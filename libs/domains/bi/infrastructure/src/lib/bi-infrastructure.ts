@@ -1,28 +1,16 @@
-import { Module, Global } from '@nestjs/common';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { BiReport, BI_REPORT_REPOSITORY, SALES_PORT } from '@virteex/bi-domain';
-import { MikroOrmBiReportRepository } from './repositories/mikro-orm-bi-report.repository';
+import { Module } from '@nestjs/common';
+import { SalesPort } from '@virteex/bi-domain';
 import { CrmSalesAdapter } from './adapters/crm-sales.adapter';
+import { CrmInfrastructureModule } from '@virteex/crm-infrastructure';
 
-@Global()
 @Module({
-  imports: [
-    MikroOrmModule.forFeature([BiReport])
-  ],
+  imports: [CrmInfrastructureModule],
   providers: [
     {
-      provide: BI_REPORT_REPOSITORY,
-      useClass: MikroOrmBiReportRepository
-    },
-    {
-      provide: SALES_PORT,
+      provide: SalesPort,
       useClass: CrmSalesAdapter
     }
   ],
-  exports: [
-    MikroOrmModule,
-    BI_REPORT_REPOSITORY,
-    SALES_PORT
-  ]
+  exports: [SalesPort]
 })
 export class BiInfrastructureModule {}
