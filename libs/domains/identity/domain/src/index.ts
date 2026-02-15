@@ -12,5 +12,6 @@ export * from './lib/ports/audit-log.repository';
 export * from './lib/ports/session.repository';
 export * from './lib/ports/risk-engine.service';
 export * from './lib/ports/job-title.repository';
+export * from './lib/ports/geo-ip.port';
 
 export * from './lib/events/user-registered.event';

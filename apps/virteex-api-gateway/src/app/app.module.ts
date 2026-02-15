@@ -12,6 +12,7 @@ import { JwtAuthGuard } from '@virteex/auth';
 import { AppController } from './app.controller';
 import { HealthController } from './health.controller';
 import { AppService } from './app.service';
+import { InitialSeederService } from './seeds/initial-seeder.service';
 
 // Domain Modules - Infrastructure
 import { BillingDomainModule } from '@virteex/billing-domain';
@@ -128,6 +129,7 @@ import { CatalogPresentationModule } from '@virteex/catalog-presentation';
   controllers: [AppController, HealthController],
   providers: [
     AppService,
+    InitialSeederService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

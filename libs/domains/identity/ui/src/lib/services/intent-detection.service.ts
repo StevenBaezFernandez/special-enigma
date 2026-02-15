@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
 import { map, catchError, shareReplay, retry } from 'rxjs/operators';
 import { ToastService, API_URL } from '@virteex/shared-ui';
 
@@ -31,11 +31,17 @@ export class IntentDetectionService {
     // Call our backend proxy instead of external API directly
     this.ipInfo$ = this.http.get<{ country_code: string | null }>(`${this.apiUrl}/auth/location`).pipe(
         retry(2), // Robustness: Retry failed requests
-        catchError((err) => {
-          // Silent fallback or less intrusive logging as per robust requirements
-          console.warn('Unable to detect location via backend. Using default null. Error:', err);
-          // Notify user about the limitation but allow proceeding
+        catchError((err: HttpErrorResponse) => {
+          console.error('Security Warning: Unable to detect location via backend.', err);
+
+          if (err.status === 404) {
+             console.error('Backend endpoint /auth/location is missing.');
+          }
+
+          // Notify user about the limitation
           this.toast.showWarning('SECURITY.LOCATION_DETECTION_UNAVAILABLE');
+
+          // Return null to indicate failure to detect
           return of({ country_code: null });
         }),
         shareReplay(1)
@@ -56,8 +62,14 @@ export class IntentDetectionService {
     let action: ContextAnalysis['action'] = 'proceed';
 
     if (!ipCountry) {
-        // If we can't detect IP country, we might proceed with caution or ask for confirmation
-        return { action: 'proceed', detectedCountry: null, targetCountry: urlCountry, discrepancyLevel: 'none' };
+        // If we can't detect IP country, treat as UNKNOWN risk (medium)
+        // Secure by default: Do not just proceed blindly.
+        return {
+            action: 'verify',
+            detectedCountry: null,
+            targetCountry: urlCountry,
+            discrepancyLevel: 'medium'
+        };
     }
 
     if (ipCountry === urlCountry) {

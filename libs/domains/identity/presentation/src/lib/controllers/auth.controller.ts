@@ -72,7 +72,7 @@ export class AuthController {
 
       if (!geo) {
           // Robust fallback for development or private networks
-          if (process.env.NODE_ENV !== 'production') {
+          if (process.env['NODE_ENV'] !== 'production') {
              return {
                  country_code: 'MX', // Default to Mexico for dev
                  city: 'Development City',

@@ -18,6 +18,8 @@ import { NodemailerNotificationService } from './services/nodemailer-notificatio
 import { DefaultRiskEngineService } from './services/risk-engine.service';
 import { MailQueueProducer } from './services/mail-queue.producer';
 import { MailProcessor } from './services/mail.processor';
+import { GeoIpLiteAdapter } from './adapters/geo-ip-lite.adapter';
+import { GEO_IP_PORT } from '@virteex/identity-domain';
 
 import {
   RegisterUserUseCase, LoginUserUseCase, VerifyMfaUseCase, StoragePort,
@@ -48,6 +50,7 @@ import { StorageAdapter } from './adapters/storage.adapter';
     { provide: NotificationService, useClass: NodemailerNotificationService },
     { provide: RiskEngineService, useClass: DefaultRiskEngineService },
     { provide: StoragePort, useClass: StorageAdapter },
+    { provide: GEO_IP_PORT, useClass: GeoIpLiteAdapter },
 
     // Application Use Cases
     RegisterUserUseCase,

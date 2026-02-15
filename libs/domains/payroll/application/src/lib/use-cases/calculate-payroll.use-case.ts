@@ -73,7 +73,7 @@ export class CalculatePayrollUseCase {
     payroll.details.add(salaryDetail);
 
     // Add Tax Deduction (Using Real Tax Service)
-    const taxAmount = await this.taxService.calculateTax(baseAmount);
+    const taxAmount = await this.taxService.calculateTax(baseAmount, end);
     const taxDetail = new PayrollDetail(tenantId, 'ISR Retenido', taxAmount, PayrollDetailType.DEDUCTION);
     payroll.details.add(taxDetail);
 

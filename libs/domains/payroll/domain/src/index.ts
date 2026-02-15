@@ -9,3 +9,4 @@ export * from './lib/repositories/payroll.repository';
 export * from './lib/repositories/attendance.repository'; // Added
 export * from './lib/ports/tax-service.port';
 export * from './lib/services/payroll-period-calculator.service';
+export * from './lib/exceptions/missing-tax-table.exception';

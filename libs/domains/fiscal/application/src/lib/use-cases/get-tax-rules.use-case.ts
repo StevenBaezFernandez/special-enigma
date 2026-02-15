@@ -8,11 +8,7 @@ export class GetTaxRulesUseCase {
   ) {}
 
   async execute(tenantId: string) {
-    let rules = await this.taxRuleRepository.findAll(tenantId);
-
-    if (!rules || rules.length === 0) {
-      rules = await this.taxRuleRepository.createDefaultRules(tenantId);
-    }
+    const rules = await this.taxRuleRepository.findAll(tenantId);
 
     return rules.map(r => ({
       id: r.id,

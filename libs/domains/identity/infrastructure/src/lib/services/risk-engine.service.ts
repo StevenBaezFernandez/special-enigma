@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { RiskEngineService } from '@virteex/identity-domain';
-import * as geoip from 'geoip-lite';
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import { RiskEngineService, GeoIpPort, GEO_IP_PORT } from '@virteex/identity-domain';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DefaultRiskEngineService implements RiskEngineService {
@@ -29,15 +29,22 @@ export class DefaultRiskEngineService implements RiskEngineService {
     /PhantomJS/i
   ];
 
+  constructor(
+    @Inject(GEO_IP_PORT) private readonly geoIpPort: GeoIpPort,
+    private readonly configService: ConfigService
+  ) {}
+
   async calculateRisk(context: { ip: string; country?: string; userAgent?: string; email?: string }): Promise<number> {
     let score = 0;
 
     // 1. IP Logic
-    const geo = geoip.lookup(context.ip);
+    const geo = await this.geoIpPort.lookup(context.ip);
 
     if (geo) {
-        // Example logic: high risk countries
-        const highRiskCountries = ['KP', 'IR', 'SY', 'CU']; // Example set
+        // High risk countries logic
+        const blockedCountriesStr = this.configService.get<string>('BLOCKED_COUNTRIES', 'KP,IR,SY,CU');
+        const highRiskCountries = blockedCountriesStr.split(',').map(c => c.trim().toUpperCase());
+
         if (highRiskCountries.includes(geo.country)) {
             score += 50;
             this.logger.warn(`High risk country detected: ${geo.country}`);

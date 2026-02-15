@@ -1,28 +1,31 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { TaxService } from '../../../../domain/src/index';
-import { TaxTableRepository } from '../../../../domain/src/lib/repositories/tax-table.repository';
+import { Injectable, Inject, Logger } from '@nestjs/common';
+import { TaxService, TaxTableRepository, MissingTaxTableException } from '../../../../domain/src/index';
 import { Decimal } from 'decimal.js';
 
 @Injectable()
 export class MexicanTaxService implements TaxService {
+  private readonly logger = new Logger(MexicanTaxService.name);
+
   constructor(
     @Inject('TaxTableRepository')
     private readonly repository: TaxTableRepository,
   ) {}
 
-  async calculateTax(taxableIncome: number): Promise<number> {
+  async calculateTax(taxableIncome: number, date: Date): Promise<number> {
     const income = new Decimal(taxableIncome);
 
     if (income.lessThanOrEqualTo(0)) {
       return 0;
     }
 
-    // Default to 2024 Monthly tables for now, could be dynamic
-    const tables = await this.repository.findForYear(2024, 'MONTHLY');
-    if (!tables.length) {
-      // Fallback or throw? For now return 0 but log warning
-      console.warn('No tax tables found for 2024');
-      return 0;
+    const year = date.getFullYear();
+    // Default to MONTHLY tables for now as per payroll type assumption
+    const type = 'MONTHLY';
+
+    const tables = await this.repository.findForYear(year, type);
+    if (!tables || tables.length === 0) {
+      this.logger.error(`No tax tables found for year ${year}`);
+      throw new MissingTaxTableException(year, type);
     }
 
     // Tables are sorted DESC by limit
