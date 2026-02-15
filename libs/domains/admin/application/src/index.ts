@@ -1,2 +1,2 @@
-export * from './lib/admin-application';
-export * from './lib/use-cases/update-config.use-case';
+export * from './lib/admin-application.module';
+export * from './lib/services/data-import.service';

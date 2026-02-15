@@ -1,23 +1,46 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { UpdateConfigUseCase, UpdateConfigDto } from '@virteex/admin-application';
+import { Controller, Post, UseInterceptors, UploadedFile, Body, Logger } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { DataImportService } from '@virteex/admin-application';
 
 @ApiTags('Admin')
 @Controller('admin')
 export class AdminController {
+  private readonly logger = new Logger(AdminController.name);
+
   constructor(
-    private readonly updateConfigUseCase: UpdateConfigUseCase
+    private readonly dataImportService: DataImportService
   ) {}
 
-  @Get('health')
-  @ApiOperation({ summary: 'Health check' })
-  health() {
-      return { status: 'ok', domain: 'Admin' };
-  }
+  @Post('import')
+  @ApiOperation({ summary: 'Import Data from CSV/Excel' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+        dataType: {
+          type: 'string',
+          enum: ['customers', 'products', 'suppliers'],
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async importData(@UploadedFile() file: Express.Multer.File, @Body('dataType') dataType: string) {
+    this.logger.log(`Received file import request for ${dataType}`);
+    if (!file) {
+        throw new Error('File is required');
+    }
 
-  @Post('config')
-  @ApiOperation({ summary: 'Update Tenant Config' })
-  updateConfig(@Body() dto: UpdateConfigDto) {
-    return this.updateConfigUseCase.execute(dto);
+    const result = await this.dataImportService.processFile(file.buffer, dataType);
+    return {
+        message: 'File processed successfully',
+        ...result
+    };
   }
 }
