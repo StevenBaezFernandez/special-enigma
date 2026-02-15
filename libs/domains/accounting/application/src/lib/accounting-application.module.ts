@@ -4,6 +4,7 @@ import { RecordJournalEntryUseCase } from './use-cases/record-journal-entry.use-
 import { GetAccountsUseCase } from './use-cases/get-accounts.use-case';
 import { GetJournalEntriesUseCase } from './use-cases/get-journal-entries.use-case';
 import { AccountingInfrastructureModule } from '@virteex/accounting-infrastructure';
+import { AccountingListener } from './listeners/accounting.listener';
 
 @Module({
   imports: [AccountingInfrastructureModule],
@@ -11,7 +12,8 @@ import { AccountingInfrastructureModule } from '@virteex/accounting-infrastructu
     CreateAccountUseCase,
     RecordJournalEntryUseCase,
     GetAccountsUseCase,
-    GetJournalEntriesUseCase
+    GetJournalEntriesUseCase,
+    AccountingListener
   ],
   exports: [
     CreateAccountUseCase,

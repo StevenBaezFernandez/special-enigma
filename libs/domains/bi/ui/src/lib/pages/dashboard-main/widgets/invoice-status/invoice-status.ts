@@ -1,8 +1,8 @@
 import {
   Component, Input, computed, signal, inject, effect,
-  ChangeDetectionStrategy, untracked, ElementRef, HostListener
+  ChangeDetectionStrategy, untracked, ElementRef, HostListener, PLATFORM_ID
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HighchartsChartComponent } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
 
@@ -21,7 +21,6 @@ import { DashboardWidget, DashboardService, ChartType } from '../../../../core/s
 import { BrandingService } from '../../../../core/services/branding';
 import { PointOptionsObject } from 'highcharts';
 
-// Extiende tipos que Highcharts no declara en Chart para los métodos de exportación
 type ExportingChart = Highcharts.Chart & {
   print: () => void;
   exportChart: (opts?: any, chartOpts?: Highcharts.Options) => void;
@@ -45,6 +44,7 @@ export class InvoiceStatus {
   private dashboardService = inject(DashboardService);
   private brandingService = inject(BrandingService);
   private hostEl = inject(ElementRef<HTMLElement>);
+  private platformId = inject(PLATFORM_ID);
 
   // Íconos
   protected readonly SettingsIcon = Settings;
@@ -66,10 +66,6 @@ export class InvoiceStatus {
     return this.chartRef as unknown as ExportingChart;
   }
 
-  /**
-   * ✅ MEJORA 1: ACTUALIZACIÓN EN TIEMPO REAL
-   * Este 'effect' se ejecuta cuando las 'chartOptions' cambian y actualiza el gráfico.
-   */
   private chartUpdater = effect(() => {
     untracked(() => {
       if (this.chartRef) {
@@ -80,14 +76,17 @@ export class InvoiceStatus {
 
   // Opciones reactivas
   chartOptions = computed<Highcharts.Options>(() => {
+    if (!isPlatformBrowser(this.platformId)) return {};
+
     const chartType = (this.widget.chartType || 'pie') as ChartType;
     const themeOptions = this.getThemeOptions();
 
-    const seriesColors = this.widget.data?.seriesColors || {
+    const defaultColors = {
       pagadas: '#4ade80',
       pendientes: '#fb923c',
       vencidas: '#f87171'
     };
+    const seriesColors = this.widget.data?.seriesColors || defaultColors;
 
     const data = [
       { name: 'Pagadas', y: 70, color: seriesColors.pagadas },
@@ -98,13 +97,11 @@ export class InvoiceStatus {
     const baseOptions: Highcharts.Options = {
       chart: { type: chartType as any },
       title: { text: 'Distribución de Facturas', style: { color: 'var(--text-primary)', fontSize: '16px', fontWeight: '600' } },
-      // subtitle: { text: 'Estado actual de la cartera de clientes', style: { color: 'var(--text-secondary)' } },
       plotOptions: {
         pie: { dataLabels: { enabled: false }, showInLegend: true, borderWidth: 3, borderColor: 'var(--bg-layer-1)', allowPointSelect: true },
         column: { borderWidth: 0, borderRadius: 4, pointWidth: 25, allowPointSelect: true },
         bar: { borderWidth: 0, allowPointSelect: true },
       },
-      // ✅ CORRECCIÓN: Se define el xAxis para que el gráfico de columnas tenga las etiquetas correctas
       xAxis: {
         categories: data.map(d => d.name),
         crosshair: true
@@ -134,12 +131,8 @@ export class InvoiceStatus {
     return [];
   });
 
-  /**
-   * ✅ MEJORA 2: MENÚ ADAPTADO AL TEMA
-   * Genera los estilos para el menú y el gráfico basados en el tema de la aplicación.
-   */
   private getThemeOptions(): Highcharts.Options {
-    if (typeof window === 'undefined') return {};
+    if (!isPlatformBrowser(this.platformId)) return {};
     const bodyStyles = getComputedStyle(document.body);
     const textColor = bodyStyles.getPropertyValue('--text-primary').trim();
     const secondaryTextColor = bodyStyles.getPropertyValue('--text-secondary').trim();
@@ -157,8 +150,6 @@ export class InvoiceStatus {
         buttonOptions: {
           theme: {
             stroke: secondaryTextColor, fill: 'transparent',
-            // states: { hover: { fill: hoverBgColor }, select: { fill: hoverBgColor } }
-
           }
         },
         menuStyle: {
@@ -178,7 +169,6 @@ export class InvoiceStatus {
     this.chartRef = chart;
   }
 
-  // Acciones de los menús
   closeMenus() {
     this.isExportMenuOpen.set(false);
     this.isSettingsOpen.set(false);
@@ -215,7 +205,6 @@ export class InvoiceStatus {
     }
   }
 
-  // Acciones de exportación
   viewFullscreen(ev: MouseEvent) { ev.stopPropagation(); this.chart?.fullscreen?.toggle(); this.closeMenus(); }
   printChart(ev: MouseEvent) { ev.stopPropagation(); this.chart?.print(); this.closeMenus(); }
   downloadPNG(ev: MouseEvent) { ev.stopPropagation(); this.chart?.exportChart({ type: 'image/png' }); this.closeMenus(); }
@@ -225,7 +214,6 @@ export class InvoiceStatus {
   downloadCSV(ev: MouseEvent) { ev.stopPropagation(); this.chart?.downloadCSV(); this.closeMenus(); }
   downloadXLS(ev: MouseEvent) { ev.stopPropagation(); this.chart?.downloadXLS(); this.closeMenus(); }
 
-  // Cierra los menús al hacer clic fuera del componente
   @HostListener('document:mousedown', ['$event'])
   onDocumentClick(ev: MouseEvent) {
     if (!this.hostEl.nativeElement.contains(ev.target as Node)) {

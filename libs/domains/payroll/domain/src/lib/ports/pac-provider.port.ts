@@ -11,4 +11,4 @@ export interface PacProvider {
   cancel(uuid: string, rfc: string): Promise<boolean>;
 }
 
-export const PAC_PROVIDER = 'PAC_PROVIDER';
+export const PAC_PROVIDER = 'PAYROLL_PAC_PROVIDER'; // specific token

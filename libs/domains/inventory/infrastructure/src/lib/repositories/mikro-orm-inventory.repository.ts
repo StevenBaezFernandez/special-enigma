@@ -29,4 +29,16 @@ export class MikroOrmInventoryRepository implements InventoryRepository {
     await this.em.persist(stock);
     await this.em.flush();
   }
+
+  async saveBatch(stocks: Stock[], movements: InventoryMovement[]): Promise<void> {
+    // If stocks are already persisted (managed), just movements need persist.
+    // But persisting managed entities is fine.
+    // We flush once at the end.
+
+    // MikroORM persist handles arrays.
+    if (stocks.length > 0) await this.em.persist(stocks);
+    if (movements.length > 0) await this.em.persist(movements);
+
+    await this.em.flush();
+  }
 }

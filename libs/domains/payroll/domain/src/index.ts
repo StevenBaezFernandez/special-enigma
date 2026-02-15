@@ -6,7 +6,10 @@ export * from './lib/entities/attendance.entity';
 export * from './lib/repositories/tax-table.repository';
 export * from './lib/repositories/employee.repository';
 export * from './lib/repositories/payroll.repository';
-export * from './lib/repositories/attendance.repository'; // Added
+export * from './lib/repositories/attendance.repository';
 export * from './lib/ports/tax-service.port';
+export * from './lib/ports/pac-provider.port';
+export * from './lib/ports/tenant-config.port';
 export * from './lib/services/payroll-period-calculator.service';
 export * from './lib/exceptions/missing-tax-table.exception';
+export * from './lib/events/payroll-stamped.event';

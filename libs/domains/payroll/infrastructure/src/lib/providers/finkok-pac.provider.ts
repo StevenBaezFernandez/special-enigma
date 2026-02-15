@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
-import { PacProvider, FiscalStamp } from '@virteex/billing-domain';
+import { PacProvider, FiscalStamp } from '@virteex/payroll-domain';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
@@ -135,7 +135,7 @@ export class FinkokPacProvider implements PacProvider {
     };
 
     const soapEnvelope = this.builder.build(soapBody);
-    const cancelUrl = this.url.replace('/stamp', '/cancel').replace(/\/$/, ''); // simple heuristic
+    const cancelUrl = this.url.replace('/stamp', '/cancel').replace(/\/$/, '');
 
     try {
         const response = await axios.post(cancelUrl, soapEnvelope, {
@@ -154,9 +154,6 @@ export class FinkokPacProvider implements PacProvider {
         if (!cancelResult) {
             throw new Error('Invalid cancel response from Finkok');
         }
-
-        // Finkok cancelResult structure might be complex, but usually existence implies success if no fault.
-        // Or check status/message inside cancelResult. For now assuming success if we got result.
 
         return true;
     } catch (error: any) {

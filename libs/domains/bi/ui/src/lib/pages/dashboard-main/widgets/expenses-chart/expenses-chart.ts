@@ -1,8 +1,8 @@
 import {
   Component, Input, computed, signal, inject, effect,
-  ChangeDetectionStrategy, untracked, ElementRef, HostListener
+  ChangeDetectionStrategy, untracked, ElementRef, HostListener, PLATFORM_ID
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HighchartsChartComponent } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
 
@@ -44,6 +44,7 @@ export class ExpensesChart {
   private dashboardService = inject(DashboardService);
   private brandingService = inject(BrandingService);
   private hostEl = inject(ElementRef<HTMLElement>);
+  private platformId = inject(PLATFORM_ID);
 
   // Íconos
   protected readonly SettingsIcon = Settings;
@@ -73,16 +74,20 @@ export class ExpensesChart {
   });
 
   chartOptions = computed<Highcharts.Options>(() => {
+    if (!isPlatformBrowser(this.platformId)) return {};
+
     const chartType = (this.widget.chartType || 'pie') as ChartType;
     const themeOptions = this.getThemeOptions();
 
-    const seriesColors = this.widget.data?.seriesColors || {
+    const defaultColors = {
       'nómina y salarios': '#3b82f6',
       'marketing y publicidad': '#8b5cf6',
       'alquiler y servicios': '#ec4899',
       'suministros de oficina': '#f97316',
       'otros': '#14b8a6'
     };
+
+    const seriesColors = this.widget.data?.seriesColors || defaultColors;
 
     const data = [
       { name: 'Nómina y Salarios', y: 45, color: seriesColors['nómina y salarios'] },
@@ -93,7 +98,7 @@ export class ExpensesChart {
     ];
 
     const baseOptions: Highcharts.Options = {
-      chart: { type: chartType as any },
+      chart: { type: chartType as any, backgroundColor: 'transparent' },
       title: { text: 'Desglose de Gastos Operativos' },
       legend: {
         enabled: true,
@@ -128,7 +133,7 @@ export class ExpensesChart {
   });
 
   private getThemeOptions(): Highcharts.Options {
-    if (typeof window === 'undefined') return {};
+    if (!isPlatformBrowser(this.platformId)) return {};
     const bodyStyles = getComputedStyle(document.body);
     const textColor = bodyStyles.getPropertyValue('--text-primary').trim();
     const secondaryTextColor = bodyStyles.getPropertyValue('--text-secondary').trim();
@@ -148,7 +153,6 @@ export class ExpensesChart {
         buttonOptions: {
           theme: {
             stroke: secondaryTextColor, fill: 'transparent',
-            // states: { hover: { fill: hoverBgColor }, select: { fill: hoverBgColor } }
           }
         },
         menuStyle: {

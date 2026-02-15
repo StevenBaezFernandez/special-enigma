@@ -63,7 +63,7 @@ export class NewInvoicePage implements OnInit {
       description: [''],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [{ value: 0, disabled: false }, [Validators.required, Validators.min(0)]],
-      taxRate: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      taxRate: [0.16, [Validators.required, Validators.min(0), Validators.max(1)]],
     });
   }
 
@@ -84,7 +84,7 @@ export class NewInvoicePage implements OnInit {
       this.lineItems.at(index).patchValue({
         description: selectedProduct.name,
         price: selectedProduct.price,
-        // Default tax rate could come from product category or settings, keeping 0.18 as default
+        taxRate: 0.16 // Could be fetched from product category in future
       });
     }
   }
@@ -116,10 +116,10 @@ export class NewInvoicePage implements OnInit {
       const productId = control.get('productId')?.value;
       const qty = control.get('quantity')?.value;
 
-      if (!productId || !qty) return true;
+      if (!productId) return true;
 
       const product = this.products.find(p => p.id === productId);
-      if (product && qty > product.stock) {
+      if (product && (qty > product.stock)) {
           return false;
       }
       return true;
@@ -131,20 +131,31 @@ export class NewInvoicePage implements OnInit {
       return;
     }
 
+    // Validate stock for all items explicitly
+    for (let i = 0; i < this.lineItems.length; i++) {
+        if (!this.validateStock(i)) {
+            this.notificationService.showError(`Stock insuficiente para el producto en la línea ${i + 1}`);
+            return;
+        }
+    }
+
     const formValue = this.invoiceForm.getRawValue();
-    // Preparamos el DTO sin los campos calculados
+
+    // Explicit typing
+    const items = formValue.lineItems.map((item: { productId: string; quantity: number; price: number; description: string; taxRate: number }) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        description: item.description,
+        taxRate: item.taxRate
+    }));
+
     const payload: CreateInvoiceDto = {
         customerId: formValue.customerId,
         issueDate: formValue.issueDate,
         dueDate: formValue.dueDate,
         notes: formValue.notes,
-        lineItems: formValue.lineItems.map((item: any) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.price,
-            description: item.description,
-            taxRate: item.taxRate
-        }))
+        lineItems: items
     };
 
     this.invoicesService.createInvoice(payload).subscribe({

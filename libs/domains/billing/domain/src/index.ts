@@ -13,6 +13,9 @@ export * from './lib/ports/pac-provider.port';
 export * from './lib/ports/invoice.repository';
 export * from './lib/ports/subscription.repository';
 export * from './lib/ports/payment-method.repository';
-export * from './lib/repositories/subscription-plan.repository'; // It was here in original
+export * from './lib/ports/tenant-config.port';
+export * from './lib/repositories/subscription-plan.repository';
+
+export * from './lib/events/invoice-stamped.event';
 
 export * from './lib/billing-domain.module';

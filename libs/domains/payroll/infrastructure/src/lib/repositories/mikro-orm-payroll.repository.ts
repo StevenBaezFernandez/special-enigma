@@ -11,11 +11,11 @@ export class MikroOrmPayrollRepository implements PayrollRepository {
   }
 
   async findById(id: string): Promise<Payroll | null> {
-    return this.em.findOne(Payroll, { id });
+    return this.em.findOne(Payroll, { id }, { populate: ['employee', 'details'] });
   }
 
   async findAllByTenant(tenantId: string): Promise<Payroll[]> {
-    return this.em.find(Payroll, { tenantId });
+    return this.em.find(Payroll, { tenantId }, { populate: ['employee'] });
   }
 
   async findByEmployeeAndPeriod(employeeId: string, start: Date, end: Date): Promise<Payroll | null> {

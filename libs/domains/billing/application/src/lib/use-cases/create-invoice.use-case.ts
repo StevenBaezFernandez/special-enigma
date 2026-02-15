@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { Invoice, InvoiceRepository, INVOICE_REPOSITORY, FiscalStampingService } from '@virteex/billing-domain';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Invoice, InvoiceRepository, INVOICE_REPOSITORY, FiscalStampingService, InvoiceStampedEvent } from '@virteex/billing-domain';
 
 export class CreateInvoiceDto {
   tenantId!: string;
@@ -14,7 +15,8 @@ export class CreateInvoiceUseCase {
 
   constructor(
     @Inject(INVOICE_REPOSITORY) private readonly invoiceRepository: InvoiceRepository,
-    private readonly fiscalStampingService: FiscalStampingService
+    private readonly fiscalStampingService: FiscalStampingService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(dto: CreateInvoiceDto): Promise<Invoice> {
@@ -30,12 +32,20 @@ export class CreateInvoiceUseCase {
       invoice.status = 'STAMPED';
 
       this.logger.log(`Invoice stamped. UUID: ${stamp.uuid}`);
+
+      this.eventEmitter.emit(
+        'invoice.stamped',
+        new InvoiceStampedEvent(
+            invoice.id,
+            invoice.tenantId,
+            Number(invoice.totalAmount),
+            Number(invoice.taxAmount),
+            new Date()
+        )
+      );
+
     } catch (error) {
       this.logger.error(`Failed to stamp invoice: ${error}`);
-      // Depending on business logic, we might save as DRAFT or fail.
-      // Here we fail or save as ERROR.
-      // For now, let's propagate error but maybe save as draft first?
-      // Usually, if stamping fails, invoice is not valid.
       throw error;
     }
 

@@ -41,6 +41,15 @@ export class Payroll {
   @OneToMany('PayrollDetail', 'payroll', { cascade: [Cascade.ALL] })
   details = new Collection<PayrollDetail>(this);
 
+  @Property({ nullable: true })
+  fiscalUuid?: string;
+
+  @Property({ nullable: true, type: 'text' })
+  xmlContent?: string;
+
+  @Property({ nullable: true })
+  stampedAt?: Date;
+
   @Property({ onCreate: () => new Date() })
   createdAt: Date = new Date();
 

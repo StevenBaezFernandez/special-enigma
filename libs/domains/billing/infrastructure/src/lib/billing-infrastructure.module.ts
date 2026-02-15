@@ -7,17 +7,19 @@ import {
   TaxLine,
   TaxRule,
   PAC_PROVIDER,
+  TENANT_CONFIG_REPOSITORY,
   PaymentMethod,
   INVOICE_REPOSITORY,
   SUBSCRIPTION_REPOSITORY,
   SUBSCRIPTION_PLAN_REPOSITORY,
   PAYMENT_METHOD_REPOSITORY
 } from '@virteex/billing-domain';
-import { MockPacProvider } from './providers/mock-pac.provider';
+import { FinkokPacProvider } from './providers/finkok-pac.provider';
 import { MikroOrmInvoiceRepository } from './repositories/mikro-orm-invoice.repository';
 import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscription.repository';
 import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';
 import { MikroOrmPaymentMethodRepository } from './repositories/mikro-orm-payment-method.repository';
+import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
 
 @Global()
 @Module({
@@ -50,7 +52,11 @@ import { MikroOrmPaymentMethodRepository } from './repositories/mikro-orm-paymen
     },
     {
       provide: PAC_PROVIDER,
-      useClass: MockPacProvider
+      useClass: FinkokPacProvider
+    },
+    {
+      provide: TENANT_CONFIG_REPOSITORY,
+      useClass: MikroOrmTenantConfigRepository
     }
   ],
   exports: [
@@ -59,6 +65,7 @@ import { MikroOrmPaymentMethodRepository } from './repositories/mikro-orm-paymen
     SUBSCRIPTION_PLAN_REPOSITORY,
     PAYMENT_METHOD_REPOSITORY,
     PAC_PROVIDER,
+    TENANT_CONFIG_REPOSITORY,
     MikroOrmModule
   ]
 })

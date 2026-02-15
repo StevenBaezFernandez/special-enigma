@@ -5,4 +5,5 @@ export interface CreateSaleDto {
     quantity: number;
   }[];
   tenantId: string;
+  warehouseId?: string;
 }

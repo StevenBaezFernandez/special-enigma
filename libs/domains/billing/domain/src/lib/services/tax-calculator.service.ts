@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TaxStrategy, TaxResult } from '../strategies/tax-strategy.interface';
 import { MxTaxStrategy } from '../strategies/mx-tax.strategy';
 import { BrTaxStrategy } from '../strategies/br-tax.strategy';
-import { TaxRuleEngine } from './tax-rule.engine';
+import type { TaxRuleEngine } from './tax-rule.engine';
 
 @Injectable()
 export class TaxCalculatorService {

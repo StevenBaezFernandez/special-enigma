@@ -36,19 +36,30 @@ export class CreateSaleUseCase {
       throw new NotFoundException(`Customer with ID ${dto.customerId} not found`);
     }
 
-    // 2. Resolve Warehouse (Simple logic: pick first warehouse of tenant)
-    // In a real scenario, this should come from context (e.g. current store) or DTO.
-    const warehouses = await this.warehouseRepository.findAll(dto.tenantId);
-    if (warehouses.length === 0) {
-      throw new BadRequestException('No warehouse found for this tenant to fulfill the sale.');
+    // 2. Resolve Warehouse
+    let warehouse;
+    if (dto.warehouseId) {
+        const wh = await this.warehouseRepository.findById(dto.warehouseId);
+        if (!wh) {
+            throw new NotFoundException(`Warehouse with ID ${dto.warehouseId} not found`);
+        }
+        if (wh.tenantId !== dto.tenantId) {
+            throw new BadRequestException(`Warehouse ${dto.warehouseId} does not belong to tenant`);
+        }
+        warehouse = wh;
+    } else {
+        const warehouses = await this.warehouseRepository.findAll(dto.tenantId);
+        if (warehouses.length === 0) {
+           throw new BadRequestException('No warehouse found for this tenant to fulfill the sale.');
+        }
+        warehouse = warehouses[0];
     }
-    const warehouse = warehouses[0]; // Naive selection
 
     let total = new Decimal(0);
-    // Use customerName from resolved customer, and customerId from DTO.
-    // Sale entity constructor: (tenantId, customerId, customerName, total)
-    // Note: I updated Sale entity to have customerId in constructor.
     const sale = new Sale(dto.tenantId, dto.customerId, customer.companyName || `${customer.firstName} ${customer.lastName}`, '0');
+
+    const stocksToUpdate: Stock[] = [];
+    const movementsToCreate: InventoryMovement[] = [];
 
     for (const item of dto.items) {
       // 3. Validate Product & Price
@@ -61,7 +72,7 @@ export class CreateSaleUseCase {
         throw new NotFoundException(`Product with ID ${item.productId} not found`);
       }
 
-      const price = new Decimal(product.price); // Trust backend price
+      const price = new Decimal(product.price);
       const quantity = new Decimal(item.quantity);
 
       // 4. Check Stock
@@ -75,10 +86,9 @@ export class CreateSaleUseCase {
          throw new InsufficientStockException(item.productId, warehouse.id);
       }
 
-      // 5. Deduct Stock (Ideally transactional)
-      // We are modifying stock here. In a robust system, this should be atomic.
+      // 5. Prepare Stock Update
       stock.removeQuantity(item.quantity.toString());
-      await this.inventoryRepository.saveStock(stock);
+      stocksToUpdate.push(stock);
 
       const movement = new InventoryMovement(
           dto.tenantId,
@@ -89,7 +99,7 @@ export class CreateSaleUseCase {
           `Sale ${sale.id}`,
           undefined
       );
-      await this.inventoryRepository.saveMovement(movement);
+      movementsToCreate.push(movement);
 
       // 6. Add to Sale
       const itemTotal = price.mul(quantity);
@@ -105,8 +115,12 @@ export class CreateSaleUseCase {
     }
 
     sale.total = total.toString();
-    sale.status = SaleStatus.APPROVED; // Automatically approved as stock is deducted
+    sale.status = SaleStatus.APPROVED;
 
-    return this.saleRepository.create(sale);
+    // Save all
+    await this.saleRepository.create(sale);
+    await this.inventoryRepository.saveBatch(stocksToUpdate, movementsToCreate);
+
+    return sale;
   }
 }
