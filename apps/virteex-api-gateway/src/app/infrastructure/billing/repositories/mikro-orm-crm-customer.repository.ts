@@ -8,10 +8,6 @@ export class MikroOrmCrmCustomerRepository implements CustomerRepository {
   constructor(private readonly em: EntityManager) {}
 
   async findById(id: string): Promise<CustomerBillingInfo | null> {
-    // We access the Customer entity directly. In a strict microservices architecture,
-    // this would be an HTTP call or Event sourcing.
-    // In a modular monolith, shared database access via ORM is acceptable for performance
-    // as long as we don't modify the entity here.
     const customer = await this.em.findOne(Customer, { id });
 
     if (!customer) {
@@ -20,9 +16,9 @@ export class MikroOrmCrmCustomerRepository implements CustomerRepository {
 
     return {
       id: customer.id,
-      rfc: customer.taxId || 'XAXX010101000', // Default generic RFC if missing
+      rfc: customer.taxId || 'XAXX010101000',
       legalName: customer.companyName || `${customer.firstName} ${customer.lastName}`.trim(),
-      taxRegimen: customer.taxRegimen || '616', // Default 'Sin obligaciones fiscales'
+      taxRegimen: customer.taxRegimen || '616',
       postalCode: customer.postalCode || '00000',
       email: customer.email || ''
     };

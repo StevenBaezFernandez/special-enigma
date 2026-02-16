@@ -1,6 +1,15 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Invoice, InvoiceItem, InvoiceRepository, INVOICE_REPOSITORY, FiscalStampingService, InvoiceStampedEvent } from '@virteex/billing-domain';
+import {
+  Invoice,
+  InvoiceItem,
+  InvoiceRepository,
+  INVOICE_REPOSITORY,
+  FiscalStampingService,
+  InvoiceStampedEvent,
+  ProductRepository,
+  PRODUCT_REPOSITORY
+} from '@virteex/billing-domain';
 import { CreateInvoiceDto } from '../dtos/create-invoice.dto';
 import { Decimal } from 'decimal.js';
 
@@ -10,6 +19,7 @@ export class CreateInvoiceUseCase {
 
   constructor(
     @Inject(INVOICE_REPOSITORY) private readonly invoiceRepository: InvoiceRepository,
+    @Inject(PRODUCT_REPOSITORY) private readonly productRepository: ProductRepository,
     private readonly fiscalStampingService: FiscalStampingService,
     private readonly eventEmitter: EventEmitter2
   ) {}
@@ -26,8 +36,24 @@ export class CreateInvoiceUseCase {
 
     // Backend Calculation
     for (const itemDto of dto.items) {
+        let price = new Decimal(itemDto.unitPrice);
         const qty = new Decimal(itemDto.quantity);
-        const price = new Decimal(itemDto.unitPrice);
+
+        // Security: Validate price against Catalog if productId is present
+        if (itemDto.productId) {
+            const product = await this.productRepository.findById(itemDto.productId);
+            if (product) {
+                const catalogPrice = new Decimal(product.price);
+                // Compare with small tolerance or strict equality
+                if (!price.equals(catalogPrice)) {
+                    this.logger.warn(`Price mismatch for product ${itemDto.productId}. Provided: ${price}, Catalog: ${catalogPrice}. Using catalog price.`);
+                    price = catalogPrice;
+                }
+            } else {
+                 throw new Error(`Product with ID ${itemDto.productId} not found`);
+            }
+        }
+
         const amount = qty.times(price);
         const tax = amount.times(taxRate);
 

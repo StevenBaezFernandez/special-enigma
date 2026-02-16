@@ -15,6 +15,9 @@ import { HealthController } from './health.controller';
 import { AppService } from './app.service';
 import { InitialSeederService } from './seeds/initial-seeder.service';
 
+// Cross Domain Infrastructure (Application Level)
+import { CrossDomainInfrastructureModule } from './infrastructure/cross-domain.module';
+
 // Domain Modules - Infrastructure
 import { BillingDomainModule } from '@virteex/billing-domain';
 import { BillingInfrastructureModule } from '@virteex/billing-infrastructure';
@@ -90,6 +93,9 @@ import { CatalogPresentationModule } from '@virteex/catalog-presentation';
         };
       },
     }),
+
+    // Cross Domain Infrastructure
+    CrossDomainInfrastructureModule,
 
     // Infrastructure Modules
     BillingInfrastructureModule,

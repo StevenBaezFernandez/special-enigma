@@ -22,6 +22,15 @@ export interface PaymentMethod {
   isDefault?: boolean;
 }
 
+export interface CreatePaymentMethodPayload {
+  type: string;
+  token: string;
+  last4?: string;
+  expiryDate?: string;
+  isDefault?: boolean;
+  [key: string]: unknown;
+}
+
 export interface PaymentHistoryItem {
   id: string;
   amount: number;
@@ -80,7 +89,7 @@ export class BillingService {
       return this.http.post(`${this.apiUrl}/billing/subscription`, { planId, tenantId });
   }
 
-  addPaymentMethod(paymentMethod: any, tenantId: string = 'default') {
+  addPaymentMethod(paymentMethod: CreatePaymentMethodPayload, tenantId: string = 'default') {
       return this.http.post(`${this.apiUrl}/billing/payment-methods`, { ...paymentMethod, tenantId });
   }
 }

@@ -23,8 +23,6 @@ import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscri
 import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';
 import { MikroOrmPaymentMethodRepository } from './repositories/mikro-orm-payment-method.repository';
 import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
-import { MikroOrmCrmCustomerRepository } from './repositories/mikro-orm-crm-customer.repository';
-import { CUSTOMER_REPOSITORY } from '@virteex/billing-domain';
 
 @Global()
 @Module({
@@ -61,19 +59,9 @@ import { CUSTOMER_REPOSITORY } from '@virteex/billing-domain';
       provide: PAC_STRATEGY_FACTORY,
       useClass: PacStrategyFactoryImpl
     },
-    // Maintain PAC_PROVIDER for backward compatibility or direct usage,
-    // but ideally we should migrate all consumers to factory.
-    // For now, let's point it to Finkok as default or remove it.
-    // Since we are refactoring, I'll remove it from exports to see breaks,
-    // but provide it locally if needed.
-    // Actually, I'll remove it to ensure we use the factory.
     {
       provide: TENANT_CONFIG_REPOSITORY,
       useClass: MikroOrmTenantConfigRepository
-    },
-    {
-      provide: CUSTOMER_REPOSITORY,
-      useClass: MikroOrmCrmCustomerRepository
     }
   ],
   exports: [
@@ -83,9 +71,8 @@ import { CUSTOMER_REPOSITORY } from '@virteex/billing-domain';
     PAYMENT_METHOD_REPOSITORY,
     PAC_STRATEGY_FACTORY,
     TENANT_CONFIG_REPOSITORY,
-    CUSTOMER_REPOSITORY,
     MikroOrmModule,
-    FinkokPacProvider, // Exporting concrete class might be needed by Factory
+    FinkokPacProvider,
     NullPacProvider
   ]
 })
