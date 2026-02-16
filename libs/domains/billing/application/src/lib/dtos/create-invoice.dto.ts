@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsOptional, ValidateNested, IsArray, Min, IsNotEmpty, IsDateString } from 'class-validator';
+import { IsString, IsNumber, IsOptional, ValidateNested, IsArray, Min, IsNotEmpty, IsDateString, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateInvoiceItemDto {
@@ -17,6 +17,12 @@ export class CreateInvoiceItemDto {
   @IsString()
   @IsOptional()
   productId?: string;
+
+  @IsNumber()
+  @Min(0)
+  @Max(1)
+  @IsOptional()
+  taxRate?: number;
 }
 
 export class CreateInvoiceDto {

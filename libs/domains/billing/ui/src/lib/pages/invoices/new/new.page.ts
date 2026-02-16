@@ -162,7 +162,7 @@ export class NewInvoicePage implements OnInit {
       const productId = control.get('productId')?.value;
       const qty = control.get('quantity')?.value;
 
-      if (!productId) return true;
+      if (!productId) return false;
 
       const product = this.products.find(p => p.id === productId);
       if (product && (qty > product.stock)) {
@@ -186,11 +186,13 @@ export class NewInvoicePage implements OnInit {
 
     const formValue = this.invoiceForm.getRawValue();
 
+    // Mapping: Include taxRate
     const items = formValue.lineItems.map((item: { productId: string; quantity: number; price: number; description: string; taxRate: number }) => ({
         productId: item.productId,
         quantity: item.quantity,
         unitPrice: item.price,
-        description: item.description
+        description: item.description,
+        taxRate: item.taxRate
     }));
 
     const payload: CreateInvoiceDto = {

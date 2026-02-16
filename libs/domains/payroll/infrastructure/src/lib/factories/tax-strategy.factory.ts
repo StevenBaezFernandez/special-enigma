@@ -32,7 +32,8 @@ export class TaxStrategyFactoryImpl implements TaxStrategyFactory {
     // We check if the country code is in our supported list excluding US/MX which are handled above
     const latamCountries = Object.values(CountryCode).filter(c => c !== CountryCode.USA && c !== CountryCode.MEXICO);
 
-    if (latamCountries.includes(upperCountry as CountryCode)) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (latamCountries.includes(upperCountry as any)) {
       return this.genericLatam;
     }
 

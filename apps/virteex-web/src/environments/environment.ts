@@ -4,7 +4,7 @@ export const environment: AppConfig = {
   production: false,
   apiUrl: 'http://localhost:3333/api',
   recaptcha: {
-    siteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+    siteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' // Public Site Key
   },
-  vapidPublicKey: 'BK_gXy_yq_placeholder_key'
+  vapidPublicKey: 'BK_gXy_yq_placeholder_key' // Placeholder
 };

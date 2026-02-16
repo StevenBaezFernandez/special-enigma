@@ -12,6 +12,23 @@ export interface Invoice {
   status: 'Paid' | 'Pending' | 'Void';
 }
 
+export interface CreateInvoiceDto {
+  customerId: string;
+  issueDate: string;
+  dueDate: string;
+  paymentForm: string;
+  paymentMethod: string;
+  usage: string;
+  notes?: string;
+  items: {
+      productId: string;
+      quantity: number;
+      unitPrice: number;
+      description: string;
+      taxRate: number;
+  }[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -23,7 +40,7 @@ export class InvoicesService {
     return this.http.get<Invoice[]>(`${this.apiUrl}/billing/invoices`);
   }
 
-  createInvoice(invoice: Omit<Invoice, 'id'>): Observable<Invoice> {
+  createInvoice(invoice: CreateInvoiceDto): Observable<Invoice> {
     return this.http.post<Invoice>(`${this.apiUrl}/billing/invoices`, invoice);
   }
 }

@@ -30,7 +30,6 @@ export class CreateInvoiceUseCase {
     }
     let subtotal = new Decimal(0);
     let totalTax = new Decimal(0);
-    const taxRate = new Decimal(0.16); // Default 16% VAT
 
     const invoice = new Invoice(dto.tenantId, dto.customerId, '0', '0');
     invoice.dueDate = new Date(dto.dueDate);
@@ -58,8 +57,9 @@ export class CreateInvoiceUseCase {
             }
         }
 
+        const itemTaxRate = new Decimal(itemDto.taxRate ?? 0.16);
         const amount = qty.times(price);
-        const tax = amount.times(taxRate);
+        const tax = amount.times(itemTaxRate);
 
         subtotal = subtotal.plus(amount);
         totalTax = totalTax.plus(tax);

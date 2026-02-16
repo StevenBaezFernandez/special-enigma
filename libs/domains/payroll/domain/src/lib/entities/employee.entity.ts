@@ -44,6 +44,16 @@ export class Employee {
   @Property({ nullable: true })
   postalCode?: string;
 
+  // Fiscal properties
+  @Property({ default: '01' })
+  contractType = '01'; // 01: Contrato de trabajo por tiempo indeterminado
+
+  @Property({ default: '02' })
+  regimeType = '02'; // 02: Sueldos y Salarios
+
+  @Property({ default: '04' })
+  periodicity = '04'; // 04: Quincenal
+
   @Enum(() => EmployeeStatus)
   status: EmployeeStatus = EmployeeStatus.ACTIVE;
 

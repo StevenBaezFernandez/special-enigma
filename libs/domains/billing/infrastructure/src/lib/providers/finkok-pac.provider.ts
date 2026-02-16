@@ -2,6 +2,7 @@ import axios from 'axios';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import { PacProvider, FiscalStamp } from '@virteex/billing-domain';
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class FinkokPacProvider implements PacProvider {
@@ -9,6 +10,10 @@ export class FinkokPacProvider implements PacProvider {
   private readonly username: string;
   private readonly password: string;
   private readonly url: string;
+  private readonly cancelUrl: string;
+  private readonly stampNamespace: string;
+  private readonly cancelNamespace: string;
+
   private readonly parser = new XMLParser({
     ignoreAttributes: false,
     attributeNamePrefix: '',
@@ -19,10 +24,13 @@ export class FinkokPacProvider implements PacProvider {
     suppressEmptyNode: true
   });
 
-  constructor() {
-    this.username = process.env['FINKOK_USERNAME']!;
-    this.password = process.env['FINKOK_PASSWORD']!;
-    this.url = process.env['FINKOK_URL']!;
+  constructor(private readonly configService: ConfigService) {
+    this.username = this.configService.get<string>('FINKOK_USERNAME')!;
+    this.password = this.configService.get<string>('FINKOK_PASSWORD')!;
+    this.url = this.configService.get<string>('FINKOK_URL')!;
+    this.cancelUrl = this.configService.get<string>('FINKOK_CANCEL_URL') || this.url?.replace('/stamp', '/cancel');
+    this.stampNamespace = this.configService.get<string>('FINKOK_STAMP_NAMESPACE') || 'http://facturacion.finkok.com/stamp';
+    this.cancelNamespace = this.configService.get<string>('FINKOK_CANCEL_NAMESPACE') || 'http://facturacion.finkok.com/cancel';
 
     if (!this.username || !this.password || !this.url) {
       this.logger.error('Finkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing from environment.');
@@ -36,7 +44,7 @@ export class FinkokPacProvider implements PacProvider {
     const soapBody = {
        'soapenv:Envelope': {
           '@_xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/',
-          '@_xmlns:apps': 'http://facturacion.finkok.com/stamp',
+          [`@_xmlns:apps`]: this.stampNamespace,
           'soapenv:Header': {},
           'soapenv:Body': {
              'apps:stamp': {
@@ -124,7 +132,7 @@ export class FinkokPacProvider implements PacProvider {
      const soapBody = {
        'soapenv:Envelope': {
           '@_xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/',
-          '@_xmlns:apps': 'http://facturacion.finkok.com/cancel',
+          [`@_xmlns:apps`]: this.cancelNamespace,
           'soapenv:Header': {},
           'soapenv:Body': {
              'apps:cancel': {
@@ -142,10 +150,9 @@ export class FinkokPacProvider implements PacProvider {
     };
 
     const soapEnvelope = this.builder.build(soapBody);
-    const cancelUrl = this.url.replace('/stamp', '/cancel').replace(/\/$/, ''); // simple heuristic
 
     try {
-        const response = await axios.post(cancelUrl, soapEnvelope, {
+        const response = await axios.post(this.cancelUrl, soapEnvelope, {
             headers: { 'Content-Type': 'text/xml;charset=UTF-8', 'SOAPAction': 'cancel' }
         });
 
@@ -159,13 +166,40 @@ export class FinkokPacProvider implements PacProvider {
 
         const cancelResult = body?.cancelResponse?.cancelResult;
         if (!cancelResult) {
-            throw new Error('Invalid cancel response from Finkok');
+            throw new Error('Invalid cancel response from Finkok: missing cancelResult');
         }
 
-        // Finkok cancelResult structure might be complex, but usually existence implies success if no fault.
-        // Or check status/message inside cancelResult. For now assuming success if we got result.
+        // Validate cancelResult content
+        // Finkok returns a list of Folios with status.
+        // Example structure: { Folios: { Folio: { UUID: '...', Status: '201', ... } } }
+        // Or if single: { Folios: { Folio: { UUID: '...', Status: '201' } } }
 
-        return true;
+        let folios = cancelResult.Folios?.Folio;
+        if (!folios) {
+             // Sometimes it might be nested differently or empty if failed
+             throw new Error(`Cancellation failed or structure unknown: ${JSON.stringify(cancelResult)}`);
+        }
+
+        if (!Array.isArray(folios)) {
+            folios = [folios];
+        }
+
+        const folio = folios.find((f: any) => f.UUID === uuid);
+        if (!folio) {
+            throw new Error(`Cancellation response does not contain UUID ${uuid}`);
+        }
+
+        // Status 201 = Cancelled successfully (or request accepted)
+        // Status 202 = Cancelled previously
+        // Check Finkok docs for exact codes. Usually 201/202 are success.
+        const status = folio.EstatusUUID || folio.Status;
+
+        if (['201', '202'].includes(String(status))) {
+            return true;
+        }
+
+        throw new Error(`Cancellation failed with status: ${status} - ${folio.EstatusCancelacion || ''}`);
+
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
             throw new Error(`PAC Connection Error during cancel: ${error.message}`);

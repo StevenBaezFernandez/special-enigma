@@ -18,6 +18,7 @@ import * as crypto from 'crypto';
 @Injectable()
 export class StampPayrollUseCase {
   private readonly logger = new Logger(StampPayrollUseCase.name);
+  private readonly DEFAULT_UMA = 108.57; // 2024 UMA
 
   constructor(
     @Inject(PAYROLL_REPOSITORY) private readonly payrollRepository: PayrollRepository,
@@ -90,28 +91,65 @@ export class StampPayrollUseCase {
     const periodStartStr = formatDates(payroll.periodStart);
     const periodEndStr = formatDates(payroll.periodEnd);
 
-    const employeeName = payroll.employee ? `${payroll.employee.firstName} ${payroll.employee.lastName}` : 'Desconocido';
+    if (!payroll.employee) {
+        throw new Error('Payroll must be associated with an Employee');
+    }
+
+    const employeeName = `${payroll.employee.firstName} ${payroll.employee.lastName}`;
 
     // Categorize details
     const earnings = payroll.details.getItems().filter(d => d.type === PayrollDetailType.EARNING);
     const deductions = payroll.details.getItems().filter(d => d.type === PayrollDetailType.DEDUCTION);
 
+    // Calculate Gravado/Exento
+    const percepcionesData = earnings.map(e => {
+        const satKey = this.mapConceptToSatKey(e.concept, 'EARNING');
+        const amount = Number(e.amount);
+        let exempt = 0;
+
+        // Simple Logic for Exemptions (LISR)
+        const conceptLower = e.concept.toLowerCase();
+        if (conceptLower.includes('aguinaldo')) {
+            // Exempt up to 30 UMA
+            const limit = 30 * this.DEFAULT_UMA;
+            exempt = Math.min(amount, limit);
+        } else if (conceptLower.includes('prima vacacional')) {
+            // Exempt up to 15 UMA
+            const limit = 15 * this.DEFAULT_UMA;
+            exempt = Math.min(amount, limit);
+        }
+        // Add more rules here as needed. Default is 0 exempt.
+
+        const gravado = amount - exempt;
+
+        return {
+            key: satKey,
+            concept: e.concept,
+            gravado: gravado.toFixed(2),
+            exento: exempt.toFixed(2),
+            amount: amount.toFixed(2)
+        };
+    });
+
+    const totalGravado = percepcionesData.reduce((sum, p) => sum + Number(p.gravado), 0).toFixed(2);
+    const totalExento = percepcionesData.reduce((sum, p) => sum + Number(p.exento), 0).toFixed(2);
+
     const percepcionesNode = earnings.length > 0 ? {
-        '@_TotalSueldos': payroll.totalEarnings,
-        '@_TotalGravado': payroll.totalEarnings, // Simplifying: assuming all is taxable
-        '@_TotalExento': '0.00',
-        'nomina12:Percepcion': earnings.map(e => ({
-            '@_TipoPercepcion': this.mapConceptToSatKey(e.concept, 'EARNING'),
-            '@_Clave': '001',
+        '@_TotalSueldos': payroll.totalEarnings, // Assuming all earnings are "Sueldos" for this node attribute simplification, usually implies Gravado+Exento
+        '@_TotalGravado': totalGravado,
+        '@_TotalExento': totalExento,
+        'nomina12:Percepcion': percepcionesData.map(e => ({
+            '@_TipoPercepcion': e.key,
+            '@_Clave': '001', // Internal Key
             '@_Concepto': e.concept,
-            '@_ImporteGravado': e.amount,
-            '@_ImporteExento': '0.00'
+            '@_ImporteGravado': e.gravado,
+            '@_ImporteExento': e.exento
         }))
     } : undefined;
 
     const deduccionesNode = deductions.length > 0 ? {
         '@_TotalOtrasDeducciones': '0.00',
-        '@_TotalImpuestosRetenidos': deductions.filter(d => d.concept.includes('ISR')).reduce((sum, d) => sum + Number(d.amount), 0).toFixed(2),
+        '@_TotalImpuestosRetenidos': deductions.filter(d => d.concept.toLowerCase().includes('isr')).reduce((sum, d) => sum + Number(d.amount), 0).toFixed(2),
         'nomina12:Deduccion': deductions.map(d => ({
             '@_TipoDeduccion': this.mapConceptToSatKey(d.concept, 'DEDUCTION'),
             '@_Clave': '002',
@@ -120,7 +158,10 @@ export class StampPayrollUseCase {
         }))
     } : undefined;
 
-    const employeePostalCode = payroll.employee?.postalCode || tenantConfig.postalCode;
+    const employeePostalCode = payroll.employee.postalCode || tenantConfig.postalCode;
+    if (!payroll.employee.curp) {
+        throw new Error(`Employee ${payroll.employee.id} missing CURP. Cannot stamp.`);
+    }
 
     const xmlObj = {
         'cfdi:Comprobante': {
@@ -131,7 +172,7 @@ export class StampPayrollUseCase {
             '@_Version': '4.0',
             '@_Serie': 'NOM',
             '@_Folio': payroll.id.substring(0, 8),
-            '@_Fecha': new Date().toISOString().split('.')[0], // Should be local time
+            '@_Fecha': new Date().toISOString().split('.')[0],
             '@_Sello': '',
             '@_NoCertificado': tenantConfig.certificateNumber,
             '@_Certificado': tenantConfig.csdCertificate,
@@ -141,7 +182,7 @@ export class StampPayrollUseCase {
             '@_Total': payroll.netPay,
             '@_TipoDeComprobante': 'N',
             '@_Exportacion': '01',
-            '@_MetodoPago': 'PUE', // Nomina is always PUE
+            '@_MetodoPago': 'PUE',
             '@_LugarExpedicion': tenantConfig.postalCode,
             'cfdi:Emisor': {
                 '@_Rfc': tenantConfig.rfc,
@@ -149,9 +190,9 @@ export class StampPayrollUseCase {
                 '@_RegimenFiscal': tenantConfig.regime
             },
             'cfdi:Receptor': {
-                '@_Rfc': payroll.employee?.rfc || 'XAXX010101000',
+                '@_Rfc': payroll.employee.rfc || 'XAXX010101000',
                 '@_Nombre': employeeName,
-                '@_DomicilioFiscalReceptor': employeePostalCode, // Fallback
+                '@_DomicilioFiscalReceptor': employeePostalCode,
                 '@_RegimenFiscalReceptor': '605',
                 '@_UsoCFDI': 'CN01'
             },
@@ -174,18 +215,18 @@ export class StampPayrollUseCase {
                     '@_FechaPago': paymentDateStr,
                     '@_FechaInicialPago': periodStartStr,
                     '@_FechaFinalPago': periodEndStr,
-                    '@_NumDiasPagados': '15.000',
+                    '@_NumDiasPagados': '15.000', // Should be calculated
                     '@_TotalPercepciones': payroll.totalEarnings,
                     '@_TotalDeducciones': payroll.totalDeductions,
                     'nomina12:Percepciones': percepcionesNode,
                     'nomina12:Deducciones': deduccionesNode,
                     'nomina12:Receptor': {
-                        '@_Curp': payroll.employee?.curp || 'AAA010101AAA000000', // Mock fallback if missing
-                        '@_TipoContrato': '01',
-                        '@_TipoRegimen': '02',
-                        '@_NumEmpleado': payroll.employee?.id.substring(0, 10),
-                        '@_PeriodicidadPago': '04', // Quincenal
-                        '@_ClaveEntFed': 'CMX'
+                        '@_Curp': payroll.employee.curp,
+                        '@_TipoContrato': payroll.employee.contractType || '01',
+                        '@_TipoRegimen': payroll.employee.regimeType || '02',
+                        '@_NumEmpleado': payroll.employee.id.substring(0, 10),
+                        '@_PeriodicidadPago': payroll.employee.periodicity || '04',
+                        '@_ClaveEntFed': 'CMX' // Hardcoded for now, should come from State of Address
                     }
                 }
             }
@@ -222,7 +263,8 @@ export class StampPayrollUseCase {
       if (type === 'EARNING') {
           if (c.includes('sueldo') || c.includes('salario')) return '001';
           if (c.includes('aguinaldo')) return '002';
-          return '001'; // Default
+          if (c.includes('vacacional')) return '020'; // Prima Vacacional
+          return '038'; // Otros
       } else {
           if (c.includes('isr')) return '002';
           if (c.includes('imss') || c.includes('seguro')) return '001';
