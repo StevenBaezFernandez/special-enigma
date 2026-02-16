@@ -35,7 +35,9 @@ export class PayrollCalculationService {
   async calculateIsr(taxableIncome: number, year: number, country = 'MX', periodType: 'MONTHLY' | 'ANNUAL' = 'MONTHLY', options?: Record<string, any>): Promise<number> {
       const strategy = this.strategyFactory.getStrategy(country);
       const date = new Date(year, 0, 1);
-      return strategy.calculateTax(taxableIncome, date, periodType, options);
+      // Pass country in options so generic strategy knows which country context applies
+      const taxOptions = { ...options, country, countryCode: country };
+      return strategy.calculateTax(taxableIncome, date, periodType, taxOptions);
   }
 
   /**
@@ -65,6 +67,8 @@ export class PayrollCalculationService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async calculatePayrollTaxes(income: number, country: string, date: Date, frequency = 'MONTHLY', options?: Record<string, any>): Promise<PayrollTaxesResult> {
       const strategy = this.strategyFactory.getStrategy(country);
-      return strategy.calculatePayrollTaxes(income, date, frequency, options);
+      // Pass country in options so generic strategy knows which country context applies
+      const taxOptions = { ...options, country, countryCode: country };
+      return strategy.calculatePayrollTaxes(income, date, frequency, taxOptions);
   }
 }

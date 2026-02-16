@@ -20,6 +20,7 @@ import { MikroOrmTaxTableRepository } from './repositories/mikro-orm-tax-table.r
 import { MikroOrmAttendanceRepository } from './repositories/mikro-orm-attendance.repository';
 import { MexicanTaxStrategy } from './strategies/mexican-tax.strategy';
 import { USPayrollStrategy } from './strategies/us-payroll.strategy';
+import { GenericLatamStrategy } from './strategies/generic-latam.strategy';
 import { TaxStrategyFactoryImpl } from './factories/tax-strategy.factory';
 import { FinkokPacProvider } from './providers/finkok-pac.provider';
 import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
@@ -36,6 +37,7 @@ import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-
     { provide: TENANT_CONFIG_REPOSITORY, useClass: MikroOrmTenantConfigRepository },
     MexicanTaxStrategy,
     USPayrollStrategy,
+    GenericLatamStrategy,
     { provide: TAX_STRATEGY_FACTORY, useClass: TaxStrategyFactoryImpl }
   ],
   exports: [
@@ -47,7 +49,8 @@ import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-
     TENANT_CONFIG_REPOSITORY,
     TAX_STRATEGY_FACTORY,
     MexicanTaxStrategy,
-    USPayrollStrategy
+    USPayrollStrategy,
+    GenericLatamStrategy
   ],
 })
 export class PayrollInfrastructureModule {}

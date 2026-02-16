@@ -10,16 +10,18 @@ export class MikroOrmTaxTableRepository implements TaxTableRepository {
     private readonly repository: EntityRepository<TaxTable>
   ) {}
 
-  async findForYear(year: number, type: string): Promise<TaxTable[]> {
-    // Assuming TaxTable has a 'type' field or similar logic.
-    // If not, we might filter in memory or modify entity.
-    // But let's assume filtering by year is enough for now or assume entity structure.
-    // The previous implementation used findOne({ year }).
+  async findForYear(year: number, type: string, country = 'MX', state?: string): Promise<TaxTable[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const where: any = { year, type, country };
 
-    // For now, let's return array.
-    // Ideally, TaxTable should have type field. If not, we ignore type filter or check schema.
+    if (state) {
+      where.state = state;
+    } else {
+      // Explicitly look for null state (federal/national level) if no state provided
+      where.state = null;
+    }
 
-    return this.repository.find({ year } as any);
+    return this.repository.find(where);
   }
 
   // Extra method not in interface but useful for seeding/tests

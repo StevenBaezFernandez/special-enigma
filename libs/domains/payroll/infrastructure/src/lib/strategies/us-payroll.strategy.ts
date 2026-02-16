@@ -1,15 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { TaxService, PayrollTaxesResult } from '@virteex/payroll-domain';
+import { Injectable, Inject, Logger } from '@nestjs/common';
+import { TaxService, PayrollTaxesResult, TaxTableRepository, TAX_TABLE_REPOSITORY, TaxTable } from '@virteex/payroll-domain';
+import { Decimal } from 'decimal.js';
 
 @Injectable()
 export class USPayrollStrategy implements TaxService {
   private readonly logger = new Logger(USPayrollStrategy.name);
 
+  constructor(
+    @Inject(TAX_TABLE_REPOSITORY)
+    private readonly repository: TaxTableRepository,
+  ) {}
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async calculateTax(taxableIncome: number, date: Date, frequency = 'MONTHLY', options?: Record<string, any>): Promise<number> {
     const result = await this.calculatePayrollTaxes(taxableIncome, date, frequency, options);
-    // Return only Federal Tax for backward compatibility if needed, or total?
-    // Usually calculateTax implies Income Tax.
     const federal = result.details.find(d => d.name === 'Federal Income Tax');
     return federal ? federal.amount : 0;
   }
@@ -17,8 +21,7 @@ export class USPayrollStrategy implements TaxService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async calculatePayrollTaxes(taxableIncome: number, date: Date, frequency = 'MONTHLY', options?: Record<string, any>): Promise<PayrollTaxesResult> {
     // Simplified US Federal Tax calculation (Single Filer 2024 approximation)
-    // Assuming taxableIncome is for the period.
-    // We need to annualize it to apply brackets correctly.
+    // We keep the hardcoded logic for Federal as a baseline, but ideally this should also be table-driven.
 
     let periods = 12;
     if (frequency === 'WEEKLY') periods = 52;
@@ -36,32 +39,45 @@ export class USPayrollStrategy implements TaxService {
     } else if (annualIncome <= 100525) {
       annualFederalTax = 11600 * 0.10 + (35550 * 0.12) + (annualIncome - 47150) * 0.22;
     } else {
-      // Simplified cap at 24% for higher brackets
       annualFederalTax = 11600 * 0.10 + (35550 * 0.12) + (53375 * 0.22) + (annualIncome - 100525) * 0.24;
     }
 
     const federalTax = parseFloat((annualFederalTax / periods).toFixed(2));
 
     // FICA
-    // Social Security: 6.2% up to $168,600 (2024 limit)
     const ssRate = 0.062;
     const ssLimit = 168600;
-    // Note: In real world, we track YTD. Here we assume per-period isolation for simplicity or assume constant salary.
     const socialSecurity = parseFloat((Math.min(taxableIncome, ssLimit/periods) * ssRate).toFixed(2));
 
-    // Medicare: 1.45% (no limit)
     const medicareRate = 0.0145;
     const medicare = parseFloat((taxableIncome * medicareRate).toFixed(2));
 
-    // State Tax
-    let stateTaxRate = 0;
-    if (options && typeof options['stateTaxRate'] === 'number') {
-        stateTaxRate = options['stateTaxRate'];
-    } else {
-        this.logger.warn('State Tax Rate not provided in options. Defaulting to 0% to avoid incorrect taxation.');
-    }
+    // State Tax Logic
+    let stateTax = 0;
+    let stateRate = 0;
+    const stateCode = options?.['state']; // e.g., 'CA', 'NY'
 
-    const stateTax = parseFloat((taxableIncome * stateTaxRate).toFixed(2));
+    if (stateCode) {
+        // Try to find state tax table
+        const tables = await this.repository.findForYear(date.getFullYear(), frequency.toUpperCase(), 'US', stateCode);
+
+        if (tables && tables.length > 0) {
+            // Calculate using progressive table
+            stateTax = this.calculateProgressiveTax(taxableIncome, tables);
+        } else {
+             // Fallback to configured rate in options
+             if (options && typeof options['stateTaxRate'] === 'number') {
+                stateRate = options['stateTaxRate'];
+                stateTax = parseFloat((taxableIncome * stateRate).toFixed(2));
+             } else {
+                 this.logger.warn(`No tax table found for US State ${stateCode} and no stateTaxRate provided.`);
+             }
+        }
+    } else if (options && typeof options['stateTaxRate'] === 'number') {
+        // Backward compatibility
+        stateRate = options['stateTaxRate'];
+        stateTax = parseFloat((taxableIncome * stateRate).toFixed(2));
+    }
 
     const totalTax = federalTax + socialSecurity + medicare + stateTax;
 
@@ -71,8 +87,30 @@ export class USPayrollStrategy implements TaxService {
         { name: 'Federal Income Tax', amount: federalTax },
         { name: 'Social Security', amount: socialSecurity, rate: ssRate },
         { name: 'Medicare', amount: medicare, rate: medicareRate },
-        { name: 'State Tax (Est.)', amount: stateTax, rate: stateTaxRate }
+        { name: 'State Tax', amount: stateTax, rate: stateRate } // Rate might be 0 if table used
       ]
     };
+  }
+
+  private calculateProgressiveTax(incomeVal: number, tables: TaxTable[]): number {
+      const income = new Decimal(incomeVal);
+      if (income.lessThanOrEqualTo(0)) return 0;
+
+      // Sort tables by limit DESC
+      tables.sort((a, b) => Number(b.limit) - Number(a.limit));
+
+      let row = tables[tables.length - 1];
+      for (const table of tables) {
+        if (income.greaterThanOrEqualTo(table.limit)) {
+          row = table;
+          break;
+        }
+      }
+
+      const excess = income.minus(row.limit);
+      const taxOnExcess = excess.times(row.percent).dividedBy(100);
+      const totalTax = taxOnExcess.plus(row.fixed);
+
+      return totalTax.toDecimalPlaces(2).toNumber();
   }
 }
