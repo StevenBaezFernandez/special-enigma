@@ -1,25 +1,24 @@
 {
-  "COMMON": {
-    "LOADING": "Cargando...",
-    "ERROR": "Error",
-    "SUCCESS": "Éxito"
-  },
-  "POS": {
-    "SEARCH_PLACEHOLDER": "Buscar productos por nombre o SKU...",
-    "CURRENT_ORDER": "Orden Actual",
-    "CLIENT_LABEL": "Cliente",
-    "NO_CUSTOMERS": "No hay clientes",
-    "NO_ITEMS": "No hay artículos en el carrito",
-    "EMPTY_CART_MESSAGE": "Añade productos para comenzar una venta.",
-    "SUBTOTAL": "Subtotal",
-    "TAX": "Impuestos",
-    "TOTAL": "Total a Pagar",
-    "COMPLETE_SALE": "Completar Venta",
-    "PAY": "Cobrar",
-    "SALE_SUCCESS": "Venta realizada con éxito",
-    "SALE_ERROR": "Error al procesar la venta",
-    "PRODUCTS_LOAD_ERROR": "Error al cargar productos",
-    "CUSTOMERS_LOAD_ERROR": "Error al cargar clientes",
-    "SELECT_CUSTOMER": "Seleccionar Cliente"
-  }
+    "INVOICE": {
+        "NEW_TITLE": "Crear Nueva Factura",
+        "CANCEL": "Cancelar",
+        "SAVE": "Guardar Factura",
+        "CLIENT": "Cliente",
+        "SELECT_CLIENT": "Seleccionar cliente",
+        "ISSUE_DATE": "Fecha de Emisión",
+        "DUE_DATE": "Fecha de Vencimiento",
+        "PAYMENT_FORM": "Forma de Pago",
+        "PAYMENT_METHOD": "Método de Pago",
+        "USAGE": "Uso de CFDI",
+        "SELECT_PRODUCT": "Seleccionar producto",
+        "QUANTITY": "Cantidad",
+        "PRICE": "Precio",
+        "TAX_RATE": "Tasa Imp.",
+        "ADD_LINE": "+ Agregar Línea",
+        "SUBTOTAL": "Subtotal",
+        "TAXES": "Impuestos",
+        "TOTAL": "Total",
+        "NOTES": "Notas",
+        "STOCK_ERROR": "Stock insuficiente"
+    }
 }

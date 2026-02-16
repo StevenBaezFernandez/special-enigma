@@ -20,17 +20,17 @@ export class JwtAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization;
     if (!authHeader) {
-      throw new UnauthorizedException('No token provided');
+      throw new UnauthorizedException('Missing Authorization Header');
     }
 
     const token = authHeader.split(' ')[1];
     if (!token) {
-      throw new UnauthorizedException('Invalid token format');
+      throw new UnauthorizedException('Invalid Token Format');
     }
 
     const secret = this.configService.get<string>('JWT_SECRET');
     if (!secret) {
-      throw new Error('JWT_SECRET is not defined');
+      throw new Error('JWT_SECRET is not defined in configuration');
     }
 
     try {
@@ -38,7 +38,7 @@ export class JwtAuthGuard implements CanActivate {
       request.user = payload;
       return true;
     } catch (err) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Invalid or Expired Token');
     }
   }
 }

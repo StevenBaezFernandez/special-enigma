@@ -1,5 +1,5 @@
-import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from '@mikro-orm/core';
 import { TaxRule } from '../../../../domain/src/lib/entities/tax-rule.entity';
 import { TaxRuleRepository } from '../../../../domain/src/lib/repositories/tax-rule.repository';
 
@@ -24,7 +24,7 @@ export class MikroOrmTaxRuleRepository implements TaxRuleRepository {
     const rules = [
       new TaxRule(tenantId, 'IVA 16%', 'IVA', '0.1600', 'General'),
       new TaxRule(tenantId, 'ISR Retención 10%', 'ISR_RET', '0.1000', 'Professional Services'),
-      new TaxRule(tenantId, 'IVA Retención 10.6667%', 'IVA_RET', '0.1066', 'Professional Services'), // Approx
+      new TaxRule(tenantId, 'IVA Retención 10.6667%', 'IVA_RET', '0.1066', 'Professional Services'),
     ];
 
     for (const rule of rules) {

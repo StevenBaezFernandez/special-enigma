@@ -1,18 +1,19 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { TaxTableRepository, TAX_TABLE_REPOSITORY } from '../repositories/tax-table.repository';
-import { TaxTable } from '../entities/tax-table.entity';
+import { TaxStrategyFactory, TAX_STRATEGY_FACTORY } from '../ports/tax-strategy.factory';
+import { PayrollTaxesResult } from '../ports/tax-service.port';
 
 @Injectable()
 export class PayrollCalculationService {
   private readonly logger = new Logger(PayrollCalculationService.name);
 
   constructor(
-    @Inject(TAX_TABLE_REPOSITORY) private readonly taxTableRepo: TaxTableRepository
+    @Inject(TAX_STRATEGY_FACTORY) private readonly strategyFactory: TaxStrategyFactory
   ) {}
 
   /**
    * Calculates the proportional salary for a given period, considering incidences.
    * Uses standard daily salary (monthly / 30) as per Mexican labor law common practice.
+   * @todo Refactor to be configurable per country/tenant policy.
    */
   calculateProportionalSalary(monthlySalary: number, start: Date, end: Date, incidenceDays = 0): number {
     const daysInPeriod = this.calculateDays(start, end);
@@ -30,58 +31,37 @@ export class PayrollCalculationService {
     return Math.round(Math.abs((end.getTime() - start.getTime()) / oneDay)) + 1;
   }
 
-  async calculateIsr(taxableIncome: number, year: number, periodType: 'MONTHLY' | 'ANNUAL' = 'MONTHLY'): Promise<number> {
-      const tables = await this.taxTableRepo.findForYear(year, periodType);
-      if (!tables || tables.length === 0) {
-          this.logger.warn(`No ISR tables found for year ${year}. Returning 0.`);
+  async calculateIsr(taxableIncome: number, year: number, country: string = 'MX', periodType: 'MONTHLY' | 'ANNUAL' = 'MONTHLY'): Promise<number> {
+      const strategy = this.strategyFactory.getStrategy(country);
+      const date = new Date(year, 0, 1);
+      return strategy.calculateTax(taxableIncome, date, periodType);
+  }
+
+  calculateImss(sbc: number, days: number = 15, uma: number = 108.57, country: string = 'MX'): number {
+      // This is legacy/specific to Mexico.
+      // Ideally should be handled by calculatePayrollTaxes strategy.
+      if (country !== 'MX') {
+          this.logger.warn(`calculateImss called for non-MX country: ${country}. Returning 0.`);
           return 0;
       }
 
-      const sortedTables = tables.sort((a, b) => Number(a.limit) - Number(b.limit));
-      let applicableRow: TaxTable | null = null;
-
-      for (const row of sortedTables) {
-          if (Number(row.limit) <= taxableIncome) {
-              applicableRow = row;
-          } else {
-              break;
-          }
-      }
-
-      if (!applicableRow) return 0;
-
-      const base = taxableIncome - Number(applicableRow.limit);
-      const tax = Number(applicableRow.fixed) + (base * Number(applicableRow.percent) / 100);
-
-      return Number(tax.toFixed(2));
-  }
-
-  calculateImss(sbc: number, days: number = 15, uma: number = 108.57): number {
       const sbcTotal = sbc * days;
-      // Base quotas (Employee share)
-      // Enf. Mat. (Dinero): 0.25%
-      // Inv. Vida: 0.625%
-      // Cesantía/Vejez: 1.125%
-      // Total Base: 2.000% (Wait, commonly cited as ~2.375% includes Excendente?)
-
-      // Let's use precise:
-      // Gastos Médicos (Excedente 3 UMA): 0.40%
-      // Prestaciones en Dinero: 0.25%
-      // Pensiones y Beneficiarios: 0.375%
-      // Invalidez y Vida: 0.625%
-      // Cesantía y Vejez: 1.125%
-
-      // Sum without Excedente: 0.25 + 0.375 + 0.625 + 1.125 = 2.375%
-      // Yes, 2.375% is correct for base up to limit.
-
       let imss = sbcTotal * 0.02375;
 
       const limitExcedente = 3 * uma;
       if (sbc > limitExcedente) {
           const excedente = (sbc - limitExcedente) * days;
-          imss += excedente * 0.004; // 0.40% additional
+          imss += excedente * 0.004;
       }
 
       return Number(imss.toFixed(2));
+  }
+
+  /**
+   * Unified method to calculate all payroll taxes/deductions based on country strategy.
+   */
+  async calculatePayrollTaxes(income: number, country: string, date: Date, frequency: string = 'MONTHLY'): Promise<PayrollTaxesResult> {
+      const strategy = this.strategyFactory.getStrategy(country);
+      return strategy.calculatePayrollTaxes(income, date, frequency);
   }
 }

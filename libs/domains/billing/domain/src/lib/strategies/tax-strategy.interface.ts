@@ -4,7 +4,7 @@ export interface TaxResult {
 }
 
 export interface TaxDetail {
-  taxType: string; // IVA, ISR, IEPS, ICMS, etc.
+  taxType: string;
   rate: number;
   amount: number;
 }

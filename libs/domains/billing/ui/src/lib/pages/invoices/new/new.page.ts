@@ -15,11 +15,12 @@ import { SatCatalogService, SatCatalogItem } from '../../../../../../shared/ui/s
 import { Customer } from '../../../core/models/customer.model';
 import { Product } from '../../../core/models/product.model';
 import { NotificationService } from '../../../core/services/notification';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'virteex-new-invoice-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './new.page.html',
   styleUrls: ['./new.page.scss'],
 })
@@ -31,6 +32,7 @@ export class NewInvoicePage implements OnInit {
   private inventoryService = inject(InventoryService);
   private notificationService = inject(NotificationService);
   private satCatalogService = inject(SatCatalogService);
+  private translate = inject(TranslateService);
 
   invoiceForm: FormGroup;
   customers: Customer[] = [];
@@ -40,17 +42,22 @@ export class NewInvoicePage implements OnInit {
   paymentMethods: SatCatalogItem[] = [];
   cfdiUsages: SatCatalogItem[] = [];
 
+  isMexicanCustomer = false;
+
   constructor() {
     this.invoiceForm = this.fb.group({
       customerId: ['', Validators.required],
       issueDate: [new Date().toISOString().split('T')[0], Validators.required],
       dueDate: ['', Validators.required],
-      paymentForm: ['03', Validators.required],
-      paymentMethod: ['PUE', Validators.required],
-      usage: ['G03', Validators.required],
+      paymentForm: [{ value: '03', disabled: true }, Validators.required],
+      paymentMethod: [{ value: 'PUE', disabled: true }, Validators.required],
+      usage: [{ value: 'G03', disabled: true }, Validators.required],
       notes: [''],
       lineItems: this.fb.array([this.createLineItem()]),
     });
+    // Set default language
+    this.translate.setDefaultLang('es');
+    this.translate.use('es');
   }
 
   ngOnInit(): void {
@@ -100,9 +107,33 @@ export class NewInvoicePage implements OnInit {
       this.lineItems.at(index).patchValue({
         description: selectedProduct.name,
         price: selectedProduct.price,
-        taxRate: 0.16 // Could be fetched from product category in future
+        taxRate: 0.16
       });
     }
+  }
+
+  onCustomerChange(): void {
+      const customerId = this.invoiceForm.get('customerId')?.value;
+      const customer = this.customers.find(c => c.id === customerId);
+
+      if (customer) {
+          const country = (customer.country || 'MX').toUpperCase();
+          this.isMexicanCustomer = (country === 'MX' || country === 'MEXICO');
+
+          const pfControl = this.invoiceForm.get('paymentForm');
+          const pmControl = this.invoiceForm.get('paymentMethod');
+          const usageControl = this.invoiceForm.get('usage');
+
+          if (this.isMexicanCustomer) {
+              pfControl?.enable();
+              pmControl?.enable();
+              usageControl?.enable();
+          } else {
+              pfControl?.disable();
+              pmControl?.disable();
+              usageControl?.disable();
+          }
+      }
   }
 
   get totals() {
@@ -126,7 +157,6 @@ export class NewInvoicePage implements OnInit {
     };
   }
 
-  // Validator to check stock
   validateStock(index: number): boolean {
       const control = this.lineItems.at(index);
       const productId = control.get('productId')?.value;
@@ -147,7 +177,6 @@ export class NewInvoicePage implements OnInit {
       return;
     }
 
-    // Validate stock for all items explicitly
     for (let i = 0; i < this.lineItems.length; i++) {
         if (!this.validateStock(i)) {
             this.notificationService.showError(`Stock insuficiente para el producto en la línea ${i + 1}`);
@@ -157,7 +186,6 @@ export class NewInvoicePage implements OnInit {
 
     const formValue = this.invoiceForm.getRawValue();
 
-    // Explicit typing
     const items = formValue.lineItems.map((item: { productId: string; quantity: number; price: number; description: string; taxRate: number }) => ({
         productId: item.productId,
         quantity: item.quantity,

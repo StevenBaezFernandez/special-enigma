@@ -1,25 +1,24 @@
 {
-  "COMMON": {
-    "LOADING": "Loading...",
-    "ERROR": "Error",
-    "SUCCESS": "Success"
-  },
-  "POS": {
-    "SEARCH_PLACEHOLDER": "Search products by name or SKU...",
-    "CURRENT_ORDER": "Current Order",
-    "CLIENT_LABEL": "Customer",
-    "NO_CUSTOMERS": "No customers",
-    "NO_ITEMS": "No items in cart",
-    "EMPTY_CART_MESSAGE": "Add products to start a sale.",
-    "SUBTOTAL": "Subtotal",
-    "TAX": "Tax",
-    "TOTAL": "Total to Pay",
-    "COMPLETE_SALE": "Complete Sale",
-    "PAY": "Pay",
-    "SALE_SUCCESS": "Sale completed successfully",
-    "SALE_ERROR": "Error processing sale",
-    "PRODUCTS_LOAD_ERROR": "Error loading products",
-    "CUSTOMERS_LOAD_ERROR": "Error loading customers",
-    "SELECT_CUSTOMER": "Select Customer"
-  }
+    "INVOICE": {
+        "NEW_TITLE": "Create New Invoice",
+        "CANCEL": "Cancel",
+        "SAVE": "Save Invoice",
+        "CLIENT": "Customer",
+        "SELECT_CLIENT": "Select customer",
+        "ISSUE_DATE": "Issue Date",
+        "DUE_DATE": "Due Date",
+        "PAYMENT_FORM": "Payment Form",
+        "PAYMENT_METHOD": "Payment Method",
+        "USAGE": "CFDI Usage",
+        "SELECT_PRODUCT": "Select product",
+        "QUANTITY": "Quantity",
+        "PRICE": "Price",
+        "TAX_RATE": "Tax Rate",
+        "ADD_LINE": "+ Add Line Item",
+        "SUBTOTAL": "Subtotal",
+        "TAXES": "Taxes",
+        "TOTAL": "Total",
+        "NOTES": "Notes",
+        "STOCK_ERROR": "Insufficient stock"
+    }
 }

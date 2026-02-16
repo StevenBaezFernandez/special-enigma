@@ -1,12 +1,11 @@
-import { TaxStrategy, TaxResult } from './tax-strategy.interface';
+import { Injectable } from '@nestjs/common';
+import { TaxStrategy, TaxResult } from '../../../../domain/src/lib/strategies/tax-strategy.interface';
 
+@Injectable()
 export class BrTaxStrategy implements TaxStrategy {
   async calculate(amount: number): Promise<TaxResult> {
-    // Brazil taxes are complex and depend on state/product.
-    // This is a structured example demonstrating capability for multiple taxes.
-
-    const icmsRate = 0.18; // ICMS standard (varies by state)
-    const ipiRate = 0.05;  // IPI (varies by product)
+    const icmsRate = 0.18;
+    const ipiRate = 0.05;
 
     const icmsAmount = amount * icmsRate;
     const ipiAmount = amount * ipiRate;

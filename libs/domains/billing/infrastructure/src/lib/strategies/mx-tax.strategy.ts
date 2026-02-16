@@ -4,11 +4,10 @@ import { TaxRuleEngine } from '../services/tax-rule.engine';
 export class MxTaxStrategy implements TaxStrategy {
   constructor(private readonly taxRuleEngine: TaxRuleEngine) {}
 
-  async calculate(amount: number): Promise<TaxResult> {
-    const rules = await this.taxRuleEngine.getApplicableRules('MX');
+  async calculate(amount: number, tenantId: string): Promise<TaxResult> {
+    const rules = await this.taxRuleEngine.getApplicableRules('MX', tenantId);
 
     if (!rules || rules.length === 0) {
-        // Fallback or throw error? For now fallback to 0 to avoid breaking if no rules seeded.
         return { totalTax: 0, details: [] };
     }
 
