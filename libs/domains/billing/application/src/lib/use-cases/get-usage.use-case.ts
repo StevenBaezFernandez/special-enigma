@@ -26,7 +26,7 @@ export class GetUsageUseCase {
   ) {}
 
   async execute(tenantId: string): Promise<UsageItem[]> {
-    const invoices = await this.invoiceRepository.findByTenantId(tenantId);
+    const invoiceCount = await this.invoiceRepository.countByTenantId(tenantId);
     const subscription = await this.subscriptionRepository.findByTenantId(tenantId);
 
     // Default Limits if no subscription (e.g., Free Tier or Trial fallback)
@@ -45,7 +45,7 @@ export class GetUsageUseCase {
 
     return [{
       resource: 'Invoices',
-      used: invoices.length,
+      used: invoiceCount,
       limit: isUnlimited ? Infinity : limits.invoices,
       type: 'numeric',
       isUnlimited: isUnlimited,

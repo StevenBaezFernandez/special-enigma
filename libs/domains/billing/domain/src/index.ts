@@ -1,4 +1,5 @@
 export * from './lib/entities/invoice.entity';
+export * from './lib/entities/invoice-item.entity';
 export * from './lib/entities/tax-line.entity';
 export * from './lib/entities/tax-rule.entity';
 export * from './lib/entities/subscription.entity';
