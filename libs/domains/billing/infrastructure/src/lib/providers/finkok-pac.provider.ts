@@ -94,9 +94,16 @@ export class FinkokPacProvider implements PacProvider {
            throw new Error('Unknown response format from Finkok');
         }
 
-      } catch (error: any) {
-        this.logger.warn(`Finkok stamp attempt ${attempt} failed: ${error.message}`);
-        lastError = error;
+      } catch (error: unknown) {
+        let errorMessage = 'Unknown error';
+        if (axios.isAxiosError(error)) {
+            errorMessage = error.message;
+        } else if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+
+        this.logger.warn(`Finkok stamp attempt ${attempt} failed: ${errorMessage}`);
+        lastError = error instanceof Error ? error : new Error(errorMessage);
         if (attempt < 3) {
             await new Promise(resolve => setTimeout(resolve, attempt * 1000));
         }
@@ -159,7 +166,7 @@ export class FinkokPacProvider implements PacProvider {
         // Or check status/message inside cancelResult. For now assuming success if we got result.
 
         return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
             throw new Error(`PAC Connection Error during cancel: ${error.message}`);
         }
