@@ -1,12 +1,13 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Invoice } from '../entities/invoice.entity';
-import { PacProvider, PAC_PROVIDER, FiscalStamp } from '../ports/pac-provider.port';
+import { FiscalStamp } from '../ports/pac-provider.port';
 import { TenantConfigRepository, TENANT_CONFIG_REPOSITORY } from '../ports/tenant-config.port';
+import { PacStrategyFactory, PAC_STRATEGY_FACTORY } from '../ports/pac-strategy.factory';
 
 @Injectable()
 export class FiscalStampingService {
   constructor(
-    @Inject(PAC_PROVIDER) private readonly pacProvider: PacProvider,
+    @Inject(PAC_STRATEGY_FACTORY) private readonly pacStrategyFactory: PacStrategyFactory,
     @Inject(TENANT_CONFIG_REPOSITORY) private readonly tenantConfigRepo: TenantConfigRepository
   ) {}
 
@@ -14,12 +15,14 @@ export class FiscalStampingService {
     const tenantConfig = await this.tenantConfigRepo.getFiscalConfig(invoice.tenantId);
     const xml = this.generateXml(invoice, tenantConfig.rfc);
 
-    return await this.pacProvider.stamp(xml);
+    const provider = this.pacStrategyFactory.getProvider(tenantConfig.country);
+    return await provider.stamp(xml);
   }
 
   async cancelInvoice(uuid: string, tenantId: string): Promise<boolean> {
     const tenantConfig = await this.tenantConfigRepo.getFiscalConfig(tenantId);
-    return await this.pacProvider.cancel(uuid, tenantConfig.rfc);
+    const provider = this.pacStrategyFactory.getProvider(tenantConfig.country);
+    return await provider.cancel(uuid, tenantConfig.rfc);
   }
 
   private generateXml(invoice: Invoice, rfc: string): string {

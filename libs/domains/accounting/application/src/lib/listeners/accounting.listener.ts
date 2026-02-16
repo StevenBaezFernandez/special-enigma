@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { RecordJournalEntryUseCase } from '../use-cases/record-journal-entry.use-case';
-import { AccountRepository, ACCOUNT_REPOSITORY } from '../../../../domain/src/index';
+import { AccountRepository, ACCOUNT_REPOSITORY } from '@virteex/accounting-domain';
 // Remove imports to avoid build cycles/rootDir issues
 // import { InvoiceStampedEvent } from '@virteex/billing-domain';
 // import { PayrollStampedEvent } from '@virteex/payroll-domain';

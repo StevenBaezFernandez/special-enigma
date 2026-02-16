@@ -1,5 +1,6 @@
 export interface TenantFiscalConfig {
   rfc: string;
+  country: string;
   csdCertificate?: string;
   csdKey?: string;
 }

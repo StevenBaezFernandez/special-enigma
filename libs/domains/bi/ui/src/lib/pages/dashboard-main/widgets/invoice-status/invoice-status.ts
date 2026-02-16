@@ -1,12 +1,11 @@
 import {
   Component, Input, computed, signal, inject, effect,
-  ChangeDetectionStrategy, untracked, ElementRef, HostListener, PLATFORM_ID
+  ChangeDetectionStrategy, untracked, ElementRef, HostListener, PLATFORM_ID, OnInit
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HighchartsChartComponent } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
 
-// Se importan los módulos ESM directamente para sus efectos secundarios.
 import 'highcharts/modules/exporting';
 import 'highcharts/modules/export-data';
 import 'highcharts/modules/accessibility';
@@ -20,6 +19,7 @@ import {
 import { DashboardWidget, DashboardService, ChartType } from '../../../../core/services/dashboard';
 import { BrandingService } from '../../../../core/services/branding';
 import { PointOptionsObject } from 'highcharts';
+import { BiService, InvoiceStatusSummary } from '../../../../services/bi.service';
 
 type ExportingChart = Highcharts.Chart & {
   print: () => void;
@@ -37,7 +37,7 @@ type ExportingChart = Highcharts.Chart & {
   styleUrls: ['./invoice-status.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InvoiceStatus {
+export class InvoiceStatus implements OnInit {
   @Input({ required: true }) widget!: DashboardWidget;
   @Input() isEditMode = false;
 
@@ -45,6 +45,7 @@ export class InvoiceStatus {
   private brandingService = inject(BrandingService);
   private hostEl = inject(ElementRef<HTMLElement>);
   private platformId = inject(PLATFORM_ID);
+  private biService = inject(BiService);
 
   // Íconos
   protected readonly SettingsIcon = Settings;
@@ -60,6 +61,7 @@ export class InvoiceStatus {
   // Estado UI
   isSettingsOpen = signal(false);
   isExportMenuOpen = signal(false);
+  invoiceData = signal<InvoiceStatusSummary | null>(null);
 
   chartRef?: Highcharts.Chart;
   private get chart(): ExportingChart | undefined {
@@ -73,6 +75,15 @@ export class InvoiceStatus {
       }
     });
   });
+
+  ngOnInit() {
+      if (isPlatformBrowser(this.platformId)) {
+        this.biService.getInvoiceStatus().subscribe({
+            next: d => this.invoiceData.set(d),
+            error: err => console.error('Error fetching invoice status', err)
+        });
+      }
+  }
 
   // Opciones reactivas
   chartOptions = computed<Highcharts.Options>(() => {
@@ -88,10 +99,15 @@ export class InvoiceStatus {
     };
     const seriesColors = this.widget.data?.seriesColors || defaultColors;
 
-    const data = [
-      { name: 'Pagadas', y: 70, color: seriesColors.pagadas },
-      { name: 'Pendientes', y: 20, color: seriesColors.pendientes },
-      { name: 'Vencidas', y: 10, color: seriesColors.vencidas }
+    const d = this.invoiceData();
+    const data = d ? [
+      { name: 'Pagadas', y: d.paid, color: seriesColors.pagadas },
+      { name: 'Pendientes', y: d.pending, color: seriesColors.pendientes },
+      { name: 'Vencidas', y: d.overdue, color: seriesColors.vencidas }
+    ] : [
+      { name: 'Pagadas', y: 0, color: seriesColors.pagadas },
+      { name: 'Pendientes', y: 0, color: seriesColors.pendientes },
+      { name: 'Vencidas', y: 0, color: seriesColors.vencidas }
     ];
 
     const baseOptions: Highcharts.Options = {

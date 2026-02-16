@@ -13,3 +13,4 @@ export enum CashFlowType { INFLOW = 'INFLOW', OUTFLOW = 'OUTFLOW' }
 export enum BankAccountType { CHECKING = 'CHECKING', SAVINGS = 'SAVINGS', CREDIT = 'CREDIT' }
 export enum ProductionOrderStatus { PLANNED = 'PLANNED', RELEASED = 'RELEASED', IN_PROGRESS = 'IN_PROGRESS', COMPLETED = 'COMPLETED', CANCELLED = 'CANCELLED' }
 export enum BillOfMaterialsStatus { DRAFT = 'DRAFT', ACTIVE = 'ACTIVE', OBSOLETE = 'OBSOLETE' }
+export * from './lib/dtos/payroll/calculate-payroll.dto';

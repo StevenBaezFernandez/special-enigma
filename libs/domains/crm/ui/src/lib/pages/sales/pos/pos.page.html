@@ -3,7 +3,7 @@
         <div class="catalog-header">
             <div class="search-bar">
                 <lucide-icon [img]="SearchIcon" size="20"></lucide-icon>
-                <input type="text" placeholder="Buscar productos por nombre o SKU...">
+                <input type="text" [placeholder]="'POS.SEARCH_PLACEHOLDER' | translate">
             </div>
         </div>
         <div class="product-grid">
@@ -24,15 +24,15 @@
 
     <div class="sale-ticket card">
         <div class="ticket-header">
-            <h3>Orden Actual</h3>
+            <h3>{{ 'POS.CURRENT_ORDER' | translate }}</h3>
             <div class="customer-selection">
-                <label>Cliente:</label>
+                <label>{{ 'POS.CLIENT_LABEL' | translate }}:</label>
                 <select formControlName="customer">
                     @for (customer of customers(); track customer.id) {
                         <option [value]="customer.id">{{ customer.companyName || customer.firstName + ' ' + customer.lastName }}</option>
                     }
                     @empty {
-                        <option value="" disabled>No hay clientes</option>
+                        <option value="" disabled>{{ 'POS.NO_CUSTOMERS' | translate }}</option>
                     }
                 </select>
             </div>
@@ -62,17 +62,17 @@
             } @else {
             <div class="empty-cart">
                 <lucide-icon name="shopping-cart" size="48"></lucide-icon>
-                <span>Añade productos para comenzar una venta.</span>
+                <span>{{ 'POS.EMPTY_CART_MESSAGE' | translate }}</span>
             </div>
             }
         </div>
         <div class="ticket-footer">
-            <div class="summary-row"><span>Subtotal</span><span>{{ subtotal() | number:'1.2-2' }}</span></div>
-            <div class="summary-row"><span>Impuestos (16%)</span><span>{{ taxAmount() | number:'1.2-2' }}</span></div>
-            <div class="summary-total"><span>Total a Pagar</span><span>${{ total() | number:'1.2-2' }}</span></div>
+            <div class="summary-row"><span>{{ 'POS.SUBTOTAL' | translate }}</span><span>{{ subtotal() | number:'1.2-2' }}</span></div>
+            <div class="summary-row"><span>{{ 'POS.TAX' | translate }} ({{ taxRate() | percent }})</span><span>{{ taxAmount() | number:'1.2-2' }}</span></div>
+            <div class="summary-total"><span>{{ 'POS.TOTAL' | translate }}</span><span>${{ total() | number:'1.2-2' }}</span></div>
             <button class="primary-button charge-btn" (click)="completeSale()" [disabled]="cartItems.length === 0 || !saleForm.get('customer')?.value">
                 <lucide-icon [img]="CreditCardIcon" size="18"></lucide-icon>
-                <span>Cobrar</span>
+                <span>{{ 'POS.PAY' | translate }}</span>
             </button>
         </div>
     </div>

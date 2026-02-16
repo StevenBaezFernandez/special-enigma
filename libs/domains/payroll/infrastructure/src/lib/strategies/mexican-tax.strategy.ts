@@ -1,13 +1,13 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { TaxService, TaxTableRepository, MissingTaxTableException } from '../../../../domain/src/index';
+import { TaxService, TaxTableRepository, MissingTaxTableException, TAX_TABLE_REPOSITORY } from '@virteex/payroll-domain';
 import { Decimal } from 'decimal.js';
 
 @Injectable()
-export class MexicanTaxService implements TaxService {
-  private readonly logger = new Logger(MexicanTaxService.name);
+export class MexicanTaxStrategy implements TaxService {
+  private readonly logger = new Logger(MexicanTaxStrategy.name);
 
   constructor(
-    @Inject('TaxTableRepository')
+    @Inject(TAX_TABLE_REPOSITORY)
     private readonly repository: TaxTableRepository,
   ) {}
 

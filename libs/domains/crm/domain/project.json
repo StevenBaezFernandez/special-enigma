@@ -20,7 +20,7 @@
         "assets": [
           "libs/domains/crm/domain/*.md"
         ],
-        "rootDir": "."
+        "rootDir": "libs/domains/crm/domain"
       }
     },
     "test": {

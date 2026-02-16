@@ -20,7 +20,7 @@
         "assets": [
           "libs/domains/payroll/domain/*.md"
         ],
-        "rootDir": "."
+        "rootDir": "libs/domains/payroll/domain"
       }
     },
     "test": {

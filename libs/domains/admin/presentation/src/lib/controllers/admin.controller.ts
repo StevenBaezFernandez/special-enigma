@@ -2,6 +2,8 @@ import { Controller, Post, UseInterceptors, UploadedFile, Body, Logger } from '@
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { DataImportService } from '@virteex/admin-application';
+import { Express } from 'express';
+import 'multer';
 
 @ApiTags('Admin')
 @Controller('admin')

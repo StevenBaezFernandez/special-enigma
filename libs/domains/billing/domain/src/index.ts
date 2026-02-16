@@ -19,3 +19,4 @@ export * from './lib/repositories/subscription-plan.repository';
 export * from './lib/events/invoice-stamped.event';
 
 export * from './lib/billing-domain.module';
+export * from './lib/ports/pac-strategy.factory';

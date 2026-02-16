@@ -1,17 +1,21 @@
-import { EntityManager } from '@mikro-orm/core';
-import { Injectable } from '@nestjs/common';
-import { Subscription } from '../../../../domain/src/lib/entities/subscription.entity';
-import { SubscriptionRepository } from '../../../../domain/src/lib/ports/subscription.repository';
+import { EntityRepository } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { Subscription, SubscriptionRepository } from '@virteex/billing-domain';
 
-@Injectable()
 export class MikroOrmSubscriptionRepository implements SubscriptionRepository {
-  constructor(private readonly em: EntityManager) {}
-
-  async findByTenantId(tenantId: string): Promise<Subscription | null> {
-    return this.em.findOne(Subscription, { tenantId }, { populate: ['plan'] });
-  }
+  constructor(
+    @InjectRepository(Subscription)
+    private readonly repository: EntityRepository<Subscription>
+  ) {}
 
   async save(subscription: Subscription): Promise<void> {
-    await this.em.persistAndFlush(subscription);
+    await this.repository.getEntityManager().persistAndFlush(subscription);
+  }
+
+  async findByTenantId(tenantId: string): Promise<Subscription | null> {
+    return this.repository.findOne({
+      tenantId,
+      status: 'ACTIVE' as any
+    });
   }
 }

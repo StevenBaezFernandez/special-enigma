@@ -1,8 +1,8 @@
 import {
   Component, Input, computed, signal, inject, effect,
-  ChangeDetectionStrategy, untracked, ElementRef, HostListener
+  ChangeDetectionStrategy, untracked, ElementRef, HostListener, OnInit, PLATFORM_ID
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HighchartsChartComponent } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
 
@@ -19,6 +19,7 @@ import {
 
 import { DashboardWidget, DashboardService, ChartType } from '../../../../core/services/dashboard';
 import { BrandingService } from '../../../../core/services/branding';
+import { BiService, ArAging } from '../../../../services/bi.service';
 
 type ExportingChart = Highcharts.Chart & {
   print: () => void;
@@ -36,13 +37,15 @@ type ExportingChart = Highcharts.Chart & {
   styleUrls: ['./ar-aging-chart.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArAgingChart {
+export class ArAgingChart implements OnInit {
   @Input({ required: true }) widget!: DashboardWidget;
   @Input() isEditMode = false;
 
   private dashboardService = inject(DashboardService);
   private brandingService = inject(BrandingService);
   private hostEl = inject(ElementRef<HTMLElement>);
+  private biService = inject(BiService);
+  private platformId = inject(PLATFORM_ID);
 
   // Íconos
   protected readonly SettingsIcon = Settings;
@@ -58,6 +61,7 @@ export class ArAgingChart {
   // Estado UI
   isSettingsOpen = signal(false);
   isExportMenuOpen = signal(false);
+  agingData = signal<ArAging | null>(null);
 
   chartRef?: Highcharts.Chart;
   private get chart(): ExportingChart | undefined {
@@ -73,17 +77,33 @@ export class ArAgingChart {
     });
   });
 
+  ngOnInit() {
+      if (isPlatformBrowser(this.platformId)) {
+        this.biService.getArAging().subscribe({
+            next: d => this.agingData.set(d),
+            error: err => console.error('Error fetching AR Aging', err)
+        });
+      }
+  }
+
   // Opciones reactivas del gráfico
   chartOptions = computed<Highcharts.Options>(() => {
     const chartType = (this.widget.chartType || 'bar') as ChartType;
     const themeOptions = this.getThemeOptions();
 
-    const data = [
-      { name: 'Corriente', y: 65000, color: '#4ade80' },
-      { name: '1-30 Días', y: 22000, color: '#fbbf24' },
-      { name: '31-60 Días', y: 15000, color: '#fb923c' },
-      { name: '61-90 Días', y: 8500, color: '#f87171' },
-      { name: '+90 Días', y: 4000, color: '#ef4444' }
+    const d = this.agingData();
+    const data = d ? [
+      { name: 'Corriente', y: d.current, color: '#4ade80' },
+      { name: '1-30 Días', y: d.days30, color: '#fbbf24' },
+      { name: '31-60 Días', y: d.days60, color: '#fb923c' },
+      { name: '61-90 Días', y: d.days90, color: '#f87171' },
+      { name: '+90 Días', y: d.over90, color: '#ef4444' }
+    ] : [
+      { name: 'Corriente', y: 0, color: '#4ade80' },
+      { name: '1-30 Días', y: 0, color: '#fbbf24' },
+      { name: '31-60 Días', y: 0, color: '#fb923c' },
+      { name: '61-90 Días', y: 0, color: '#f87171' },
+      { name: '+90 Días', y: 0, color: '#ef4444' }
     ];
 
     const baseOptions: Highcharts.Options = {
@@ -110,7 +130,7 @@ export class ArAgingChart {
   });
 
   private getThemeOptions(): Highcharts.Options {
-    if (typeof window === 'undefined') return {};
+    if (!isPlatformBrowser(this.platformId)) return {};
     const bodyStyles = getComputedStyle(document.body);
     const textColor = bodyStyles.getPropertyValue('--text-primary').trim();
     const secondaryTextColor = bodyStyles.getPropertyValue('--text-secondary').trim();

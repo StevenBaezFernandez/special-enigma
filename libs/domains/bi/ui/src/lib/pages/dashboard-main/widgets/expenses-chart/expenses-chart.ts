@@ -1,6 +1,6 @@
 import {
   Component, Input, computed, signal, inject, effect,
-  ChangeDetectionStrategy, untracked, ElementRef, HostListener, PLATFORM_ID
+  ChangeDetectionStrategy, untracked, ElementRef, HostListener, PLATFORM_ID, OnInit
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HighchartsChartComponent } from 'highcharts-angular';
@@ -20,6 +20,7 @@ import {
 import { DashboardWidget, DashboardService, ChartType } from '../../../../core/services/dashboard';
 import { BrandingService } from '../../../../core/services/branding';
 import { PointOptionsObject } from 'highcharts';
+import { BiService, ExpenseCategory } from '../../../../services/bi.service';
 
 type ExportingChart = Highcharts.Chart & {
   print: () => void;
@@ -37,7 +38,7 @@ type ExportingChart = Highcharts.Chart & {
   styleUrls: ['./expenses-chart.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpensesChart {
+export class ExpensesChart implements OnInit {
   @Input({ required: true }) widget!: DashboardWidget;
   @Input() isEditMode = false;
 
@@ -45,6 +46,7 @@ export class ExpensesChart {
   private brandingService = inject(BrandingService);
   private hostEl = inject(ElementRef<HTMLElement>);
   private platformId = inject(PLATFORM_ID);
+  private biService = inject(BiService);
 
   // Íconos
   protected readonly SettingsIcon = Settings;
@@ -59,6 +61,7 @@ export class ExpensesChart {
   // Estado UI
   isSettingsOpen = signal(false);
   isExportMenuOpen = signal(false);
+  expensesData = signal<ExpenseCategory[]>([]);
 
   chartRef?: Highcharts.Chart;
   private get chart(): ExportingChart | undefined {
@@ -72,6 +75,15 @@ export class ExpensesChart {
       }
     });
   });
+
+  ngOnInit() {
+      if (isPlatformBrowser(this.platformId)) {
+        this.biService.getExpenses().subscribe({
+            next: d => this.expensesData.set(d),
+            error: err => console.error('Error fetching expenses', err)
+        });
+      }
+  }
 
   chartOptions = computed<Highcharts.Options>(() => {
     if (!isPlatformBrowser(this.platformId)) return {};
@@ -89,12 +101,17 @@ export class ExpensesChart {
 
     const seriesColors = this.widget.data?.seriesColors || defaultColors;
 
-    const data = [
-      { name: 'Nómina y Salarios', y: 45, color: seriesColors['nómina y salarios'] },
-      { name: 'Marketing y Publicidad', y: 25, color: seriesColors['marketing y publicidad'] },
-      { name: 'Alquiler y Servicios', y: 15, color: seriesColors['alquiler y servicios'] },
-      { name: 'Suministros de Oficina', y: 10, color: seriesColors['suministros de oficina'] },
-      { name: 'Otros', y: 5, color: seriesColors['otros'] }
+    const d = this.expensesData();
+    const data = d.length > 0 ? d.map(item => ({
+        name: item.category,
+        y: item.amount,
+        color: seriesColors[item.category.toLowerCase().replace(/ /g, '_')] || seriesColors['otros'] || '#cccccc'
+    })) : [
+        { name: 'Nómina y Salarios', y: 0, color: seriesColors['nómina y salarios'] },
+        { name: 'Marketing y Publicidad', y: 0, color: seriesColors['marketing y publicidad'] },
+        { name: 'Alquiler y Servicios', y: 0, color: seriesColors['alquiler y servicios'] },
+        { name: 'Suministros de Oficina', y: 0, color: seriesColors['suministros de oficina'] },
+        { name: 'Otros', y: 0, color: seriesColors['otros'] }
     ];
 
     const baseOptions: Highcharts.Options = {

@@ -4,12 +4,35 @@
   "sourceRoot": "libs/domains/billing/infrastructure/src",
   "projectType": "library",
   "tags": [
-    "scope:billing",
     "type:infrastructure",
-    "platform:agnostic",
-    "tenant-mode:schema",
-    "criticality:high"
+    "scope:billing"
   ],
-  "targets": {},
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domains/billing/infrastructure",
+        "main": "libs/domains/billing/infrastructure/src/index.ts",
+        "tsConfig": "libs/domains/billing/infrastructure/tsconfig.lib.json",
+        "assets": [
+          "libs/domains/billing/infrastructure/*.md"
+        ],
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "libs/domains/billing/infrastructure/jest.config.cts",
+        "passWithNoTests": true
+      }
+    }
+  },
   "prefix": "virteex"
 }

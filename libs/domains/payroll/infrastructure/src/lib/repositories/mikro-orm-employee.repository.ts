@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { EmployeeRepository, Employee } from '../../../../domain/src/index';
+import { EmployeeRepository, Employee } from '@virteex/payroll-domain';
 
 @Injectable()
 export class MikroOrmEmployeeRepository implements EmployeeRepository {

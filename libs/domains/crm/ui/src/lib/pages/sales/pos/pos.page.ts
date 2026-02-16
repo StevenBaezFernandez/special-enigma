@@ -29,11 +29,12 @@ import { CrmService } from '../../../core/services/crm.service';
 import { CreateSaleDto } from '../../../core/models/sale.model';
 import { Customer } from '../../../core/models/customer.model';
 import { ToastService } from '@virteex/shared-ui';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'virteex-pos-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './pos.page.html',
   styleUrls: ['./pos.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,6 +43,7 @@ export class PosPage implements OnInit {
   private fb = inject(FormBuilder);
   private crmService = inject(CrmService);
   private toast = inject(ToastService);
+  private translate = inject(TranslateService);
 
   protected readonly SearchIcon = Search;
   protected readonly XIcon = X;
@@ -53,6 +55,7 @@ export class PosPage implements OnInit {
   allProducts = signal<Product[]>([]);
   customers = signal<Customer[]>([]);
   isLoading = signal(false);
+  taxRate = signal(0.16); // Default, updated on init
 
   saleForm!: FormGroup;
 
@@ -69,10 +72,14 @@ export class PosPage implements OnInit {
     }, 0);
   });
 
-  taxAmount = computed(() => this.subtotal() * 0.16); // 16% IVA
+  taxAmount = computed(() => this.subtotal() * this.taxRate());
   total = computed(() => this.subtotal() + this.taxAmount());
 
   ngOnInit(): void {
+    // Initialize default language
+    this.translate.setDefaultLang('es');
+    this.translate.use('es');
+
     this.saleForm = this.fb.group({
       cartItems: this.fb.array([]),
       customer: [''], // Will hold customer ID
@@ -80,6 +87,14 @@ export class PosPage implements OnInit {
 
     this.loadProducts();
     this.loadCustomers();
+    this.loadTaxRate();
+  }
+
+  loadTaxRate(): void {
+      this.crmService.getTaxRate().subscribe({
+          next: (res) => this.taxRate.set(res.rate),
+          error: (err) => console.error('Error fetching tax rate', err)
+      });
   }
 
   loadProducts(): void {
@@ -91,7 +106,7 @@ export class PosPage implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.toast.showError('Error al cargar productos');
+        this.toast.showError(this.translate.instant('POS.PRODUCTS_LOAD_ERROR'));
       },
     });
   }
@@ -106,7 +121,7 @@ export class PosPage implements OnInit {
         },
         error: (err) => {
           console.error('Error loading customers', err);
-          this.toast.showError('Error al cargar clientes');
+          this.toast.showError(this.translate.instant('POS.CUSTOMERS_LOAD_ERROR'));
         }
     });
   }
@@ -177,10 +192,10 @@ export class PosPage implements OnInit {
               this.saleForm.get('customer')?.setValue(customers[0].id);
           }
           this.isLoading.set(false);
-          this.toast.showSuccess('Venta realizada con éxito');
+          this.toast.showSuccess(this.translate.instant('POS.SALE_SUCCESS'));
         },
         error: () => {
-          this.toast.showError('Error al procesar la venta');
+          this.toast.showError(this.translate.instant('POS.SALE_ERROR'));
           this.isLoading.set(false);
         },
       });

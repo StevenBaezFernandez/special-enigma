@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Sale } from '../../../../domain/src/index';
-import { SaleRepository } from '../../../../domain/src/lib/repositories/sale.repository';
+import { Sale, SaleRepository } from '@virteex/crm-domain';
 
 @Injectable()
 export class MikroOrmSaleRepository implements SaleRepository {
@@ -14,11 +13,11 @@ export class MikroOrmSaleRepository implements SaleRepository {
   }
 
   async findById(id: string): Promise<Sale | null> {
-    return this.em.findOne(Sale, { id }, { populate: ['items'] });
+    return this.em.findOne(Sale, { id } as any, { populate: ['items'] });
   }
 
   async findAll(tenantId: string): Promise<Sale[]> {
-    return this.em.find(Sale, { tenantId }, { populate: ['items'], orderBy: { createdAt: 'DESC' } });
+    return this.em.find(Sale, { tenantId } as any, { populate: ['items'], orderBy: { createdAt: 'DESC' } });
   }
 
   async update(sale: Sale): Promise<Sale> {

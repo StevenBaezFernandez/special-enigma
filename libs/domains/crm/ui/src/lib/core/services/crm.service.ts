@@ -36,4 +36,8 @@ export class CrmService {
   getCustomers(tenantId: string = 'default'): Observable<Customer[]> {
     return this.http.get<Customer[]>(`${this.apiUrl}/crm/customers?tenantId=${tenantId}`);
   }
+
+  getTaxRate(tenantId: string = 'default'): Observable<{ rate: number }> {
+    return this.http.get<{ rate: number }>(`${this.apiUrl}/fiscal/tax-rate?tenantId=${tenantId}`);
+  }
 }

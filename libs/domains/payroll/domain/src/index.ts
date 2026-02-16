@@ -13,3 +13,4 @@ export * from './lib/ports/tenant-config.port';
 export * from './lib/services/payroll-period-calculator.service';
 export * from './lib/exceptions/missing-tax-table.exception';
 export * from './lib/events/payroll-stamped.event';
+export * from './lib/ports/tax-strategy.factory';

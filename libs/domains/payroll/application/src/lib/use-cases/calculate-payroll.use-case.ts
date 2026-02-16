@@ -7,20 +7,23 @@ import {
   PAYROLL_REPOSITORY,
   Payroll,
   PayrollDetail,
-  TaxService,
-  TAX_SERVICE,
+  TaxStrategyFactory,
+  TAX_STRATEGY_FACTORY,
   AttendanceRepository,
   ATTENDANCE_REPOSITORY,
-  PayrollPeriodCalculator
-} from '../../../../domain/src/index';
-import { CalculatePayrollDto } from '../../../../contracts/src/index';
+  PayrollPeriodCalculator,
+  TenantConfigRepository,
+  TENANT_CONFIG_REPOSITORY
+} from '@virteex/payroll-domain';
+import { CalculatePayrollDto } from '@virteex/contracts';
 
 @Injectable()
 export class CalculatePayrollUseCase {
   constructor(
     @Inject(EMPLOYEE_REPOSITORY) private employeeRepository: EmployeeRepository,
     @Inject(PAYROLL_REPOSITORY) private payrollRepository: PayrollRepository,
-    @Inject(TAX_SERVICE) private taxService: TaxService,
+    @Inject(TAX_STRATEGY_FACTORY) private taxStrategyFactory: TaxStrategyFactory,
+    @Inject(TENANT_CONFIG_REPOSITORY) private tenantConfigRepo: TenantConfigRepository,
     @Inject(ATTENDANCE_REPOSITORY) private attendanceRepository: AttendanceRepository,
     private payrollCalculator: PayrollPeriodCalculator
   ) {}
@@ -53,6 +56,10 @@ export class CalculatePayrollUseCase {
       throw new ConflictException(`Payroll for employee ${employeeId} in period ${start.toISOString()} - ${end.toISOString()} already exists`);
     }
 
+    // Get Tenant Config for Country Strategy
+    const tenantConfig = await this.tenantConfigRepo.getFiscalConfig(tenantId);
+    const taxStrategy = this.taxStrategyFactory.getStrategy(tenantConfig.country);
+
     // Calculate incidences
     const incidencesDays = await this.attendanceRepository.countIncidences(employeeId, start, end);
 
@@ -72,9 +79,9 @@ export class CalculatePayrollUseCase {
     const salaryDetail = new PayrollDetail(tenantId, 'Sueldo Base', baseAmount, PayrollDetailType.EARNING);
     payroll.details.add(salaryDetail);
 
-    // Add Tax Deduction (Using Real Tax Service)
-    const taxAmount = await this.taxService.calculateTax(baseAmount, end);
-    const taxDetail = new PayrollDetail(tenantId, 'ISR Retenido', taxAmount, PayrollDetailType.DEDUCTION);
+    // Add Tax Deduction (Using Strategy)
+    const taxAmount = await taxStrategy.calculateTax(baseAmount, end);
+    const taxDetail = new PayrollDetail(tenantId, 'Impuestos Retenidos', taxAmount, PayrollDetailType.DEDUCTION);
     payroll.details.add(taxDetail);
 
     // Update totals
