@@ -145,9 +145,8 @@ export class NewInvoicePage implements OnInit {
     const items = formValue.lineItems.map((item: { productId: string; quantity: number; price: number; description: string; taxRate: number }) => ({
         productId: item.productId,
         quantity: item.quantity,
-        price: item.price,
-        description: item.description,
-        taxRate: item.taxRate
+        unitPrice: item.price,
+        description: item.description
     }));
 
     const payload: CreateInvoiceDto = {
@@ -155,7 +154,7 @@ export class NewInvoicePage implements OnInit {
         issueDate: formValue.issueDate,
         dueDate: formValue.dueDate,
         notes: formValue.notes,
-        lineItems: items
+        items: items
     };
 
     this.invoicesService.createInvoice(payload).subscribe({

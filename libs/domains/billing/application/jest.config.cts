@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'payroll-infrastructure',
+  displayName: 'billing-application',
   preset: '../../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -7,5 +7,5 @@ module.exports = {
   },
   transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$|uuid)'],
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../../coverage/libs/domains/payroll/infrastructure'
+  coverageDirectory: '../../../../coverage/libs/domains/billing/application'
 };

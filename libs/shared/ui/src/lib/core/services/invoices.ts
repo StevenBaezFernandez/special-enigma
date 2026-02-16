@@ -29,13 +29,14 @@ export interface Invoice {
 // DTO ya no incluye totales, se calculan en backend
 export interface CreateInvoiceDto {
     customerId: string;
-    issueDate: string;
-    dueDate: string;
+    // Fields below might be ignored by current backend implementation but kept for UI state if needed
+    issueDate?: string;
+    dueDate?: string;
     notes?: string;
-    lineItems: {
+    items: {
         productId: string;
         quantity: number;
-        price: number;
+        unitPrice: number;
         description: string;
     }[];
 }

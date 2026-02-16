@@ -21,7 +21,9 @@ export class BillingController {
   ) {}
 
   @Post('invoices')
-  async create(@Body() dto: CreateInvoiceDto) {
+  async create(@Body() dto: CreateInvoiceDto, @Query('tenantId') tenantId: string) {
+    // Basic tenant handling fallback
+    dto.tenantId = tenantId || 'default-tenant';
     return await this.createInvoiceUseCase.execute(dto);
   }
 
