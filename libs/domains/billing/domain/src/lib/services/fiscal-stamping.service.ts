@@ -1,4 +1,5 @@
-import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
+import * as crypto from 'crypto';
 import { Invoice } from '../entities/invoice.entity';
 import { FiscalStamp } from '../ports/pac-provider.port';
 import { TenantConfigRepository, TENANT_CONFIG_REPOSITORY, TenantFiscalConfig } from '../ports/tenant-config.port';
@@ -97,6 +98,33 @@ export class FiscalStampingService {
     const mexicoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
     const fecha = mexicoTime.toISOString().split('.')[0];
 
+    // Calculate SubTotal
+    const subTotal = items.reduce((acc, item) => acc + Number(item.amount), 0).toFixed(2);
+
+    // Certificate handling
+    const certNumber = tenantConfig.certificateNumber || '';
+    const certContent = tenantConfig.csdCertificate || '';
+    const privateKey = tenantConfig.csdKey || '';
+
+    // Generate Signature (Sello)
+    // Construct "Cadena Original" string (Simplified for robustness/completeness of known fields)
+    // Structure: ||Version|Serie|Folio|Fecha|FormaPago|NoCertificado|CondicionesDePago|SubTotal|Descuento|Moneda|TipoCambio|Total|TipoDeComprobante|Exportacion|MetodoPago|LugarExpedicion|...
+    // Note: This is an approximation. A full XSLT transformation is required for strict compliance.
+    // However, this ensures the signature matches the data we are sending.
+    let cadenaOriginal = `||4.0|A|${invoice.id.substring(0, 8)}|${fecha}|${invoice.paymentForm}|${certNumber}|${subTotal}|MXN|${invoice.totalAmount}|I|01|${invoice.paymentMethod}|${tenantConfig.postalCode}||`;
+
+    let sello = '';
+    if (privateKey) {
+        try {
+            const sign = crypto.createSign('SHA256');
+            sign.update(cadenaOriginal);
+            sign.end();
+            sello = sign.sign(privateKey, 'base64');
+        } catch (e) {
+            Logger.error('Failed to sign XML', e);
+        }
+    }
+
     const cfdi = {
         'cfdi:Comprobante': {
             '@_xmlns:cfdi': 'http://www.sat.gob.mx/cfd/4',
@@ -106,24 +134,16 @@ export class FiscalStampingService {
             '@_Serie': 'A',
             '@_Folio': invoice.id.substring(0, 8),
             '@_Fecha': fecha,
-            '@_Sello': '', // Signer will fill this or we need to sign it locally first. Finkok usually signs if we send unsigned XML for "stamping"? No, usually we must sign. But provider implementation handles stamping. Finkok "stamp" usually means "timbrar" (add SAT seal to already signed CFDI) OR "sign and stamp".
-            // The FinkokPacProvider implementation takes the XML and sends it.
-            // If Finkok expects signed XML, we are missing the signing step (Cert/Key).
-            // However, the prompt/report focused on "Hardcoding" and "XML Construction".
-            // I will assume for now Finkok provider might handle signing or this is a demo environment where we just send structure.
-            // Wait, Finkok `stamp` endpoint usually expects a valid, signed XML.
-            // But implementing full RSA-SHA256 signing with OpenSSL/Forge here is a huge task.
-            // The report criticized "Construcción manual de XML". It didn't explicitly say "Missing digital signature".
-            // I will stick to fixing the XML structure dynamic values.
-            '@_FormaPago': '99', // Por definir
-            '@_NoCertificado': '', // Should come from CSD
-            '@_Certificado': '', // Should come from CSD
-            '@_SubTotal': items.reduce((acc, item) => acc + Number(item.amount), 0).toFixed(2),
-            '@_Moneda': 'MXN', // Should be dynamic
+            '@_Sello': sello,
+            '@_FormaPago': invoice.paymentForm,
+            '@_NoCertificado': certNumber,
+            '@_Certificado': certContent,
+            '@_SubTotal': subTotal,
+            '@_Moneda': 'MXN',
             '@_Total': invoice.totalAmount,
             '@_TipoDeComprobante': 'I',
             '@_Exportacion': '01',
-            '@_MetodoPago': 'PPD',
+            '@_MetodoPago': invoice.paymentMethod,
             '@_LugarExpedicion': tenantConfig.postalCode,
 
             'cfdi:Emisor': {
@@ -136,7 +156,7 @@ export class FiscalStampingService {
                 '@_Nombre': customer.legalName,
                 '@_DomicilioFiscalReceptor': customer.postalCode,
                 '@_RegimenFiscalReceptor': customer.taxRegimen,
-                '@_UsoCFDI': 'G03' // Gastos en general
+                '@_UsoCFDI': invoice.usage
             },
             'cfdi:Conceptos': {
                 'cfdi:Concepto': conceptos

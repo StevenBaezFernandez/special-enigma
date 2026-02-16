@@ -67,7 +67,6 @@ export class DataExportsPage {
   startExport(): void {
     if (this.exportForm.invalid) return;
     this.isGenerating.set(true);
-    // console.log('Generating export with options:', this.exportForm.value);
 
     // Simulación de la generación del archivo
     setTimeout(() => {

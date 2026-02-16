@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsOptional, ValidateNested, IsArray, Min, IsNotEmpty } from 'class-validator';
+import { IsString, IsNumber, IsOptional, ValidateNested, IsArray, Min, IsNotEmpty, IsDateString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateInvoiceItemDto {
@@ -27,6 +27,22 @@ export class CreateInvoiceDto {
   @IsString()
   @IsNotEmpty()
   customerId!: string;
+
+  @IsDateString()
+  @IsNotEmpty()
+  dueDate!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  paymentForm!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  paymentMethod!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  usage!: string;
 
   @IsArray()
   @ValidateNested({ each: true })

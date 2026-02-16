@@ -33,6 +33,10 @@ export class CreateInvoiceUseCase {
     const taxRate = new Decimal(0.16); // Default 16% VAT
 
     const invoice = new Invoice(dto.tenantId, dto.customerId, '0', '0');
+    invoice.dueDate = new Date(dto.dueDate);
+    invoice.paymentForm = dto.paymentForm;
+    invoice.paymentMethod = dto.paymentMethod;
+    invoice.usage = dto.usage;
 
     // Backend Calculation
     for (const itemDto of dto.items) {

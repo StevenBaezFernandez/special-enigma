@@ -3,6 +3,7 @@ export interface TenantFiscalConfig {
   country: string;
   csdCertificate?: string;
   csdKey?: string;
+  certificateNumber?: string;
   legalName: string;
   regime: string;
   postalCode: string;

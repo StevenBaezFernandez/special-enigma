@@ -40,6 +40,27 @@
           </div>
         </div>
 
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label">Forma de Pago</label>
+            <select formControlName="paymentForm" class="form-control">
+               <option *ngFor="let pf of paymentForms" [value]="pf.code">{{ pf.name }}</option>
+            </select>
+          </div>
+          <div class="form-col">
+            <label class="form-label">Método de Pago</label>
+            <select formControlName="paymentMethod" class="form-control">
+               <option *ngFor="let pm of paymentMethods" [value]="pm.code">{{ pm.name }}</option>
+            </select>
+          </div>
+          <div class="form-col">
+            <label class="form-label">Uso de CFDI</label>
+             <select formControlName="usage" class="form-control">
+               <option *ngFor="let u of cfdiUsages" [value]="u.code">{{ u.name }}</option>
+            </select>
+          </div>
+        </div>
+
         <div formArrayName="lineItems">
           <div
             *ngFor="let item of lineItems.controls; let i = index"

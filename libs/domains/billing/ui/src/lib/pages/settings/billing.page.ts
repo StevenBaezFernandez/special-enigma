@@ -50,7 +50,6 @@ export class BillingPage implements OnInit {
     this.billingService.changePlan(this.selectedPlan()).subscribe({
       next: () => {
         // En una app real, recargaríamos los datos de la suscripción
-        // console.log('Plan actualizado con éxito');
         this.isSaving.set(false);
       },
       error: () => {

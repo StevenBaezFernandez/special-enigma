@@ -31,8 +31,15 @@ export class BiInvoiceAdapter implements InvoicePort {
         if (inv.status === 'PAID') continue;
 
         const issueDate = new Date(inv.issueDate);
-        const dueDate = new Date(issueDate);
-        dueDate.setDate(dueDate.getDate() + 30); // Net 30 assumption
+        let dueDate: Date;
+
+        if (inv.dueDate) {
+            dueDate = new Date(inv.dueDate);
+        } else {
+             // Fallback for legacy data without dueDate
+            dueDate = new Date(issueDate);
+            dueDate.setDate(dueDate.getDate() + 30);
+        }
 
         const diffTime = now.getTime() - dueDate.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

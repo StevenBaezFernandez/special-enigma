@@ -16,6 +16,18 @@ export class Invoice {
   @Property()
   issueDate!: Date;
 
+  @Property()
+  dueDate!: Date;
+
+  @Property()
+  paymentForm!: string; // FormaPago (e.g., 01, 03)
+
+  @Property()
+  paymentMethod!: string; // MetodoPago (e.g., PUE, PPD)
+
+  @Property()
+  usage!: string; // UsoCFDI (e.g., G03)
+
   @Property({ type: 'decimal', precision: 10, scale: 2 })
   totalAmount!: string;
 

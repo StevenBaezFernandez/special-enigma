@@ -46,7 +46,6 @@ export class PeriodsPage {
 
   togglePeriodStatus(periodToUpdate: AccountingPeriod): void {
     // Lógica simulada para abrir/cerrar períodos
-    // console.log(`Toggling status for period: ${periodToUpdate.month}`);
     this.periods.update(currentPeriods =>
       currentPeriods.map(p => {
         if (p.month === periodToUpdate.month) {

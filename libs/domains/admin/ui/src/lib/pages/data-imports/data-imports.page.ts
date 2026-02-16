@@ -82,7 +82,6 @@ export class DataImportsPage {
   startImport(): void {
     if (!this.selectedFile() || !this.selectedDataTypeId()) return;
     this.isUploading.set(true);
-    // console.log(`Uploading ${this.selectedFile()!.name} for data type ${this.selectedDataTypeId()}`);
 
     setTimeout(() => {
       this.isUploading.set(false);
