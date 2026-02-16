@@ -6,13 +6,15 @@ import { TenantConfigRepository, TENANT_CONFIG_REPOSITORY, TenantFiscalConfig } 
 import { CustomerRepository, CUSTOMER_REPOSITORY, CustomerBillingInfo } from '../ports/customer.repository';
 import { PacStrategyFactory, PAC_STRATEGY_FACTORY } from '../ports/pac-strategy.factory';
 import { XMLBuilder } from 'fast-xml-parser';
+import { XsltService } from '@virteex/shared-infrastructure-xslt';
 
 @Injectable()
 export class FiscalStampingService {
   constructor(
     @Inject(PAC_STRATEGY_FACTORY) private readonly pacStrategyFactory: PacStrategyFactory,
     @Inject(TENANT_CONFIG_REPOSITORY) private readonly tenantConfigRepo: TenantConfigRepository,
-    @Inject(CUSTOMER_REPOSITORY) private readonly customerRepo: CustomerRepository
+    @Inject(CUSTOMER_REPOSITORY) private readonly customerRepo: CustomerRepository,
+    private readonly xsltService: XsltService
   ) {}
 
   async stampInvoice(invoice: Invoice): Promise<FiscalStamp> {
@@ -29,7 +31,7 @@ export class FiscalStampingService {
         throw new BadRequestException(`Customer fiscal data is incomplete (RFC, Postal Code, Tax Regimen are required)`);
     }
 
-    const xml = this.generateXml(invoice, tenantConfig, customer);
+    const xml = await this.generateSignedXml(invoice, tenantConfig, customer);
 
     const provider = this.pacStrategyFactory.getProvider(tenantConfig.country);
     return await provider.stamp(xml);
@@ -41,7 +43,7 @@ export class FiscalStampingService {
     return await provider.cancel(uuid, tenantConfig.rfc);
   }
 
-  private generateXml(invoice: Invoice, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfo): string {
+  private async generateSignedXml(invoice: Invoice, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfo): Promise<string> {
     const builder = new XMLBuilder({
         ignoreAttributes: false,
         format: true,
@@ -106,26 +108,7 @@ export class FiscalStampingService {
     const certContent = tenantConfig.csdCertificate || '';
     const privateKey = tenantConfig.csdKey || '';
 
-    // Generate Signature (Sello)
-    // Construct "Cadena Original" string (Simplified for robustness/completeness of known fields)
-    // Structure: ||Version|Serie|Folio|Fecha|FormaPago|NoCertificado|CondicionesDePago|SubTotal|Descuento|Moneda|TipoCambio|Total|TipoDeComprobante|Exportacion|MetodoPago|LugarExpedicion|...
-    // Note: This is an approximation. A full XSLT transformation is required for strict compliance.
-    // However, this ensures the signature matches the data we are sending.
-    let cadenaOriginal = `||4.0|A|${invoice.id.substring(0, 8)}|${fecha}|${invoice.paymentForm}|${certNumber}|${subTotal}|MXN|${invoice.totalAmount}|I|01|${invoice.paymentMethod}|${tenantConfig.postalCode}||`;
-
-    let sello = '';
-    if (privateKey) {
-        try {
-            const sign = crypto.createSign('SHA256');
-            sign.update(cadenaOriginal);
-            sign.end();
-            sello = sign.sign(privateKey, 'base64');
-        } catch (e) {
-            Logger.error('Failed to sign XML', e);
-        }
-    }
-
-    const cfdi = {
+    const cfdiObj = {
         'cfdi:Comprobante': {
             '@_xmlns:cfdi': 'http://www.sat.gob.mx/cfd/4',
             '@_xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
@@ -134,7 +117,7 @@ export class FiscalStampingService {
             '@_Serie': 'A',
             '@_Folio': invoice.id.substring(0, 8),
             '@_Fecha': fecha,
-            '@_Sello': sello,
+            '@_Sello': '', // Placeholder
             '@_FormaPago': invoice.paymentForm,
             '@_NoCertificado': certNumber,
             '@_Certificado': certContent,
@@ -176,6 +159,42 @@ export class FiscalStampingService {
         }
     };
 
-    return builder.build(cfdi);
+    // 1. Generate XML without signature
+    const xmlWithoutSello = builder.build(cfdiObj);
+
+    // 2. Generate Cadena Original using XSLT
+    // Assuming XSLT is located at libs/domains/billing/domain/src/lib/xslt/cadenaoriginal_4_0.xslt
+    // We need to resolve the path correctly.
+    // In production build, these assets should be copied to dist.
+    // For now, we point to source.
+    const xsltPath = 'libs/domains/billing/domain/src/lib/xslt/cadenaoriginal_4_0.xslt';
+    let cadenaOriginal = '';
+    try {
+        cadenaOriginal = await this.xsltService.transform(xmlWithoutSello, xsltPath);
+    } catch (e) {
+        const message = e instanceof Error ? e.message : String(e);
+        throw new Error(`Failed to generate Cadena Original: ${message}`);
+    }
+
+    // 3. Generate Sello (Signature)
+    let sello = '';
+    if (privateKey) {
+        try {
+            const sign = crypto.createSign('SHA256');
+            sign.update(cadenaOriginal);
+            sign.end();
+            sello = sign.sign(privateKey, 'base64');
+        } catch (e) {
+            Logger.error('Failed to sign XML', e);
+            const message = e instanceof Error ? e.message : String(e);
+            throw new Error(`Failed to sign XML: ${message}`);
+        }
+    } else {
+        throw new Error('Private key is missing for signing');
+    }
+
+    // 4. Inject Sello and Rebuild
+    cfdiObj['cfdi:Comprobante']['@_Sello'] = sello;
+    return builder.build(cfdiObj);
   }
 }

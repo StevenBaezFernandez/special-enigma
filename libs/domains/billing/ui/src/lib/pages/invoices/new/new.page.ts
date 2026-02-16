@@ -11,6 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 import { InvoicesService, CreateInvoiceDto } from '../../../core/services/invoices';
 import { CustomersService } from '../../../core/api/customers.service';
 import { InventoryService } from '../../../core/api/inventory.service';
+import { SatCatalogService, SatCatalogItem } from '../../../../../../shared/ui/src/lib/core/api/sat-catalog.service';
 import { Customer } from '../../../core/models/customer.model';
 import { Product } from '../../../core/models/product.model';
 import { NotificationService } from '../../../core/services/notification';
@@ -29,28 +30,15 @@ export class NewInvoicePage implements OnInit {
   private customersService = inject(CustomersService);
   private inventoryService = inject(InventoryService);
   private notificationService = inject(NotificationService);
+  private satCatalogService = inject(SatCatalogService);
 
   invoiceForm: FormGroup;
   customers: Customer[] = [];
   products: Product[] = [];
 
-  paymentForms = [
-    { code: '01', name: '01 - Efectivo' },
-    { code: '03', name: '03 - Transferencia electrónica de fondos' },
-    { code: '04', name: '04 - Tarjeta de crédito' },
-    { code: '99', name: '99 - Por definir' }
-  ];
-
-  paymentMethods = [
-    { code: 'PUE', name: 'Pago en una sola exhibición' },
-    { code: 'PPD', name: 'Pago en parcialidades o diferido' }
-  ];
-
-  cfdiUsages = [
-    { code: 'G01', name: 'Adquisición de mercancías' },
-    { code: 'G03', name: 'Gastos en general' },
-    { code: 'P01', name: 'Por definir' }
-  ];
+  paymentForms: SatCatalogItem[] = [];
+  paymentMethods: SatCatalogItem[] = [];
+  cfdiUsages: SatCatalogItem[] = [];
 
   constructor() {
     this.invoiceForm = this.fb.group({
@@ -67,11 +55,18 @@ export class NewInvoicePage implements OnInit {
 
   ngOnInit(): void {
     this.loadInitialData();
+    this.loadSatCatalogs();
   }
 
   loadInitialData(): void {
     this.customersService.getCustomers().subscribe((data) => (this.customers = data));
     this.inventoryService.getProducts().subscribe((data) => (this.products = data));
+  }
+
+  loadSatCatalogs(): void {
+      this.satCatalogService.getPaymentForms().subscribe(data => this.paymentForms = data);
+      this.satCatalogService.getPaymentMethods().subscribe(data => this.paymentMethods = data);
+      this.satCatalogService.getCfdiUsages().subscribe(data => this.cfdiUsages = data);
   }
 
   get lineItems(): FormArray {

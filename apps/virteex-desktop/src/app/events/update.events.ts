@@ -2,6 +2,7 @@ import { app, autoUpdater, dialog, MessageBoxOptions } from 'electron';
 import { platform, arch } from 'os';
 import { updateServerUrl } from '../constants';
 import App from '../app';
+import { Logger } from '@nestjs/common';
 
 export default class UpdateEvents {
   // initialize auto update service - most be invoked only in production
@@ -14,7 +15,7 @@ export default class UpdateEvents {
     };
 
     if (!App.isDevelopmentMode()) {
-      console.log('Initializing auto update service...\n');
+      Logger.log('Initializing auto update service...', 'UpdateEvents');
 
       autoUpdater.setFeedURL(feed);
       UpdateEvents.checkForUpdates();
@@ -48,22 +49,21 @@ autoUpdater.on(
 );
 
 autoUpdater.on('checking-for-update', () => {
-  console.log('Checking for updates...\n');
+  Logger.log('Checking for updates...', 'UpdateEvents');
 });
 
 autoUpdater.on('update-available', () => {
-  console.log('New update available!\n');
+  Logger.log('New update available!', 'UpdateEvents');
 });
 
 autoUpdater.on('update-not-available', () => {
-  console.log('Up to date!\n');
+  Logger.log('Up to date!', 'UpdateEvents');
 });
 
 autoUpdater.on('before-quit-for-update', () => {
-  console.log('Application update is about to begin...\n');
+  Logger.log('Application update is about to begin...', 'UpdateEvents');
 });
 
 autoUpdater.on('error', (message) => {
-  console.error('There was a problem updating the application');
-  console.error(message, '\n');
+  Logger.error('There was a problem updating the application', message, 'UpdateEvents');
 });

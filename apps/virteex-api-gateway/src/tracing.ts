@@ -5,6 +5,7 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
+import { Logger } from '@nestjs/common';
 
 // Configure the SDK
 export const otelSDK = new NodeSDK({
@@ -27,8 +28,8 @@ process.on('SIGTERM', () => {
   otelSDK
     .shutdown()
     .then(
-      () => console.log('SDK shut down successfully'),
-      (err) => console.log('Error shutting down SDK', err)
+      () => Logger.log('SDK shut down successfully', 'Tracing'),
+      (err) => Logger.error('Error shutting down SDK', err, 'Tracing')
     )
     .finally(() => process.exit(0));
 });

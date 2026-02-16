@@ -6,7 +6,8 @@ import {
   CreateProductDto,
   UpdateProductUseCase,
   UpdateProductDto,
-  DeleteProductUseCase
+  DeleteProductUseCase,
+  GetSatCatalogsUseCase
 } from '@virteex/catalog-application';
 
 @ApiTags('Catalog')
@@ -16,7 +17,8 @@ export class CatalogController {
     private readonly getProductsUseCase: GetProductsUseCase,
     private readonly createProductUseCase: CreateProductUseCase,
     private readonly updateProductUseCase: UpdateProductUseCase,
-    private readonly deleteProductUseCase: DeleteProductUseCase
+    private readonly deleteProductUseCase: DeleteProductUseCase,
+    private readonly getSatCatalogsUseCase: GetSatCatalogsUseCase
   ) {}
 
   @Get('products')
@@ -42,5 +44,23 @@ export class CatalogController {
   @ApiOperation({ summary: 'Delete a product' })
   async deleteProduct(@Param('id') id: number) {
     return this.deleteProductUseCase.execute(id);
+  }
+
+  @Get('sat/payment-forms')
+  @ApiOperation({ summary: 'Get SAT Payment Forms' })
+  getPaymentForms() {
+    return this.getSatCatalogsUseCase.getPaymentForms();
+  }
+
+  @Get('sat/payment-methods')
+  @ApiOperation({ summary: 'Get SAT Payment Methods' })
+  getPaymentMethods() {
+    return this.getSatCatalogsUseCase.getPaymentMethods();
+  }
+
+  @Get('sat/cfdi-usages')
+  @ApiOperation({ summary: 'Get SAT CFDI Usages' })
+  getCfdiUsages() {
+    return this.getSatCatalogsUseCase.getCfdiUsages();
   }
 }

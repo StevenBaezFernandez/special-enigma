@@ -11,7 +11,7 @@ import {
   TAX_STRATEGY_FACTORY,
   AttendanceRepository,
   ATTENDANCE_REPOSITORY,
-  PayrollPeriodCalculator,
+  PayrollCalculationService,
   TenantConfigRepository,
   TENANT_CONFIG_REPOSITORY
 } from '@virteex/payroll-domain';
@@ -25,7 +25,7 @@ export class CalculatePayrollUseCase {
     @Inject(TAX_STRATEGY_FACTORY) private taxStrategyFactory: TaxStrategyFactory,
     @Inject(TENANT_CONFIG_REPOSITORY) private tenantConfigRepo: TenantConfigRepository,
     @Inject(ATTENDANCE_REPOSITORY) private attendanceRepository: AttendanceRepository,
-    private payrollCalculator: PayrollPeriodCalculator
+    private payrollCalculator: PayrollCalculationService
   ) {}
 
   async execute(dto: CalculatePayrollDto): Promise<Payroll> {
@@ -79,15 +79,22 @@ export class CalculatePayrollUseCase {
     const salaryDetail = new PayrollDetail(tenantId, 'Sueldo Base', baseAmount, PayrollDetailType.EARNING);
     payroll.details.add(salaryDetail);
 
-    // Add Tax Deduction (Using Strategy)
+    // Calculate ISR (Tax Deduction)
     const taxAmount = await taxStrategy.calculateTax(baseAmount, end);
-    const taxDetail = new PayrollDetail(tenantId, 'Impuestos Retenidos', taxAmount, PayrollDetailType.DEDUCTION);
+    const taxDetail = new PayrollDetail(tenantId, 'ISR Retenido', taxAmount, PayrollDetailType.DEDUCTION);
     payroll.details.add(taxDetail);
+
+    // Calculate IMSS
+    const days = this.payrollCalculator.calculateDays(start, end);
+    const dailySalary = employee.salary / 30; // Approx
+    const imssAmount = this.payrollCalculator.calculateImss(dailySalary, days);
+    const imssDetail = new PayrollDetail(tenantId, 'Cuota IMSS', imssAmount, PayrollDetailType.DEDUCTION);
+    payroll.details.add(imssDetail);
 
     // Update totals
     payroll.totalEarnings = baseAmount;
-    payroll.totalDeductions = taxAmount;
-    payroll.netPay = Number((baseAmount - taxAmount).toFixed(2));
+    payroll.totalDeductions = taxAmount + imssAmount;
+    payroll.netPay = Number((baseAmount - payroll.totalDeductions).toFixed(2));
 
     await this.payrollRepository.save(payroll);
 

@@ -177,7 +177,8 @@
     "rxjs": "^7.8.0",
     "socket.io-client": "^4.8.3",
     "uuid": "^13.0.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xslt-processor": "^5.0.2"
   },
   "lint-staged": {
     "*.{ts,js,html}": [

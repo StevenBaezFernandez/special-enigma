@@ -35,30 +35,16 @@ export class BillingService {
   // Signals for state
   plans = signal<Plan[]>([]);
 
-  // TODO: Fetch real subscription from Organization details or dedicated endpoint
-  // For now, keeping mock structure but ready to integrate
-  currentSubscription = signal<Subscription>({
-    planName: 'Profesional',
-    planId: 'pro',
-    status: 'Activo',
-    price: 49.00,
-    billingCycle: 'mensual',
-    nextBillingDate: '2025-08-20',
-  });
+  // Removed hardcoded mock. Initialized to null.
+  currentSubscription = signal<Subscription | null>(null);
 
-  paymentMethod = signal<PaymentMethod>({
-    type: 'Visa',
-    last4: '4242',
-    expiryDate: '12/27'
-  });
+  paymentMethod = signal<PaymentMethod | null>(null);
 
-  paymentHistory = signal<PaymentHistoryItem[]>([
-    { id: 'pay_1', date: '2025-07-20', description: 'Suscripción Mensual - Plan Profesional', amount: 49.00 },
-    { id: 'pay_2', date: '2025-06-20', description: 'Suscripción Mensual - Plan Profesional', amount: 49.00 },
-  ]);
+  paymentHistory = signal<PaymentHistoryItem[]>([]);
 
   constructor() {
     this.loadPlans();
+    this.loadSubscription();
   }
 
   loadPlans() {
@@ -71,6 +57,17 @@ export class BillingService {
     ).subscribe();
   }
 
+  loadSubscription() {
+      this.http.get<Subscription>(`${this.apiUrl}/saas/subscription`).pipe(
+          tap(sub => this.currentSubscription.set(sub)),
+          catchError(err => {
+              // console.error('Failed to load subscription', err);
+              // Fallback to null (inactive)
+              return of(null);
+          })
+      ).subscribe();
+  }
+
   getUsage(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/saas/usage`).pipe(
         catchError(err => {
@@ -80,11 +77,11 @@ export class BillingService {
     );
   }
 
-  getSubscription(): Observable<Subscription> {
+  getSubscription(): Observable<Subscription | null> {
     return of(this.currentSubscription());
   }
 
-  getPaymentMethod(): Observable<PaymentMethod> {
+  getPaymentMethod(): Observable<PaymentMethod | null> {
     return of(this.paymentMethod());
   }
 
@@ -93,8 +90,6 @@ export class BillingService {
   }
 
   changePlan(newPlanId: string): Observable<boolean> {
-    // console.log('Cambiando al plan:', newPlanId);
-    // In a real app, this would call POST /payment/checkout-session with the priceId from the plan
     const plan = this.plans().find(p => p.slug === newPlanId || p.id === newPlanId);
     if (!plan) return of(false);
 

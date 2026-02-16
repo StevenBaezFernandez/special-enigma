@@ -461,7 +461,10 @@
         "libs/shared/infrastructure/storage/src/*"
       ],
       "@virteex/finops": ["libs/kernel/finops/src/index.ts"],
-      "@virteex/finops/*": ["libs/kernel/finops/src/*"]
+      "@virteex/finops/*": ["libs/kernel/finops/src/*"],
+      "@virteex/shared-infrastructure-xslt": [
+        "libs/shared/infrastructure/xslt/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
