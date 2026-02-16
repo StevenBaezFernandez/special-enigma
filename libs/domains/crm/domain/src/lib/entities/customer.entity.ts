@@ -32,6 +32,9 @@ export class Customer {
   taxId?: string;
 
   @Property({ nullable: true })
+  taxRegimen?: string;
+
+  @Property({ nullable: true })
   contactPerson?: string;
 
   @Property({ nullable: true })

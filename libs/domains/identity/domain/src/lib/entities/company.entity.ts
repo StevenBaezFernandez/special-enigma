@@ -20,6 +20,9 @@ export class Company {
   @Property({ nullable: true })
   regime?: string; // Simplified, Ordinary, Gran Contribuyente
 
+  @Property({ nullable: true })
+  postalCode?: string;
+
   @Property()
   currency = 'USD'; // Default, adaptive based on country
 

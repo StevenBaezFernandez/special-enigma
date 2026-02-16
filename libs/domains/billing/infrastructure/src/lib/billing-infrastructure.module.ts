@@ -23,6 +23,8 @@ import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscri
 import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';
 import { MikroOrmPaymentMethodRepository } from './repositories/mikro-orm-payment-method.repository';
 import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
+import { MikroOrmCrmCustomerRepository } from './repositories/mikro-orm-crm-customer.repository';
+import { CUSTOMER_REPOSITORY } from '@virteex/billing-domain';
 
 @Global()
 @Module({
@@ -68,6 +70,10 @@ import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-
     {
       provide: TENANT_CONFIG_REPOSITORY,
       useClass: MikroOrmTenantConfigRepository
+    },
+    {
+      provide: CUSTOMER_REPOSITORY,
+      useClass: MikroOrmCrmCustomerRepository
     }
   ],
   exports: [
@@ -77,6 +83,7 @@ import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-
     PAYMENT_METHOD_REPOSITORY,
     PAC_STRATEGY_FACTORY,
     TENANT_CONFIG_REPOSITORY,
+    CUSTOMER_REPOSITORY,
     MikroOrmModule,
     FinkokPacProvider, // Exporting concrete class might be needed by Factory
     NullPacProvider
