@@ -1,13 +1,15 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import { User, UserRepository, NotificationService, AuthService } from '@virteex/identity-domain';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { User, UserRepository, AuthService, UserInvitedEvent } from '@virteex/identity-domain';
 import { InviteUserDto } from '../dto/invite-user.dto';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class InviteUserUseCase {
   constructor(
     @Inject(UserRepository) private readonly userRepository: UserRepository,
-    @Inject(NotificationService) private readonly notificationService: NotificationService,
-    @Inject(AuthService) private readonly authService: AuthService
+    @Inject(AuthService) private readonly authService: AuthService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(dto: InviteUserDto, currentUserId: string): Promise<User> {
@@ -19,8 +21,8 @@ export class InviteUserUseCase {
     const currentUser = await this.userRepository.findById(currentUserId);
     if (!currentUser) throw new Error('Inviter not found');
 
-    const tempPassword = Math.random().toString(36).slice(-8);
-    const passwordHash = await this.authService.hashPassword(tempPassword);
+    const token = randomUUID();
+    const passwordHash = await this.authService.hashPassword(randomUUID());
 
     const user = new User(
       dto.email,
@@ -31,9 +33,13 @@ export class InviteUserUseCase {
       currentUser.company
     );
     user.role = dto.role;
+    user.status = 'INVITED';
+    user.invitationToken = token;
+    user.invitationExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     await this.userRepository.save(user);
-    await this.notificationService.sendWelcomeEmail(user, tempPassword);
+
+    this.eventEmitter.emit('user.invited', new UserInvitedEvent(user, token));
 
     return user;
   }

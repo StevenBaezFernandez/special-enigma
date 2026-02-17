@@ -15,3 +15,4 @@ export * from './lib/ports/job-title.repository';
 export * from './lib/ports/geo-ip.port';
 
 export * from './lib/events/user-registered.event';
+export * from './lib/events/user-invited.event';

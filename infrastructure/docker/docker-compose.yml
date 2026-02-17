@@ -31,9 +31,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: virteex
-      POSTGRES_PASSWORD: virteex_password
-      POSTGRES_DB: virteex_core
+      POSTGRES_USER: ${POSTGRES_USER:-virteex}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-virteex_password}
+      POSTGRES_DB: ${POSTGRES_DB:-virteex_core}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -52,14 +52,24 @@ services:
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/virteex_keycloak
-      KC_DB_USERNAME: virteex
-      KC_DB_PASSWORD: virteex_password
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB_USERNAME: ${POSTGRES_USER:-virteex}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-virteex_password}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
     ports:
       - "8080:8080"
     depends_on:
       - postgres
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.50
+    container_name: virteex-jaeger
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      COLLECTOR_OTLP_ENABLED: true
 
 volumes:
   postgres_data:

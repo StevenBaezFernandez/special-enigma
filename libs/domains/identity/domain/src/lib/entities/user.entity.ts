@@ -2,7 +2,7 @@ import { Entity, PrimaryKey, Property, ManyToOne, Unique } from '@mikro-orm/core
 import type { Company } from './company.entity';
 import { v4 as uuidv4 } from 'uuid';
 
-@Entity()
+@Entity({ schema: 'identity' })
 export class User {
   @PrimaryKey({ type: 'uuid' })
   id: string = uuidv4();
@@ -40,6 +40,15 @@ export class User {
 
   @Property()
   isActive = true;
+
+  @Property()
+  status = 'PENDING';
+
+  @Property({ nullable: true })
+  invitationToken?: string;
+
+  @Property({ nullable: true })
+  invitationExpiresAt?: Date;
 
   // New fields for Authentication Security
   @Property()
