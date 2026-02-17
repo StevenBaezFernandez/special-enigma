@@ -5,7 +5,7 @@ import type { PayrollDetail } from './payroll-detail.entity';
 
 @Entity()
 export class Payroll {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

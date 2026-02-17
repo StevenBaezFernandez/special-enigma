@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
   InventoryMovement,
@@ -13,6 +13,7 @@ import { MikroOrmInventoryRepository } from './repositories/mikro-orm-inventory.
 import { MikroOrmWarehouseRepository } from './repositories/mikro-orm-warehouse.repository';
 import { CatalogProductAdapter } from './adapters/catalog-product.adapter';
 
+@Global()
 @Module({
   imports: [
     MikroOrmModule.forFeature([InventoryMovement, Stock, Warehouse, Location])

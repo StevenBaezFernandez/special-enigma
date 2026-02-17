@@ -1,15 +1,18 @@
-import { Module } from '@nestjs/common';
-import { SALES_PORT, INVOICE_PORT, EXPENSES_PORT, BI_REPORT_REPOSITORY } from '@virteex/bi-domain';
+import { Module, Global } from '@nestjs/common';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { SALES_PORT, INVOICE_PORT, EXPENSES_PORT, BI_REPORT_REPOSITORY, BiReport } from '@virteex/bi-domain';
 import { CrmSalesAdapter } from './adapters/crm-sales.adapter';
 import { BiInvoiceAdapter } from './adapters/bi-invoice.adapter';
 import { BiExpensesAdapter } from './adapters/bi-expenses.adapter';
 import { CrmInfrastructureModule } from '@virteex/crm-infrastructure';
 import { BillingInfrastructureModule } from '@virteex/billing-infrastructure';
 import { PayrollInfrastructureModule } from '@virteex/payroll-infrastructure';
-import { MockBiReportRepository } from './repositories/mock-bi-report.repository';
+import { MikroOrmBiReportRepository } from './repositories/mikro-orm-bi-report.repository';
 
+@Global()
 @Module({
   imports: [
+    MikroOrmModule.forFeature([BiReport]),
     CrmInfrastructureModule,
     BillingInfrastructureModule,
     PayrollInfrastructureModule
@@ -29,7 +32,7 @@ import { MockBiReportRepository } from './repositories/mock-bi-report.repository
     },
     {
       provide: BI_REPORT_REPOSITORY,
-      useClass: MockBiReportRepository
+      useClass: MikroOrmBiReportRepository
     }
   ],
   exports: [SALES_PORT, INVOICE_PORT, EXPENSES_PORT, BI_REPORT_REPOSITORY]

@@ -4,7 +4,7 @@ import type { Project } from './project.entity';
 
 @Entity()
 export class Task {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

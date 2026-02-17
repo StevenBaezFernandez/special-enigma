@@ -3,7 +3,7 @@ import type { PurchaseOrder } from './purchase-order.entity';
 
 @Entity()
 export class PurchaseOrderItem {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @ManyToOne('PurchaseOrder')

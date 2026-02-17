@@ -5,7 +5,7 @@ import type { PurchaseOrderItem } from './purchase-order-item.entity';
 
 @Entity()
 export class PurchaseOrder {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

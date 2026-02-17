@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { BiReportRepository, BiReport } from '@virteex/bi-domain';
+import { BiReportRepository } from '@virteex/bi-domain';
+import { BiReport } from '@virteex/bi-domain';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 

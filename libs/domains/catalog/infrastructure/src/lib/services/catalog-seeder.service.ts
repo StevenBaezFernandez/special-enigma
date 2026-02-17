@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager } from '@mikro-orm/core'; // Changed from @mikro-orm/postgresql to @mikro-orm/core for driver agnostic
 import { SatPaymentForm, SatPaymentMethod, SatCfdiUsage } from '@virteex/catalog-domain';
 
 @Injectable()
@@ -10,9 +10,11 @@ export class CatalogSeederService {
 
   async seed() {
     this.logger.log('Checking if catalog data seeding is required...');
+    // Create a fork to use a dedicated context for seeding, avoiding global EM validation issues
+    const em = this.em.fork();
 
     // Payment Forms
-    const formCount = await this.em.count(SatPaymentForm, {});
+    const formCount = await em.count(SatPaymentForm, {});
     if (formCount === 0) {
       this.logger.log('Seeding SAT Payment Forms...');
       const forms = [
@@ -43,12 +45,12 @@ export class CatalogSeederService {
         const entity = new SatPaymentForm();
         entity.code = f.code;
         entity.name = f.name;
-        this.em.persist(entity);
+        em.persist(entity);
       }
     }
 
     // Payment Methods
-    const methodCount = await this.em.count(SatPaymentMethod, {});
+    const methodCount = await em.count(SatPaymentMethod, {});
     if (methodCount === 0) {
       this.logger.log('Seeding SAT Payment Methods...');
       const methods = [
@@ -59,12 +61,12 @@ export class CatalogSeederService {
         const entity = new SatPaymentMethod();
         entity.code = m.code;
         entity.name = m.name;
-        this.em.persist(entity);
+        em.persist(entity);
       }
     }
 
     // CFDI Usages
-    const usageCount = await this.em.count(SatCfdiUsage, {});
+    const usageCount = await em.count(SatCfdiUsage, {});
     if (usageCount === 0) {
       this.logger.log('Seeding SAT CFDI Usages...');
       const usages = [
@@ -97,11 +99,11 @@ export class CatalogSeederService {
         const entity = new SatCfdiUsage();
         entity.code = u.code;
         entity.name = u.name;
-        this.em.persist(entity);
+        em.persist(entity);
       }
     }
 
-    await this.em.flush();
+    await em.flush();
     this.logger.log('Catalog seeding complete.');
   }
 }

@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { HealthCheck, HealthCheckService, HttpHealthIndicator, MemoryHealthIndicator } from '@nestjs/terminus';
+import { HealthCheckService, HttpHealthIndicator, HealthCheck, MemoryHealthIndicator } from '@nestjs/terminus';
+import { Public } from '@virteex/auth';
 
 @Controller('health')
 export class HealthController {
@@ -11,6 +12,7 @@ export class HealthController {
 
   @Get()
   @HealthCheck()
+  @Public()
   check() {
     return this.health.check([
       () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),

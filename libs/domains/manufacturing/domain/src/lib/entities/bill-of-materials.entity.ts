@@ -2,7 +2,7 @@ import { Entity, PrimaryKey, Property, OneToMany, Collection, Cascade } from '@m
 
 @Entity()
 export class BillOfMaterials {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()
@@ -35,7 +35,7 @@ export class BillOfMaterials {
 
 @Entity()
 export class BillOfMaterialsComponent {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

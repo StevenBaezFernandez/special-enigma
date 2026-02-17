@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
@@ -9,7 +9,8 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { JwtAuthGuard } from '@virteex/auth';
+import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/auth';
+import { TenantRlsInterceptor, TenantModule } from '@virteex/tenant';
 import { AppController } from './app.controller';
 import { HealthController } from './health.controller';
 import { AppService } from './app.service';
@@ -17,24 +18,6 @@ import { InitialSeederService } from './seeds/initial-seeder.service';
 
 // Cross Domain Infrastructure (Application Level)
 import { CrossDomainInfrastructureModule } from './infrastructure/cross-domain.module';
-
-// Domain Modules - Infrastructure
-import { BillingDomainModule } from '@virteex/billing-domain';
-import { BillingInfrastructureModule } from '@virteex/billing-infrastructure';
-import { ProjectsInfrastructureModule } from '@virteex/projects-infrastructure';
-import { ManufacturingInfrastructureModule } from '@virteex/manufacturing-infrastructure';
-import { FixedAssetsInfrastructureModule } from '@virteex/fixed-assets-infrastructure';
-import { BiInfrastructureModule } from '@virteex/bi-infrastructure';
-import { AdminInfrastructureModule } from '@virteex/admin-infrastructure';
-import { FiscalInfrastructureModule } from '@virteex/fiscal-infrastructure';
-import { AccountingInfrastructureModule } from '@virteex/accounting-infrastructure';
-import { InventoryInfrastructureModule } from '@virteex/inventory-infrastructure';
-import { PayrollInfrastructureModule } from '@virteex/payroll-infrastructure';
-import { CrmInfrastructureModule } from '@virteex/crm-infrastructure';
-import { TreasuryInfrastructureModule } from '@virteex/treasury-infrastructure';
-import { PurchasingInfrastructureModule } from '@virteex/purchasing-infrastructure';
-import { CatalogInfrastructureModule } from '@virteex/catalog-infrastructure';
-import { IdentityInfrastructureModule } from '@virteex/identity-infrastructure';
 
 // Domain Modules - Presentation
 import { BillingPresentationModule } from '@virteex/billing-presentation';
@@ -99,30 +82,13 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
       },
     }),
 
+    // Core Modules
+    TenantModule,
+
     // Cross Domain Infrastructure
     CrossDomainInfrastructureModule,
 
-    // Infrastructure Modules
-    BillingInfrastructureModule,
-    ProjectsInfrastructureModule,
-    ManufacturingInfrastructureModule,
-    FixedAssetsInfrastructureModule,
-    BiInfrastructureModule,
-    AdminInfrastructureModule,
-    FiscalInfrastructureModule,
-    AccountingInfrastructureModule,
-    InventoryInfrastructureModule,
-    PayrollInfrastructureModule,
-    CrmInfrastructureModule,
-    TreasuryInfrastructureModule,
-    PurchasingInfrastructureModule,
-    CatalogInfrastructureModule,
-    IdentityInfrastructureModule,
-
-    // Domain Definition Modules (if needed)
-    BillingDomainModule,
-
-    // Presentation Modules
+    // Presentation Modules (These import Infra internally)
     BillingPresentationModule,
     IdentityPresentationModule,
     FixedAssetsPresentationModule,
@@ -156,6 +122,16 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TenantRlsInterceptor,
+    },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(JwtTenantMiddleware)
+      .forRoutes('*');
+  }
+}

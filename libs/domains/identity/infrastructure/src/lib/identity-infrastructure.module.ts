@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule } from '@nestjs/config';
 import {
-  User, Company, AuditLog, Session, JobTitle,
   UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository,
-  AuthService, NotificationService, RiskEngineService
+  AuthService, NotificationService, RiskEngineService,
+  User, Company, AuditLog, Session, JobTitle
 } from '@virteex/identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
@@ -29,6 +29,7 @@ import {
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
 
+@Global()
 @Module({
   imports: [
     ConfigModule,

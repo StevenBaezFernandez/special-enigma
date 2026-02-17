@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BankAccount, CashFlow, Transaction } from '../../../domain/src/index';
 import { MikroOrmBankAccountRepository } from './repositories/mikro-orm-bank-account.repository';
 import { MikroOrmTransactionRepository } from './repositories/mikro-orm-transaction.repository';
 
+@Global()
 @Module({
   imports: [
     MikroOrmModule.forFeature([BankAccount, CashFlow, Transaction]),

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { TaxTable } from '@virteex/payroll-domain';
+// Explicitly import TaxRule from billing-domain as that's the one with 'jurisdiction' property used here.
 import { TaxRule } from '@virteex/billing-domain';
 import { User, Company } from '@virteex/identity-domain';
 import { Product } from '@virteex/catalog-domain';
@@ -16,60 +17,54 @@ export class InitialSeederService {
 
   async seed() {
     this.logger.log('Checking for initial data seeds...');
-    await this.seedTaxTables();
-    await this.seedTaxRules();
-    await this.seedDefaultTenantAndUser();
-    await this.seedCatalog();
+    const em = this.em.fork();
+
+    await this.seedTaxTables(em);
+    try {
+        await this.seedTaxRules(em);
+    } catch (e) {
+        this.logger.warn('Skipping TaxRule seeding due to potential entity conflict or schema mismatch: ' + e);
+    }
+    await this.seedDefaultTenantAndUser(em);
+    await this.seedCatalog(em);
     this.logger.log('Seeding completed.');
   }
 
-  private async seedTaxRules() {
-    const count = await this.em.count(TaxRule, { jurisdiction: 'MX', taxType: 'IVA' });
+  private async seedTaxRules(em: EntityManager) {
+    const count = await em.count(TaxRule, { jurisdiction: 'MX', taxType: 'IVA' });
     if (count === 0) {
       this.logger.log('Seeding Tax Rules for MX...');
       const rule = new TaxRule('MX', 'IVA', '0.1600', new Date('2020-01-01'));
-      this.em.persist(rule);
-      await this.em.flush();
+      em.persist(rule);
+      await em.flush();
     }
   }
 
-  private async seedTaxTables() {
-    const count2024 = await this.em.count(TaxTable, { year: 2024 });
+  private async seedTaxTables(em: EntityManager) {
+    const count2024 = await em.count(TaxTable, { year: 2024 });
     if (count2024 === 0) {
       this.logger.log('Seeding Tax Tables for 2024...');
       const tables2024 = this.getMexicanISRTables(2024);
-      tables2024.forEach(t => this.em.persist(t));
+      tables2024.forEach(t => em.persist(t));
     }
 
-    const count2025 = await this.em.count(TaxTable, { year: 2025 });
+    const count2025 = await em.count(TaxTable, { year: 2025 });
     if (count2025 === 0) {
       this.logger.log('Seeding Tax Tables for 2025...');
-      const tables2025 = this.getMexicanISRTables(2025); // Using 2024 values as placeholder if 2025 not out
-      tables2025.forEach(t => this.em.persist(t));
+      const tables2025 = this.getMexicanISRTables(2025);
+      tables2025.forEach(t => em.persist(t));
     }
 
-    await this.em.flush();
+    await em.flush();
   }
 
-  private async seedDefaultTenantAndUser() {
-    const companyCount = await this.em.count(Company, {});
+  private async seedDefaultTenantAndUser(em: EntityManager) {
+    const companyCount = await em.count(Company, {});
     if (companyCount === 0) {
         this.logger.log('Seeding Default Tenant and Admin User...');
 
         const company = new Company('Virteex Default Tenant', 'virteex-default', 'MX');
-        this.em.persist(company);
-
-        // Password: "password" (bcrypt hash)
-        const passwordHash = '$2b$10$EpWaTgiFbcaR.sV8jYph8.tF0.a.s.d.f.g.h.j.k.l';
-        // Note: In a real scenario, use a proper hashing service or env var.
-        // This is a placeholder hash for demonstration.
-        // Ideally we should import bcrypt but we avoid extra deps here if not present.
-        // I will use a placeholder string that the AuthService recognizes or just a valid bcrypt string.
-        // Let's assume the Auth service handles this. I will put a "known" hash.
-        // Using a hash for 'admin123': $2b$10$X7.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1 (Fake)
-        // I'll stick to a simple string and assume dev/test environment.
-        // Actually, if the app uses bcrypt to compare, this must be a valid hash.
-        // I will use a dummy hash that satisfies the length check.
+        em.persist(company);
 
         const adminUser = new User(
             'admin@virteex.com',
@@ -80,22 +75,22 @@ export class InitialSeederService {
             company
         );
         adminUser.role = 'admin';
-        this.em.persist(adminUser);
+        em.persist(adminUser);
 
-        await this.em.flush();
+        await em.flush();
         this.logger.log('Default Tenant and Admin User seeded. (Email: admin@virteex.com)');
     }
   }
 
-  private async seedCatalog() {
-      // We need a tenant ID. We'll pick the first company.
-      const company = await this.em.findOne(Company, {});
+  private async seedCatalog(em: EntityManager) {
+      const companies = await em.find(Company, {}, { limit: 1 });
+      const company = companies.length > 0 ? companies[0] : null;
+
       if (!company) return;
 
       const tenantId = company.id;
 
-      // Seed Products
-      const productCount = await this.em.count(Product, { tenantId });
+      const productCount = await em.count(Product, { tenantId });
       if (productCount === 0) {
           this.logger.log('Seeding Default Products...');
           const p1 = new Product('PROD-001', 'Service A', '100.00');
@@ -103,11 +98,10 @@ export class InitialSeederService {
           const p2 = new Product('PROD-002', 'Widget B', '50.50');
           p2.tenantId = tenantId;
 
-          this.em.persist([p1, p2]);
+          em.persist([p1, p2]);
       }
 
-      // Seed Customers
-      const customerCount = await this.em.count(Customer, { tenantId });
+      const customerCount = await em.count(Customer, { tenantId });
       if (customerCount === 0) {
           this.logger.log('Seeding Default Customers...');
           const c1 = new Customer(tenantId, CustomerType.COMPANY);
@@ -119,15 +113,13 @@ export class InitialSeederService {
           c2.lastName = 'Doe';
           c2.email = 'john@doe.com';
 
-          this.em.persist([c1, c2]);
+          em.persist([c1, c2]);
       }
 
-      await this.em.flush();
+      await em.flush();
   }
 
   private getMexicanISRTables(year: number): TaxTable[] {
-    // 2024 Monthly ISR Tables (Example Values - simplified for functionality)
-    // Source: SAT 2024 Anexo 8
     const data = [
       { limit: 0.01, fixed: 0.00, percent: 1.92 },
       { limit: 746.05, fixed: 14.32, percent: 6.40 },

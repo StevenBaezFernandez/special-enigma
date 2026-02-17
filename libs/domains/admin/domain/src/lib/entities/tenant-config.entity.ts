@@ -2,7 +2,7 @@ import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity()
 export class TenantConfig {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()
