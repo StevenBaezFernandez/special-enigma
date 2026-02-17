@@ -1,12 +1,13 @@
-import { Module, Global } from '@nestjs/common';
+import { Module, Global, OnModuleInit } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Product, SAT_CATALOG_REPOSITORY } from '@virteex/catalog-domain';
+import { Product, SAT_CATALOG_REPOSITORY, SatPaymentForm, SatPaymentMethod, SatCfdiUsage } from '@virteex/catalog-domain';
 import { MikroOrmProductRepository } from './repositories/mikro-orm-product.repository';
-import { InMemorySatCatalogRepository } from './repositories/in-memory-sat-catalog.repository';
+import { MikroOrmSatCatalogRepository } from './repositories/mikro-orm-sat-catalog.repository';
+import { CatalogSeederService } from './services/catalog-seeder.service';
 
 @Global()
 @Module({
-  imports: [MikroOrmModule.forFeature([Product])],
+  imports: [MikroOrmModule.forFeature([Product, SatPaymentForm, SatPaymentMethod, SatCfdiUsage])],
   providers: [
     {
       provide: 'ProductRepository',
@@ -14,9 +15,16 @@ import { InMemorySatCatalogRepository } from './repositories/in-memory-sat-catal
     },
     {
       provide: SAT_CATALOG_REPOSITORY,
-      useClass: InMemorySatCatalogRepository,
+      useClass: MikroOrmSatCatalogRepository,
     },
+    CatalogSeederService
   ],
-  exports: ['ProductRepository', SAT_CATALOG_REPOSITORY],
+  exports: ['ProductRepository', SAT_CATALOG_REPOSITORY, CatalogSeederService],
 })
-export class CatalogInfrastructureModule {}
+export class CatalogInfrastructureModule implements OnModuleInit {
+  constructor(private readonly seeder: CatalogSeederService) {}
+
+  async onModuleInit() {
+    await this.seeder.seed();
+  }
+}
