@@ -8,8 +8,12 @@ import {
   FiscalStampingService,
   InvoiceStampedEvent,
   ProductRepository,
-  PRODUCT_REPOSITORY
+  PRODUCT_REPOSITORY,
+  TaxCalculatorService,
+  TENANT_CONFIG_REPOSITORY,
+  TenantConfigRepository
 } from '@virteex/billing-domain';
+import { DomainException } from '@virteex/shared-util-server-config';
 import { CreateInvoiceDto } from '../dtos/create-invoice.dto';
 import { Decimal } from 'decimal.js';
 
@@ -20,16 +24,21 @@ export class CreateInvoiceUseCase {
   constructor(
     @Inject(INVOICE_REPOSITORY) private readonly invoiceRepository: InvoiceRepository,
     @Inject(PRODUCT_REPOSITORY) private readonly productRepository: ProductRepository,
+    @Inject(TENANT_CONFIG_REPOSITORY) private readonly tenantConfigRepository: TenantConfigRepository,
     private readonly fiscalStampingService: FiscalStampingService,
+    private readonly taxCalculatorService: TaxCalculatorService,
     private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(dto: CreateInvoiceDto): Promise<Invoice> {
     if (!dto.tenantId) {
-        throw new Error('Tenant ID is required');
+        throw new DomainException('Tenant ID is required', 'TENANT_REQUIRED');
     }
     let subtotal = new Decimal(0);
     let totalTax = new Decimal(0);
+
+    const tenantConfig = await this.tenantConfigRepository.getFiscalConfig(dto.tenantId);
+    const jurisdiction = tenantConfig.country || 'MX';
 
     const invoice = new Invoice(dto.tenantId, dto.customerId, '0', '0');
     invoice.dueDate = new Date(dto.dueDate);
@@ -53,13 +62,15 @@ export class CreateInvoiceUseCase {
                     price = catalogPrice;
                 }
             } else {
-                 throw new Error(`Product with ID ${itemDto.productId} not found`);
+                 throw new DomainException(`Product with ID ${itemDto.productId} not found`, 'PRODUCT_NOT_FOUND');
             }
         }
 
-        const itemTaxRate = new Decimal(itemDto.taxRate ?? 0.16);
         const amount = qty.times(price);
-        const tax = amount.times(itemTaxRate);
+
+        // Dynamic Tax Calculation using Strategy
+        const taxResult = await this.taxCalculatorService.calculateTax(amount.toNumber(), jurisdiction);
+        const tax = new Decimal(taxResult.totalTax);
 
         subtotal = subtotal.plus(amount);
         totalTax = totalTax.plus(tax);
@@ -114,7 +125,7 @@ export class CreateInvoiceUseCase {
       // 3. Save Stamped (Update)
       await this.invoiceRepository.save(invoice);
 
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Failed to stamp invoice: ${error}`);
       // Record remains PENDING
       throw error;

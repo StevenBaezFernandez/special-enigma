@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { TaxTable } from '@virteex/payroll-domain';
+import { TaxRule } from '@virteex/billing-domain';
 import { User, Company } from '@virteex/identity-domain';
 import { Product } from '@virteex/catalog-domain';
 import { Customer } from '@virteex/crm-domain';
@@ -16,9 +17,20 @@ export class InitialSeederService {
   async seed() {
     this.logger.log('Checking for initial data seeds...');
     await this.seedTaxTables();
+    await this.seedTaxRules();
     await this.seedDefaultTenantAndUser();
     await this.seedCatalog();
     this.logger.log('Seeding completed.');
+  }
+
+  private async seedTaxRules() {
+    const count = await this.em.count(TaxRule, { jurisdiction: 'MX', taxType: 'IVA' });
+    if (count === 0) {
+      this.logger.log('Seeding Tax Rules for MX...');
+      const rule = new TaxRule('MX', 'IVA', '0.1600', new Date('2020-01-01'));
+      this.em.persist(rule);
+      await this.em.flush();
+    }
   }
 
   private async seedTaxTables() {

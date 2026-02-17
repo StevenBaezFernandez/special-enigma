@@ -21,7 +21,7 @@ export const appRoutes: Route[] = [
   {
     path: '',
     component: MainLayoutComponent,
-    // canActivate: [authGuard], // Disabled for verification
+    canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'accounting', pathMatch: 'full' }, // Redirect root to accounting or a dashboard
       { path: 'accounting', loadChildren: () => import('@virteex/accounting-ui').then(m => m.accountingRoutes) },

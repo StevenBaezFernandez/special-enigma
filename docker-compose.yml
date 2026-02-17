@@ -10,10 +10,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - VIRTEEX_HMAC_SECRET=dev-hmac-secret-for-local-only
-      - REDIS_URL=redis://redis:6379
-      - POSTGRES_URL=postgres://virteex:virteex_password@postgres:5432/virteex_erp
-      - NODE_ENV=development
+      - VIRTEEX_HMAC_SECRET=${VIRTEEX_HMAC_SECRET:-dev-hmac-secret-for-local-only}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - POSTGRES_URL=${POSTGRES_URL:-postgres://virteex:virteex_password@postgres:5432/virteex_erp}
+      - NODE_ENV=${NODE_ENV:-development}
     command: npm run start # Adjust based on actual start command or use nx serve
     depends_on:
       - postgres
@@ -25,7 +25,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: virteex
-      POSTGRES_PASSWORD: virteex_password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-virteex_password}
       POSTGRES_DB: virteex_erp
     ports:
       - "5432:5432"

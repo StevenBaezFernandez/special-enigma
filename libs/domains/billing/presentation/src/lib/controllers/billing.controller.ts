@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { CurrentTenant } from '@virteex/shared-util-server-config';
 import {
   CreateInvoiceUseCase,
   CreateInvoiceDto,
@@ -21,9 +22,8 @@ export class BillingController {
   ) {}
 
   @Post('invoices')
-  async create(@Body() dto: CreateInvoiceDto, @Query('tenantId') tenantId: string) {
-    // Basic tenant handling fallback
-    dto.tenantId = tenantId || 'default-tenant';
+  async create(@Body() dto: CreateInvoiceDto, @CurrentTenant() tenantId: string) {
+    dto.tenantId = tenantId;
     return await this.createInvoiceUseCase.execute(dto);
   }
 
@@ -38,15 +38,12 @@ export class BillingController {
   }
 
   @Get('history')
-  async getHistory(@Query('tenantId') tenantId: string) {
-    // Basic tenant handling - in real app should come from auth context
-    const tid = tenantId || 'default-tenant';
-    return await this.getPaymentHistoryUseCase.execute(tid);
+  async getHistory(@CurrentTenant() tenantId: string) {
+    return await this.getPaymentHistoryUseCase.execute(tenantId);
   }
 
   @Get('usage')
-  async getUsage(@Query('tenantId') tenantId: string) {
-    const tid = tenantId || 'default-tenant';
-    return await this.getUsageUseCase.execute(tid);
+  async getUsage(@CurrentTenant() tenantId: string) {
+    return await this.getUsageUseCase.execute(tenantId);
   }
 }
