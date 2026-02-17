@@ -7,9 +7,9 @@ import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
 import { ServerConfigModule } from '@virteex/shared-util-server-config';
 import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
-import { BillingPresentationModule } from '@virteex/billing-presentation';
-import { BillingInfrastructureModule } from '@virteex/billing-infrastructure';
-import { InitialSeederService } from './seeds/initial-seeder.service';
+import { CrmPresentationModule } from '@virteex/crm-presentation';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -27,8 +27,8 @@ import { InitialSeederService } from './seeds/initial-seeder.service';
     TerminusModule,
     ServerConfigModule,
     KafkaModule.forRoot({
-      clientId: 'billing-service',
-      groupId: 'billing-service-consumer',
+      clientId: 'crm-service',
+      groupId: 'crm-service-consumer',
     }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -37,14 +37,14 @@ import { InitialSeederService } from './seeds/initial-seeder.service';
         const isPostgres = configService.get('DB_DRIVER') === 'postgres';
         return {
           driver: isPostgres ? PostgreSqlDriver : SqliteDriver,
-          host: isPostgres ? (configService.get<string>('BILLING_DB_HOST') || configService.get<string>('DB_HOST')) : undefined,
-          port: isPostgres ? (configService.get<number>('BILLING_DB_PORT') || configService.get<number>('DB_PORT')) : undefined,
-          user: isPostgres ? (configService.get<string>('BILLING_DB_USER') || configService.get<string>('DB_USER')) : undefined,
-          password: isPostgres ? (configService.get<string>('BILLING_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
+          host: isPostgres ? (configService.get<string>('CRM_DB_HOST') || configService.get<string>('DB_HOST')) : undefined,
+          port: isPostgres ? (configService.get<number>('CRM_DB_PORT') || configService.get<number>('DB_PORT')) : undefined,
+          user: isPostgres ? (configService.get<string>('CRM_DB_USER') || configService.get<string>('DB_USER')) : undefined,
+          password: isPostgres ? (configService.get<string>('CRM_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
           dbName: (() => {
-            const dbName = configService.get<string>('BILLING_DB_NAME');
+            const dbName = configService.get<string>('CRM_DB_NAME');
             if (!dbName) {
-              throw new Error('BILLING_DB_NAME environment variable is required.');
+              throw new Error('CRM_DB_NAME environment variable is required.');
             }
             return dbName;
           })(),
@@ -57,9 +57,9 @@ import { InitialSeederService } from './seeds/initial-seeder.service';
         };
       },
     }),
-    BillingInfrastructureModule,
-    BillingPresentationModule,
+    CrmPresentationModule,
   ],
-  providers: [InitialSeederService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

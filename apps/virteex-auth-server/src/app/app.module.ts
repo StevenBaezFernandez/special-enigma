@@ -26,7 +26,13 @@ import { AppService } from './app.service';
           port: isPostgres ? (configService.get<number>('IDENTITY_DB_PORT') || configService.get<number>('DB_PORT')) : undefined,
           user: isPostgres ? (configService.get<string>('IDENTITY_DB_USER') || configService.get<string>('DB_USER')) : undefined,
           password: isPostgres ? (configService.get<string>('IDENTITY_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
-          dbName: configService.get<string>('IDENTITY_DB_NAME') || configService.get<string>('DB_NAME') || (isPostgres ? 'virteex_identity' : 'virteex.db'),
+          dbName: (() => {
+            const dbName = configService.get<string>('IDENTITY_DB_NAME');
+            if (!dbName) {
+              throw new Error('IDENTITY_DB_NAME environment variable is required.');
+            }
+            return dbName;
+          })(),
           autoLoadEntities: true,
           driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))
             ? {
