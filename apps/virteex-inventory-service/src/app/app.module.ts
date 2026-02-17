@@ -49,7 +49,13 @@ import { InventoryPresentationModule } from '@virteex/inventory-presentation';
           port: isPostgres ? (configService.get<number>('INVENTORY_DB_PORT') || configService.get<number>('DB_PORT')) : undefined,
           user: isPostgres ? (configService.get<string>('INVENTORY_DB_USER') || configService.get<string>('DB_USER')) : undefined,
           password: isPostgres ? (configService.get<string>('INVENTORY_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
-          dbName: configService.get<string>('INVENTORY_DB_NAME') || configService.get<string>('DB_NAME') || (isPostgres ? 'virteex' : 'virteex.db'),
+          dbName: (() => {
+            const dbName = configService.get<string>('INVENTORY_DB_NAME');
+            if (!dbName && configService.get('NODE_ENV') === 'production') {
+              throw new Error('INVENTORY_DB_NAME environment variable is required in production.');
+            }
+            return dbName || configService.get<string>('DB_NAME') || (isPostgres ? 'virteex' : 'virteex.db');
+          })(),
           autoLoadEntities: true,
           driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))
             ? {

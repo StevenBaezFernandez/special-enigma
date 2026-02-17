@@ -9,6 +9,7 @@ otelSDK.start();
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { Logger as PinoLogger } from 'nestjs-pino';
 import { NestFactory } from '@nestjs/core';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
@@ -19,6 +20,21 @@ import { MikroORM } from '@mikro-orm/core';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        brokers: process.env.KAFKA_BROKERS?.split(',') || ['localhost:9092'],
+      },
+      consumer: {
+        groupId: 'api-gateway-consumer',
+      },
+    },
+  });
+
+  await app.startAllMicroservices();
+
   app.useLogger(app.get(PinoLogger));
 
   // Ensure Database Schema exists (Auto-migration for dev/demo)

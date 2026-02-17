@@ -1,16 +1,18 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Customer } from '@virteex/crm-domain';
-import { Product } from '@virteex/catalog-domain';
 import { CUSTOMER_REPOSITORY, PRODUCT_REPOSITORY } from '@virteex/billing-domain';
 import { MikroOrmCrmCustomerRepository } from './billing/repositories/mikro-orm-crm-customer.repository';
-import { MikroOrmCatalogProductRepository } from './billing/repositories/mikro-orm-catalog-product.repository';
+import { LocalProductRepository } from './billing/repositories/local-product.repository';
+import { BillingProductEntity } from './billing/entities/billing-product.entity';
+import { ProductEventsController } from './billing/listeners/product-events.controller';
 
 @Global()
 @Module({
   imports: [
-    MikroOrmModule.forFeature([Customer, Product])
+    MikroOrmModule.forFeature([Customer, BillingProductEntity])
   ],
+  controllers: [ProductEventsController],
   providers: [
     {
       provide: CUSTOMER_REPOSITORY,
@@ -18,7 +20,7 @@ import { MikroOrmCatalogProductRepository } from './billing/repositories/mikro-o
     },
     {
       provide: PRODUCT_REPOSITORY,
-      useClass: MikroOrmCatalogProductRepository
+      useClass: LocalProductRepository
     }
   ],
   exports: [CUSTOMER_REPOSITORY, PRODUCT_REPOSITORY]

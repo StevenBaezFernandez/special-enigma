@@ -11,6 +11,7 @@ import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/auth';
 import { TenantRlsInterceptor, TenantModule } from '@virteex/tenant';
+import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
 import { AppController } from './app.controller';
 import { HealthController } from './health.controller';
 import { AppService } from './app.service';
@@ -51,6 +52,10 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
     }),
     TerminusModule,
     EventEmitterModule.forRoot(),
+    KafkaModule.forRoot({
+      clientId: 'api-gateway',
+      groupId: 'api-gateway-consumer',
+    }),
     ServerConfigModule,
     ThrottlerModule.forRoot([
       {

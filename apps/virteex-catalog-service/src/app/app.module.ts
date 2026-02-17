@@ -5,8 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TenantModule } from '@virteex/tenant';
 import { JwtTenantMiddleware } from '@virteex/auth';
+import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
 import { CatalogInfrastructureModule } from '@virteex/catalog-infrastructure';
 import { CatalogApplicationModule } from '@virteex/catalog-application';
 import { CatalogResolver } from './catalog.resolver';
@@ -16,6 +18,11 @@ import { SchemaService } from './schema.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    EventEmitterModule.forRoot(),
+    KafkaModule.forRoot({
+      clientId: 'catalog-service',
+      groupId: 'catalog-consumer',
     }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
@@ -34,7 +41,13 @@ import { SchemaService } from './schema.service';
           port: isPostgres ? (configService.get<number>('CATALOG_DB_PORT') || configService.get<number>('DB_PORT')) : undefined,
           user: isPostgres ? (configService.get<string>('CATALOG_DB_USER') || configService.get<string>('DB_USER')) : undefined,
           password: isPostgres ? (configService.get<string>('CATALOG_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
-          dbName: configService.get<string>('CATALOG_DB_NAME') || configService.get<string>('DB_NAME') || (isPostgres ? 'virteex' : 'virteex.db'),
+          dbName: (() => {
+            const dbName = configService.get<string>('CATALOG_DB_NAME');
+            if (!dbName && configService.get('NODE_ENV') === 'production') {
+              throw new Error('CATALOG_DB_NAME environment variable is required in production.');
+            }
+            return dbName || configService.get<string>('DB_NAME') || (isPostgres ? 'virteex' : 'virteex.db');
+          })(),
           autoLoadEntities: true,
           driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))
             ? {

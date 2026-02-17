@@ -1,6 +1,8 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ProductRepository } from '@virteex/catalog-domain/lib/repositories/product.repository';
 import { Product } from '@virteex/catalog-domain/lib/entities/product.entity';
+import { ProductUpdatedEvent } from '@virteex/catalog-domain';
 
 export interface UpdateProductDto {
   id: number;
@@ -16,7 +18,8 @@ export interface UpdateProductDto {
 export class UpdateProductUseCase {
   constructor(
     @Inject('ProductRepository')
-    private readonly productRepository: ProductRepository
+    private readonly productRepository: ProductRepository,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(dto: UpdateProductDto): Promise<Product> {
@@ -33,6 +36,22 @@ export class UpdateProductUseCase {
     if (dto.isActive !== undefined) product.isActive = dto.isActive;
 
     await this.productRepository.save(product);
+
+    this.eventEmitter.emit(
+      'catalog.product.updated',
+      new ProductUpdatedEvent(
+        product.id,
+        product.tenantId,
+        product.sku,
+        product.name,
+        product.price,
+        product.isActive,
+        new Date(),
+        product.taxGroup,
+        product.fiscalCode
+      )
+    );
+
     return product;
   }
 }

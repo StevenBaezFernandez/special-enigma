@@ -4,6 +4,7 @@ import { Product, SAT_CATALOG_REPOSITORY, SatPaymentForm, SatPaymentMethod, SatC
 import { MikroOrmProductRepository } from './repositories/mikro-orm-product.repository';
 import { MikroOrmSatCatalogRepository } from './repositories/mikro-orm-sat-catalog.repository';
 import { CatalogSeederService } from './services/catalog-seeder.service';
+import { CatalogKafkaPublisher } from './listeners/catalog-kafka.publisher';
 
 @Global()
 @Module({
@@ -17,7 +18,8 @@ import { CatalogSeederService } from './services/catalog-seeder.service';
       provide: SAT_CATALOG_REPOSITORY,
       useClass: MikroOrmSatCatalogRepository,
     },
-    CatalogSeederService
+    CatalogSeederService,
+    CatalogKafkaPublisher
   ],
   exports: ['ProductRepository', SAT_CATALOG_REPOSITORY, CatalogSeederService],
 })
