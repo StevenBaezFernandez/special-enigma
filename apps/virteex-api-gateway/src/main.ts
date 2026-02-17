@@ -32,7 +32,7 @@ async function bootstrap(): Promise<void> {
     try {
       const configService = app.get(ConfigService);
       if (configService.get('DB_DRIVER') === 'postgres') {
-        await orm.em.execute('CREATE SCHEMA IF NOT EXISTS identity');
+        await (orm.em as any).execute('CREATE SCHEMA IF NOT EXISTS identity');
       }
     } catch (error) {
       // Ignore if not supported or fails

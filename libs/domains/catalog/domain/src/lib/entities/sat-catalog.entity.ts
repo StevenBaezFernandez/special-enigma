@@ -1,6 +1,6 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-@Entity({ tableName: 'sat_catalog_payment_forms' })
+@Entity({ tableName: 'sat_catalog_payment_forms', schema: 'catalog' })
 export class SatPaymentForm {
   @PrimaryKey()
   code!: string;
@@ -9,7 +9,7 @@ export class SatPaymentForm {
   name!: string;
 }
 
-@Entity({ tableName: 'sat_catalog_payment_methods' })
+@Entity({ tableName: 'sat_catalog_payment_methods', schema: 'catalog' })
 export class SatPaymentMethod {
   @PrimaryKey()
   code!: string;
@@ -18,7 +18,7 @@ export class SatPaymentMethod {
   name!: string;
 }
 
-@Entity({ tableName: 'sat_catalog_usages' })
+@Entity({ tableName: 'sat_catalog_usages', schema: 'catalog' })
 export class SatCfdiUsage {
   @PrimaryKey()
   code!: string;

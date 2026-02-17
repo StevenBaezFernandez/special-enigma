@@ -34,7 +34,6 @@ import { ManufacturingPresentationModule } from '@virteex/manufacturing-presenta
 import { BiPresentationModule } from '@virteex/bi-presentation';
 import { AdminPresentationModule } from '@virteex/admin-presentation';
 import { FiscalPresentationModule } from '@virteex/fiscal-presentation';
-import { CatalogPresentationModule } from '@virteex/catalog-presentation';
 
 // BFF Modules
 import { WmsApiModule } from '../presentation/wms-api/wms-api.module';
@@ -103,7 +102,6 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
     BiPresentationModule,
     AdminPresentationModule,
     FiscalPresentationModule,
-    CatalogPresentationModule,
 
     // BFF Modules
     WmsApiModule,
