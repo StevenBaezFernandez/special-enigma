@@ -23,10 +23,23 @@ async function bootstrap(): Promise<void> {
 
   // Ensure Database Schema exists (Auto-migration for dev/demo)
   // This is critical for SQLite in-memory or file-based DBs to have tables created before seeding.
-  const orm = app.get(MikroORM);
-  const generator = orm.getSchemaGenerator();
-  await generator.ensureDatabase();
-  await generator.updateSchema();
+  if (process.env.NODE_ENV !== 'production') {
+    const orm = app.get(MikroORM);
+    const generator = orm.getSchemaGenerator();
+    await generator.ensureDatabase();
+
+    // Ensure schemas exist for Postgres
+    try {
+      const configService = app.get(ConfigService);
+      if (configService.get('DB_DRIVER') === 'postgres') {
+        await orm.em.execute('CREATE SCHEMA IF NOT EXISTS identity');
+      }
+    } catch (error) {
+      // Ignore if not supported or fails
+    }
+
+    await generator.updateSchema();
+  }
 
   // Run Seeder
   const seeder = app.get(InitialSeederService);

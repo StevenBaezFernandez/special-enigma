@@ -2,7 +2,7 @@ import { Entity, PrimaryKey, Property, OneToMany, Collection } from '@mikro-orm/
 import type { User } from './user.entity';
 import { v4 as uuidv4 } from 'uuid';
 
-@Entity()
+@Entity({ schema: 'identity' })
 export class Company {
   @PrimaryKey({ type: 'uuid' })
   id: string = uuidv4();

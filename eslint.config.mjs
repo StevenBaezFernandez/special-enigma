@@ -23,7 +23,6 @@ export default [
             {
               sourceTag: 'type:domain',
               onlyDependOnLibsWithTags: [
-                'type:domain',
                 'type:contract',
                 'type:util',
               ],

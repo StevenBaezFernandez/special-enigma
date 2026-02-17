@@ -24,7 +24,7 @@ import { GEO_IP_PORT } from '@virteex/identity-domain';
 import {
   RegisterUserUseCase, LoginUserUseCase, VerifyMfaUseCase, StoragePort,
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
-  ListTenantsUseCase
+  ListTenantsUseCase, UserInvitedListener
 } from '@virteex/identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
@@ -40,6 +40,9 @@ import { StorageAdapter } from './adapters/storage.adapter';
     // Queue Services
     MailQueueProducer,
     MailProcessor,
+
+    // Application Listeners
+    UserInvitedListener,
 
     // Ports Implementations
     { provide: UserRepository, useClass: MikroOrmUserRepository },

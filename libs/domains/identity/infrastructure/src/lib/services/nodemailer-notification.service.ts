@@ -40,4 +40,28 @@ export class NodemailerNotificationService implements NotificationService {
       html: htmlContent,
     });
   }
+
+  async sendInvitationEmail(user: User, token: string): Promise<void> {
+    this.logger.log(`Queueing invitation email for ${user.email}`);
+
+    const frontendUrl = this.configService.get('FRONTEND_URL') || 'http://localhost:4200';
+    const inviteUrl = `${frontendUrl}/auth/invite?token=${token}`;
+
+    const htmlContent = `
+        <h1>You have been invited to Virteex ERP</h1>
+        <p>Hello,</p>
+        <p>You have been invited to join <strong>${user.company.name}</strong> on Virteex.</p>
+        <p>Click the button below to set your password and access your account:</p>
+        <p><a href="${inviteUrl}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Accept Invitation</a></p>
+        <p>Or copy this link: ${inviteUrl}</p>
+    `;
+    const textContent = `You have been invited to Virteex ERP. Click here to accept: ${inviteUrl}`;
+
+    await this.mailQueueProducer.addEmailJob({
+      to: user.email,
+      subject: 'Invitation to Virteex ERP',
+      text: textContent,
+      html: htmlContent,
+    });
+  }
 }
