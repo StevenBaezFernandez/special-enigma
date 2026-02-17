@@ -30,11 +30,11 @@ import { SchemaService } from './schema.service';
         const isPostgres = configService.get('DB_DRIVER') === 'postgres';
         return {
           driver: isPostgres ? PostgreSqlDriver : SqliteDriver,
-          host: isPostgres ? configService.get<string>('DB_HOST') : undefined,
-          port: isPostgres ? configService.get<number>('DB_PORT') : undefined,
-          user: isPostgres ? configService.get<string>('DB_USER') : undefined,
-          password: isPostgres ? configService.get<string>('DB_PASSWORD') : undefined,
-          dbName: configService.get<string>('DB_NAME') || (isPostgres ? 'virteex' : 'virteex.db'),
+          host: isPostgres ? (configService.get<string>('CATALOG_DB_HOST') || configService.get<string>('DB_HOST')) : undefined,
+          port: isPostgres ? (configService.get<number>('CATALOG_DB_PORT') || configService.get<number>('DB_PORT')) : undefined,
+          user: isPostgres ? (configService.get<string>('CATALOG_DB_USER') || configService.get<string>('DB_USER')) : undefined,
+          password: isPostgres ? (configService.get<string>('CATALOG_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
+          dbName: configService.get<string>('CATALOG_DB_NAME') || configService.get<string>('DB_NAME') || (isPostgres ? 'virteex' : 'virteex.db'),
           autoLoadEntities: true,
           driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))
             ? {

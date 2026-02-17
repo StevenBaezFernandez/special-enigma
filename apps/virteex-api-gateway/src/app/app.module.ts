@@ -24,7 +24,6 @@ import { BillingPresentationModule } from '@virteex/billing-presentation';
 import { IdentityPresentationModule } from '@virteex/identity-presentation';
 import { FixedAssetsPresentationModule } from '@virteex/fixed-assets-presentation';
 import { AccountingPresentationModule } from '@virteex/accounting-presentation';
-import { InventoryPresentationModule } from '@virteex/inventory-presentation';
 import { PayrollPresentationModule } from '@virteex/payroll-presentation';
 import { CrmPresentationModule } from '@virteex/crm-presentation';
 import { TreasuryPresentationModule } from '@virteex/treasury-presentation';
@@ -92,7 +91,6 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
     IdentityPresentationModule,
     FixedAssetsPresentationModule,
     AccountingPresentationModule,
-    InventoryPresentationModule,
     PayrollPresentationModule,
     CrmPresentationModule,
     TreasuryPresentationModule,
