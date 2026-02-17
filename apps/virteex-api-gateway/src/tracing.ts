@@ -5,6 +5,7 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
+import { KafkaJsInstrumentation } from '@opentelemetry/instrumentation-kafkajs';
 import { Logger } from '@nestjs/common';
 
 // Configure the SDK
@@ -20,6 +21,9 @@ export const otelSDK = new NodeSDK({
     new HttpInstrumentation(),
     new ExpressInstrumentation(),
     new NestInstrumentation(),
+    new KafkaJsInstrumentation({
+      // see https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/plugins/node/opentelemetry-instrumentation-kafkajs#kafka-producer-configuration
+    }),
   ],
 });
 
