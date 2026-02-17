@@ -3,8 +3,6 @@ import { EntityManager } from '@mikro-orm/core';
 import { TaxTable } from '@virteex/payroll-domain';
 import { User, Company } from '@virteex/identity-domain';
 import { Product } from '@virteex/catalog-domain';
-import { Customer } from '@virteex/crm-domain';
-import { CustomerType } from '@virteex/contracts';
 import { v4 } from 'uuid';
 
 @Injectable()
@@ -84,20 +82,6 @@ export class InitialSeederService {
           em.persist([p1, p2]);
       }
 
-      const customerCount = await em.count(Customer, { tenantId });
-      if (customerCount === 0) {
-          this.logger.log('Seeding Default Customers...');
-          const c1 = new Customer(tenantId, CustomerType.COMPANY);
-          c1.companyName = 'Acme Corp';
-          c1.email = 'contact@acme.com';
-
-          const c2 = new Customer(tenantId, CustomerType.INDIVIDUAL);
-          c2.firstName = 'John';
-          c2.lastName = 'Doe';
-          c2.email = 'john@doe.com';
-
-          em.persist([c1, c2]);
-      }
 
       await em.flush();
   }

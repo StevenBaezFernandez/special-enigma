@@ -24,7 +24,6 @@ import { CrossDomainInfrastructureModule } from './infrastructure/cross-domain.m
 import { FixedAssetsPresentationModule } from '@virteex/fixed-assets-presentation';
 import { AccountingPresentationModule } from '@virteex/accounting-presentation';
 import { PayrollPresentationModule } from '@virteex/payroll-presentation';
-import { CrmPresentationModule } from '@virteex/crm-presentation';
 import { TreasuryPresentationModule } from '@virteex/treasury-presentation';
 import { ProjectsPresentationModule } from '@virteex/projects-presentation';
 import { PurchasingPresentationModule } from '@virteex/purchasing-presentation';
@@ -93,7 +92,6 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
     FixedAssetsPresentationModule,
     AccountingPresentationModule,
     PayrollPresentationModule,
-    CrmPresentationModule,
     TreasuryPresentationModule,
     ProjectsPresentationModule,
     PurchasingPresentationModule,

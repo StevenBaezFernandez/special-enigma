@@ -30,6 +30,16 @@ module.exports = {
       comment: 'Infrastructure must not depend on Presentation',
       from: { path: '^libs/.*infrastructure' },
       to: { path: '^libs/.*presentation' }
+    },
+    {
+      name: 'app-isolation',
+      severity: 'error',
+      comment: 'Applications must not depend on other applications',
+      from: { path: '^apps/([^/]+)/' },
+      to: {
+        path: '^apps/([^/]+)/',
+        pathNot: '^apps/$1/'
+      }
     }
   ],
   options: {

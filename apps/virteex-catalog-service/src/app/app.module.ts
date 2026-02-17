@@ -43,10 +43,10 @@ import { SchemaService } from './schema.service';
           password: isPostgres ? (configService.get<string>('CATALOG_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
           dbName: (() => {
             const dbName = configService.get<string>('CATALOG_DB_NAME');
-            if (!dbName && configService.get('NODE_ENV') === 'production') {
-              throw new Error('CATALOG_DB_NAME environment variable is required in production.');
+            if (!dbName) {
+              throw new Error('CATALOG_DB_NAME environment variable is required.');
             }
-            return dbName || configService.get<string>('DB_NAME') || (isPostgres ? 'virteex' : 'virteex.db');
+            return dbName;
           })(),
           autoLoadEntities: true,
           driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))
