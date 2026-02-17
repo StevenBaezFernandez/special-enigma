@@ -469,7 +469,10 @@
       "@virteex/ui-shopfloor": [
         "libs/domains/manufacturing/ui-shopfloor/src/index.ts"
       ],
-      "@virteex/ui-store": ["libs/domains/catalog/ui-store/src/index.ts"]
+      "@virteex/ui-store": ["libs/domains/catalog/ui-store/src/index.ts"],
+      "@virteex/shared/infrastructure/kafka": [
+        "libs/shared/infrastructure/kafka/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
