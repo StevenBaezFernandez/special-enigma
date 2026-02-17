@@ -1,0 +1,467 @@
+
+ NX   Running target serve for project virteex-api-gateway and 72 tasks it depends on:
+
+
+
+> nx run contracts:build
+
+Compiling TypeScript files for project "contracts"...
+Done compiling TypeScript files for project "contracts".
+
+> nx run catalog-domain:build
+
+Compiling TypeScript files for project "catalog-domain"...
+Done compiling TypeScript files for project "catalog-domain".
+
+> nx run identity-domain:build
+
+Compiling TypeScript files for project "identity-domain"...
+Done compiling TypeScript files for project "identity-domain".
+
+> nx run inventory-domain:build
+
+Compiling TypeScript files for project "inventory-domain"...
+Done compiling TypeScript files for project "inventory-domain".
+
+> nx run payroll-domain:build
+
+Compiling TypeScript files for project "payroll-domain"...
+Done compiling TypeScript files for project "payroll-domain".
+
+> nx run crm-domain:build
+
+Compiling TypeScript files for project "crm-domain"...
+Done compiling TypeScript files for project "crm-domain".
+
+> nx run accounting-contracts:build
+
+Compiling TypeScript files for project "accounting-contracts"...
+Done compiling TypeScript files for project "accounting-contracts".
+
+> nx run billing-domain:build
+
+Compiling TypeScript files for project "billing-domain"...
+Done compiling TypeScript files for project "billing-domain".
+
+> nx run shared-util-server-config:build
+
+Compiling TypeScript files for project "shared-util-server-config"...
+Done compiling TypeScript files for project "shared-util-server-config".
+
+> nx run treasury-contracts:build
+
+Compiling TypeScript files for project "treasury-contracts"...
+Done compiling TypeScript files for project "treasury-contracts".
+
+> nx run accounting-domain:build
+
+Compiling TypeScript files for project "accounting-domain"...
+Done compiling TypeScript files for project "accounting-domain".
+
+> nx run crm-infrastructure:build
+
+Compiling TypeScript files for project "crm-infrastructure"...
+Done compiling TypeScript files for project "crm-infrastructure".
+
+> nx run treasury-domain:build
+
+Compiling TypeScript files for project "treasury-domain"...
+Done compiling TypeScript files for project "treasury-domain".
+
+> nx run payroll-infrastructure:build
+
+Compiling TypeScript files for project "payroll-infrastructure"...
+Done compiling TypeScript files for project "payroll-infrastructure".
+
+> nx run inventory-infrastructure:build
+
+Compiling TypeScript files for project "inventory-infrastructure"...
+Done compiling TypeScript files for project "inventory-infrastructure".
+
+> nx run accounting-infrastructure:build
+
+Compiling TypeScript files for project "accounting-infrastructure"...
+Done compiling TypeScript files for project "accounting-infrastructure".
+
+> nx run treasury-infrastructure:build
+
+Compiling TypeScript files for project "treasury-infrastructure"...
+Done compiling TypeScript files for project "treasury-infrastructure".
+
+> nx run xslt:build
+
+Compiling TypeScript files for project "xslt"...
+Done compiling TypeScript files for project "xslt".
+
+> nx run admin-domain:build
+
+Compiling TypeScript files for project "admin-domain"...
+Done compiling TypeScript files for project "admin-domain".
+
+> nx run identity-application:build
+
+Compiling TypeScript files for project "identity-application"...
+Done compiling TypeScript files for project "identity-application".
+
+> nx run purchasing-domain:build
+
+Compiling TypeScript files for project "purchasing-domain"...
+Done compiling TypeScript files for project "purchasing-domain".
+
+> nx run bi-domain:build
+
+Compiling TypeScript files for project "bi-domain"...
+Done compiling TypeScript files for project "bi-domain".
+
+> nx run fiscal-domain:build
+
+Compiling TypeScript files for project "fiscal-domain"...
+Done compiling TypeScript files for project "fiscal-domain".
+
+> nx run billing-infrastructure:build
+
+Compiling TypeScript files for project "billing-infrastructure"...
+Done compiling TypeScript files for project "billing-infrastructure".
+
+> nx run payroll-contracts:build
+
+Compiling TypeScript files for project "payroll-contracts"...
+Done compiling TypeScript files for project "payroll-contracts".
+
+> nx run purchasing-contracts:build
+
+Compiling TypeScript files for project "purchasing-contracts"...
+Done compiling TypeScript files for project "purchasing-contracts".
+
+> nx run purchasing-infrastructure:build
+
+Compiling TypeScript files for project "purchasing-infrastructure"...
+Done compiling TypeScript files for project "purchasing-infrastructure".
+
+> nx run projects-contracts:build
+
+Compiling TypeScript files for project "projects-contracts"...
+Done compiling TypeScript files for project "projects-contracts".
+
+> nx run telemetry:build
+
+Compiling TypeScript files for project "telemetry"...
+Done compiling TypeScript files for project "telemetry".
+
+> nx run fiscal-infrastructure:build
+
+Compiling TypeScript files for project "fiscal-infrastructure"...
+Done compiling TypeScript files for project "fiscal-infrastructure".
+
+> nx run bi-infrastructure:build
+
+Compiling TypeScript files for project "bi-infrastructure"...
+Done compiling TypeScript files for project "bi-infrastructure".
+
+> nx run manufacturing-contracts:build
+
+Compiling TypeScript files for project "manufacturing-contracts"...
+Done compiling TypeScript files for project "manufacturing-contracts".
+
+> nx run fixed-assets-contracts:build
+
+Compiling TypeScript files for project "fixed-assets-contracts"...
+Done compiling TypeScript files for project "fixed-assets-contracts".
+
+> nx run projects-domain:build
+
+Compiling TypeScript files for project "projects-domain"...
+Done compiling TypeScript files for project "projects-domain".
+
+> nx run auth:build
+
+Compiling TypeScript files for project "auth"...
+Done compiling TypeScript files for project "auth".
+
+> nx run manufacturing-domain:build
+
+Compiling TypeScript files for project "manufacturing-domain"...
+Done compiling TypeScript files for project "manufacturing-domain".
+
+> nx run inventory-contracts:build
+
+Compiling TypeScript files for project "inventory-contracts"...
+Done compiling TypeScript files for project "inventory-contracts".
+
+> nx run fixed-assets-domain:build
+
+Compiling TypeScript files for project "fixed-assets-domain"...
+Done compiling TypeScript files for project "fixed-assets-domain".
+
+> nx run tenant:build
+
+Compiling TypeScript files for project "tenant"...
+Done compiling TypeScript files for project "tenant".
+
+> nx run fixed-assets-application:build
+
+Compiling TypeScript files for project "fixed-assets-application"...
+Done compiling TypeScript files for project "fixed-assets-application".
+
+> nx run shared-infrastructure-storage:build
+
+Compiling TypeScript files for project "shared-infrastructure-storage"...
+Done compiling TypeScript files for project "shared-infrastructure-storage".
+
+> nx run inventory-application:build
+
+Compiling TypeScript files for project "inventory-application"...
+Done compiling TypeScript files for project "inventory-application".
+
+> nx run projects-application:build
+
+Compiling TypeScript files for project "projects-application"...
+Done compiling TypeScript files for project "projects-application".
+
+> nx run manufacturing-application:build
+
+Compiling TypeScript files for project "manufacturing-application"...
+Done compiling TypeScript files for project "manufacturing-application".
+
+> nx run payroll-application:build
+
+Compiling TypeScript files for project "payroll-application"...
+Done compiling TypeScript files for project "payroll-application".
+
+> nx run fiscal-application:build
+
+Compiling TypeScript files for project "fiscal-application"...
+Done compiling TypeScript files for project "fiscal-application".
+
+> nx run identity-infrastructure:build
+
+Compiling TypeScript files for project "identity-infrastructure"...
+Done compiling TypeScript files for project "identity-infrastructure".
+
+> nx run purchasing-application:build
+
+Compiling TypeScript files for project "purchasing-application"...
+Done compiling TypeScript files for project "purchasing-application".
+
+> nx run treasury-application:build
+
+Compiling TypeScript files for project "treasury-application"...
+Done compiling TypeScript files for project "treasury-application".
+
+> nx run catalog-application:build
+
+Compiling TypeScript files for project "catalog-application"...
+Done compiling TypeScript files for project "catalog-application".
+
+> nx run admin-application:build
+
+Compiling TypeScript files for project "admin-application"...
+Done compiling TypeScript files for project "admin-application".
+
+> nx run bi-application:build
+
+Compiling TypeScript files for project "bi-application"...
+Done compiling TypeScript files for project "bi-application".
+
+> nx run admin-presentation:build
+
+Compiling TypeScript files for project "admin-presentation"...
+Done compiling TypeScript files for project "admin-presentation".
+
+> nx run accounting-application:build
+
+Compiling TypeScript files for project "accounting-application"...
+Done compiling TypeScript files for project "accounting-application".
+
+> nx run crm-application:build
+
+Compiling TypeScript files for project "crm-application"...
+Done compiling TypeScript files for project "crm-application".
+
+> nx run bi-presentation:build
+
+Compiling TypeScript files for project "bi-presentation"...
+Done compiling TypeScript files for project "bi-presentation".
+
+> nx run treasury-presentation:build
+
+Compiling TypeScript files for project "treasury-presentation"...
+Done compiling TypeScript files for project "treasury-presentation".
+
+> nx run accounting-presentation:build
+
+Compiling TypeScript files for project "accounting-presentation"...
+Done compiling TypeScript files for project "accounting-presentation".
+
+> nx run crm-presentation:build
+
+Compiling TypeScript files for project "crm-presentation"...
+Done compiling TypeScript files for project "crm-presentation".
+
+> nx run identity-presentation:build
+
+Compiling TypeScript files for project "identity-presentation"...
+Done compiling TypeScript files for project "identity-presentation".
+
+> nx run projects-presentation:build
+
+Compiling TypeScript files for project "projects-presentation"...
+Done compiling TypeScript files for project "projects-presentation".
+
+> nx run payroll-presentation:build
+
+Compiling TypeScript files for project "payroll-presentation"...
+Done compiling TypeScript files for project "payroll-presentation".
+
+> nx run manufacturing-infrastructure:build
+
+Compiling TypeScript files for project "manufacturing-infrastructure"...
+Done compiling TypeScript files for project "manufacturing-infrastructure".
+
+> nx run admin-infrastructure:build
+
+Compiling TypeScript files for project "admin-infrastructure"...
+Done compiling TypeScript files for project "admin-infrastructure".
+
+> nx run projects-infrastructure:build
+
+Compiling TypeScript files for project "projects-infrastructure"...
+Done compiling TypeScript files for project "projects-infrastructure".
+
+> nx run fixed-assets-presentation:build
+
+Compiling TypeScript files for project "fixed-assets-presentation"...
+Done compiling TypeScript files for project "fixed-assets-presentation".
+
+> nx run fixed-assets-infrastructure:build
+
+Compiling TypeScript files for project "fixed-assets-infrastructure"...
+Done compiling TypeScript files for project "fixed-assets-infrastructure".
+
+> nx run inventory-presentation:build
+
+Compiling TypeScript files for project "inventory-presentation"...
+Done compiling TypeScript files for project "inventory-presentation".
+
+> nx run manufacturing-presentation:build
+
+Compiling TypeScript files for project "manufacturing-presentation"...
+Done compiling TypeScript files for project "manufacturing-presentation".
+
+> nx run fiscal-presentation:build
+
+Compiling TypeScript files for project "fiscal-presentation"...
+Done compiling TypeScript files for project "fiscal-presentation".
+
+> nx run purchasing-presentation:build
+
+Compiling TypeScript files for project "purchasing-presentation"...
+Done compiling TypeScript files for project "purchasing-presentation".
+
+> nx run virteex-api-gateway:build
+
+> webpack-cli build --node-env=production
+
+webpack compiled [1m[32msuccessfully[39m[22m (1bcec5eaae80a728)
+
+> nx run virteex-api-gateway:serve:development
+
+[1m[33mNX Daemon is not running. Node process will not restart automatically after file changes.[39m[22m
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project virteex-api-gateway and [1m71[22m tasks it depends on:[39m
+[2m> [22m[2mnx run[22m contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m catalog-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m billing-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m crm-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m shared-util-server-config:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m crm-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m xslt:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m billing-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m admin-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fiscal-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m bi-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fiscal-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m bi-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m telemetry:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m tenant:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m shared-infrastructure-storage:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m crm-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m bi-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m catalog-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fiscal-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m admin-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fiscal-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m admin-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m crm-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m admin-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m bi-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m virteex-api-gateway:build:development
+[2m> [22mwebpack-cli build --node-env=development
+webpack compiled [1m[32msuccessfully[39m[22m (1bcec5eaae80a728)
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project virteex-api-gateway and [1m71[22m tasks it depends on[39m
+[2mNx read the output from the cache instead of running the command for 71 out of 72 tasks.[22m
+[1m[31mDebugger listening on ws://localhost:9229/cb1c1da3-e74b-4914-accc-5de8ac6cef6b[39m[22m
+[1m[31mDebugger listening on ws://localhost:9229/cb1c1da3-e74b-4914-accc-5de8ac6cef6b[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[1m[31mESM loader error: Error: Cannot find module '/app/node_modules/xslt-processor/dist/index.js'[39m[22m
+[1m[31m[90m    at createEsmNotFoundErr (node:internal/modules/cjs/loader:1419:15)[39m[31m[39m[22m
+[1m[31m[90m    at finalizeEsmResolution (node:internal/modules/cjs/loader:1408:15)[39m[31m[39m[22m
+[1m[31m[90m    at resolveExports (node:internal/modules/cjs/loader:650:14)[39m[31m[39m[22m
+[1m[31m[90m    at Function._findPath (node:internal/modules/cjs/loader:717:31)[39m[31m[39m[22m
+[1m[31m[90m    at Function._resolveFilename (node:internal/modules/cjs/loader:1369:27)[39m[31m[39m[22m
+[1m[31m[90m    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)[39m[31m[39m[22m
+[1m[31m[90m    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)[39m[31m[39m[22m
+[1m[31m[90m    at Function._load (node:internal/modules/cjs/loader:1192:37)[39m[31m[39m[22m
+[1m[31m[90m    at TracingChannel.traceSync (node:diagnostics_channel:328:14)[39m[31m[39m[22m
+[1m[31m[90m    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)[39m[31m {[39m[22m
+[1m[31m  code: [32m'MODULE_NOT_FOUND'[39m[31m,[39m[22m
+[1m[31m  path: [32m'/app/node_modules/xslt-processor'[39m[31m[39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[7m[1m[36m NX [39m[22m[27m [1mProcess exited with code 1, waiting for changes to restart...[22m
+Task "virteex-api-gateway:serve:development" is continuous but exited with code 143

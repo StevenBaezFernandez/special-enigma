@@ -13,7 +13,8 @@ import {
   INVOICE_REPOSITORY,
   SUBSCRIPTION_REPOSITORY,
   SUBSCRIPTION_PLAN_REPOSITORY,
-  PAYMENT_METHOD_REPOSITORY
+  PAYMENT_METHOD_REPOSITORY,
+  BillingDomainModule
 } from '@virteex/billing-domain';
 import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '../../../domain/src/lib/ports/fiscal-document-builder.port';
 import { BILLING_TAX_STRATEGY_FACTORY } from '../../../domain/src/lib/strategies/tax-strategy.factory';
@@ -40,6 +41,7 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
 @Global()
 @Module({
   imports: [
+    BillingDomainModule,
     MikroOrmModule.forFeature([
       Invoice,
       Subscription,

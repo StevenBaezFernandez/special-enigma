@@ -1,0 +1,365 @@
+
+ NX   Running target serve for project virteex-api-gateway and 72 tasks it depends on:
+
+
+
+> nx run contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run identity-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run catalog-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run inventory-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run payroll-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run billing-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run crm-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run accounting-contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run shared-util-server-config:build  [existing outputs match the cache, left as is]
+
+
+> nx run treasury-contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run crm-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run accounting-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run payroll-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run treasury-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run inventory-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run accounting-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run xslt:build  [existing outputs match the cache, left as is]
+
+
+> nx run treasury-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run identity-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run admin-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run billing-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run bi-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run fiscal-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run purchasing-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run payroll-contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run purchasing-contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run bi-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run purchasing-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run fiscal-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run telemetry:build  [existing outputs match the cache, left as is]
+
+
+> nx run fixed-assets-contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run projects-contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run manufacturing-contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run auth:build  [existing outputs match the cache, left as is]
+
+
+> nx run fixed-assets-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run projects-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run manufacturing-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run tenant:build  [existing outputs match the cache, left as is]
+
+
+> nx run shared-infrastructure-storage:build  [existing outputs match the cache, left as is]
+
+
+> nx run inventory-contracts:build  [existing outputs match the cache, left as is]
+
+
+> nx run manufacturing-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run projects-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run identity-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run inventory-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run purchasing-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run fixed-assets-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run crm-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run payroll-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run catalog-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run fiscal-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run accounting-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run bi-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run admin-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run treasury-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run accounting-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run bi-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run admin-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run treasury-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run fiscal-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run crm-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run purchasing-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run identity-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run manufacturing-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run manufacturing-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run projects-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run fixed-assets-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run admin-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run projects-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run inventory-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run fixed-assets-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run payroll-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run virteex-api-gateway:build  [local cache]
+
+> webpack-cli build --node-env=production
+
+webpack compiled [1m[32msuccessfully[39m[22m (3b5d1a056390680e)
+
+> nx run virteex-api-gateway:serve:development
+
+[1m[33mNX Daemon is not running. Node process will not restart automatically after file changes.[39m[22m
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project virteex-api-gateway and [1m71[22m tasks it depends on:[39m
+[2m> [22m[2mnx run[22m contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m catalog-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m billing-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m crm-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m shared-util-server-config:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m crm-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m xslt:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m billing-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m admin-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fiscal-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m bi-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fiscal-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m bi-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m telemetry:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m tenant:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-contracts:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m shared-infrastructure-storage:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m crm-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m bi-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m catalog-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fiscal-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m admin-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fiscal-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m treasury-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m admin-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m crm-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m accounting-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m purchasing-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m inventory-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m admin-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m fixed-assets-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m manufacturing-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m projects-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m payroll-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m bi-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m virteex-api-gateway:build:development  [2m[local cache][22m
+[2m> [22mwebpack-cli build --node-env=development
+webpack compiled [1m[32msuccessfully[39m[22m (3b5d1a056390680e)
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project virteex-api-gateway and [1m71[22m tasks it depends on[39m
+[2mNx read the output from the cache instead of running the command for 72 out of 72 tasks.[22m
+[1m[31mDebugger listening on ws://localhost:9229/5aed8584-73b4-4a73-aa93-93467deee2d9[39m[22m
+[1m[31m[39m[22m
+[1m[31mDebugger listening on ws://localhost:9229/5aed8584-73b4-4a73-aa93-93467deee2d9[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[1m[31mSupport for driver specific imports in modules defined with `useFactory` and `inject` requires an explicit `driver` option. See https://github.com/mikro-orm/nestjs/pull/204[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[33m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [33m   WARN[39m [38;5;3m[FinkokPacProvider] [39m[33mFinkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing from environment.[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAdminApplicationModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mThrottlerModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mWmsApiModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mShopfloorApiModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mStoreApiModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69670  - [39m02/17/2026, 3:26:51 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mEventEmitterModule dependencies initialized[39m[38;5;3m +0ms[39m
+[1m[31m[31m[Nest] 69670  - [39m[31m02/17/2026, 3:26:51 AM [31m  ERROR[39m[31m [38;5;3m[FinkokPacProvider] [39m[31m[31mFinkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing from environment.[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 69670  - [39m[31m02/17/2026, 3:26:51 AM [31m  ERROR[39m[31m [38;5;3m[ExceptionHandler] [39m[31mUnknownDependenciesException [Error]: Nest can't resolve dependencies of the GenerateReportUseCase (?, JOURNAL_ENTRY_REPOSITORY). Please make sure that the argument "BI_REPORT_REPOSITORY" at index [0] is available in the BiApplicationModule context.[39m[22m
+[1m[31m[39m[22m
+[1m[31mPotential solutions:[39m[22m
+[1m[31m- Is BiApplicationModule a valid NestJS module?[39m[22m
+[1m[31m- If "BI_REPORT_REPOSITORY" is a provider, is it part of the current BiApplicationModule?[39m[22m
+[1m[31m- If "BI_REPORT_REPOSITORY" is exported from a separate @Module, is that module imported within BiApplicationModule?[39m[22m
+[1m[31m  @Module({[39m[22m
+[1m[31m    imports: [ /* the Module containing "BI_REPORT_REPOSITORY" */ ][39m[22m
+[1m[31m  })[39m[22m
+[1m[31m[39m[22m
+[1m[31mFor more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors[39m[22m
+[1m[31m    at Injector.lookupComponentInParentModules [90m(/app/[39m[31mnode_modules/[4m@nestjs/core[24m/injector/injector.js:290:19[90m)[39m[31m[39m[22m
+[1m[31m    at resolveParam [90m(/app/[39m[31mnode_modules/[4m@nestjs/core[24m/injector/injector.js:140:38[90m)[39m[31m[39m[22m
+[1m[31m    at async Promise.all (index 0)[39m[22m
+[1m[31m    at Injector.resolveConstructorParams [90m(/app/[39m[31mnode_modules/[4m@nestjs/core[24m/injector/injector.js:169:27[90m)[39m[31m[39m[22m
+[1m[31m    at Injector.loadInstance [90m(/app/[39m[31mnode_modules/[4m@nestjs/core[24m/injector/injector.js:75:13[90m)[39m[31m[39m[22m
+[1m[31m    at Injector.loadProvider [90m(/app/[39m[31mnode_modules/[4m@nestjs/core[24m/injector/injector.js:103:9[90m)[39m[31m[39m[22m
+[1m[31m    at [90m/app/[39m[31mnode_modules/[4m@nestjs/core[24m/injector/instance-loader.js:56:13[39m[22m
+[1m[31m    at async Promise.all (index 3)[39m[22m
+[1m[31m    at InstanceLoader.createInstancesOfProviders [90m(/app/[39m[31mnode_modules/[4m@nestjs/core[24m/injector/instance-loader.js:55:9[90m)[39m[31m[39m[22m
+[1m[31m    at [90m/app/[39m[31mnode_modules/[4m@nestjs/core[24m/injector/instance-loader.js:40:13 {[39m[22m
+[1m[31m  type: [32m'GenerateReportUseCase'[39m[31m,[39m[22m
+[1m[31m  context: {[39m[22m
+[1m[31m    index: [33m0[39m[31m,[39m[22m
+[1m[31m    dependencies: [[39m[22m
+[1m[31m      [32m'BI_REPORT_REPOSITORY'[39m[31m,[39m[22m
+[1m[31m      [32m'JOURNAL_ENTRY_REPOSITORY'[39m[31m[39m[22m
+[1m[31m    ],[39m[22m
+[1m[31m    name: [32m'BI_REPORT_REPOSITORY'[39m[31m[39m[22m
+[1m[31m  },[39m[22m
+[1m[31m  metadata: {[39m[22m
+[1m[31m    id: [32m'5ac9e940250e722a37b62'[39m[31m[39m[22m
+[1m[31m  },[39m[22m
+[1m[31m  moduleRef: {[39m[22m
+[1m[31m    id: [32m'9980fcf2a932edc5387c1'[39m[31m[39m[22m
+[1m[31m  }[39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[7m[1m[36m NX [39m[22m[27m [1mProcess exited with code 1, waiting for changes to restart...[22m
+Task "virteex-api-gateway:serve:development" is continuous but exited with code 143

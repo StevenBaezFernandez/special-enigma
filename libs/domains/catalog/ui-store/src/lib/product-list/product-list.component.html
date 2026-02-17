@@ -1,0 +1,12 @@
+<div class="store-container">
+  <header>
+    <h1>Virteex Store</h1>
+  </header>
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let product of products">
+      <h3>{{ product.name }}</h3>
+      <p class="price">{{ product.price | currency }}</p>
+      <button>Add to Cart</button>
+    </div>
+  </div>
+</div>

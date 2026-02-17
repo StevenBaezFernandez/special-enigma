@@ -1,0 +1,64 @@
+
+ NX   Running target test for 4 projects:
+
+- virteex-api-gateway
+- virteex-wms
+- virteex-shopfloor
+- virteex-store
+
+
+
+> nx run virteex-api-gateway:test  [existing outputs match the cache, left as is]
+
+> jest --passWithNoTests=true
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m virteex-api-gateway [39m[27m[0m [2msrc/app/[22m[1mapp.controller.spec.ts[22m ([0m[1m[41m5.917 s[49m[22m[0m)
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m virteex-api-gateway [39m[27m[0m [2msrc/app/[22m[1mapp.service.spec.ts[22m ([0m[1m[41m5.748 s[49m[22m[0m)
+
+[1mTest Suites: [22m[1m[32m2 passed[39m[22m, 2 total
+[1mTests:       [22m[1m[32m2 passed[39m[22m, 2 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        7.57 s
+[2mRan all test suites[22m[2m.[22m
+
+> nx run virteex-shopfloor:test
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m virteex-shopfloor [39m[27m[0m [2mapps/virteex-shopfloor/src/app/[22m[1mapp.spec.ts[22m
+  App
+    [32m✓[39m [2mshould render title (241 ms)[22m
+
+[1mTest Suites: [22m[1m[32m1 passed[39m[22m, 1 total
+[1mTests:       [22m[1m[32m1 passed[39m[22m, 1 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        2.439 s
+[2mRan all test suites[22m[2m.[22m
+
+> nx run virteex-wms:test
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m virteex-wms [39m[27m[0m [2mapps/virteex-wms/src/app/[22m[1mapp.spec.ts[22m
+  App
+    [32m✓[39m [2mshould render title (204 ms)[22m
+
+[1mTest Suites: [22m[1m[32m1 passed[39m[22m, 1 total
+[1mTests:       [22m[1m[32m1 passed[39m[22m, 1 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        2.448 s
+[2mRan all test suites[22m[2m.[22m
+
+> nx run virteex-store:test
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m virteex-store [39m[27m[0m [2mapps/virteex-store/src/app/[22m[1mapp.spec.ts[22m
+  App
+    [32m✓[39m [2mshould render title (237 ms)[22m
+
+[1mTest Suites: [22m[1m[32m1 passed[39m[22m, 1 total
+[1mTests:       [22m[1m[32m1 passed[39m[22m, 1 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        2.541 s
+[2mRan all test suites[22m[2m.[22m
+
+
+
+ NX   Successfully ran target test for 4 projects
+
+Nx read the output from the cache instead of running the command for 1 out of 4 tasks.

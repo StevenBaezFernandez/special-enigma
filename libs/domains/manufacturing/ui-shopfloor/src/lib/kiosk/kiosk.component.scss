@@ -1,0 +1,32 @@
+.kiosk-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #222;
+  color: #eee;
+
+  .actions {
+    display: flex;
+    gap: 2rem;
+
+    .action-btn {
+      font-size: 2rem;
+      padding: 3rem;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+
+      &.start {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      &.stop {
+        background-color: #f44336;
+        color: white;
+      }
+    }
+  }
+}

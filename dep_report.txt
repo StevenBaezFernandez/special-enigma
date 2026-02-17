@@ -1,0 +1,34 @@
+
+  error no-circular: libs/shared/ui/src/lib/core/services/language.ts →
+      libs/shared/ui/src/lib/core/services/auth.ts →
+      libs/shared/ui/src/lib/interfaces/user.interface.ts →
+      libs/shared/ui/src/index.ts →
+      libs/shared/ui/src/lib/core/services/language.ts
+  error no-circular: libs/shared/ui/src/lib/core/services/auth.ts →
+      libs/shared/util/auth/src/index.ts →
+      libs/shared/util/auth/src/lib/interceptors/error.interceptor.ts →
+      libs/shared/ui/src/index.ts →
+      libs/shared/ui/src/lib/core/services/auth.ts
+  error no-circular: libs/shared/ui/src/index.ts →
+      libs/shared/ui/src/lib/interfaces/user.interface.ts →
+      libs/shared/ui/src/index.ts
+  error no-circular: libs/shared/ui/src/index.ts →
+      libs/shared/ui/src/lib/directives/has-permission.directive.ts →
+      libs/shared/ui/src/lib/core/services/auth.ts →
+      libs/shared/ui/src/lib/interfaces/user.interface.ts →
+      libs/shared/ui/src/index.ts
+  error no-circular: libs/shared/ui/src/index.ts →
+      libs/shared/ui/src/lib/core/services/language.ts →
+      libs/shared/ui/src/lib/core/api/users.service.ts →
+      libs/shared/ui/src/lib/interfaces/user.interface.ts →
+      libs/shared/ui/src/index.ts
+  error no-circular: libs/shared/ui/src/index.ts →
+      libs/shared/ui/src/lib/core/services/auth.ts →
+      libs/shared/ui/src/lib/interfaces/user.interface.ts →
+      libs/shared/ui/src/index.ts
+  error no-circular: libs/shared/ui/src/index.ts →
+      libs/shared/ui/src/lib/core/api/users.service.ts →
+      libs/shared/ui/src/lib/interfaces/user.interface.ts →
+      libs/shared/ui/src/index.ts
+
+x 7 dependency violations (7 errors, 0 warnings). 1551 modules, 4014 dependencies cruised.

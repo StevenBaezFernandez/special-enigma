@@ -1,0 +1,3 @@
+libs/domains/bi/application/src/lib/use-cases/generate-report.use-case.ts:import { BiReport, BiReportRepository, BI_REPORT_REPOSITORY } from '@virteex/bi-domain';
+libs/domains/bi/application/src/lib/use-cases/generate-report.use-case.ts:    @Inject(BI_REPORT_REPOSITORY) private readonly repository: BiReportRepository,
+libs/domains/bi/domain/src/lib/ports/bi-report.repository.ts:export const BI_REPORT_REPOSITORY = 'BI_REPORT_REPOSITORY';

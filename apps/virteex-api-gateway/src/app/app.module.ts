@@ -53,6 +53,11 @@ import { AdminPresentationModule } from '@virteex/admin-presentation';
 import { FiscalPresentationModule } from '@virteex/fiscal-presentation';
 import { CatalogPresentationModule } from '@virteex/catalog-presentation';
 
+// BFF Modules
+import { WmsApiModule } from '../presentation/wms-api/wms-api.module';
+import { ShopfloorApiModule } from '../presentation/shopfloor-api/shopfloor-api.module';
+import { StoreApiModule } from '../presentation/store-api/store-api.module';
+
 @Module({
   imports: [
     LoggerModule.forRoot({
@@ -133,6 +138,11 @@ import { CatalogPresentationModule } from '@virteex/catalog-presentation';
     AdminPresentationModule,
     FiscalPresentationModule,
     CatalogPresentationModule,
+
+    // BFF Modules
+    WmsApiModule,
+    ShopfloorApiModule,
+    StoreApiModule,
   ],
   controllers: [AppController, HealthController],
   providers: [

@@ -464,7 +464,12 @@
       "@virteex/finops/*": ["libs/kernel/finops/src/*"],
       "@virteex/shared-infrastructure-xslt": [
         "libs/shared/infrastructure/xslt/src/index.ts"
-      ]
+      ],
+      "@virteex/ui-wms": ["libs/domains/inventory/ui-wms/src/index.ts"],
+      "@virteex/ui-shopfloor": [
+        "libs/domains/manufacturing/ui-shopfloor/src/index.ts"
+      ],
+      "@virteex/ui-store": ["libs/domains/catalog/ui-store/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

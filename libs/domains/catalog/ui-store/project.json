@@ -1,0 +1,20 @@
+{
+  "name": "ui-store",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domains/catalog/ui-store/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["type:ui", "scope:catalog"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domains/catalog/ui-store"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

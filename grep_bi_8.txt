@@ -1,0 +1,7 @@
+libs/domains/bi/infrastructure/src/lib/bi-infrastructure.ts:import { SALES_PORT, INVOICE_PORT, EXPENSES_PORT, BI_REPORT_REPOSITORY } from '@virteex/bi-domain';
+libs/domains/bi/infrastructure/src/lib/bi-infrastructure.ts:      provide: BI_REPORT_REPOSITORY,
+libs/domains/bi/infrastructure/src/lib/bi-infrastructure.ts:  exports: [SALES_PORT, INVOICE_PORT, EXPENSES_PORT, BI_REPORT_REPOSITORY]
+libs/domains/bi/application/src/lib/use-cases/generate-report.use-case.ts:import { BiReport, BiReportRepository, BI_REPORT_REPOSITORY } from '@virteex/bi-domain';
+libs/domains/bi/application/src/lib/use-cases/generate-report.use-case.ts:    @Inject(BI_REPORT_REPOSITORY) private readonly repository: BiReportRepository,
+libs/domains/bi/application/src/lib/bi-application.ts:import { BI_REPORT_REPOSITORY } from '@virteex/bi-domain';
+libs/domains/bi/domain/src/lib/ports/bi-report.repository.ts:export const BI_REPORT_REPOSITORY = 'BI_REPORT_REPOSITORY';

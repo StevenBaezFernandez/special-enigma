@@ -1,0 +1,20 @@
+.scan-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #333;
+  color: white;
+
+  .scan-button {
+    font-size: 2rem;
+    padding: 2rem;
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    width: 80%;
+    margin-top: 2rem;
+  }
+}
