@@ -1,7 +1,7 @@
 import { Injectable, Inject, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_URL } from '@virteex/shared-ui';
+import { API_URL } from '@virteex/shared-config';
 
 export interface FiscalStats {
   taxesPayable: number;

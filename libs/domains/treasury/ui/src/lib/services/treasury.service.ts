@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_URL } from '@virteex/shared-ui';
+import { API_URL } from '@virteex/shared-config';
 import { BankAccountDto, CreateBankAccountDto } from '@virteex/treasury-contracts';
 
 @Injectable({

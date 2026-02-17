@@ -10,7 +10,7 @@ import { authInterceptor, errorInterceptor } from '@virteex/shared-util-auth';
 import { loadingInterceptor } from '@virteex/shared-util-http';
 import { APP_CONFIG, AppConfig } from '@virteex/shared-config';
 import { environment } from '../environments/environment';
-import { API_URL } from '@virteex/shared-ui';
+import { API_URL } from '@virteex/shared-config';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
