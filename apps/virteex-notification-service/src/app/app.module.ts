@@ -6,7 +6,10 @@ import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
 
 @Module({
   imports: [
-    KafkaModule,
+    KafkaModule.forRoot({
+      clientId: 'notification-service',
+      groupId: 'notification-consumer',
+    }),
     BullModule.forRoot({
       connection: {
         host: process.env.REDIS_HOST || 'localhost',

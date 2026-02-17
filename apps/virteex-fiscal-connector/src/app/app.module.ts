@@ -5,7 +5,12 @@ import { InvoiceConsumer } from './invoice.consumer';
 import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
 
 @Module({
-  imports: [KafkaModule],
+  imports: [
+    KafkaModule.forRoot({
+      clientId: 'fiscal-connector',
+      groupId: 'fiscal-consumer',
+    }),
+  ],
   controllers: [AppController, InvoiceConsumer],
   providers: [AppService],
 })
