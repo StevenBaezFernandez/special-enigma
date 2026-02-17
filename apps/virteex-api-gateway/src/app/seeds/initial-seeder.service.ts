@@ -1,8 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { TaxTable } from '@virteex/payroll-domain';
-// Explicitly import TaxRule from billing-domain as that's the one with 'jurisdiction' property used here.
-import { TaxRule } from '@virteex/billing-domain';
 import { User, Company } from '@virteex/identity-domain';
 import { Product } from '@virteex/catalog-domain';
 import { Customer } from '@virteex/crm-domain';
@@ -20,24 +18,9 @@ export class InitialSeederService {
     const em = this.em.fork();
 
     await this.seedTaxTables(em);
-    try {
-        await this.seedTaxRules(em);
-    } catch (e) {
-        this.logger.warn('Skipping TaxRule seeding due to potential entity conflict or schema mismatch: ' + e);
-    }
     await this.seedDefaultTenantAndUser(em);
     await this.seedCatalog(em);
     this.logger.log('Seeding completed.');
-  }
-
-  private async seedTaxRules(em: EntityManager) {
-    const count = await em.count(TaxRule, { jurisdiction: 'MX', taxType: 'IVA' });
-    if (count === 0) {
-      this.logger.log('Seeding Tax Rules for MX...');
-      const rule = new TaxRule('MX', 'IVA', '0.1600', new Date('2020-01-01'));
-      em.persist(rule);
-      await em.flush();
-    }
   }
 
   private async seedTaxTables(em: EntityManager) {

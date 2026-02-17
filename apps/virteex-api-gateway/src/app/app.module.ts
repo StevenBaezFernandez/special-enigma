@@ -21,8 +21,6 @@ import { InitialSeederService } from './seeds/initial-seeder.service';
 import { CrossDomainInfrastructureModule } from './infrastructure/cross-domain.module';
 
 // Domain Modules - Presentation
-import { BillingPresentationModule } from '@virteex/billing-presentation';
-import { IdentityPresentationModule } from '@virteex/identity-presentation';
 import { FixedAssetsPresentationModule } from '@virteex/fixed-assets-presentation';
 import { AccountingPresentationModule } from '@virteex/accounting-presentation';
 import { PayrollPresentationModule } from '@virteex/payroll-presentation';
@@ -92,8 +90,6 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
     CrossDomainInfrastructureModule,
 
     // Presentation Modules (These import Infra internally)
-    BillingPresentationModule,
-    IdentityPresentationModule,
     FixedAssetsPresentationModule,
     AccountingPresentationModule,
     PayrollPresentationModule,

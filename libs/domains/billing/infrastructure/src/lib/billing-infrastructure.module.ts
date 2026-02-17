@@ -15,6 +15,8 @@ import {
   SUBSCRIPTION_REPOSITORY,
   SUBSCRIPTION_PLAN_REPOSITORY,
   PAYMENT_METHOD_REPOSITORY,
+  PRODUCT_REPOSITORY,
+  CUSTOMER_REPOSITORY,
   BillingDomainModule
 } from '@virteex/billing-domain';
 import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '../../../domain/src/lib/ports/fiscal-document-builder.port';
@@ -36,6 +38,11 @@ import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscri
 import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';
 import { MikroOrmPaymentMethodRepository } from './repositories/mikro-orm-payment-method.repository';
 import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
+import { LocalProductRepository } from './repositories/local-product.repository';
+import { HttpCustomerRepository } from './repositories/http-customer.repository';
+
+import { BillingProductEntity } from './entities/billing-product.entity';
+import { ProductEventsController } from './listeners/product-events.controller';
 
 import { XsltService } from '@virteex/shared-infrastructure-xslt';
 
@@ -49,20 +56,12 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
       Subscription,
       SubscriptionPlan,
       PaymentMethod,
-      TaxLine
-      // TaxRule is excluded to avoid duplicates with Fiscal/Domain module if both loaded.
-      // But wait, removing TaxRule from here caused "Duplicate entity names" error to GO AWAY,
-      // but if we need TaxRule for Billing logic, we rely on BillingDomainModule exporting it
-      // OR FiscalInfrastructureModule exporting the other TaxRule.
-      // Actually, I renamed Fiscal TaxRule to FiscalTaxRule. So now we CAN include TaxRule here if needed.
-      // But let's check if BillingDomainModule already exports MikroOrmModule for TaxRule.
-      // BillingDomainModule DOES export MikroOrmModule.forFeature([Invoice, TaxLine, SubscriptionPlan]).
-      // I removed TaxRule from BillingDomainModule too.
-      // So TaxRule (Billing) needs to be registered somewhere.
-      // Let's add TaxRule back here since conflict name is resolved (Fiscal is FiscalTaxRule).
-      , TaxRule
+      TaxLine,
+      TaxRule,
+      BillingProductEntity
     ])
   ],
+  controllers: [ProductEventsController],
   providers: [
     {
       provide: INVOICE_REPOSITORY,
@@ -79,6 +78,14 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
     {
       provide: PAYMENT_METHOD_REPOSITORY,
       useClass: MikroOrmPaymentMethodRepository
+    },
+    {
+      provide: PRODUCT_REPOSITORY,
+      useClass: LocalProductRepository
+    },
+    {
+      provide: CUSTOMER_REPOSITORY,
+      useClass: HttpCustomerRepository
     },
     FinkokPacProvider,
     NullPacProvider,
@@ -112,6 +119,8 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
     SUBSCRIPTION_REPOSITORY,
     SUBSCRIPTION_PLAN_REPOSITORY,
     PAYMENT_METHOD_REPOSITORY,
+    PRODUCT_REPOSITORY,
+    CUSTOMER_REPOSITORY,
     PAC_STRATEGY_FACTORY,
     TENANT_CONFIG_REPOSITORY,
     FISCAL_DOCUMENT_BUILDER_FACTORY,

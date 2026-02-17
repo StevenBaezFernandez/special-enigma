@@ -4,6 +4,7 @@ import { CreateSaleUseCase } from './use-cases/create-sale.use-case';
 import { ListSalesUseCase } from './use-cases/list-sales.use-case';
 import { CreateCustomerUseCase } from './use-cases/create-customer.use-case';
 import { ListCustomersUseCase } from './use-cases/list-customers.use-case';
+import { GetCustomerByIdUseCase } from './use-cases/get-customer-by-id.use-case';
 import { ApproveSaleUseCase } from './use-cases/approve-sale.use-case';
 import { CancelSaleUseCase } from './use-cases/cancel-sale.use-case';
 import { CompleteSaleUseCase } from './use-cases/complete-sale.use-case';
@@ -15,6 +16,7 @@ import { CompleteSaleUseCase } from './use-cases/complete-sale.use-case';
     ListSalesUseCase,
     CreateCustomerUseCase,
     ListCustomersUseCase,
+    GetCustomerByIdUseCase,
     ApproveSaleUseCase,
     CancelSaleUseCase,
     CompleteSaleUseCase
@@ -24,6 +26,7 @@ import { CompleteSaleUseCase } from './use-cases/complete-sale.use-case';
     ListSalesUseCase,
     CreateCustomerUseCase,
     ListCustomersUseCase,
+    GetCustomerByIdUseCase,
     ApproveSaleUseCase,
     CancelSaleUseCase,
     CompleteSaleUseCase

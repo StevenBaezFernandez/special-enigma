@@ -51,7 +51,7 @@ export class ProductEventsController {
         product = new BillingProductEntity();
         product.id = data.id.toString();
         product.tenantId = data.tenantId;
-        em.persist(product);
+        await em.persistAndFlush(product);
     }
 
     product.name = data.name;

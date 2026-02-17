@@ -7,6 +7,7 @@ import {
   CreateCustomerUseCase,
   CreateCustomerDto,
   ListCustomersUseCase,
+  GetCustomerByIdUseCase,
   ApproveSaleUseCase,
   CancelSaleUseCase,
   CompleteSaleUseCase
@@ -20,6 +21,7 @@ export class CrmController {
     private readonly listSalesUseCase: ListSalesUseCase,
     private readonly createCustomerUseCase: CreateCustomerUseCase,
     private readonly listCustomersUseCase: ListCustomersUseCase,
+    private readonly getCustomerByIdUseCase: GetCustomerByIdUseCase,
     private readonly approveSaleUseCase: ApproveSaleUseCase,
     private readonly cancelSaleUseCase: CancelSaleUseCase,
     private readonly completeSaleUseCase: CompleteSaleUseCase
@@ -72,5 +74,13 @@ export class CrmController {
   @ApiResponse({ status: 200, description: 'List of customers.' })
   async listCustomers(@Query('tenantId') tenantId: string) {
     return this.listCustomersUseCase.execute(tenantId || 'default');
+  }
+
+  @Get('customers/:id')
+  @ApiOperation({ summary: 'Get customer by id' })
+  @ApiResponse({ status: 200, description: 'The customer.' })
+  @ApiResponse({ status: 404, description: 'Customer not found.' })
+  async getCustomerById(@Param('id') id: string) {
+    return this.getCustomerByIdUseCase.execute(id);
   }
 }
