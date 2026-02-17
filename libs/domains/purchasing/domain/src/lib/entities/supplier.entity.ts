@@ -4,7 +4,7 @@ import { SupplierType } from '../enums/supplier-type.enum';
 @Entity()
 @Unique({ properties: ['tenantId', 'taxId'] })
 export class Supplier {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

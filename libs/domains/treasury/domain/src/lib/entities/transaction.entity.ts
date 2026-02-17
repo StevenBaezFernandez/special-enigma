@@ -4,7 +4,7 @@ import { TransactionType } from '../../../../contracts/src/lib/enums/transaction
 
 @Entity()
 export class Transaction {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

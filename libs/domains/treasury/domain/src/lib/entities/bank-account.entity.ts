@@ -3,7 +3,7 @@ import type { CashFlow } from './cash-flow.entity';
 
 @Entity()
 export class BankAccount {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

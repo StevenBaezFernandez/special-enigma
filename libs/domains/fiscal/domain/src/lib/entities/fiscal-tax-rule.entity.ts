@@ -2,7 +2,7 @@ import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
-export class TaxRule {
+export class FiscalTaxRule {
   @PrimaryKey()
   id: string = uuidv4();
 

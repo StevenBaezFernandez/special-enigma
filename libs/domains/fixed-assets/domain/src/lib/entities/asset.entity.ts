@@ -4,7 +4,7 @@ import type { Depreciation } from './depreciation.entity';
 
 @Entity()
 export class Asset {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

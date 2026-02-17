@@ -4,7 +4,7 @@ import {
   TaxDeclaration,
   TAX_DECLARATION_REPOSITORY,
   FISCAL_DATA_PROVIDER,
-  TaxRule,
+  FiscalTaxRule,
   TAX_RULE_REPOSITORY,
   TENANT_CONFIG_REPOSITORY
 } from '@virteex/fiscal-domain';
@@ -16,7 +16,7 @@ import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-
 @Global()
 @Module({
   imports: [
-    MikroOrmModule.forFeature([TaxDeclaration, TaxRule])
+    MikroOrmModule.forFeature([TaxDeclaration, FiscalTaxRule])
   ],
   providers: [
     {

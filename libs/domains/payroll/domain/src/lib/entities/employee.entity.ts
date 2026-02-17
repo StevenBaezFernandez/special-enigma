@@ -5,7 +5,7 @@ import type { Attendance } from './attendance.entity';
 
 @Entity()
 export class Employee {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

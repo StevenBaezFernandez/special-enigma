@@ -32,15 +32,20 @@ export class FinkokPacProvider implements PacProvider {
     this.stampNamespace = this.configService.get<string>('FINKOK_STAMP_NAMESPACE') || 'http://facturacion.finkok.com/stamp';
     this.cancelNamespace = this.configService.get<string>('FINKOK_CANCEL_NAMESPACE') || 'http://facturacion.finkok.com/cancel';
 
-    if (!this.username || !this.password || !this.url) {
+    if ((!this.username || !this.password || !this.url) && process.env['NODE_ENV'] === 'production') {
       this.logger.error('Finkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing from environment.');
       throw new Error(
         'Finkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing from environment.'
       );
+    } else if (!this.username || !this.password || !this.url) {
+        this.logger.warn('Finkok credentials missing. PAC functionality will be disabled or mock/fail in dev mode.');
     }
   }
 
   async stamp(xml: string): Promise<FiscalStamp> {
+    if (!this.url) {
+        throw new Error('PAC URL is not configured. Cannot stamp.');
+    }
     const soapBody = {
        'soapenv:Envelope': {
           '@_xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/',
@@ -125,6 +130,9 @@ export class FinkokPacProvider implements PacProvider {
   }
 
   async cancel(uuid: string, rfc: string): Promise<boolean> {
+     if (!this.cancelUrl) {
+         throw new Error('PAC Cancel URL is not configured.');
+     }
      if (!rfc) {
          throw new Error('RFC (Tax ID) is required for cancellation');
      }

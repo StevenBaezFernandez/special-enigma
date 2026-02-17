@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { TaxRuleRepository, TAX_RULE_REPOSITORY } from '@virteex/fiscal-domain';
+import { TaxRuleRepository, TAX_RULE_REPOSITORY, FiscalTaxRule } from '@virteex/fiscal-domain';
 
 @Injectable()
 export class GetTaxRulesUseCase {
@@ -8,9 +8,10 @@ export class GetTaxRulesUseCase {
   ) {}
 
   async execute(tenantId: string) {
-    const rules = await this.taxRuleRepository.findAll(tenantId);
+    // Correctly using findByTenant as per interface
+    const rules = await this.taxRuleRepository.findByTenant(tenantId);
 
-    return rules.map(r => ({
+    return rules.map((r: FiscalTaxRule) => ({
       id: r.id,
       name: r.name,
       rate: Number(r.rate),

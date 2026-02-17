@@ -4,7 +4,7 @@ import { AccountType } from '@virteex/accounting-contracts';
 @Entity()
 @Unique({ properties: ['tenantId', 'code'] })
 export class Account {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

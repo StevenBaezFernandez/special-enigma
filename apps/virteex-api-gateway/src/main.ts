@@ -15,10 +15,18 @@ import helmet from 'helmet';
 import { AppModule } from './app/app.module';
 import { GlobalExceptionFilter } from './app/filters/global-exception.filter';
 import { InitialSeederService } from './app/seeds/initial-seeder.service';
+import { MikroORM } from '@mikro-orm/core';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.useLogger(app.get(PinoLogger));
+
+  // Ensure Database Schema exists (Auto-migration for dev/demo)
+  // This is critical for SQLite in-memory or file-based DBs to have tables created before seeding.
+  const orm = app.get(MikroORM);
+  const generator = orm.getSchemaGenerator();
+  await generator.ensureDatabase();
+  await generator.updateSchema();
 
   // Run Seeder
   const seeder = app.get(InitialSeederService);

@@ -1,11 +1,12 @@
 import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection, Cascade, BeforeCreate, BeforeUpdate, ValidationError } from '@mikro-orm/core';
 import { CustomerType } from '@virteex/contracts';
+import { v4 as uuidv4 } from 'uuid';
 import type { Opportunity } from './opportunity.entity';
 
 @Entity()
 export class Customer {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
-  id!: string;
+  @PrimaryKey({ type: 'uuid' })
+  id: string = uuidv4();
 
   @Property()
   tenantId!: string;

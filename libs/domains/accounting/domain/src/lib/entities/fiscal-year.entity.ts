@@ -7,7 +7,7 @@ export enum FiscalYearStatus {
 
 @Entity()
 export class FiscalYear {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()

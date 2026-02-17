@@ -4,7 +4,7 @@ import type { Customer } from './customer.entity';
 
 @Entity()
 export class Opportunity {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
+  @PrimaryKey({ type: 'uuid' })
   id!: string;
 
   @Property()
