@@ -28,7 +28,7 @@ import { AppService } from './app.service';
     ServerConfigModule,
     KafkaModule.forRoot({
       clientId: 'crm-service',
-      groupId: 'crm-service-consumer',
+      groupId: 'crm-consumer',
     }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],

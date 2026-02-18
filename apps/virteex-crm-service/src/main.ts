@@ -19,7 +19,7 @@ async function bootstrap() {
         clientId: 'crm-service',
       },
       consumer: {
-        groupId: 'crm-service-consumer',
+        groupId: 'crm-consumer',
       },
     },
   });

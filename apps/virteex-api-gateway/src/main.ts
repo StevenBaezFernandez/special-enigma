@@ -27,7 +27,7 @@ async function bootstrap(): Promise<void> {
         brokers: process.env.KAFKA_BROKERS?.split(',') || ['localhost:9092'],
       },
       consumer: {
-        groupId: 'api-gateway-consumer',
+        groupId: 'gateway-consumer',
       },
     },
   });

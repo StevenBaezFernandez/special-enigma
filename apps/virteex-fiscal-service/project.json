@@ -1,7 +1,7 @@
 {
-  "name": "virteex-fiscal-connector",
+  "name": "virteex-fiscal-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-fiscal-connector/src",
+  "sourceRoot": "apps/virteex-fiscal-service/src",
   "projectType": "application",
   "tags": ["type:application", "platform:fiscal"],
   "targets": {
@@ -10,7 +10,7 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "apps/virteex-fiscal-connector"
+        "cwd": "apps/virteex-fiscal-service"
       },
       "configurations": {
         "development": {
@@ -23,8 +23,8 @@
       "cache": true,
       "executor": "@nx/js:prune-lockfile",
       "outputs": [
-        "{workspaceRoot}/dist/apps/virteex-fiscal-connector/package.json",
-        "{workspaceRoot}/dist/apps/virteex-fiscal-connector/package-lock.json"
+        "{workspaceRoot}/dist/apps/virteex-fiscal-service/package.json",
+        "{workspaceRoot}/dist/apps/virteex-fiscal-service/package-lock.json"
       ],
       "options": {
         "buildTarget": "build"
@@ -34,7 +34,7 @@
       "dependsOn": ["build"],
       "cache": true,
       "outputs": [
-        "{workspaceRoot}/dist/apps/virteex-fiscal-connector/workspace_modules"
+        "{workspaceRoot}/dist/apps/virteex-fiscal-service/workspace_modules"
       ],
       "executor": "@nx/js:copy-workspace-modules",
       "options": {
@@ -51,15 +51,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "virteex-fiscal-connector:build",
+        "buildTarget": "virteex-fiscal-service:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "virteex-fiscal-connector:build:development"
+          "buildTarget": "virteex-fiscal-service:build:development"
         },
         "production": {
-          "buildTarget": "virteex-fiscal-connector:build:production"
+          "buildTarget": "virteex-fiscal-service:build:production"
         }
       }
     },

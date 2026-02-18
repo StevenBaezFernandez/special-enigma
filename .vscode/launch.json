@@ -52,12 +52,12 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-auth-server with Nx",
+      "name": "Debug virteex-identity-service with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-auth-server"
+        "virteex-identity-service"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9231"
@@ -69,19 +69,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-auth-server/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/virteex-identity-service/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-jobs with Nx",
+      "name": "Debug virteex-scheduler-service with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-jobs"
+        "virteex-scheduler-service"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9232"
@@ -93,19 +93,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-jobs/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/virteex-scheduler-service/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-fiscal-connector with Nx",
+      "name": "Debug virteex-fiscal-service with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-fiscal-connector"
+        "virteex-fiscal-service"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9233"
@@ -117,7 +117,7 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-fiscal-connector/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/virteex-fiscal-service/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },

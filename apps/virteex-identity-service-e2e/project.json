@@ -1,20 +1,17 @@
 {
-  "name": "virteex-fiscal-connector-e2e",
+  "name": "virteex-identity-service-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "implicitDependencies": ["virteex-fiscal-connector"],
+  "implicitDependencies": ["virteex-identity-service"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "apps/virteex-fiscal-connector-e2e/jest.config.cts",
+        "jestConfig": "apps/virteex-identity-service-e2e/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": [
-        "virteex-fiscal-connector:build",
-        "virteex-fiscal-connector:serve"
-      ]
+      "dependsOn": ["virteex-identity-service:build", "virteex-identity-service:serve"]
     }
   }
 }

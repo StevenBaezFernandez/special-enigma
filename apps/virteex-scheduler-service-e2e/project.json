@@ -1,17 +1,17 @@
 {
-  "name": "virteex-auth-server-e2e",
+  "name": "virteex-scheduler-service-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "implicitDependencies": ["virteex-auth-server"],
+  "implicitDependencies": ["virteex-scheduler-service"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "apps/virteex-auth-server-e2e/jest.config.cts",
+        "jestConfig": "apps/virteex-scheduler-service-e2e/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": ["virteex-auth-server:build", "virteex-auth-server:serve"]
+      "dependsOn": ["virteex-scheduler-service:build", "virteex-scheduler-service:serve"]
     }
   }
 }

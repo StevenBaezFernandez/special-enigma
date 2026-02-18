@@ -1,10 +1,10 @@
 module.exports = {
-  displayName: 'virteex-fiscal-connector',
+  displayName: 'virteex-fiscal-service',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/virteex-fiscal-connector',
+  coverageDirectory: '../../coverage/apps/virteex-fiscal-service',
 };

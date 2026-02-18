@@ -42,9 +42,9 @@
       },
       "exclude": [
         "apps/virteex-api-gateway-e2e/**/*",
-        "apps/virteex-auth-server-e2e/**/*",
-        "apps/virteex-jobs-e2e/**/*",
-        "apps/virteex-fiscal-connector-e2e/**/*",
+        "apps/virteex-identity-service-e2e/**/*",
+        "apps/virteex-scheduler-service-e2e/**/*",
+        "apps/virteex-fiscal-service-e2e/**/*",
         "apps/virteex-catalog-service-e2e/**/*",
         "apps/virteex-gateway-e2e/**/*",
         "apps/virteex-notification-service-e2e/**/*",

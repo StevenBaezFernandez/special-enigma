@@ -43,7 +43,7 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
     EventEmitterModule.forRoot(),
     KafkaModule.forRoot({
       clientId: 'api-gateway',
-      groupId: 'api-gateway-consumer',
+      groupId: 'gateway-consumer',
     }),
     AuditModule,
     ServerConfigModule,

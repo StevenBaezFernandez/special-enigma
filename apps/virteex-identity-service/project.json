@@ -1,16 +1,16 @@
 {
-  "name": "virteex-auth-server",
+  "name": "virteex-identity-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-auth-server/src",
+  "sourceRoot": "apps/virteex-identity-service/src",
   "projectType": "application",
-  "tags": ["type:application", "platform:auth"],
+  "tags": ["type:application", "platform:identity"],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "apps/virteex-auth-server"
+        "cwd": "apps/virteex-identity-service"
       },
       "configurations": {
         "development": {
@@ -23,8 +23,8 @@
       "cache": true,
       "executor": "@nx/js:prune-lockfile",
       "outputs": [
-        "{workspaceRoot}/dist/apps/virteex-auth-server/package.json",
-        "{workspaceRoot}/dist/apps/virteex-auth-server/package-lock.json"
+        "{workspaceRoot}/dist/apps/virteex-identity-service/package.json",
+        "{workspaceRoot}/dist/apps/virteex-identity-service/package-lock.json"
       ],
       "options": {
         "buildTarget": "build"
@@ -34,7 +34,7 @@
       "dependsOn": ["build"],
       "cache": true,
       "outputs": [
-        "{workspaceRoot}/dist/apps/virteex-auth-server/workspace_modules"
+        "{workspaceRoot}/dist/apps/virteex-identity-service/workspace_modules"
       ],
       "executor": "@nx/js:copy-workspace-modules",
       "options": {
@@ -51,15 +51,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "virteex-auth-server:build",
+        "buildTarget": "virteex-identity-service:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "virteex-auth-server:build:development"
+          "buildTarget": "virteex-identity-service:build:development"
         },
         "production": {
-          "buildTarget": "virteex-auth-server:build:production"
+          "buildTarget": "virteex-identity-service:build:production"
         }
       }
     },

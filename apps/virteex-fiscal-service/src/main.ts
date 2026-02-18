@@ -13,7 +13,7 @@ async function bootstrap() {
         brokers: process.env['KAFKA_BROKERS']?.split(',') || ['localhost:9092'],
       },
       consumer: {
-        groupId: 'virteex-fiscal-connector-consumer',
+        groupId: 'fiscal-consumer',
       },
     },
   });

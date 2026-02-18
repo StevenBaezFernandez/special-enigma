@@ -1,5 +1,5 @@
 export default {
-  displayName: 'virteex-auth-server-e2e',
+  displayName: 'virteex-identity-service-e2e',
   preset: '../../jest.preset.js',
   globalSetup: '<rootDir>/src/support/global-setup.ts',
   globalTeardown: '<rootDir>/src/support/global-teardown.ts',
@@ -14,5 +14,5 @@ export default {
     ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/virteex-auth-server-e2e',
+  coverageDirectory: '../../coverage/virteex-identity-service-e2e',
 };
