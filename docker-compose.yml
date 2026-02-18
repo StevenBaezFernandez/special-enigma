@@ -282,3 +282,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+# This file defines the full local development environment with extracted microservices.
