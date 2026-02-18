@@ -1,8 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { TaxTable } from '@virteex/payroll-domain';
-import { User, Company } from '@virteex/identity-domain';
-import { Product } from '@virteex/catalog-domain';
 
 @Injectable()
 export class InitialSeederService {
@@ -15,8 +13,6 @@ export class InitialSeederService {
     const em = this.em.fork();
 
     await this.seedTaxTables(em);
-    await this.seedDefaultTenantAndUser(em);
-    await this.seedCatalog(em);
     this.logger.log('Seeding completed.');
   }
 
@@ -36,53 +32,6 @@ export class InitialSeederService {
     }
 
     await em.flush();
-  }
-
-  private async seedDefaultTenantAndUser(em: EntityManager) {
-    const companyCount = await em.count(Company, {});
-    if (companyCount === 0) {
-        this.logger.log('Seeding Default Tenant and Admin User...');
-
-        const company = new Company('Virteex Default Tenant', 'virteex-default', 'MX');
-        em.persist(company);
-
-        const adminUser = new User(
-            'admin@virteex.com',
-            '$2b$10$abcdefghijklmnopqrstuv', // Dummy hash
-            'Admin',
-            'User',
-            'MX',
-            company
-        );
-        adminUser.role = 'admin';
-        em.persist(adminUser);
-
-        await em.flush();
-        this.logger.log('Default Tenant and Admin User seeded. (Email: admin@virteex.com)');
-    }
-  }
-
-  private async seedCatalog(em: EntityManager) {
-      const companies = await em.find(Company, {}, { limit: 1 });
-      const company = companies.length > 0 ? companies[0] : null;
-
-      if (!company) return;
-
-      const tenantId = company.id;
-
-      const productCount = await em.count(Product, { tenantId });
-      if (productCount === 0) {
-          this.logger.log('Seeding Default Products...');
-          const p1 = new Product('PROD-001', 'Service A', '100.00');
-          p1.tenantId = tenantId;
-          const p2 = new Product('PROD-002', 'Widget B', '50.50');
-          p2.tenantId = tenantId;
-
-          em.persist([p1, p2]);
-      }
-
-
-      await em.flush();
   }
 
   private getMexicanISRTables(year: number): TaxTable[] {
