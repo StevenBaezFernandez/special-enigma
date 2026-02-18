@@ -1,0 +1,98 @@
+{
+  "name": "virteex-manufacturing-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/virteex-manufacturing-service/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "domain:manufacturing"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/virteex-manufacturing-service",
+        "main": "apps/virteex-manufacturing-service/src/main.ts",
+        "tsConfig": "apps/virteex-manufacturing-service/tsconfig.app.json",
+        "assets": [
+          "apps/virteex-manufacturing-service/src/assets"
+        ],
+        "webpackConfig": "apps/virteex-manufacturing-service/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/virteex-manufacturing-service/src/environments/environment.ts",
+              "with": "apps/virteex-manufacturing-service/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/virteex-manufacturing-service/package.json",
+        "{workspaceRoot}/dist/apps/virteex-manufacturing-service/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/dist/apps/virteex-manufacturing-service/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "prune": {
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ],
+      "executor": "nx:noop"
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "virteex-manufacturing-service:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "virteex-manufacturing-service:build:development"
+        },
+        "production": {
+          "buildTarget": "virteex-manufacturing-service:build:production"
+        }
+      }
+    },
+    "test": {
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
+}

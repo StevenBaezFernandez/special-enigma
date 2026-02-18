@@ -1,0 +1,98 @@
+{
+  "name": "virteex-purchasing-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/virteex-purchasing-service/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "domain:purchasing"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/virteex-purchasing-service",
+        "main": "apps/virteex-purchasing-service/src/main.ts",
+        "tsConfig": "apps/virteex-purchasing-service/tsconfig.app.json",
+        "assets": [
+          "apps/virteex-purchasing-service/src/assets"
+        ],
+        "webpackConfig": "apps/virteex-purchasing-service/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/virteex-purchasing-service/src/environments/environment.ts",
+              "with": "apps/virteex-purchasing-service/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/virteex-purchasing-service/package.json",
+        "{workspaceRoot}/dist/apps/virteex-purchasing-service/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/dist/apps/virteex-purchasing-service/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "prune": {
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ],
+      "executor": "nx:noop"
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "virteex-purchasing-service:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "virteex-purchasing-service:build:development"
+        },
+        "production": {
+          "buildTarget": "virteex-purchasing-service:build:production"
+        }
+      }
+    },
+    "test": {
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
+}

@@ -151,10 +151,19 @@ services:
       - .:/app
     environment:
       - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - FISCAL_DB_HOST=postgres
+      - FISCAL_DB_PORT=5432
+      - FISCAL_DB_USER=virteex
+      - FISCAL_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - FISCAL_DB_NAME=virteex_fiscal
+      - DB_DRIVER=postgres
       - NODE_ENV=${NODE_ENV:-development}
       - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
     command: npx nx serve virteex-fiscal-service
     depends_on:
+      - postgres
+      - redis
       - kafka
 
   # SCHEDULER SERVICE
@@ -170,6 +179,222 @@ services:
       - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
     command: npx nx serve virteex-scheduler-service
     depends_on:
+      - kafka
+
+  # ACCOUNTING SERVICE
+  accounting-service:
+    image: node:20-alpine
+    container_name: virteex-accounting-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - ACCOUNTING_DB_HOST=postgres
+      - ACCOUNTING_DB_PORT=5432
+      - ACCOUNTING_DB_USER=virteex
+      - ACCOUNTING_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - ACCOUNTING_DB_NAME=virteex_accounting
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-accounting-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # PAYROLL SERVICE
+  payroll-service:
+    image: node:20-alpine
+    container_name: virteex-payroll-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - PAYROLL_DB_HOST=postgres
+      - PAYROLL_DB_PORT=5432
+      - PAYROLL_DB_USER=virteex
+      - PAYROLL_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - PAYROLL_DB_NAME=virteex_payroll
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-payroll-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # PROJECTS SERVICE
+  projects-service:
+    image: node:20-alpine
+    container_name: virteex-projects-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - PROJECTS_DB_HOST=postgres
+      - PROJECTS_DB_PORT=5432
+      - PROJECTS_DB_USER=virteex
+      - PROJECTS_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - PROJECTS_DB_NAME=virteex_projects
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-projects-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # MANUFACTURING SERVICE
+  manufacturing-service:
+    image: node:20-alpine
+    container_name: virteex-manufacturing-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - MANUFACTURING_DB_HOST=postgres
+      - MANUFACTURING_DB_PORT=5432
+      - MANUFACTURING_DB_USER=virteex
+      - MANUFACTURING_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - MANUFACTURING_DB_NAME=virteex_manufacturing
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-manufacturing-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # TREASURY SERVICE
+  treasury-service:
+    image: node:20-alpine
+    container_name: virteex-treasury-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - TREASURY_DB_HOST=postgres
+      - TREASURY_DB_PORT=5432
+      - TREASURY_DB_USER=virteex
+      - TREASURY_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - TREASURY_DB_NAME=virteex_treasury
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-treasury-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # PURCHASING SERVICE
+  purchasing-service:
+    image: node:20-alpine
+    container_name: virteex-purchasing-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - PURCHASING_DB_HOST=postgres
+      - PURCHASING_DB_PORT=5432
+      - PURCHASING_DB_USER=virteex
+      - PURCHASING_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - PURCHASING_DB_NAME=virteex_purchasing
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-purchasing-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # BI SERVICE
+  bi-service:
+    image: node:20-alpine
+    container_name: virteex-bi-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - BI_DB_HOST=postgres
+      - BI_DB_PORT=5432
+      - BI_DB_USER=virteex
+      - BI_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - BI_DB_NAME=virteex_bi
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-bi-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # ADMIN SERVICE
+  admin-service:
+    image: node:20-alpine
+    container_name: virteex-admin-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - ADMIN_DB_HOST=postgres
+      - ADMIN_DB_PORT=5432
+      - ADMIN_DB_USER=virteex
+      - ADMIN_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - ADMIN_DB_NAME=virteex_admin
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-admin-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # FIXED ASSETS SERVICE
+  fixed-assets-service:
+    image: node:20-alpine
+    container_name: virteex-fixed-assets-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - FIXED_ASSETS_DB_HOST=postgres
+      - FIXED_ASSETS_DB_PORT=5432
+      - FIXED_ASSETS_DB_USER=virteex
+      - FIXED_ASSETS_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - FIXED_ASSETS_DB_NAME=virteex_fixed_assets
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-fixed-assets-service
+    depends_on:
+      - postgres
+      - redis
       - kafka
 
   # CATALOG SERVICE (Subgraph)

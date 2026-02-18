@@ -48,7 +48,16 @@
         "apps/virteex-catalog-service-e2e/**/*",
         "apps/virteex-gateway-e2e/**/*",
         "apps/virteex-notification-service-e2e/**/*",
-        "apps/virteex-billing-service-e2e/**/*"
+        "apps/virteex-billing-service-e2e/**/*",
+        "apps/virteex-accounting-service-e2e/**/*",
+        "apps/virteex-payroll-service-e2e/**/*",
+        "apps/virteex-projects-service-e2e/**/*",
+        "apps/virteex-manufacturing-service-e2e/**/*",
+        "apps/virteex-treasury-service-e2e/**/*",
+        "apps/virteex-purchasing-service-e2e/**/*",
+        "apps/virteex-bi-service-e2e/**/*",
+        "apps/virteex-admin-service-e2e/**/*",
+        "apps/virteex-fixed-assets-service-e2e/**/*"
       ]
     },
     {

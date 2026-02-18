@@ -2,7 +2,7 @@
 set -e
 
 # Databases to create
-DATABASES=(virteex_catalog virteex_inventory virteex_identity virteex_billing virteex_crm virteex_accounting)
+DATABASES=(virteex_catalog virteex_inventory virteex_identity virteex_billing virteex_crm virteex_accounting virteex_payroll virteex_projects virteex_manufacturing virteex_treasury virteex_purchasing virteex_bi virteex_admin virteex_fixed_assets virteex_fiscal)
 
 for db in "${DATABASES[@]}"; do
   echo "Checking if database '$db' exists..."
