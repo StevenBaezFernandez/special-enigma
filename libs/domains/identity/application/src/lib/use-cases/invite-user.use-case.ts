@@ -9,7 +9,7 @@ export class InviteUserUseCase {
   constructor(
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     @Inject(AuthService) private readonly authService: AuthService,
-    private readonly eventEmitter: EventEmitter2
+    @Inject(EventEmitter2) private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(dto: InviteUserDto, currentUserId: string): Promise<User> {

@@ -4,30 +4,26 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TokenService {
-  private readonly ACCESS_TOKEN_KEY = 'access_token';
-  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
+  // We no longer store tokens in LocalStorage for security (HttpOnly Cookies are used)
 
   setTokens(accessToken: string, refreshToken?: string): void {
-    localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
-    if (refreshToken) {
-      localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
-    }
+    // No-op
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem(this.ACCESS_TOKEN_KEY);
+    return null;
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+    return null;
   }
 
   clearTokens(): void {
-    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    // No-op
   }
 
   hasAccessToken(): boolean {
-    return !!this.getAccessToken();
+    // We assume true if we have a session, but really we rely on API calls now
+    return false;
   }
 }

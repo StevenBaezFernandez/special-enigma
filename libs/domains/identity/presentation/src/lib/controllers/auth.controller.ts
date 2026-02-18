@@ -1,11 +1,11 @@
-import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req } from '@nestjs/common';
+import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException } from '@nestjs/common';
 import {
   RegisterUserDto, LoginUserDto, VerifyMfaDto,
   RegisterUserUseCase, LoginUserUseCase, VerifyMfaUseCase,
-  LoginResponseDto
+  LoginResponseDto, RefreshTokenUseCase
 } from '@virteex/identity-application';
 import { User } from '@virteex/identity-domain';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { Public } from '@virteex/auth';
 import { ApiOperation } from '@nestjs/swagger';
 import * as geoip from 'geoip-lite';
@@ -15,7 +15,8 @@ export class AuthController {
   constructor(
     private readonly registerUserUseCase: RegisterUserUseCase,
     private readonly loginUserUseCase: LoginUserUseCase,
-    private readonly verifyMfaUseCase: VerifyMfaUseCase
+    private readonly verifyMfaUseCase: VerifyMfaUseCase,
+    private readonly refreshTokenUseCase: RefreshTokenUseCase
   ) {}
 
   @Public()
@@ -33,23 +34,90 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginUserDto, @Req() req: Request): Promise<LoginResponseDto> {
+  async login(@Body() dto: LoginUserDto, @Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<Partial<LoginResponseDto>> {
     const context = {
       ip: req.ip || 'unknown',
       userAgent: req.headers['user-agent'] || 'unknown'
     };
-    return this.loginUserUseCase.execute(dto, context);
+    const result = await this.loginUserUseCase.execute(dto, context);
+    this.setCookies(res, result);
+    const { accessToken, refreshToken, ...rest } = result;
+    return rest;
   }
 
   @Public()
   @Post('verify-mfa')
   @HttpCode(HttpStatus.OK)
-  async verifyMfa(@Body() dto: VerifyMfaDto, @Req() req: Request): Promise<LoginResponseDto> {
+  async verifyMfa(@Body() dto: VerifyMfaDto, @Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<Partial<LoginResponseDto>> {
     const context = {
         ip: req.ip || 'unknown',
         userAgent: req.headers['user-agent'] || 'unknown'
     };
-    return this.verifyMfaUseCase.execute(dto, context);
+    const result = await this.verifyMfaUseCase.execute(dto, context);
+    this.setCookies(res, result);
+    const { accessToken, refreshToken, ...rest } = result;
+    return rest;
+  }
+
+  @Public()
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<Partial<LoginResponseDto>> {
+    const refreshToken = req.cookies['refresh_token'];
+    if (!refreshToken) {
+        throw new UnauthorizedException('No refresh token found in cookies');
+    }
+
+    const context = {
+        ip: req.ip || 'unknown',
+        userAgent: req.headers['user-agent'] || 'unknown'
+    };
+
+    const result = await this.refreshTokenUseCase.execute({ refreshToken }, context);
+    this.setCookies(res, result);
+    const { accessToken: at, refreshToken: rt, ...rest } = result;
+    return rest;
+  }
+
+  @Public()
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Res({ passthrough: true }) res: Response) {
+      res.clearCookie('access_token', {
+          httpOnly: true,
+          secure: process.env['NODE_ENV'] === 'production',
+          sameSite: 'lax',
+      });
+      res.clearCookie('refresh_token', {
+          httpOnly: true,
+          secure: process.env['NODE_ENV'] === 'production',
+          sameSite: 'lax',
+      });
+      return { message: 'Logged out successfully' };
+  }
+
+  @Get('me')
+  async getMe(@Req() req: Request) {
+      return (req as any).user;
+  }
+
+  private setCookies(res: Response, result: LoginResponseDto) {
+      if (result.accessToken) {
+          res.cookie('access_token', result.accessToken, {
+              httpOnly: true,
+              secure: process.env['NODE_ENV'] === 'production',
+              sameSite: 'lax', // Use 'lax' for better UX with redirections, or 'strict' if SPA is on same domain
+              maxAge: 3600 * 1000 // 1 hour
+          });
+      }
+      if (result.refreshToken) {
+          res.cookie('refresh_token', result.refreshToken, {
+              httpOnly: true,
+              secure: process.env['NODE_ENV'] === 'production',
+              sameSite: 'lax',
+              maxAge: 7 * 24 * 3600 * 1000 // 7 days
+          });
+      }
   }
 
   @Public()

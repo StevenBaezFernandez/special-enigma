@@ -22,6 +22,9 @@ export class Session {
   @Property()
   riskScore = 0; // 0-100
 
+  @Property({ nullable: true })
+  currentRefreshTokenHash?: string;
+
   @Property()
   isActive = true;
 

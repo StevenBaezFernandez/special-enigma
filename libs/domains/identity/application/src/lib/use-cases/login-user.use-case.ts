@@ -1,4 +1,5 @@
 import { Injectable, Inject, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import * as crypto from 'crypto';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import {
@@ -105,12 +106,17 @@ export class LoginUserUseCase {
         };
     }
 
-    // 8. Create Session (Only if MFA passed or not required)
+    // 8. Generate Secure Refresh Token
+    const refreshTokenSecret = crypto.randomBytes(32).toString('hex');
+    const refreshTokenHash = crypto.createHash('sha256').update(refreshTokenSecret).digest('hex');
+
+    // 9. Create Session (Only if MFA passed or not required)
     const expiresAt = new Date(Date.now() + 3600 * 1000); // 1 hour
     const session = new Session(user, context.ip, context.userAgent, expiresAt, riskScore);
+    session.currentRefreshTokenHash = refreshTokenHash;
     await this.sessionRepository.save(session);
 
-    // 9. Generate Tokens
+    // 10. Generate Tokens
     const token = await this.authService.generateToken({
       sub: user.id,
       email: user.email,
@@ -120,7 +126,8 @@ export class LoginUserUseCase {
       sessionId: session.id
     });
 
-    const refreshToken = `refresh-${session.id}`;
+    // Composite Refresh Token: sessionId:secret (base64 encoded)
+    const refreshToken = Buffer.from(`${session.id}:${refreshTokenSecret}`).toString('base64');
 
     await this.auditLogRepository.save(new AuditLog('LOGIN_SUCCESS', user.id, { ip: context.ip, sessionId: session.id, risk: riskScore }));
 

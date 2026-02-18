@@ -7,8 +7,11 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "@nestjs/common": "^11.0.0",
-    "@virteex/payroll-contracts": "*",
     "@virteex/payroll-domain": "*",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@virteex/shared-infrastructure-xslt": "0.0.1",
+    "@virteex/contracts": "0.0.1",
+    "@nestjs/event-emitter": "^3.0.1",
+    "fast-xml-parser": "^4.2.7"
   }
 }

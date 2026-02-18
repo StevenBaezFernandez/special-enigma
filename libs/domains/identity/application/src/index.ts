@@ -14,3 +14,5 @@ export * from './lib/dto/update-user.dto';
 export * from './lib/dto/invite-user.dto';
 export * from './lib/use-cases/list-tenants.use-case';
 export * from './lib/listeners/user-invited.listener';
+export * from './lib/dto/refresh-token.dto';
+export * from './lib/use-cases/refresh-token.use-case';

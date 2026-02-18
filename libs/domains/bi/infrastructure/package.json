@@ -6,6 +6,13 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@nestjs/common": "^11.0.0",
+    "@virteex/bi-domain": "0.0.1",
+    "@virteex/payroll-domain": "0.0.1",
+    "@virteex/crm-domain": "0.0.1",
+    "@mikro-orm/nestjs": "^6.1.1",
+    "@virteex/crm-infrastructure": "0.0.1",
+    "@mikro-orm/postgresql": "^6.6.5"
   }
 }

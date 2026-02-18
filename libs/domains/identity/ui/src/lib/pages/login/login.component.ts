@@ -78,8 +78,8 @@ export class LoginComponent implements OnInit {
               this.mfaRequired = true;
               this.tempToken = res.tempToken;
               this.loading = false;
-          } else if (res.accessToken) {
-            this.sessionService.login(res.accessToken, res.refreshToken);
+          } else {
+            this.sessionService.login();
             const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
             this.router.navigate([returnUrl]);
           }
@@ -105,11 +105,9 @@ export class LoginComponent implements OnInit {
               code: this.mfaForm.value.code
           }).subscribe({
               next: (res) => {
-                  if (res.accessToken) {
-              this.sessionService.login(res.accessToken, res.refreshToken);
-              const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-              this.router.navigate([returnUrl]);
-                  }
+                  this.sessionService.login();
+                  const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                  this.router.navigate([returnUrl]);
               },
               error: () => {
                   this.loading = false;

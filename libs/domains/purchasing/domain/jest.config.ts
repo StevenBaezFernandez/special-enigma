@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 export default {
   displayName: 'purchasing-domain',
   preset: '../../../../jest.preset.js',

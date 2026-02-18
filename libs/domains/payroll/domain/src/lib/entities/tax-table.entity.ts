@@ -33,7 +33,7 @@ export class TaxTable {
     percent: number,
     year: number,
     type: 'MONTHLY' | 'ANNUAL' = 'MONTHLY',
-    country: string = 'MX',
+    country = 'MX',
     state?: string,
   ) {
     this.limit = limit;

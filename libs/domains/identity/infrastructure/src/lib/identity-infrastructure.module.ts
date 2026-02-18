@@ -1,6 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import {
   UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository,
   AuthService, NotificationService, RiskEngineService,
@@ -24,7 +25,7 @@ import { GEO_IP_PORT } from '@virteex/identity-domain';
 import {
   RegisterUserUseCase, LoginUserUseCase, VerifyMfaUseCase, StoragePort,
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
-  ListTenantsUseCase, UserInvitedListener
+  ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase
 } from '@virteex/identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
@@ -33,6 +34,7 @@ import { StorageAdapter } from './adapters/storage.adapter';
 @Module({
   imports: [
     ConfigModule,
+    EventEmitterModule,
     MikroOrmModule.forFeature([User, Company, AuditLog, Session, JobTitle]),
     SharedInfrastructureStorageModule
   ],
@@ -65,7 +67,8 @@ import { StorageAdapter } from './adapters/storage.adapter';
     UpdateUserProfileUseCase,
     InviteUserUseCase,
     UploadAvatarUseCase,
-    ListTenantsUseCase
+    ListTenantsUseCase,
+    RefreshTokenUseCase
   ],
   exports: [
     RegisterUserUseCase,
@@ -76,6 +79,7 @@ import { StorageAdapter } from './adapters/storage.adapter';
     InviteUserUseCase,
     UploadAvatarUseCase,
     ListTenantsUseCase,
+    RefreshTokenUseCase,
     StoragePort,
     // Export ports if other modules need them directly
     UserRepository,

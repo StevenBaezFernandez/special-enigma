@@ -7,8 +7,11 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "tslib": "^2.3.0",
-    "@nestjs/common": "^10.0.0",
-    "@nestjs/platform-express": "^10.0.0",
-    "@virteex/admin-application": "*"
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "@virteex/admin-application": "*",
+    "@nestjs/swagger": "^11.2.6",
+    "express": "^4.21.2",
+    "multer": "2.0.2"
   }
 }

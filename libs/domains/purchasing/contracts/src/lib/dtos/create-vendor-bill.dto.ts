@@ -14,4 +14,4 @@ export interface CreateVendorBillDto {
   lineItems: VendorBillLineItemDto[];
 }
 
-export interface UpdateVendorBillDto extends Partial<CreateVendorBillDto> {}
+export type UpdateVendorBillDto = Partial<CreateVendorBillDto>

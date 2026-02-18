@@ -12,6 +12,7 @@
     "@nestjs/common": "^11.0.0",
     "@mikro-orm/nestjs": "^6.1.1",
     "@nestjs/schedule": "^6.1.0",
-    "ioredis": "^5.9.2"
+    "ioredis": "^5.9.2",
+    "kafkajs": "^2.2.4"
   }
 }

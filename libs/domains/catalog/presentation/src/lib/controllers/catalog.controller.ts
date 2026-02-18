@@ -23,7 +23,7 @@ export class CatalogController {
 
   @Get('products')
   @ApiOperation({ summary: 'Get all products' })
-  async getProducts(@Query('tenantId') tenantId: string = 'default') {
+  async getProducts(@Query('tenantId') tenantId = 'default') {
     return this.getProductsUseCase.execute(tenantId);
   }
 

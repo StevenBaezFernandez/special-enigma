@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 module.exports = {
   displayName: 'identity-infrastructure',
   preset: '../../../../jest.preset.js',
