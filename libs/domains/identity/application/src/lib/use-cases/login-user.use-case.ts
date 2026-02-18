@@ -4,7 +4,7 @@ import { LoginUserDto } from '../dto/login-user.dto';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import {
   UserRepository, SessionRepository, Session, AuditLogRepository, AuditLog,
-  RiskEngineService, AuthService
+  RiskEngineService, AuthService, CachePort
 } from '@virteex/identity-domain';
 
 export interface LoginContext {
@@ -20,25 +20,23 @@ export class LoginUserUseCase {
     @Inject(AuthService) private readonly authService: AuthService,
     @Inject(SessionRepository) private readonly sessionRepository: SessionRepository,
     @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
-    @Inject(RiskEngineService) private readonly riskEngineService: RiskEngineService
+    @Inject(RiskEngineService) private readonly riskEngineService: RiskEngineService,
+    @Inject(CachePort) private readonly cachePort: CachePort
   ) {}
 
   async execute(dto: LoginUserDto, context: LoginContext = { ip: 'unknown', userAgent: 'unknown' }): Promise<LoginResponseDto> {
     const user = await this.userRepository.findByEmail(dto.email);
 
-    // 1. Check if user exists
     if (!user) {
       await this.auditLogRepository.save(new AuditLog('LOGIN_FAILED_USER_NOT_FOUND', undefined, { email: dto.email, ip: context.ip }));
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // 2. Check Lockout
     if (user.lockedUntil && user.lockedUntil > new Date()) {
       await this.auditLogRepository.save(new AuditLog('LOGIN_FAILED_LOCKED', user.id, { ip: context.ip }));
       throw new ForbiddenException(`Account locked until ${user.lockedUntil.toISOString()}`);
     }
 
-    // 3. Verify Password
     const isPasswordValid = await this.authService.verifyPassword(dto.password, user.passwordHash);
 
     if (!isPasswordValid) {
@@ -51,30 +49,24 @@ export class LoginUserUseCase {
         await this.auditLogRepository.save(new AuditLog('LOGIN_FAILED_BAD_PASSWORD', user.id, { ip: context.ip }));
       }
 
-      await this.userRepository.save(user); // Persist attempts
+      await this.userRepository.save(user);
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // 4. Verify Active Status
     if (!user.isActive) {
       throw new UnauthorizedException('User is inactive');
     }
 
-    // 5. Calculate Risk
     const riskScore = await this.riskEngineService.calculateRisk({
       ip: context.ip,
-      country: user.country, // Expected country vs actual IP
+      country: user.country,
       userAgent: context.userAgent,
       email: user.email
     });
 
-    // 6. MFA Logic (Adaptive)
     let mfaRequired = false;
 
     if (user.mfaEnabled || riskScore > 60) {
-      // If risk is high or MFA enforced, we require MFA.
-
-      // If Risk > 90, we block.
       if (riskScore > 90) {
           await this.auditLogRepository.save(new AuditLog('LOGIN_BLOCKED_HIGH_RISK', user.id, { score: riskScore }));
           throw new ForbiddenException('Login blocked due to suspicious activity. Contact support.');
@@ -84,15 +76,13 @@ export class LoginUserUseCase {
       await this.auditLogRepository.save(new AuditLog('LOGIN_MFA_CHALLENGE', user.id, { score: riskScore }));
     }
 
-    // 7. Reset Lockout counters on success (partial success if MFA required)
     user.failedLoginAttempts = 0;
     user.lockedUntil = undefined;
     user.lastLoginAt = new Date();
-    user.riskScore = riskScore; // Update baseline
+    user.riskScore = riskScore;
     await this.userRepository.save(user);
 
     if (mfaRequired) {
-        // Generate partial token (e.g. valid for 5 mins, only for MFA verification)
         const tempToken = await this.authService.generateToken({
             sub: user.id,
             email: user.email,
@@ -106,17 +96,18 @@ export class LoginUserUseCase {
         };
     }
 
-    // 8. Generate Secure Refresh Token
     const refreshTokenSecret = crypto.randomBytes(32).toString('hex');
     const refreshTokenHash = crypto.createHash('sha256').update(refreshTokenSecret).digest('hex');
 
-    // 9. Create Session (Only if MFA passed or not required)
-    const expiresAt = new Date(Date.now() + 3600 * 1000); // 1 hour
+    const SESSION_TTL = 7 * 24 * 3600; // seconds
+    const expiresAt = new Date(Date.now() + SESSION_TTL * 1000);
+
     const session = new Session(user, context.ip, context.userAgent, expiresAt, riskScore);
     session.currentRefreshTokenHash = refreshTokenHash;
     await this.sessionRepository.save(session);
 
-    // 10. Generate Tokens
+    await this.cachePort.set(`session:${session.id}`, 'valid', SESSION_TTL);
+
     const token = await this.authService.generateToken({
       sub: user.id,
       email: user.email,
@@ -126,7 +117,6 @@ export class LoginUserUseCase {
       sessionId: session.id
     });
 
-    // Composite Refresh Token: sessionId:secret (base64 encoded)
     const refreshToken = Buffer.from(`${session.id}:${refreshTokenSecret}`).toString('base64');
 
     await this.auditLogRepository.save(new AuditLog('LOGIN_SUCCESS', user.id, { ip: context.ip, sessionId: session.id, risk: riskScore }));
@@ -134,7 +124,7 @@ export class LoginUserUseCase {
     return {
       accessToken: token,
       refreshToken: refreshToken,
-      expiresIn: 3600,
+      expiresIn: 900,
       mfaRequired: false
     };
   }

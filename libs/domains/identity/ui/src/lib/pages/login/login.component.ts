@@ -4,14 +4,12 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angula
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ButtonComponent, InputComponent } from '@virteex/shared-ui';
-import { CountrySelectorComponent } from '../../components/country-selector/country-selector.component';
-import { IntentDetectionService } from '../../services/intent-detection.service';
 import { SessionService } from '@virteex/shared-util-auth';
 
 @Component({
   selector: 'virteex-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, ButtonComponent, InputComponent, CountrySelectorComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ButtonComponent, InputComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -21,14 +19,13 @@ export class LoginComponent implements OnInit {
   private sessionService = inject(SessionService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private intentService = inject(IntentDetectionService);
 
   loginForm: FormGroup;
   mfaForm: FormGroup;
   loading = false;
   errorMsg = '';
-  country = 'CO';
   lang = 'es';
+  country = 'CO';
 
   mfaRequired = false;
   tempToken = '';
@@ -36,7 +33,8 @@ export class LoginComponent implements OnInit {
   constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
+      rememberMe: [false]
     });
 
     this.mfaForm = this.fb.group({
@@ -47,30 +45,14 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
       this.route.paramMap.subscribe(params => {
           this.lang = params.get('lang') || 'es';
-          const countryParam = params.get('country');
-
-          if (countryParam) {
-              this.country = countryParam.toUpperCase();
-          } else {
-              // Auto detect default
-              this.intentService.analyzeContext('').subscribe(analysis => {
-                  if (analysis.detectedCountry) {
-                      this.country = analysis.detectedCountry;
-                  }
-              });
-          }
       });
-  }
-
-  onCountrySelected(country: string) {
-    this.country = country;
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
       this.loading = true;
       this.errorMsg = '';
-      const payload = { ...this.loginForm.value, country: this.country };
+      const payload = this.loginForm.value;
 
       this.authService.login(payload).subscribe({
         next: (res) => {

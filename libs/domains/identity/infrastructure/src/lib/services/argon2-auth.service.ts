@@ -3,13 +3,14 @@ import { AuthService } from '@virteex/identity-domain';
 import * as jwt from 'jsonwebtoken';
 import { authenticator } from '@otplib/preset-default';
 import * as crypto from 'crypto';
+import * as argon2 from 'argon2';
 
 interface JwtPayload {
   [key: string]: unknown;
 }
 
 @Injectable()
-export class NodeCryptoAuthService implements AuthService {
+export class Argon2AuthService implements AuthService {
   private readonly secret: string;
   private readonly encryptionKey: Buffer;
   private readonly algorithm = 'aes-256-gcm';
@@ -20,34 +21,31 @@ export class NodeCryptoAuthService implements AuthService {
       throw new Error('JWT_SECRET is not defined in environment variables.');
     }
     const mfaKey = process.env['MFA_ENCRYPTION_KEY'] || this.secret;
-    // Derive a 32-byte key
-    this.encryptionKey = crypto.scryptSync(mfaKey, 'salt', 32);
+    const salt = process.env['ENCRYPTION_SALT'] || 'virteex-secure-salt';
+
+    // Derive a 32-byte key using strict scrypt params
+    this.encryptionKey = crypto.scryptSync(mfaKey, salt, 32);
   }
 
   async hashPassword(password: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const salt = crypto.randomBytes(16).toString('hex');
-      crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-        if (err) reject(err);
-        resolve(`${salt}:${derivedKey.toString('hex')}`);
-      });
+    return argon2.hash(password, {
+      type: argon2.argon2id,
+      memoryCost: 2 ** 16, // 64 MB
+      timeCost: 3,
+      parallelism: 1,
     });
   }
 
   async verifyPassword(password: string, storedHash: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const [salt, key] = storedHash.split(':');
-      if (!salt || !key) return resolve(false);
-
-      crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-        if (err) reject(err);
-        resolve(key === derivedKey.toString('hex'));
-      });
-    });
+    try {
+      return await argon2.verify(storedHash, password);
+    } catch (err) {
+      return false;
+    }
   }
 
   async generateToken(payload: any): Promise<string> {
-    const expiration = process.env['JWT_EXPIRATION'] || '1h';
+    const expiration = process.env['JWT_EXPIRATION'] || '15m'; // Default to short-lived
     return jwt.sign(payload, this.secret, { expiresIn: expiration } as jwt.SignOptions);
   }
 

@@ -7,7 +7,8 @@ import {
   AuditLogRepository,
   AuditLog,
   AuthService,
-  UserRepository
+  UserRepository,
+  CachePort
 } from '@virteex/identity-domain';
 
 @Injectable()
@@ -16,11 +17,11 @@ export class RefreshTokenUseCase {
     @Inject(SessionRepository) private readonly sessionRepository: SessionRepository,
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     @Inject(AuthService) private readonly authService: AuthService,
-    @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository
+    @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
+    @Inject(CachePort) private readonly cachePort: CachePort
   ) {}
 
   async execute(dto: RefreshTokenDto, context: { ip: string; userAgent: string }): Promise<LoginResponseDto> {
-    // 1. Decode Token
     let sessionId: string;
     let secret: string;
 
@@ -34,8 +35,11 @@ export class RefreshTokenUseCase {
        throw new UnauthorizedException('Invalid token format');
     }
 
-    // 2. Find Session
-    // Assuming findById loads the relation or we load user separately
+    const sessionStatus = await this.cachePort.get(`session:${sessionId}`);
+    if (!sessionStatus || sessionStatus !== 'valid') {
+        // Fallback or treat as invalid
+    }
+
     const session = await this.sessionRepository.findById(sessionId);
 
     if (!session) {
@@ -50,33 +54,33 @@ export class RefreshTokenUseCase {
         throw new UnauthorizedException('Session expired');
     }
 
-    // 3. Verify Hash (Rotation Check)
     const secretHash = crypto.createHash('sha256').update(secret).digest('hex');
 
     if (session.currentRefreshTokenHash !== secretHash) {
-        // REUSE DETECTED!
-        // Invalidate session immediately
         session.isActive = false;
         await this.sessionRepository.save(session);
-        // Assuming session.user is loaded or has an ID
+
+        await this.cachePort.del(`session:${sessionId}`);
+
         const userId = session.user.id || (session.user as any);
         await this.auditLogRepository.save(new AuditLog('TOKEN_REUSE_DETECTED', userId, { sessionId: session.id, ip: context.ip }));
+
         throw new UnauthorizedException('Token reuse detected. Session revoked.');
     }
 
-    // 4. Rotate Token
     const newSecret = crypto.randomBytes(32).toString('hex');
     const newHash = crypto.createHash('sha256').update(newSecret).digest('hex');
 
     session.currentRefreshTokenHash = newHash;
-    session.expiresAt = new Date(Date.now() + 3600 * 1000); // +1 hour
+    const SESSION_TTL = 7 * 24 * 3600;
+    session.expiresAt = new Date(Date.now() + SESSION_TTL * 1000);
 
     await this.sessionRepository.save(session);
 
-    // 5. Generate Access Token
-    // Ensure we have the user data
+    await this.cachePort.set(`session:${session.id}`, 'valid', SESSION_TTL);
+
     let user = session.user;
-    if (!user.email) { // If not populated
+    if (!user.email) {
         const foundUser = await this.userRepository.findById(user.id);
         if (!foundUser) throw new UnauthorizedException('User not found');
         user = foundUser;
@@ -98,7 +102,7 @@ export class RefreshTokenUseCase {
     return {
       accessToken,
       refreshToken: newRefreshToken,
-      expiresIn: 3600,
+      expiresIn: 900,
       mfaRequired: false
     };
   }

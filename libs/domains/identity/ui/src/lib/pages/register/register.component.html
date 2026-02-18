@@ -4,48 +4,68 @@
     <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
       Registro Empresarial
     </h2>
-    <p class="mt-2 text-center text-sm text-gray-600">
-      Adaptado para {{ country }}
-    </p>
   </div>
 
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 relative">
 
       <!-- Stepper -->
-      <div class="flex justify-between mb-8" *ngIf="currentStep < 5">
-          <ng-container *ngFor="let step of [1,2,3,4]; let i = index">
+      <div class="flex justify-between mb-8" *ngIf="currentStep < 4">
+          <ng-container *ngFor="let step of [1,2,3]; let i = index">
               <div class="flex items-center">
                   <div class="flex items-center justify-center w-8 h-8 rounded-full border-2"
                        [ngClass]="{'border-indigo-600 bg-indigo-600 text-white': currentStep > step, 'border-indigo-600 text-indigo-600': currentStep === step, 'border-gray-300 text-gray-300': currentStep < step}">
                       {{ step }}
                   </div>
-                  <div class="w-full h-1 bg-gray-300 mx-2" *ngIf="i < 3"></div>
+                  <div class="w-full h-1 bg-gray-300 mx-2" *ngIf="i < 2"></div>
               </div>
           </ng-container>
       </div>
 
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" *ngIf="currentStep < 5">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" *ngIf="currentStep < 4">
 
-        <!-- Step 1: Personal Info -->
+        <!-- Step 1: Account Setup -->
         <div *ngIf="currentStep === 1">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Información Personal</h3>
-            <virteex-input formControlName="firstName" label="Nombres" type="text" [error]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched ? 'Requerido' : ''"></virteex-input>
-            <virteex-input formControlName="lastName" label="Apellidos" type="text" [error]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched ? 'Requerido' : ''"></virteex-input>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Cuenta y Seguridad</h3>
+
+            <div class="grid grid-cols-2 gap-4">
+                <virteex-input formControlName="firstName" label="Nombres" type="text" [error]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched ? 'Requerido' : ''"></virteex-input>
+                <virteex-input formControlName="lastName" label="Apellidos" type="text" [error]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched ? 'Requerido' : ''"></virteex-input>
+            </div>
+
             <virteex-input formControlName="email" label="Email Corporativo" type="email" [error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched ? 'Email inválido' : ''"></virteex-input>
             <virteex-input formControlName="phone" label="Teléfono" type="tel" [error]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched ? 'Requerido' : ''"></virteex-input>
+
+            <virteex-input formControlName="password" label="Contraseña" type="password" [error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched ? 'Mínimo 12 caracteres' : ''"></virteex-input>
+
+            <!-- Password Strength Meter -->
+            <div class="mt-1 mb-4" *ngIf="registerForm.get('password')?.value">
+                <div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                    <div class="h-full transition-all duration-300"
+                         [ngClass]="passwordStrengthClass"
+                         [style.width]="passwordStrengthWidth"></div>
+                </div>
+                <p class="text-xs text-right mt-1 text-gray-500">{{ passwordStrengthLabel }}</p>
+            </div>
+
+            <virteex-input formControlName="confirmPassword" label="Confirmar Contraseña" type="password" [error]="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched ? 'No coinciden' : ''"></virteex-input>
         </div>
 
-        <!-- Step 2: Company Info -->
+        <!-- Step 2: Verification -->
         <div *ngIf="currentStep === 2">
-             <h3 class="text-lg font-medium text-gray-900 mb-4">Información de la Empresa</h3>
-             <virteex-input formControlName="companyName" label="Razón Social" type="text" [error]="registerForm.get('companyName')?.invalid && registerForm.get('companyName')?.touched ? 'Requerido' : ''"></virteex-input>
-             <virteex-input formControlName="industry" label="Industria" type="text" [error]="registerForm.get('industry')?.invalid && registerForm.get('industry')?.touched ? 'Requerido' : ''"></virteex-input>
+             <h3 class="text-lg font-medium text-gray-900 mb-4">Verificación de Email</h3>
+             <p class="text-sm text-gray-500 mb-4">Hemos enviado un código de 6 dígitos a <b>{{ registerForm.get('email')?.value }}</b>.</p>
+
+             <virteex-input formControlName="otp" label="Código de Verificación" type="text" placeholder="123456" [error]="registerForm.get('otp')?.invalid && registerForm.get('otp')?.touched ? 'Código de 6 dígitos requerido' : ''"></virteex-input>
         </div>
 
-        <!-- Step 3: Tax Details -->
+        <!-- Step 3: Business Details (Onboarding) -->
         <div *ngIf="currentStep === 3">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Detalles Fiscales</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Datos de la Empresa</h3>
+
+            <virteex-input formControlName="companyName" label="Razón Social" type="text" [error]="registerForm.get('companyName')?.invalid && registerForm.get('companyName')?.touched ? 'Requerido' : ''"></virteex-input>
+            <virteex-input formControlName="industry" label="Industria" type="text" [error]="registerForm.get('industry')?.invalid && registerForm.get('industry')?.touched ? 'Requerido' : ''"></virteex-input>
+
             <virteex-country-selector [selectedCountry]="country" (countrySelected)="onCountrySelected($event)"></virteex-country-selector>
 
             <virteex-input
@@ -57,98 +77,63 @@
             </virteex-input>
 
             <virteex-input formControlName="regime" label="Régimen Fiscal" type="text" [error]="registerForm.get('regime')?.invalid && registerForm.get('regime')?.touched ? 'Requerido' : ''"></virteex-input>
-        </div>
 
-        <!-- Step 4: Security -->
-        <div *ngIf="currentStep === 4">
-             <h3 class="text-lg font-medium text-gray-900 mb-4">Seguridad</h3>
-             <virteex-input formControlName="password" label="Contraseña" type="password" [error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched ? 'Mínimo 12 caracteres' : ''"></virteex-input>
-             <virteex-input formControlName="confirmPassword" label="Confirmar Contraseña" type="password" [error]="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched ? 'No coinciden' : ''"></virteex-input>
-
-             <div class="flex items-center mt-4 mb-4">
-                <input id="terms" formControlName="terms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                <label for="terms" class="ml-2 block text-sm text-gray-900">
-                  Acepto los términos y condiciones
-                </label>
-             </div>
-             <p *ngIf="registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched" class="text-red-600 text-xs mt-1">Debe aceptar los términos.</p>
+            <div class="mt-4">
+                <div class="flex items-center mb-2">
+                    <input id="terms" formControlName="terms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label for="terms" class="ml-2 block text-sm text-gray-900">
+                      Acepto los <a href="#" class="text-indigo-600">Términos y Condiciones</a>
+                    </label>
+                </div>
+                <div class="flex items-center">
+                    <input id="privacy" formControlName="privacy" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label for="privacy" class="ml-2 block text-sm text-gray-900">
+                      Acepto la <a href="#" class="text-indigo-600">Política de Privacidad (GDPR)</a>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <!-- Navigation Buttons -->
         <div class="mt-6 flex justify-between">
-            <button type="button" *ngIf="currentStep > 1" (click)="prevStep()" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Atrás
-            </button>
+            <button type="button" *ngIf="currentStep === 1 || currentStep === 3" (click)="currentStep === 3 ? null : router.navigate(['/auth/login'])" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                {{ currentStep === 3 ? '' : 'Cancelar' }}
+            </button> <!-- Hide back button logic for simplicity in strict flow, or implement proper back -->
+
             <div class="flex-1"></div>
-            <button type="button" *ngIf="currentStep < 4" (click)="nextStep()" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+
+            <virteex-button *ngIf="currentStep === 1" (click)="onInitiateSignup()" [loading]="loading" [disabled]="!isStep1Valid()">
                 Siguiente
-            </button>
-            <virteex-button *ngIf="currentStep === 4" type="submit" [loading]="loading" class="ml-3">
-                Registrar Empresa
+            </virteex-button>
+
+            <virteex-button *ngIf="currentStep === 2" (click)="onVerifySignup()" [loading]="loading" [disabled]="!!registerForm.get('otp')?.invalid">
+                Verificar
+            </virteex-button>
+
+            <virteex-button *ngIf="currentStep === 3" type="submit" [loading]="loading" [disabled]="registerForm.invalid">
+                Finalizar Registro
             </virteex-button>
         </div>
 
-        <div *ngIf="errorMsg" class="mt-2 text-sm text-red-600">
+        <div *ngIf="errorMsg" class="mt-2 text-sm text-red-600 text-center">
             {{ errorMsg }}
         </div>
 
       </form>
 
-      <!-- Step 5: Success -->
-      <div *ngIf="currentStep === 5" class="text-center">
+      <!-- Step 4: Success -->
+      <div *ngIf="currentStep === 4" class="text-center">
           <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
             <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
           </div>
-          <h3 class="mt-2 text-lg font-medium text-gray-900">Registro Exitoso</h3>
+          <h3 class="mt-2 text-lg font-medium text-gray-900">¡Bienvenido!</h3>
           <p class="mt-1 text-sm text-gray-500">
-              Hemos enviado un correo de verificación a <b>{{ registerForm.get('email')?.value }}</b>.
+              Tu cuenta ha sido creada exitosamente. Redirigiendo...
           </p>
-          <div class="mt-6">
-              <a routerLink="/auth/login" class="text-indigo-600 hover:text-indigo-500 font-medium">Ir al Login</a>
-          </div>
       </div>
 
     </div>
   </div>
-
-  <!-- Discrepancy Modal -->
-  <div *ngIf="showDiscrepancyModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-          <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-          <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-          <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-              <div>
-                  <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100">
-                      <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                      </svg>
-                  </div>
-                  <div class="mt-3 text-center sm:mt-5">
-                      <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                          Discrepancia de Ubicación Detectada
-                      </h3>
-                      <div class="mt-2">
-                          <p class="text-sm text-gray-500">
-                              Parece que estás registrando una empresa en <b>{{ country }}</b>, pero detectamos que estás ubicado en <b>{{ contextAnalysis?.detectedCountry }}</b>.
-                          </p>
-                          <p class="text-sm text-gray-500 mt-2">
-                              Esto afectará tu facturación, moneda y regulaciones fiscales.
-                          </p>
-                      </div>
-                  </div>
-              </div>
-              <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-                  <button type="button" (click)="handleDiscrepancy('continue')" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">
-                      Continuar con {{ country }}
-                  </button>
-                  <button type="button" (click)="handleDiscrepancy('switch')" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
-                      Cambiar a {{ contextAnalysis?.detectedCountry }}
-                  </button>
-              </div>
-          </div>
-      </div>
-  </div>
-
 </div>

@@ -4,8 +4,8 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, AbstractContro
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ButtonComponent, InputComponent } from '@virteex/shared-ui';
-import { CountrySelectorComponent, CountryInfo } from '../../components/country-selector/country-selector.component';
-import { IntentDetectionService, ContextAnalysis } from '../../services/intent-detection.service';
+import { CountrySelectorComponent } from '../../components/country-selector/country-selector.component';
+import { SessionService } from '@virteex/shared-util-auth';
 
 @Component({
   selector: 'virteex-register',
@@ -17,80 +17,56 @@ import { IntentDetectionService, ContextAnalysis } from '../../services/intent-d
 export class RegisterComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
+  private sessionService = inject(SessionService);
+  public router = inject(Router);
   private route = inject(ActivatedRoute);
-  private intentService = inject(IntentDetectionService);
 
   registerForm: FormGroup;
   loading = false;
   errorMsg = '';
   country = 'CO';
-  lang = 'es';
   currentStep = 1;
-  contextAnalysis: ContextAnalysis | null = null;
-  showDiscrepancyModal = false;
+  onboardingToken = '';
 
   constructor() {
     this.registerForm = this.fb.group({
-      // Step 1: Personal Info
+      // Step 1
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
-      role: ['admin', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(12)]],
+      confirmPassword: ['', Validators.required],
 
-      // Step 2: Company Info
+      // Step 2
+      otp: ['', [Validators.minLength(6), Validators.maxLength(6)]],
+
+      // Step 3
       companyName: ['', Validators.required],
       industry: ['', Validators.required],
-
-      // Step 3: Tax Details
       country: ['CO', Validators.required],
       taxId: ['', Validators.required],
       regime: ['', Validators.required],
-
-      // Step 4: Security
-      password: ['', [Validators.required, Validators.minLength(12)]],
-      confirmPassword: ['', Validators.required],
-      terms: [false, Validators.requiredTrue]
+      terms: [false, Validators.requiredTrue],
+      privacy: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
   }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-        this.lang = params.get('lang') || 'es';
         const countryParam = params.get('country');
-
         if (countryParam) {
             this.country = countryParam.toUpperCase();
             this.registerForm.patchValue({ country: this.country });
-            this.checkContext(this.country);
             this.updateValidators(this.country);
-        } else {
-            // Auto detect if no param
-             this.intentService.analyzeContext('').subscribe(analysis => {
-                if (analysis.detectedCountry) {
-                    this.onCountrySelected(analysis.detectedCountry);
-                }
-             });
         }
     });
-  }
-
-  checkContext(country: string) {
-      this.intentService.analyzeContext(country).subscribe(analysis => {
-          this.contextAnalysis = analysis;
-          if (analysis.discrepancyLevel === 'medium' || analysis.discrepancyLevel === 'high') {
-              this.showDiscrepancyModal = true;
-          }
-      });
   }
 
   onCountrySelected(country: string) {
     this.country = country;
     this.registerForm.patchValue({ country });
     this.updateValidators(country);
-    // User manual selection overrides auto-detection for the form, but we might still warn if mismatch persists
-    // However, if they manually select, we assume Intent > Location.
   }
 
   updateValidators(country: string) {
@@ -99,16 +75,12 @@ export class RegisterComponent implements OnInit {
       taxIdControl?.setValidators(Validators.required);
 
       if (country === 'CO') {
-          // NIT: 9-10 digits
           taxIdControl?.addValidators(Validators.pattern(/^\d{9,10}$/));
       } else if (country === 'MX') {
-          // RFC
           taxIdControl?.addValidators(Validators.pattern(/^[A-Z&Ñ]{3,4}\d{6}[A-V1-9][A-Z\d]{2}$/));
       } else if (country === 'US') {
-          // EIN or SSN
           taxIdControl?.addValidators(Validators.pattern(/^\d{2}-\d{7}$|^\d{3}-\d{2}-\d{4}$/));
       }
-
       taxIdControl?.updateValueAndValidity();
   }
 
@@ -117,35 +89,34 @@ export class RegisterComponent implements OnInit {
          ? null : { mismatch: true };
   }
 
-  nextStep() {
-      if (this.currentStep < 5) {
-          if (this.isStepValid(this.currentStep)) {
-            this.currentStep++;
-          } else {
-              this.registerForm.markAllAsTouched();
-          }
-      }
+  isStep1Valid(): boolean {
+      const { firstName, lastName, email, phone, password, confirmPassword } = this.registerForm.controls;
+      return firstName.valid && lastName.valid && email.valid && phone.valid && password.valid && confirmPassword.valid && !this.registerForm.hasError('mismatch');
   }
 
-  prevStep() {
-      if (this.currentStep > 1) {
-          this.currentStep--;
-      }
+  get passwordStrengthLabel(): string {
+      const val = this.registerForm.get('password')?.value || '';
+      if (val.length < 8) return 'Débil';
+      if (val.length < 12) return 'Media';
+      return 'Fuerte';
   }
 
-  isStepValid(step: number): boolean {
-      const controls = this.registerForm.controls;
-      switch(step) {
-          case 1: return !controls['firstName'].invalid && !controls['lastName'].invalid && !controls['email'].invalid && !controls['phone'].invalid;
-          case 2: return !controls['companyName'].invalid && !controls['industry'].invalid;
-          case 3: return !controls['taxId'].invalid && !controls['regime'].invalid;
-          case 4: return !controls['password'].invalid && !controls['confirmPassword'].invalid && !controls['terms'].invalid;
-          default: return true;
-      }
+  get passwordStrengthWidth(): string {
+      const val = this.registerForm.get('password')?.value || '';
+      if (val.length < 8) return '30%';
+      if (val.length < 12) return '60%';
+      return '100%';
+  }
+
+  get passwordStrengthClass(): string {
+      const val = this.registerForm.get('password')?.value || '';
+      if (val.length < 8) return 'bg-red-500';
+      if (val.length < 12) return 'bg-yellow-500';
+      return 'bg-green-500';
   }
 
   getTaxIdLabel(): string {
-    const labels: Record<string, string> = { 'CO': 'NIT', 'MX': 'RFC', 'US': 'EIN/SSN', 'BR': 'CNPJ/CPF' };
+    const labels: Record<string, string> = { 'CO': 'NIT', 'MX': 'RFC', 'US': 'EIN/SSN' };
     return labels[this.country] || 'Tax ID';
   }
 
@@ -154,26 +125,64 @@ export class RegisterComponent implements OnInit {
      return placeholders[this.country] || '';
   }
 
-  handleDiscrepancy(choice: 'continue' | 'switch') {
-      this.showDiscrepancyModal = false;
-      if (choice === 'switch' && this.contextAnalysis?.detectedCountry) {
-          this.onCountrySelected(this.contextAnalysis.detectedCountry);
-          this.router.navigate(['/', this.lang, this.contextAnalysis.detectedCountry.toLowerCase(), 'auth', 'register']);
+  onInitiateSignup() {
+      if (this.isStep1Valid()) {
+          this.loading = true;
+          this.errorMsg = '';
+          const { email, password } = this.registerForm.value;
+          this.authService.initiateSignup({ email, password }).subscribe({
+              next: () => {
+                  this.loading = false;
+                  this.currentStep = 2;
+              },
+              error: (err: any) => {
+                  this.loading = false;
+                  this.errorMsg = err.error?.message || 'Error al iniciar registro.';
+              }
+          });
+      }
+  }
+
+  onVerifySignup() {
+      if (this.registerForm.get('otp')?.valid) {
+          this.loading = true;
+          this.errorMsg = '';
+          const { email, otp } = this.registerForm.value;
+          this.authService.verifySignup({ email, otp }).subscribe({
+              next: (res: any) => {
+                  this.loading = false;
+                  this.onboardingToken = res.onboardingToken;
+                  this.currentStep = 3;
+              },
+              error: (err: any) => {
+                  this.loading = false;
+                  this.errorMsg = 'Código inválido.';
+              }
+          });
       }
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
+    if (this.registerForm.valid && this.onboardingToken) {
       this.loading = true;
       this.errorMsg = '';
-      this.authService.register(this.registerForm.value).subscribe({
+      const payload = {
+          ...this.registerForm.value,
+          onboardingToken: this.onboardingToken
+      };
+
+      this.authService.completeOnboarding(payload).subscribe({
         next: (res) => {
-          this.currentStep = 5;
+          this.currentStep = 4;
           this.loading = false;
+          this.sessionService.login(); // Update frontend state
+          setTimeout(() => {
+              this.router.navigate(['/']);
+          }, 2000);
         },
-        error: () => {
+        error: (err: any) => {
           this.loading = false;
-          this.errorMsg = 'Error en el registro. Verifique los datos o intente más tarde.';
+          this.errorMsg = err.error?.message || 'Error en el registro.';
         }
       });
     }

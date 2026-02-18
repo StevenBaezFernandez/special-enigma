@@ -2,7 +2,10 @@ export * from './lib/dto/register-user.dto';
 export * from './lib/dto/login-user.dto';
 export * from './lib/dto/login-response.dto';
 export * from './lib/dto/verify-mfa.dto';
-export * from './lib/use-cases/register-user.use-case';
+// export * from './lib/use-cases/register-user.use-case'; // Deleted
+export * from './lib/use-cases/initiate-signup.use-case';
+export * from './lib/use-cases/verify-signup.use-case';
+export * from './lib/use-cases/complete-onboarding.use-case';
 export * from './lib/use-cases/login-user.use-case';
 export * from './lib/use-cases/verify-mfa.use-case';
 export * from './lib/ports/storage.port';

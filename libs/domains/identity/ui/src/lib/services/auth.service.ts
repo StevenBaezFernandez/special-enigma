@@ -1,7 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoginUserDto, RegisterUserDto, LoginResponseDto, VerifyMfaDto } from '@virteex/identity-application';
+import {
+  LoginUserDto, RegisterUserDto, LoginResponseDto, VerifyMfaDto,
+  InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto
+} from '@virteex/identity-application';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -19,5 +22,17 @@ export class AuthService {
 
   verifyMfa(dto: VerifyMfaDto): Observable<LoginResponseDto> {
     return this.http.post<LoginResponseDto>(`${this.apiUrl}/verify-mfa`, dto);
+  }
+
+  initiateSignup(dto: InitiateSignupDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/signup/initiate`, dto);
+  }
+
+  verifySignup(dto: VerifySignupDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/signup/verify`, dto);
+  }
+
+  completeOnboarding(dto: CompleteOnboardingDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/signup/complete`, dto);
   }
 }
