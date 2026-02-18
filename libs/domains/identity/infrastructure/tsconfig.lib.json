@@ -10,11 +10,13 @@
     "module": "commonjs"
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "../../../../libs/shared/infrastructure/cache/src/**/*.ts"
   ],
   "exclude": [
     "jest.config.cts",
     "src/**/*.spec.ts",
-    "src/**/*.test.ts"
+    "src/**/*.test.ts",
+    "../../../../libs/shared/infrastructure/cache/src/**/*.spec.ts"
   ]
 }

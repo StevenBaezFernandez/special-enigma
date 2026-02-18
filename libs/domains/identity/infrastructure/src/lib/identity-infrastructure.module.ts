@@ -1,10 +1,10 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import {
   UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository,
-  AuthService, NotificationService, RiskEngineService,
+  AuthService, NotificationService, RiskEngineService, CachePort,
   User, Company, AuditLog, Session, JobTitle
 } from '@virteex/identity-domain';
 
@@ -14,7 +14,7 @@ import { MikroOrmAuditLogRepository } from './persistence/mikro-orm-audit-log.re
 import { MikroOrmSessionRepository } from './persistence/mikro-orm-session.repository';
 import { MikroOrmJobTitleRepository } from './persistence/mikro-orm-job-title.repository';
 
-import { NodeCryptoAuthService } from './services/node-crypto-auth.service';
+import { Argon2AuthService } from './services/argon2-auth.service';
 import { NodemailerNotificationService } from './services/nodemailer-notification.service';
 import { DefaultRiskEngineService } from './services/risk-engine.service';
 import { MailQueueProducer } from './services/mail-queue.producer';
@@ -23,12 +23,15 @@ import { GeoIpLiteAdapter } from './adapters/geo-ip-lite.adapter';
 import { GEO_IP_PORT } from '@virteex/identity-domain';
 
 import {
-  RegisterUserUseCase, LoginUserUseCase, VerifyMfaUseCase, StoragePort,
+  LoginUserUseCase, VerifyMfaUseCase, StoragePort,
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
-  ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase
+  ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase,
+  InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase
 } from '@virteex/identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
+import { RedisCacheModule } from '@virteex/shared/infrastructure/cache';
+import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
 
 @Global()
 @Module({
@@ -36,7 +39,22 @@ import { StorageAdapter } from './adapters/storage.adapter';
     ConfigModule,
     EventEmitterModule,
     MikroOrmModule.forFeature([User, Company, AuditLog, Session, JobTitle]),
-    SharedInfrastructureStorageModule
+    SharedInfrastructureStorageModule,
+    RedisCacheModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const url = configService.get<string>('REDIS_URL');
+        if (url) {
+           return url as any;
+        }
+        return {
+          host: configService.get<string>('REDIS_HOST') || 'localhost',
+          port: configService.get<number>('REDIS_PORT') || 6379,
+          password: configService.get<string>('REDIS_PASSWORD'),
+        };
+      },
+    }),
   ],
   providers: [
     // Queue Services
@@ -53,14 +71,18 @@ import { StorageAdapter } from './adapters/storage.adapter';
     { provide: SessionRepository, useClass: MikroOrmSessionRepository },
     { provide: JobTitleRepository, useClass: MikroOrmJobTitleRepository },
 
-    { provide: AuthService, useClass: NodeCryptoAuthService },
+    { provide: AuthService, useClass: Argon2AuthService },
     { provide: NotificationService, useClass: NodemailerNotificationService },
     { provide: RiskEngineService, useClass: DefaultRiskEngineService },
     { provide: StoragePort, useClass: StorageAdapter },
     { provide: GEO_IP_PORT, useClass: GeoIpLiteAdapter },
+    { provide: CachePort, useClass: RedisCacheAdapter },
 
     // Application Use Cases
-    RegisterUserUseCase,
+    InitiateSignupUseCase,
+    VerifySignupUseCase,
+    CompleteOnboardingUseCase,
+
     LoginUserUseCase,
     VerifyMfaUseCase,
     GetUserProfileUseCase,
@@ -71,7 +93,10 @@ import { StorageAdapter } from './adapters/storage.adapter';
     RefreshTokenUseCase
   ],
   exports: [
-    RegisterUserUseCase,
+    InitiateSignupUseCase,
+    VerifySignupUseCase,
+    CompleteOnboardingUseCase,
+
     LoginUserUseCase,
     VerifyMfaUseCase,
     GetUserProfileUseCase,
@@ -81,14 +106,14 @@ import { StorageAdapter } from './adapters/storage.adapter';
     ListTenantsUseCase,
     RefreshTokenUseCase,
     StoragePort,
-    // Export ports if other modules need them directly
     UserRepository,
     CompanyRepository,
     AuditLogRepository,
     SessionRepository,
     JobTitleRepository,
     AuthService,
-    RiskEngineService
+    RiskEngineService,
+    CachePort
   ]
 })
 export class IdentityInfrastructureModule {}
