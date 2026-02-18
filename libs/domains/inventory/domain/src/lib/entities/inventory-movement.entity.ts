@@ -42,6 +42,12 @@ export class InventoryMovement {
   @Property()
   createdAt: Date = new Date();
 
+  @Property({ nullable: true })
+  lotId?: string;
+
+  @Property({ nullable: true })
+  serialNumber?: string;
+
   constructor(
     tenantId: string,
     productId: string,
@@ -49,7 +55,9 @@ export class InventoryMovement {
     type: InventoryMovementType,
     quantity: string,
     reference: string,
-    location?: Location
+    location?: Location,
+    lotId?: string,
+    serialNumber?: string
   ) {
     this.tenantId = tenantId;
     this.productId = productId;
@@ -60,5 +68,7 @@ export class InventoryMovement {
     if (location) {
       this.location = location;
     }
+    this.lotId = lotId;
+    this.serialNumber = serialNumber;
   }
 }

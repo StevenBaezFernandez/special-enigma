@@ -75,6 +75,12 @@ describe('CreateInvoiceUseCase', () => {
           useValue: {
             emit: jest.fn(),
           }
+        },
+        {
+          provide: 'KAFKA_SERVICE',
+          useValue: {
+            emit: jest.fn(),
+          }
         }
       ],
     }).compile();

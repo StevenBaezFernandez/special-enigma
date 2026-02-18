@@ -22,6 +22,15 @@ export class JournalEntryLine {
   @Property({ nullable: true })
   description?: string;
 
+  @Property({ nullable: true })
+  currencyId?: string;
+
+  @Property({ type: 'decimal', precision: 14, scale: 2, nullable: true })
+  amountCurrency?: string;
+
+  @Property({ type: 'decimal', precision: 10, scale: 6, nullable: true })
+  exchangeRate?: string;
+
   constructor(account: Account, debit: string, credit: string) {
     this.account = account;
     this.debit = debit;

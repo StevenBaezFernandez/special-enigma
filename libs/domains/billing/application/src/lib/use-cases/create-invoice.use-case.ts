@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ClientKafka } from '@nestjs/microservices';
 import {
   Invoice,
   InvoiceItem,
@@ -25,6 +26,7 @@ export class CreateInvoiceUseCase {
     @Inject(INVOICE_REPOSITORY) private readonly invoiceRepository: InvoiceRepository,
     @Inject(PRODUCT_REPOSITORY) private readonly productRepository: ProductRepository,
     @Inject(TENANT_CONFIG_REPOSITORY) private readonly tenantConfigRepository: TenantConfigRepository,
+    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
     private readonly fiscalStampingService: FiscalStampingService,
     private readonly taxCalculatorService: TaxCalculatorService,
     private readonly eventEmitter: EventEmitter2
@@ -121,6 +123,14 @@ export class CreateInvoiceUseCase {
             new Date()
         )
       );
+
+      this.kafkaClient.emit('billing.invoice.validated', {
+          id: invoice.id,
+          tenantId: invoice.tenantId,
+          totalAmount: invoice.totalAmount,
+          taxAmount: invoice.taxAmount,
+          stampedAt: invoice.stampedAt
+      });
 
       // 3. Save Stamped (Update)
       await this.invoiceRepository.save(invoice);
