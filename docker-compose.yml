@@ -1,25 +1,213 @@
 version: '3.8'
 
 services:
+  # UNIFIED GATEWAY (NGINX)
+  nginx:
+    image: nginx:alpine
+    container_name: virteex-unified-gateway
+    ports:
+      - "3000:80"
+    volumes:
+      - ./infrastructure/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api-gateway
+      - identity-service
+      - inventory-service
+      - billing-service
+      - crm-service
+      - fiscal-service
+      - scheduler-service
+      - gateway
+      - catalog-service
+
+  # API GATEWAY (Monolith)
   api-gateway:
-    image: node:18-alpine
+    image: node:20-alpine
     container_name: virteex-api-gateway
     working_dir: /app
     volumes:
       - .:/app
-    ports:
-      - "3000:3000"
     environment:
+      - PORT=3000
       - VIRTEEX_HMAC_SECRET=${VIRTEEX_HMAC_SECRET:-dev-hmac-secret-for-local-only}
       - REDIS_URL=${REDIS_URL:-redis://redis:6379}
       - POSTGRES_URL=${POSTGRES_URL:-postgres://virteex:virteex_password@postgres:5432/virteex_erp}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=virteex
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - DB_NAME=virteex_erp
+      - DB_DRIVER=postgres
       - NODE_ENV=${NODE_ENV:-development}
       - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
-    command: npm run start # Adjust based on actual start command or use nx serve
+    command: npx nx serve virteex-api-gateway
     depends_on:
       - postgres
       - redis
       - kafka
+
+  # IDENTITY SERVICE
+  identity-service:
+    image: node:20-alpine
+    container_name: virteex-identity-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - IDENTITY_DB_HOST=postgres
+      - IDENTITY_DB_PORT=5432
+      - IDENTITY_DB_USER=virteex
+      - IDENTITY_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - IDENTITY_DB_NAME=virteex_identity
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-identity-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # INVENTORY SERVICE
+  inventory-service:
+    image: node:20-alpine
+    container_name: virteex-inventory-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - INVENTORY_DB_HOST=postgres
+      - INVENTORY_DB_PORT=5432
+      - INVENTORY_DB_USER=virteex
+      - INVENTORY_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - INVENTORY_DB_NAME=virteex_inventory
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-inventory-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # BILLING SERVICE
+  billing-service:
+    image: node:20-alpine
+    container_name: virteex-billing-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - BILLING_DB_HOST=postgres
+      - BILLING_DB_PORT=5432
+      - BILLING_DB_USER=virteex
+      - BILLING_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - BILLING_DB_NAME=virteex_billing
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-billing-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # CRM SERVICE
+  crm-service:
+    image: node:20-alpine
+    container_name: virteex-crm-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - CRM_DB_HOST=postgres
+      - CRM_DB_PORT=5432
+      - CRM_DB_USER=virteex
+      - CRM_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - CRM_DB_NAME=virteex_crm
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-crm-service
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  # FISCAL SERVICE
+  fiscal-service:
+    image: node:20-alpine
+    container_name: virteex-fiscal-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-fiscal-service
+    depends_on:
+      - kafka
+
+  # SCHEDULER SERVICE
+  scheduler-service:
+    image: node:20-alpine
+    container_name: virteex-scheduler-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-scheduler-service
+    depends_on:
+      - kafka
+
+  # CATALOG SERVICE (Subgraph)
+  catalog-service:
+    image: node:20-alpine
+    container_name: virteex-catalog-service
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - CATALOG_DB_HOST=postgres
+      - CATALOG_DB_PORT=5432
+      - CATALOG_DB_USER=virteex
+      - CATALOG_DB_PASSWORD=${POSTGRES_PASSWORD:-virteex_password}
+      - CATALOG_DB_NAME=virteex_catalog
+      - DB_DRIVER=postgres
+      - NODE_ENV=${NODE_ENV:-development}
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+    command: npx nx serve virteex-catalog-service
+    depends_on:
+      - postgres
+      - kafka
+
+  # GATEWAY (Apollo)
+  gateway:
+    image: node:20-alpine
+    container_name: virteex-gateway
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PORT=3000
+      - CATALOG_SERVICE_URL=http://catalog-service:3000/graphql
+      - NODE_ENV=${NODE_ENV:-development}
+    command: npx nx serve virteex-gateway
+    depends_on:
+      - catalog-service
 
   postgres:
     image: timescale/timescaledb:latest-pg15
@@ -87,10 +275,11 @@ services:
     image: grafana/grafana:latest
     container_name: virteex-grafana
     ports:
-      - "3001:3000" # Changed to 3001 to avoid conflict with potential NestJS app on 3000
+      - "3001:3000"
     depends_on:
       - prometheus
 
 volumes:
   postgres_data:
   redis_data:
+# This file defines the full local development environment with extracted microservices.
