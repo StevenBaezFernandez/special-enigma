@@ -3,3 +3,4 @@ export * from './lib/ports/bi-report.repository';
 export * from './lib/ports/sales.port'; // Added
 export * from './lib/ports/invoice.port';
 export * from './lib/ports/expenses.port';
+export * from './lib/ports/dashboard-gateway.port';

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PurchasingController } from './controllers/purchasing.controller';
+import { ApprovalsController } from './controllers/approvals.controller'; // Added
 import { PurchasingResolver } from './resolvers/purchasing.resolver';
 import {
   PurchasingApplicationModule,
@@ -15,7 +16,7 @@ import { PurchasingInfrastructureModule } from '@virteex/purchasing-infrastructu
 
 @Module({
   imports: [PurchasingApplicationModule, PurchasingInfrastructureModule],
-  controllers: [PurchasingController],
+  controllers: [PurchasingController, ApprovalsController], // Added
   providers: [
     CreateSupplierUseCase,
     CreatePurchaseOrderUseCase,
