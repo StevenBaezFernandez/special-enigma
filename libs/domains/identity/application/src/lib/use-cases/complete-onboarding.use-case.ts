@@ -4,6 +4,7 @@ import {
   AuditLogRepository, AuditLog, RiskEngineService,
   User, Company, Session, SessionRepository, CachePort
 } from '@virteex/identity-domain';
+import { Tenant, TenantMode } from '@virteex/tenant';
 import { IsString, IsNotEmpty } from 'class-validator';
 import { EntityManager } from '@mikro-orm/core';
 import * as crypto from 'crypto';
@@ -89,6 +90,19 @@ export class CompleteOnboardingUseCase {
         }
 
         em.persist(company);
+
+        // -----------------------------------------------------
+        // CRITICAL: Create the Infrastructure Tenant record
+        // This ensures the TenantMiddleware can resolve the context later.
+        // -----------------------------------------------------
+        const tenant = new Tenant();
+        tenant.id = company.id; // Sync Business ID with Infrastructure ID
+        tenant.mode = TenantMode.SHARED; // Default for new signups
+        tenant.plan = 'TRIAL';
+        tenant.createdAt = new Date();
+        tenant.updatedAt = new Date();
+
+        em.persist(tenant);
 
         const user = new User(
             email,

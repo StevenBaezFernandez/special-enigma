@@ -2,16 +2,16 @@ name: CI/CD Pipeline
 on:
   workflow_dispatch:
   # CI/CD Triggers temporarily disabled due to GitHub Billing Account Lock. Uncomment to restore production pipeline.
-  # push:
-  #   branches: [main, release/*]
-  #   paths-ignore:
-  #     - '**.md'
-  #     - '**.txt'
-  # pull_request:
-  #   branches: [main]
-  #   paths-ignore:
-  #     - '**.md'
-  #     - '**.txt'
+  push:
+    branches: [main, release/*]
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
 
 jobs:
   validate:

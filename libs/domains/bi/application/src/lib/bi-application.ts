@@ -6,6 +6,7 @@ import { GetTopProductsUseCase } from './use-cases/get-top-products.use-case';
 import { GetInvoiceStatusUseCase } from './use-cases/get-invoice-status.use-case';
 import { GetArAgingUseCase } from './use-cases/get-ar-aging.use-case';
 import { GetExpensesUseCase } from './use-cases/get-expenses.use-case';
+import { GetDashboardStatsUseCase } from './use-cases/get-dashboard-stats.use-case'; // Added
 
 @Module({
   imports: [
@@ -16,14 +17,16 @@ import { GetExpensesUseCase } from './use-cases/get-expenses.use-case';
     GetTopProductsUseCase,
     GetInvoiceStatusUseCase,
     GetArAgingUseCase,
-    GetExpensesUseCase
+    GetExpensesUseCase,
+    GetDashboardStatsUseCase // Added
   ],
   exports: [
     GenerateReportUseCase,
     GetTopProductsUseCase,
     GetInvoiceStatusUseCase,
     GetArAgingUseCase,
-    GetExpensesUseCase
+    GetExpensesUseCase,
+    GetDashboardStatsUseCase // Added
   ]
 })
 export class BiApplicationModule {}
