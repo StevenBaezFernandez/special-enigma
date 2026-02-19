@@ -5,19 +5,22 @@ import {
   RegisterMovementUseCase,
   GetWarehousesUseCase,
   UpdateWarehouseUseCase,
-  DeleteWarehouseUseCase
+  DeleteWarehouseUseCase,
+  ReserveStockUseCase
 } from '../../../application/src/index';
 import { InventoryInfrastructureModule } from '../../../infrastructure/src/index';
+import { InventoryController } from './controllers/inventory.controller';
 
 @Module({
   imports: [InventoryApplicationModule, InventoryInfrastructureModule],
-  controllers: [],
+  controllers: [InventoryController],
   providers: [
     CreateWarehouseUseCase,
     RegisterMovementUseCase,
     GetWarehousesUseCase,
     UpdateWarehouseUseCase,
-    DeleteWarehouseUseCase
+    DeleteWarehouseUseCase,
+    ReserveStockUseCase
   ]
 })
 export class InventoryPresentationModule {}

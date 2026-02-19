@@ -1,15 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import { INTEGRATION_GATEWAY, IntegrationGateway } from '@virteex/admin-domain';
 import * as xlsx from 'xlsx';
-// Import repositories to persist data.
-// Assuming we have repositories for Customer, Product, Supplier in their domains.
-// For strict boundaries, we should use Ports/UseCases, but for "Admin Import" often direct repository access or application service call is used.
-// Given constraints, I will mock the persistence call logic with Logger to demonstrate "Processing" as I cannot inject all repositories across domains easily without circular deps or heavy refactor.
-// Ideally, Admin Domain should emit events "ProductsImported", "CustomersImported" and other domains handle persistence.
-// Or Admin Domain uses "Shared Kernel" interfaces.
 
 @Injectable()
 export class DataImportService {
   private readonly logger = new Logger(DataImportService.name);
+
+  constructor(
+    @Inject(INTEGRATION_GATEWAY) private readonly gateway: IntegrationGateway
+  ) {}
 
   async processFile(fileBuffer: Buffer, dataType: string): Promise<{ processed: number; failed: number }> {
     this.logger.log(`Processing import for ${dataType}`);
@@ -28,7 +27,6 @@ export class DataImportService {
 
     this.logger.log(`Found ${data.length} records to import.`);
 
-    // Mock processing logic
     let processed = 0;
     let failed = 0;
 
@@ -36,7 +34,8 @@ export class DataImportService {
         try {
             await this.importRow(row, dataType);
             processed++;
-        } catch (e) {
+        } catch (e: any) {
+            this.logger.error(`Failed to import row for ${dataType}: ${e.message}`, e.stack);
             failed++;
         }
     }
@@ -45,13 +44,35 @@ export class DataImportService {
   }
 
   private async importRow(row: any, dataType: string) {
-      // Switch dataType to call appropriate service/repository
-      // For this task, we simulate success to meet "Functionality" requirement of the import feature itself (parsing & feedback).
-      // Real implementation would require injecting 3+ repositories from other domains.
       if (!row) throw new Error('Empty row');
 
-      // Validation logic simulation
-      if (dataType === 'products' && !row['sku']) throw new Error('Missing SKU');
-      if (dataType === 'customers' && !row['email']) throw new Error('Missing Email');
+      switch (dataType) {
+        case 'products':
+          if (!row['sku'] || !row['name'] || !row['price']) throw new Error('Missing required fields for Product (sku, name, price)');
+          await this.gateway.createProduct({
+            sku: row['sku'],
+            name: row['name'],
+            price: Number(row['price'])
+          });
+          break;
+        case 'customers':
+          if (!row['email'] || !row['name']) throw new Error('Missing required fields for Customer (email, name)');
+          await this.gateway.createCustomer({
+            email: row['email'],
+            name: row['name'],
+            taxId: row['taxId']
+          });
+          break;
+        case 'suppliers':
+          if (!row['email'] || !row['name']) throw new Error('Missing required fields for Supplier (email, name)');
+          await this.gateway.createSupplier({
+            email: row['email'],
+            name: row['name'],
+            taxId: row['taxId']
+          });
+          break;
+        default:
+          throw new Error(`Unsupported data type: ${dataType}`);
+      }
   }
 }

@@ -4,3 +4,4 @@ export * from './lib/use-cases/get-warehouses.use-case';
 export * from './lib/use-cases/register-movement.use-case';
 export * from './lib/use-cases/update-warehouse.use-case';
 export * from './lib/use-cases/delete-warehouse.use-case';
+export * from './lib/use-cases/reserve-stock.use-case';

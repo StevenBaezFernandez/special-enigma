@@ -22,6 +22,7 @@ import { InventoryResolver } from './inventory.resolver';
 
 // Domain Modules
 import { InventoryApplicationModule } from '@virteex/inventory-application';
+import { InventoryPresentationModule } from '@virteex/inventory-presentation';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { InventoryApplicationModule } from '@virteex/inventory-application';
 
     // Domain Modules
     InventoryApplicationModule,
+    InventoryPresentationModule,
   ],
   controllers: [AppController],
   providers: [
