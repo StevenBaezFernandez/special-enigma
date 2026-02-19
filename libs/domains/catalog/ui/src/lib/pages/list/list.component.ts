@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { CatalogService, Product } from '../../core/services/catalog.service';
 
 export interface ProductItem extends Product {
@@ -15,6 +16,7 @@ export interface ProductItem extends Product {
 })
 export class ListComponent implements OnInit {
   private catalogService = inject(CatalogService);
+  public router = inject(Router);
   items: ProductItem[] = [];
 
   ngOnInit() {

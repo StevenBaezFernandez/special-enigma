@@ -1,0 +1,50 @@
+<div class="p-6">
+  <h1 class="text-2xl font-bold mb-6">Create Product</h1>
+  <div class="bg-white shadow-md rounded-lg p-6 max-w-lg">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+      @if (errorMessage()) {
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong class="font-bold">Error! </strong>
+          <span class="block sm:inline">{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <div class="mb-4">
+        <label for="sku" class="block text-sm font-medium text-gray-700">SKU</label>
+        <input id="sku" type="text" formControlName="sku"
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+        @if (productForm.get('sku')?.invalid && productForm.get('sku')?.touched) {
+          <p class="text-red-500 text-xs mt-1">SKU is required.</p>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+        <input id="name" type="text" formControlName="name"
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+        @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
+          <p class="text-red-500 text-xs mt-1">Name is required.</p>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+        <input id="price" type="number" formControlName="price"
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+         @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+          <p class="text-red-500 text-xs mt-1">Price is required and must be positive.</p>
+        }
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+         <button type="button"
+                 class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
+                 (click)="router.navigate(['catalog/list'])">Cancel</button>
+        <button type="submit"
+                [disabled]="productForm.invalid"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

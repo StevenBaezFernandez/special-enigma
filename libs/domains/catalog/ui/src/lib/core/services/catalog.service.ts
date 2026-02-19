@@ -21,4 +21,8 @@ export class CatalogService {
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/catalog/products`);
   }
+
+  createProduct(product: Omit<Product, 'id'>): Observable<Product> {
+    return this.http.post<Product>(`${this.apiUrl}/catalog/products`, product);
+  }
 }

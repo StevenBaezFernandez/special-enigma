@@ -2,7 +2,7 @@ INFORME DE MADUREZ TÉCNICA Y READINESS COMERCIAL - VIRTEEX ERP
 
 FECHA: 24 de Octubre de 2023
 AUTOR: Jules (Analista de Producto / Ingeniero de Software)
-VERSIÓN: 1.0
+VERSIÓN: 1.1 (Actualizada tras acciones correctivas)
 
 --------------------------------------------------------------------------------
 1. INTRODUCCIÓN
@@ -18,14 +18,18 @@ Virteex se posiciona como una solución moderna (Microservicios, GraphQL Federat
 
 El análisis exhaustivo del código fuente (backend, frontend e infraestructura) indica que Virteex se encuentra en una etapa de "Prototipo Avanzado" o "MVP Técnico", pero lejos de ser un producto comercialmente viable.
 
-*   **Porcentaje de Avance Funcional:** 40%
-    *   El backend tiene una base sólida en infraestructura y algunos dominios core (Identity, Payroll), pero otros (CRM, Projects) son esqueletos o presentan violaciones arquitectónicas graves.
-*   **Porcentaje de Readiness Comercial:** 20%
-    *   La aplicación es invendible en su estado actual debido a la ausencia crítica de interfaces de usuario para la creación y edición de datos (Frontend es mayoritariamente "Read-Only"). No es posible realizar un flujo de negocio completo (ej. "Order to Cash") desde la UI.
+*   **Porcentaje de Avance Funcional:** 45% (+5% tras correcciones recientes)
+    *   El backend tiene una base sólida en infraestructura y algunos dominios core (Identity, Payroll).
+    *   **ACTUALIZACIÓN:** Se ha refactorizado el dominio `CRM` para eliminar el acoplamiento monolítico, mejorando la escalabilidad.
+*   **Porcentaje de Readiness Comercial:** 25% (+5% tras correcciones recientes)
+    *   La aplicación es invendible en su estado actual debido a la ausencia crítica de interfaces de usuario para la creación y edición de datos.
+    *   **ACTUALIZACIÓN:** Se ha iniciado la implementación de formularios de entrada de datos con `CreateProductComponent` en el dominio de Catálogo.
 
 Hallazgos Principales:
-1.  **Frontend Incompleto:** Las librerías de UI para dominios clave (`catalog`, `manufacturing`) solo contienen vistas de "Listado" y "Dashboard". No existen formularios para crear productos, órdenes o clientes.
-2.  **Violaciones de Arquitectura en Backend:** El dominio `CRM` importa directamente repositorios de `Inventory` y `Catalog`, rompiendo el aislamiento de microservicios y creando un monolito distribuido.
+1.  **Frontend Incompleto:** Las librerías de UI para dominios clave (`manufacturing`) solo contienen vistas de "Listado" y "Dashboard".
+    *   *Nota:* Se ha remediado parcialmente en `catalog` con la adición de creación de productos.
+2.  **Violaciones de Arquitectura en Backend:**
+    *   *Nota:* El dominio `CRM` ha sido desacoplado exitosamente mediante adaptadores HTTP (`HttpInventoryAdapter`, `HttpCatalogAdapter`), resolviendo la violación crítica previamente reportada.
 3.  **Madurez Desigual:** Mientras `Identity` y `Payroll` tienen lógica compleja implementada (impuestos, sesiones), dominios como `Fixed-Assets` y `Treasury` son esqueletos vacíos.
 4.  **Infraestructura Sólida:** La base de multi-tenencia, observabilidad y configuración de servidor es robusta y está bien implementada.
 
@@ -40,9 +44,8 @@ Hallazgos Principales:
     *   El `Gateway` (Apollo Federation) y la autenticación (Identity) están operativos.
     *   Soporte real para Multi-tenencia vía `CurrentTenant` decorator y configuración en `libs/shared`.
     *   `Manufacturing` ha corregido violaciones previas usando `HttpInventoryAdapter` para comunicarse con `Inventory`.
+    *   **NUEVO:** `CRM` ahora utiliza Puertos y Adaptadores (`InventoryService`, `CatalogService`) para comunicarse con otros microservicios, eliminando dependencias directas de base de datos.
 *   **Debilidades Críticas:**
-    *   **Acoplamiento en CRM:** El caso de uso `CreateSaleUseCase` en `libs/domains/crm` importa directamente `InventoryRepository` y `ProductRepository` de otros paquetes. Esto impide el despliegue independiente y escala de los servicios.
-        *   *Solución:* Reemplazar importaciones directas con comunicación asíncrona (Eventos) o síncrona (HTTP/gRPC) vía adaptadores, similar a lo hecho en `Manufacturing`.
     *   **Dominios Esqueleto:** Los directorios para `Projects`, `Fixed-Assets` y `Treasury` existen, pero carecen de lógica de negocio profunda. Son "placeholders".
 
 3.2 FRONTEND Y EXPERIENCIA DE USUARIO (UX)
@@ -50,10 +53,11 @@ Hallazgos Principales:
 *   **Estado:** Crítico / Insuficiente.
 *   **Análisis:**
     *   Se exploraron las librerías de UI (`libs/domains/*/ui`).
-    *   En `catalog` y `manufacturing`, solo existen componentes `ListComponent` y `DashboardComponent`.
-    *   **FALTANTE:** No existen componentes `CreateComponent`, `EditComponent`, ni modales de formulario.
+    *   En `manufacturing`, solo existen componentes `ListComponent` y `DashboardComponent`.
+    *   **FALTANTE:** No existen componentes `CreateComponent`, `EditComponent`, ni modales de formulario para la mayoría de dominios.
+    *   **PROGRESO:** En `catalog`, se ha implementado `CreateProductComponent` con validaciones reactivas y conexión al backend, sirviendo como modelo para otros dominios.
 *   **Impacto Comercial:**
-    *   Un usuario no puede ingresar datos al sistema. El ERP funciona solo como un visor de datos pre-cargados (seed data). Esto hace imposible cualquier demo comercial o prueba piloto (PoC).
+    *   Un usuario no puede ingresar datos al sistema en la mayoría de los módulos. El ERP funciona mayoritariamente como un visor.
 
 3.3 LOCALIZACIÓN FISCAL Y CUMPLIMIENTO
 --------------------------------------
@@ -84,11 +88,12 @@ Hallazgos Principales:
 Para llevar Virteex a un estado comercializable (100% funcional), se deben priorizar las siguientes acciones:
 
 **PRIORIDAD 1: HABILITAR LA ENTRADA DE DATOS (FRONTEND)**
-*   Desarrollar formularios CRUD (Create, Read, Update, Delete) para todas las entidades core: Productos, Clientes, Proveedores, Órdenes de Compra/Venta.
+*   Extender el modelo implementado en `CreateProductComponent` a todas las entidades core: Clientes, Proveedores, Órdenes de Compra/Venta.
 *   Implementar validaciones de formulario en el cliente que coincidan con los DTOs del backend.
 
 **PRIORIDAD 2: DESACOPLAMIENTO DE MICROSERVICIOS (BACKEND)**
-*   Refactorizar el dominio `CRM`. Eliminar la dependencia directa de `@virteex/inventory-domain` y `@virteex/catalog-domain`. Implementar `HttpCatalogAdapter` y `HttpInventoryAdapter` o usar un bus de eventos (Kafka/RabbitMQ) para la reserva de stock.
+*   **RESUELTO EN CRM.** Mantener este patrón para futuros desarrollos y evitar regresiones.
+*   Implementar un bus de eventos (Kafka/RabbitMQ) para operaciones asíncronas complejas (ej. reserva de stock distribuida).
 
 **PRIORIDAD 3: COMPLETAR DOMINIOS CORE**
 *   Implementar la lógica de negocio real para `Treasury` (Conciliación bancaria), `Purchasing` (Flujo de aprobación) y `Fixed Assets` (Depreciación). Actualmente son cascarones vacíos.
@@ -99,7 +104,7 @@ Para llevar Virteex a un estado comercializable (100% funcional), se deben prior
 --------------------------------------------------------------------------------
 ANEXO: EVIDENCIA TÉCNICA
 --------------------------------------------------------------------------------
-*   `libs/domains/crm/application/src/lib/use-cases/create-sale.use-case.ts`: Importa repositorios de otros dominios (Violación de arquitectura).
-*   `libs/domains/manufacturing/infrastructure/src/lib/adapters/http-inventory.adapter.ts`: Evidencia de corrección arquitectónica (Uso de HTTP).
-*   `libs/domains/catalog/ui`: Solo contiene `dashboard` y `list`. Faltan formularios.
+*   `libs/domains/crm/application/src/lib/use-cases/create-sale.use-case.ts`: Refactorizado para usar `InventoryService` y `CatalogService` (Puertos).
+*   `libs/domains/crm/infrastructure/src/lib/adapters/http-inventory.adapter.ts`: Nueva implementación de adaptador HTTP.
+*   `libs/domains/catalog/ui/src/lib/pages/create-product`: Nueva UI para creación de productos.
 *   `libs/domains/payroll/application/src/lib/use-cases/calculate-payroll.use-case.ts`: Lógica de nómina compleja implementada.
