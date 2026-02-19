@@ -105,6 +105,7 @@ export class AppModule implements NestModule {
     consumer.apply(createServiceProxy('http://virteex-crm-service:3000')).forRoutes('crm');
     consumer.apply(createServiceProxy('http://virteex-projects-service:3000')).forRoutes('projects');
     consumer.apply(createServiceProxy('http://virteex-manufacturing-service:3000')).forRoutes('manufacturing');
+    consumer.apply(createServiceProxy('http://virteex-inventory-service:3000')).forRoutes('inventory');
 
     // Proxy for GraphQL Gateway
     // Assuming virteex-gateway runs on port 3000 and has global prefix 'api', exposing GraphQL at '/api/graphql'
