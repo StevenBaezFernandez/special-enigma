@@ -1,7 +1,19 @@
-import { Controller, Post, Body, UseGuards, BadRequestException, Get, Param, Query } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, BadRequestException, Get, Param, Query, Put, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { ReserveStockUseCase, CheckStockUseCase, GetWarehousesUseCase, GetWarehouseUseCase, ReserveBatchStockUseCase } from '@virteex/inventory-application';
-import { IsString, IsNumber, Min, IsArray, ValidateNested } from 'class-validator';
+import {
+  ReserveStockUseCase,
+  CheckStockUseCase,
+  GetWarehousesUseCase,
+  GetWarehouseUseCase,
+  ReserveBatchStockUseCase,
+  CreateWarehouseUseCase,
+  UpdateWarehouseUseCase,
+  DeleteWarehouseUseCase,
+  RegisterMovementUseCase,
+  CreateWarehouseDto,
+  RegisterMovementDto
+} from '@virteex/inventory-application';
+import { IsString, IsNumber, Min, IsArray, ValidateNested, IsOptional, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { JwtAuthGuard, CurrentUser, UserPayload } from '@virteex/auth';
 
@@ -27,6 +39,28 @@ class ReserveBatchStockDto {
   reference!: string;
 }
 
+class UpdateWarehouseBodyDto {
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  code?: string;
+
+  @IsString()
+  @IsOptional()
+  address?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
+}
+
 @ApiTags('Inventory')
 @ApiBearerAuth()
 @Controller('inventory')
@@ -37,8 +71,50 @@ export class InventoryController {
     private readonly checkStockUseCase: CheckStockUseCase,
     private readonly getWarehousesUseCase: GetWarehousesUseCase,
     private readonly getWarehouseUseCase: GetWarehouseUseCase,
-    private readonly reserveBatchStockUseCase: ReserveBatchStockUseCase
+    private readonly reserveBatchStockUseCase: ReserveBatchStockUseCase,
+    private readonly createWarehouseUseCase: CreateWarehouseUseCase,
+    private readonly updateWarehouseUseCase: UpdateWarehouseUseCase,
+    private readonly deleteWarehouseUseCase: DeleteWarehouseUseCase,
+    private readonly registerMovementUseCase: RegisterMovementUseCase
   ) {}
+
+  @Post('warehouses')
+  @ApiOperation({ summary: 'Create a new warehouse' })
+  async createWarehouse(@Body() dto: CreateWarehouseDto, @CurrentUser() user: UserPayload) {
+    if (!user.tenantId) {
+      throw new BadRequestException('Tenant ID is required');
+    }
+    // Ensure tenantId from token overrides body
+    dto.tenantId = user.tenantId;
+    return this.createWarehouseUseCase.execute(dto);
+  }
+
+  @Put('warehouses/:id')
+  @ApiOperation({ summary: 'Update a warehouse' })
+  async updateWarehouse(
+    @Param('id') id: string,
+    @Body() dto: UpdateWarehouseBodyDto
+  ) {
+    return this.updateWarehouseUseCase.execute({ id, ...dto });
+  }
+
+  @Delete('warehouses/:id')
+  @ApiOperation({ summary: 'Delete a warehouse' })
+  async deleteWarehouse(@Param('id') id: string) {
+    return this.deleteWarehouseUseCase.execute(id);
+  }
+
+  @Post('movements')
+  @ApiOperation({ summary: 'Register an inventory movement' })
+  async registerMovement(@Body() dto: RegisterMovementDto, @CurrentUser() user: UserPayload) {
+    if (!user.tenantId) {
+      throw new BadRequestException('Tenant ID is required');
+    }
+    // Ensure tenantId from token overrides body
+    dto.tenantId = user.tenantId;
+    await this.registerMovementUseCase.execute(dto);
+    return { message: 'Movement registered successfully' };
+  }
 
   @Post('reserve')
   @ApiOperation({ summary: 'Reserve stock for a product' })
