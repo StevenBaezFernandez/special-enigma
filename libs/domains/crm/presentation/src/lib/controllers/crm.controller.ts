@@ -41,6 +41,21 @@ export class CrmController {
     return this.listSalesUseCase.execute(tenantId || 'default');
   }
 
+  @Get('deals')
+  @ApiOperation({ summary: 'List deals for mobile' })
+  @ApiResponse({ status: 200, description: 'List of deals.' })
+  async listDeals(@Query('tenantId') tenantId: string) {
+    const sales = await this.listSalesUseCase.execute(tenantId || 'default');
+    // Map Sales to Deals structure for Mobile
+    return sales.map(s => ({
+      id: s.id,
+      name: `Sale #${s.number}`,
+      company: s.customerName || 'Unknown',
+      stage: s.status,
+      amount: s.total
+    }));
+  }
+
   @Post('sales/:id/approve')
   @ApiOperation({ summary: 'Approve a sale' })
   @ApiResponse({ status: 200, description: 'The sale has been approved.' })

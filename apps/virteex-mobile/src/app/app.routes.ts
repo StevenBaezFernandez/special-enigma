@@ -5,7 +5,17 @@ import { InventoryPage } from './pages/inventory/inventory.page';
 export const appRoutes: Route[] = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginPage },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./pages/dashboard/dashboard.page').then(m => m.DashboardPage)
+  },
   { path: 'inventory', component: InventoryPage },
-  // Dashboard route would be protected by an AuthGuard in a real implementation
-  // { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.page').then(m => m.DashboardPage) }
+  {
+    path: 'approvals',
+    loadComponent: () => import('./pages/approvals/approvals.page').then(m => m.ApprovalsPage)
+  },
+  {
+    path: 'crm',
+    loadComponent: () => import('./pages/crm/crm.page').then(m => m.CrmPage)
+  },
 ];

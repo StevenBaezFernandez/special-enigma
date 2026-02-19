@@ -3,18 +3,24 @@ import { CreateSupplierUseCase } from './use-cases/create-supplier.use-case';
 import { CreatePurchaseOrderUseCase } from './use-cases/create-purchase-order.use-case';
 import { CreateRequisitionUseCase } from './use-cases/create-requisition.use-case';
 import { GetRequisitionsUseCase } from './use-cases/get-requisitions.use-case';
+import { ApproveRequisitionUseCase } from './use-cases/approve-requisition.use-case'; // Added
+import { RejectRequisitionUseCase } from './use-cases/reject-requisition.use-case'; // Added
 import { CreateVendorBillUseCase } from './use-cases/create-vendor-bill.use-case';
 import { UpdateVendorBillUseCase } from './use-cases/update-vendor-bill.use-case';
 import { GetVendorBillUseCase } from './use-cases/get-vendor-bill.use-case';
-import { PurchasingInfrastructureModule } from '../../../infrastructure/src/index';
+// import { PurchasingInfrastructureModule } from '../../../infrastructure/src/index';
 
 @Module({
-  imports: [PurchasingInfrastructureModule],
+  imports: [
+      // PurchasingInfrastructureModule
+  ],
   providers: [
     CreateSupplierUseCase,
     CreatePurchaseOrderUseCase,
     CreateRequisitionUseCase,
     GetRequisitionsUseCase,
+    ApproveRequisitionUseCase, // Added
+    RejectRequisitionUseCase, // Added
     CreateVendorBillUseCase,
     UpdateVendorBillUseCase,
     GetVendorBillUseCase
@@ -24,6 +30,8 @@ import { PurchasingInfrastructureModule } from '../../../infrastructure/src/inde
     CreatePurchaseOrderUseCase,
     CreateRequisitionUseCase,
     GetRequisitionsUseCase,
+    ApproveRequisitionUseCase, // Added
+    RejectRequisitionUseCase, // Added
     CreateVendorBillUseCase,
     UpdateVendorBillUseCase,
     GetVendorBillUseCase
