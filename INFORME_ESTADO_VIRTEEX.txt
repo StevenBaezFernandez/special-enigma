@@ -1,86 +1,114 @@
-INFORME DETALLADO DE ESTADO DE LA APLICACIÓN VIRTEEX
-======================================================
-Fecha: 27 de Mayo de 2024
-Autor: Jules (AI Software Engineer)
-Objetivo: Análisis para alcanzar el estado "100% Funcional y Comercial" (Sin Mocks)
+# INFORME DETALLADO DE ESTADO Y BRECHAS FUNCIONALES - VIRTEEX ERP
 
-1. RESUMEN EJECUTIVO
---------------------
-La aplicación Virteex se encuentra en una fase avanzada de transición de arquitectura. No es una aplicación "rota" o "vacía", pero opera bajo un modelo híbrido inconsistente.
-- El 35% de los dominios (los "Core") operan bajo una arquitectura moderna de GraphQL Federation.
-- El 65% de los dominios (los "Nuevos") operan bajo una arquitectura REST tradicional, proxied por un API Gateway monolítico, sin integración con el Grafo unificado.
-- El Frontend refleja esta división: módulos antiguos consumen GraphQL, módulos nuevos consumen REST.
-- La infraestructura base (Kernel, Auth, Telemetry) es robusta y está lista para producción ("Commercial Ready").
+Este informe detalla exhaustivamente las carencias, errores arquitectónicos y módulos incompletos que impiden que la aplicación Virteex sea 100% funcional y apta para un entorno comercial (producción). El análisis abarca desde la infraestructura y el backend hasta la integración con el frontend.
 
-2. ANÁLISIS DETALLADO DEL BACKEND
----------------------------------
+---
 
-2.1. Estado de los Microservicios
-Se detectaron dos grupos de microservicios con niveles de madurez dispares:
+## 1. ERRORES CRÍTICOS DE ARQUITECTURA (BLOQUEANTES)
 
-GRUPO A: Dominios "Core" (Federados y Maduros)
-----------------------------------------------
-Servicios: Identity, Catalog, Inventory, Billing, Accounting.
-Estado:
-- Integrados correctamente en `virteex-gateway` (Apollo Federation).
-- Exponen subgrafos GraphQL.
-- Cuentan con lógica de dominio completa.
+Estos problemas impedirán que la aplicación funcione en un entorno distribuido (microservicios reales) y causarán fallos inmediatos en tiempo de ejecución.
 
-GRUPO B: Dominios "Nuevos" (Aislados / REST)
---------------------------------------------
-Servicios: Payroll, Treasury, CRM, Projects, Manufacturing, Purchasing, BI, Admin, Fixed Assets.
-Estado:
-- NO están integrados en el `virteex-gateway`. El archivo `apps/virteex-gateway/src/app/app.module.ts` no los incluye en la lista de subgrafos.
-- Operan como servicios REST independientes.
-- Son consumidos a través de un proxy inverso en `virteex-api-gateway` (puerto 3000 -> rutas `/payroll`, `/treasury`, etc.).
-- NO son "cascarones vacíos" (Shells). Se verificó que importan módulos de Infraestructura y Presentación (`@virteex/*-infrastructure`), lo que indica que tienen lógica, pero su exposición es legacy/híbrida.
+### 1.1. Violación de Límites de Microservicios en `Manufacturing Service`
+**Archivo Afectado:** `libs/domains/manufacturing/infrastructure/src/lib/services/mikro-orm-inventory.service.ts`
+**Problema:**
+El servicio `virteex-manufacturing-service` está importando directamente la entidad `Stock` desde `@virteex/inventory-domain` e intentando consultarla usando su propio `EntityManager`.
+**Impacto:**
+En producción, `virteex-manufacturing-service` se conecta a su propia base de datos (`virteex_manufacturing`). La tabla `stock` reside en la base de datos de inventario (`virteex_inventory`).
+Al ejecutar `this.em.findOne(Stock, ...)`, MikroORM intentará buscar la tabla `stock` en la base de datos `virteex_manufacturing`. Esto lanzará un error SQL `relation "stock" does not exist` o, peor aún, si la tabla se crea automáticamente, creará una "isla de datos" desconectada del inventario real.
+**Solución Requerida:**
+Reemplazar `MikroOrmInventoryService` con un `HttpInventoryService` que realice una llamada REST o gRPC al microservicio `virteex-inventory-service` para reservar stock.
 
-2.2. Gateways
-- `virteex-gateway` (Apollo): Solo orquesta los 5 servicios del Grupo A. Es el punto de entrada deseado para una app comercial moderna.
-- `virteex-api-gateway` (NestJS Monolith): Actúa como un "BFF de emergencia" o proxy reverso para los 9 servicios del Grupo B.
-- CONCLUSIÓN: Para ser 100% funcional y comercial, se debe eliminar la dependencia del proxy REST y federar los 9 servicios restantes.
+### 1.2. Mocks Explícitos en Lógica de Negocio (Admin Domain)
+**Archivo Afectado:** `libs/domains/admin/application/src/lib/services/data-import.service.ts`
+**Problema:**
+El método `processFile` y `importRow` contienen lógica simulada ("mock").
+El código dice explícitamente: `// Mock processing logic` y `// For this task, we simulate success`.
+El servicio simplemente lee un Excel y "simula" que guarda datos, pero no llama a ningún repositorio ni servicio real para persistir Clientes, Productos o Proveedores.
+**Impacto:**
+La funcionalidad de "Importación de Datos" es completamente falsa. El usuario verá un mensaje de éxito, pero ningún dato se guardará en la base de datos.
+**Solución Requerida:**
+Implementar la llamada real a los casos de uso `CreateProduct`, `CreateCustomer`, `CreateSupplier` de sus respectivos dominios (probablemente a través de eventos de dominio o llamadas HTTP/RPC para mantener el desacoplamiento).
 
-3. ANÁLISIS DETALLADO DEL FRONTEND (virteex-web)
-------------------------------------------------
+---
 
-3.1. Arquitectura
-- Excelente arquitectura basada en librerías (`libs-first`). La app principal es solo un shell.
-- La lógica reside en `libs/domains/*/ui`.
+## 2. ANÁLISIS POR DOMINIO (BACKEND)
 
-3.2. Integración de API (Inconsistencia)
-- Se verificó que los módulos del "Grupo B" (ej. Treasury) utilizan `HttpClient` para llamar a endpoints REST (`${apiUrl}/treasury/...`).
-- Esto obliga al frontend a mantener dos clientes de API: Apollo Client (para Core) y HttpClient (para Nuevos).
-- Esto no es "comercialmente ideal" debido a la complejidad de mantenimiento y gestión de estado dual.
+Se ha detectado que muchos de los nuevos microservicios son "cascarones vacíos" (Scaffolding) con estructura pero sin implementación real.
 
-3.3. Mocks Detectados
-- Se encontró uso explícito de mocks en código productivo:
-  Archivo: `libs/domains/purchasing/ui/src/lib/pages/accounts-payable/form/form.page.ts`
-  Hallazgo: `return of(null);`
-- Esto simula una operación exitosa sin llamar al backend, lo cual viola el requisito de "No Mocks".
+### 2.1. Fixed Assets (Activos Fijos)
+**Estado:** Incompleto / Esqueleto.
+**Hallazgos:**
+- `CreateFixedAssetUseCase` (`libs/domains/fixed-assets/application/src/lib/use-cases/create-fixed-asset.use-case.ts`): Implementación básica correcta.
+- `MikroOrmFixedAssetRepository`: Parece funcional.
+- **Faltante:** No hay lógica de depreciación real ni integración con Contabilidad (asientos automáticos). En un ERP comercial, crear un activo fijo debe generar un asiento contable.
 
-4. ANÁLISIS DE INFRAESTRUCTURA (SHARED/KERNEL)
-----------------------------------------------
-Esta es la parte más sólida del sistema.
+### 2.2. Treasury (Tesorería)
+**Estado:** Parcialmente Implementado / Riesgo de Ruteo.
+**Hallazgos:**
+- `TreasuryService` (Frontend) usa GraphQL.
+- `virteex-api-gateway` tiene la ruta `/treasury` comentada en `proxy.middleware.ts`. Esto es correcto si se usa GraphQL Federation, PERO requiere que el Gateway (Apollo) tenga el subgrafo registrado y activo.
+- **Faltante:** La conciliación bancaria y la integración real con pasarelas de pago no existen; son solo registros CRUD de cuentas bancarias.
 
-- Logging/Observabilidad: Implementado correctamente via `libs/kernel/telemetry` y `libs/shared/util/server-config` (OpenTelemetry, Tracing). Listo para producción.
-- Autenticación: Centralizada en `libs/kernel/auth` y `libs/shared/util/auth`. Soporte para Multi-tenancy (`libs/kernel/tenant`) implementado en el API Gateway.
-- Bootstrap: Estandarizado via `ServerConfigModule`, asegurando que todos los microservicios (nuevos y viejos) arranquen con la misma configuración de seguridad y logging.
+### 2.3. Purchasing (Compras) & Manufacturing (Manufactura)
+**Estado:** Crítico.
+**Hallazgos:**
+- **Manufacturing:** Además del error crítico de DB mencionado en 1.1, la lógica de `CreateProductionOrder` es simplista. No valida capacidad de planta ni disponibilidad de materiales (BOM) de forma recursiva.
+- **Purchasing:** Se detectaron múltiples archivos con la palabra "mock" en `libs/domains/purchasing/application/src/lib/use-cases/create-supplier.use-case.spec.ts` (test) pero la implementación real en `create-supplier.use-case.ts` debe ser revisada para asegurar que no sea un "pass-through".
 
-5. PLAN DE ACCIÓN PARA ESTADO "100% FUNCIONAL"
-----------------------------------------------
+### 2.4. CRM & Projects
+**Estado:** Esqueleto.
+**Hallazgos:**
+- `libs/domains/crm/infrastructure/src/lib/repositories/mikro-orm-sale.repository.ts`: Marcado como "Potencial bloque vacío".
+- `libs/domains/projects/application/src/lib/use-cases/get-projects.use-case.ts`: Marcado como "Potencial bloque vacío".
+- Estos módulos parecen haber sido generados por el generador Nx pero no tienen lógica de negocio real (validaciones, estados, flujos de trabajo).
 
-Paso 1: Completar la Federación (Backend)
-- Modificar los 9 microservicios del "Grupo B" para exponer módulos GraphQL (usando `@nestjs/graphql` y `ApolloFederationDriver`) en lugar de (o además de) controladores REST.
-- Registrar estos 9 subgrafos en `apps/virteex-gateway/src/app/app.module.ts`.
+---
 
-Paso 2: Unificar el Consumo en Frontend
-- Refactorizar los servicios en `libs/domains/*/ui` (ej. `TreasuryService`) para usar Apollo Client (Queries/Mutations) en lugar de `HttpClient`.
-- Eliminar la dependencia de las rutas REST del proxy.
+## 3. INTEGRACIÓN FRONTEND (VIRTEEX-WEB)
 
-Paso 3: Eliminar Mocks
-- Reemplazar el `of(null)` en `libs/domains/purchasing/.../form.page.ts` con una llamada real a la mutación/endpoint de creación de cuentas por pagar.
+### 3.1. Estrategia de Comunicación Mixta e Inconsistente
+**Problema:**
+La aplicación usa una mezcla confusa de REST y GraphQL que dificulta el mantenimiento y la configuración de CORS/Proxy.
+- **Manufacturing UI:** Llama a `/manufacturing/orders` (REST) -> Proxy en API Gateway -> Servicio.
+- **Treasury UI:** Llama a GraphQL (Apollo) -> Gateway -> Subgrafo.
+**Impacto Comercial:**
+Tener dos puertas de enlace (API Gateway REST y Apollo Gateway) aumenta la superficie de ataque y la complejidad de configuración (autenticación duplicada, manejo de tokens). Se recomienda unificar o tener una estrategia clara (BFF).
 
-Paso 4: Limpieza
-- Una vez federados todos los servicios, eliminar los proxies manuales en `virteex-api-gateway`.
+### 3.2. UI "Dummy" o Incompleta
+**Archivo Afectado:** `libs/domains/manufacturing/ui/src/lib/pages/dashboard/dashboard.component.ts`
+**Problema:**
+El Dashboard de Manufactura solo hace un `getOrders().length`.
+**Impacto:**
+Visualmente pobre y no aporta valor de negocio (KPIs, eficiencia, alertas).
+**General:**
+La mayoría de los módulos UI en `libs/domains/*/ui` siguen este patrón: Listados básicos (CRUD) sin formularios complejos, validaciones de negocio en el cliente, ni manejo de errores robusto (Toasts, Modales de confirmación).
 
-FIN DEL INFORME
+---
+
+## 4. INFRAESTRUCTURA Y DESPLIEGUE
+
+### 4.1. Configuración de Base de Datos
+**Archivo:** `docker-compose.yml`
+**Estado:** Correcto.
+Cada servicio tiene su propia DB (`virteex_inventory`, `virteex_billing`, etc.). Esto es bueno, PERO exacerba el error crítico 1.1 (Manufacturing intentando leer tablas de Inventory).
+
+### 4.2. Secretos y Seguridad
+**Estado:** Aceptable para Desarrollo.
+Se usan variables de entorno (`${POSTGRES_PASSWORD}`).
+**Faltante:**
+No se observa un manejo de rotación de secretos o integración con Vault para un entorno "Comercial".
+La autenticación entre microservicios (Service-to-Service) parece confiar en la red interna o tokens compartidos, lo cual es débil para estándares comerciales estrictos (falta mTLS o OAuth2 Client Credentials).
+
+---
+
+## 5. CONCLUSIÓN Y PASOS PARA "100% FUNCIONAL"
+
+Para que esta aplicación sea comercialmente viable, se deben ejecutar obligatoriamente las siguientes acciones (en orden de prioridad):
+
+1.  **Refactorizar `Manufacturing Service`:** Eliminar la dependencia directa de `@virteex/inventory-domain/entities`. Crear un cliente HTTP interno para comunicarse con `Inventory Service`.
+2.  **Implementar `Data Import` Real:** Reescribir `DataImportService` en Admin para que orqueste la creación de datos llamando a las APIs de los otros microservicios, en lugar de simular éxito.
+3.  **Rellenar los "Esqueletos":** Revisar todos los Repositorios y Casos de Uso en `Projects`, `CRM`, `Fixed Assets` y asegurar que no sean solo clases vacías o métodos que devuelven `[]`.
+4.  **Unificar Comunicación Frontend:** Decidir si `Treasury` y `Purchasing` deben ir por REST (habilitar proxy en API Gateway) o si todo migra a GraphQL. Actualmente está roto/dividido.
+5.  **Validación de Negocio:** Agregar validaciones reales (ej. no permitir factura negativa, no permitir orden de producción sin receta/BOM) que actualmente brillan por su ausencia en los casos de uso simples.
+
+Fin del Informe.
