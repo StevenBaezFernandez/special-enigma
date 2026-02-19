@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import {
   CatalogApplicationModule,
   GetProductsUseCase,
+  GetProductByIdUseCase,
   CreateProductUseCase,
   UpdateProductUseCase,
   DeleteProductUseCase
@@ -14,6 +15,7 @@ import { CatalogController } from './controllers/catalog.controller';
   controllers: [CatalogController],
   providers: [
     GetProductsUseCase,
+    GetProductByIdUseCase,
     CreateProductUseCase,
     UpdateProductUseCase,
     DeleteProductUseCase

@@ -4,6 +4,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 import { ServerConfigModule } from '@virteex/shared-util-server-config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
@@ -31,6 +32,7 @@ import { InventoryPresentationModule } from '@virteex/inventory-presentation';
     }),
     TerminusModule,
     EventEmitterModule.forRoot(),
+    HttpModule,
     ServerConfigModule,
     ThrottlerModule.forRoot([
       {

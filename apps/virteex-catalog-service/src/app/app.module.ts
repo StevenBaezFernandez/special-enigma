@@ -11,6 +11,7 @@ import { JwtTenantMiddleware } from '@virteex/auth';
 import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
 import { CatalogInfrastructureModule } from '@virteex/catalog-infrastructure';
 import { CatalogApplicationModule } from '@virteex/catalog-application';
+import { CatalogPresentationModule } from '@virteex/catalog-presentation';
 import { CatalogResolver } from './catalog.resolver';
 import { SchemaService } from './schema.service';
 
@@ -60,6 +61,7 @@ import { SchemaService } from './schema.service';
     TenantModule,
     CatalogInfrastructureModule,
     CatalogApplicationModule,
+    CatalogPresentationModule,
   ],
   providers: [CatalogResolver, SchemaService],
 })

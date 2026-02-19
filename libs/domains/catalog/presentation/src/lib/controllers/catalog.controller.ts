@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   GetProductsUseCase,
+  GetProductByIdUseCase,
   CreateProductUseCase,
   CreateProductDto,
   UpdateProductUseCase,
@@ -15,6 +16,7 @@ import {
 export class CatalogController {
   constructor(
     private readonly getProductsUseCase: GetProductsUseCase,
+    private readonly getProductByIdUseCase: GetProductByIdUseCase,
     private readonly createProductUseCase: CreateProductUseCase,
     private readonly updateProductUseCase: UpdateProductUseCase,
     private readonly deleteProductUseCase: DeleteProductUseCase,
@@ -25,6 +27,12 @@ export class CatalogController {
   @ApiOperation({ summary: 'Get all products' })
   async getProducts(@Query('tenantId') tenantId = 'default') {
     return this.getProductsUseCase.execute(tenantId);
+  }
+
+  @Get('products/:id')
+  @ApiOperation({ summary: 'Get product by ID' })
+  async getProductById(@Param('id') id: number) {
+    return this.getProductByIdUseCase.execute(id);
   }
 
   @Post('products')
