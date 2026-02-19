@@ -9,7 +9,7 @@ export class BillOfMaterials {
   tenantId!: string;
 
   @Property()
-  productId!: string; // Reference to Inventory Product
+  productSku!: string; // Changed from productId to productSku to align with ProductionOrder
 
   @Property()
   version!: string;
@@ -26,9 +26,9 @@ export class BillOfMaterials {
   @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  constructor(tenantId: string, productId: string, version: string) {
+  constructor(tenantId: string, productSku: string, version: string) {
     this.tenantId = tenantId;
-    this.productId = productId;
+    this.productSku = productSku;
     this.version = version;
   }
 }
@@ -42,7 +42,7 @@ export class BillOfMaterialsComponent {
   tenantId!: string;
 
   @Property()
-  componentProductId!: string; // Reference to Inventory Product (Material)
+  componentProductSku!: string; // Changed from componentProductId
 
   @Property({ type: 'decimal', precision: 10, scale: 4 })
   quantity!: number;
@@ -53,9 +53,9 @@ export class BillOfMaterialsComponent {
   @Property()
   billOfMaterials!: BillOfMaterials;
 
-  constructor(tenantId: string, componentProductId: string, quantity: number, unit: string) {
+  constructor(tenantId: string, componentProductSku: string, quantity: number, unit: string) {
     this.tenantId = tenantId;
-    this.componentProductId = componentProductId;
+    this.componentProductSku = componentProductSku;
     this.quantity = quantity;
     this.unit = unit;
   }

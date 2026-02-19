@@ -2,15 +2,22 @@ import { Module, Global } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { ProductionOrder, PRODUCTION_ORDER_REPOSITORY } from '@virteex/manufacturing-domain';
-import { INVENTORY_SERVICE } from '@virteex/manufacturing-domain';
+import {
+  ProductionOrder,
+  PRODUCTION_ORDER_REPOSITORY,
+  INVENTORY_SERVICE,
+  BillOfMaterials,
+  BillOfMaterialsComponent,
+  BILL_OF_MATERIALS_REPOSITORY
+} from '@virteex/manufacturing-domain';
 import { MikroOrmProductionOrderRepository } from './repositories/mikro-orm-production-order.repository';
+import { MikroOrmBillOfMaterialsRepository } from './repositories/mikro-orm-bill-of-materials.repository';
 import { HttpInventoryAdapter } from './adapters/http-inventory.adapter';
 
 @Global()
 @Module({
   imports: [
-    MikroOrmModule.forFeature([ProductionOrder]),
+    MikroOrmModule.forFeature([ProductionOrder, BillOfMaterials, BillOfMaterialsComponent]),
     HttpModule,
     ConfigModule
   ],
@@ -20,6 +27,10 @@ import { HttpInventoryAdapter } from './adapters/http-inventory.adapter';
       useClass: MikroOrmProductionOrderRepository
     },
     {
+      provide: BILL_OF_MATERIALS_REPOSITORY,
+      useClass: MikroOrmBillOfMaterialsRepository
+    },
+    {
       provide: INVENTORY_SERVICE,
       useClass: HttpInventoryAdapter
     }
@@ -27,6 +38,7 @@ import { HttpInventoryAdapter } from './adapters/http-inventory.adapter';
   exports: [
     MikroOrmModule,
     PRODUCTION_ORDER_REPOSITORY,
+    BILL_OF_MATERIALS_REPOSITORY,
     INVENTORY_SERVICE
   ]
 })
