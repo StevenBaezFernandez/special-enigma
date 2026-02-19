@@ -3,6 +3,7 @@ import { rendererAppName, rendererAppPort } from './constants';
 import { environment } from '../environments/environment';
 import { join } from 'path';
 import { format } from 'url';
+import { FileSystemApi } from './api/file-system.api';
 
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will
@@ -47,6 +48,9 @@ export default class App {
     if (rendererAppName) {
       App.initMainWindow();
       App.loadMainWindow();
+
+      // Initialize APIs
+      FileSystemApi.registerHandlers();
     }
   }
 
@@ -72,6 +76,7 @@ export default class App {
         contextIsolation: true,
         backgroundThrottling: false,
         preload: join(__dirname, 'main.preload.js'),
+        nodeIntegration: false, // Security best practice
       },
     });
     App.mainWindow.setMenu(null);
