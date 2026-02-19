@@ -7,11 +7,13 @@ import { AppService } from './app.service';
 import { InvoiceConsumer } from './invoice.consumer';
 import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
 import { FiscalPresentationModule } from '@virteex/fiscal-presentation';
-import { FiscalInfrastructureModule, MockFiscalProvider } from '@virteex/fiscal-infrastructure';
+import { FiscalInfrastructureModule, MockFiscalProvider, DianFiscalAdapter, SatFiscalAdapter } from '@virteex/fiscal-infrastructure';
+import { HttpModule, HttpService } from '@nestjs/axios';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    HttpModule,
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -37,7 +39,17 @@ import { FiscalInfrastructureModule, MockFiscalProvider } from '@virteex/fiscal-
     AppService,
     {
       provide: 'FiscalProvider',
-      useClass: MockFiscalProvider,
+      inject: [ConfigService, HttpService],
+      useFactory: (config: ConfigService, http: HttpService) => {
+        const provider = config.get('FISCAL_PROVIDER');
+        if (provider === 'DIAN') {
+          return new DianFiscalAdapter(http);
+        }
+        if (provider === 'SAT') {
+          return new SatFiscalAdapter(http);
+        }
+        return new MockFiscalProvider();
+      },
     },
   ],
 })

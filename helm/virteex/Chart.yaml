@@ -1,0 +1,6 @@
+apiVersion: v2
+name: virteex
+description: A Helm chart for Virteex ERP
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

@@ -31,7 +31,7 @@ services:
       - PORT=3000
       - VIRTEEX_HMAC_SECRET=${VIRTEEX_HMAC_SECRET:-dev-hmac-secret-for-local-only}
       - REDIS_URL=${REDIS_URL:-redis://redis:6379}
-      - POSTGRES_URL=${POSTGRES_URL:-postgres://virteex:virteex_password@postgres:5432/virteex_erp}
+      - POSTGRES_URL=${POSTGRES_URL:-postgres://virteex:${POSTGRES_PASSWORD:-virteex_password}@postgres:5432/virteex_erp}
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_USER=virteex

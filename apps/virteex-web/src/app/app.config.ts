@@ -13,6 +13,7 @@ import { appRoutes } from './app.routes';
 import { authInterceptor } from '@virteex/shared-util-auth';
 import { errorInterceptor } from '@virteex/shared-ui';
 import { loadingInterceptor } from '@virteex/shared-util-http';
+import { globalErrorInterceptor } from './core/interceptors/global-error.interceptor';
 import { APP_CONFIG, AppConfig } from '@virteex/shared-config';
 import { environment } from '../environments/environment';
 import { API_URL } from '@virteex/shared-config';
@@ -34,7 +35,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
       provideBrowserGlobalErrorListeners(),
       provideRouter(appRoutes),
-      provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor, errorInterceptor])),
+      provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor, errorInterceptor, globalErrorInterceptor])),
       provideStore(
         {},
         {

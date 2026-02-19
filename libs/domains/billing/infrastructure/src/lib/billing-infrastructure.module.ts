@@ -40,6 +40,7 @@ import { MikroOrmPaymentMethodRepository } from './repositories/mikro-orm-paymen
 import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
 import { LocalProductRepository } from './repositories/local-product.repository';
 import { HttpCustomerRepository } from './repositories/http-customer.repository';
+import { StripePaymentProvider } from './adapters/stripe-payment-provider.adapter';
 
 import { BillingProductEntity } from './entities/billing-product.entity';
 import { ProductEventsController } from './listeners/product-events.controller';
@@ -97,6 +98,10 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
       provide: TENANT_CONFIG_REPOSITORY,
       useClass: MikroOrmTenantConfigRepository
     },
+    {
+      provide: 'PaymentProvider',
+      useClass: StripePaymentProvider
+    },
     // Xslt Service
     XsltService,
     // Builders
@@ -127,7 +132,8 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
     BILLING_TAX_STRATEGY_FACTORY,
     MikroOrmModule,
     FinkokPacProvider,
-    NullPacProvider
+    NullPacProvider,
+    'PaymentProvider'
   ]
 })
 export class BillingInfrastructureModule {}

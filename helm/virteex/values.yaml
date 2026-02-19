@@ -1,0 +1,19 @@
+global:
+  env: production
+
+applications:
+  gateway:
+    image: virteex/gateway:latest
+    replicas: 2
+  identity:
+    image: virteex/identity:latest
+    replicas: 1
+  billing:
+    image: virteex/billing:latest
+    replicas: 1
+  notification:
+    image: virteex/notification:latest
+    replicas: 1
+  fiscal:
+    image: virteex/fiscal:latest
+    replicas: 1

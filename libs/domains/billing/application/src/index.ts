@@ -8,4 +8,5 @@ export * from './lib/use-cases/create-subscription.use-case';
 export * from './lib/use-cases/get-subscription.use-case';
 export * from './lib/use-cases/add-payment-method.use-case';
 export * from './lib/use-cases/get-payment-method.use-case';
+export * from './lib/use-cases/process-payment.use-case';
 export * from './lib/dtos/create-invoice.dto';

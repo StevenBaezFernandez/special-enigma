@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { NotificationConsumer } from './notification.consumer';
+import { EmailService } from '../../../../libs/domains/notification/infrastructure/src/lib/services/email.service';
 import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
 
 @Module({
@@ -17,7 +19,7 @@ import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, NotificationConsumer],
+  providers: [AppService, EmailService],
 })
 export class AppModule {}
