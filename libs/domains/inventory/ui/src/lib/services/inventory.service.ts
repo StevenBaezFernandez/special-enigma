@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { GraphQLClientService } from '@virteex/shared-util-http';
 
 export interface Warehouse {
   id: string;
@@ -9,106 +8,55 @@ export interface Warehouse {
   code: string;
   location: string;
   tenantId: string;
+  description?: string;
+  isActive?: boolean;
 }
 
-export interface RegisterMovementItemInput {
+export interface RegisterMovementDto {
   productId: string;
+  warehouseId: string;
+  type: 'IN' | 'OUT' | 'TRANSFER' | 'ADJUSTMENT'; // InventoryMovementType
   quantity: string;
-  type: string;
   reference: string;
   locationId?: string;
+  tenantId?: string; // Optional as backend might infer from token, but DTO allows it
 }
-
-export interface RegisterMovementInput {
-  warehouseId: string;
-  items: RegisterMovementItemInput[];
-}
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class InventoryService {
-  private gql = inject(GraphQLClientService);
+  private http = inject(HttpClient);
+  // Robust config access
+  private get apiUrl(): string {
+    return (window as any).env?.apiUrl || 'http://localhost:3333/api';
+  }
 
   getWarehouses(): Observable<Warehouse[]> {
-    const query = `
-      query GetWarehouses {
-        warehouses {
-          id
-          name
-          location
-          code
-          tenantId
-        }
-      }
-    `;
-    return this.gql.query<{ warehouses: Warehouse[] }>(query).pipe(
-      map(res => res.warehouses)
-    );
+    return this.http.get<Warehouse[]>(`${this.apiUrl}/inventory/warehouses`);
+  }
+
+  getWarehouse(id: string): Observable<Warehouse> {
+    return this.http.get<Warehouse>(`${this.apiUrl}/inventory/warehouses/${id}`);
   }
 
   createWarehouse(warehouse: Partial<Warehouse>): Observable<Warehouse> {
-    const input = {
-      name: warehouse.name,
-      location: warehouse.location
-    };
-    const mutation = `
-      mutation CreateWarehouse($input: CreateWarehouseInput!) {
-        createWarehouse(input: $input) {
-          id
-          name
-          location
-          code
-          tenantId
-        }
-      }
-    `;
-    return this.gql.mutate<{ createWarehouse: Warehouse }>(mutation, { input }).pipe(
-      map(res => res.createWarehouse)
-    );
+    return this.http.post<Warehouse>(`${this.apiUrl}/inventory/warehouses`, warehouse);
   }
 
   updateWarehouse(id: string, warehouse: Partial<Warehouse>): Observable<Warehouse> {
-     const input = {
-      name: warehouse.name,
-      location: warehouse.location
-    };
-    const mutation = `
-      mutation UpdateWarehouse($id: ID!, $input: UpdateWarehouseInput!) {
-        updateWarehouse(id: $id, input: $input) {
-          id
-          name
-          location
-          code
-          tenantId
-        }
-      }
-    `;
-    return this.gql.mutate<{ updateWarehouse: Warehouse }>(mutation, { id, input }).pipe(
-      map(res => res.updateWarehouse)
-    );
+    return this.http.put<Warehouse>(`${this.apiUrl}/inventory/warehouses/${id}`, warehouse);
   }
 
   deleteWarehouse(id: string): Observable<void> {
-    const mutation = `
-      mutation DeleteWarehouse($id: ID!) {
-        deleteWarehouse(id: $id)
-      }
-    `;
-    return this.gql.mutate<{ deleteWarehouse: boolean }>(mutation, { id }).pipe(
-      map(() => undefined)
-    );
+    return this.http.delete<void>(`${this.apiUrl}/inventory/warehouses/${id}`);
   }
 
-  registerMovement(movement: RegisterMovementInput): Observable<void> {
-    const mutation = `
-      mutation RegisterMovement($input: RegisterMovementInput!) {
-        registerMovement(input: $input)
-      }
-    `;
-    return this.gql.mutate<{ registerMovement: boolean }>(mutation, { input: movement }).pipe(
-      map(() => undefined)
-    );
+  registerMovement(movement: RegisterMovementDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/inventory/movements`, movement);
+  }
+
+  checkStock(warehouseId: string, productSku: string, quantity: number): Observable<{ available: boolean }> {
+      return this.http.get<{ available: boolean }>(`${this.apiUrl}/inventory/check/${warehouseId}/${productSku}?quantity=${quantity}`);
   }
 }
