@@ -20,12 +20,7 @@ import { InitialSeederService } from './seeds/initial-seeder.service';
 // Cross Domain Infrastructure (Application Level)
 import { CrossDomainInfrastructureModule } from './infrastructure/cross-domain.module';
 
-// Domain Modules - Presentation
-import { FiscalPresentationModule } from '@virteex/fiscal-presentation';
-
 // BFF Modules
-import { WmsApiModule } from '../presentation/wms-api/wms-api.module';
-import { ShopfloorApiModule } from '../presentation/shopfloor-api/shopfloor-api.module';
 import { StoreApiModule } from '../presentation/store-api/store-api.module';
 
 @Module({
@@ -72,12 +67,7 @@ import { StoreApiModule } from '../presentation/store-api/store-api.module';
     // Cross Domain Infrastructure
     CrossDomainInfrastructureModule,
 
-    // Presentation Modules (These import Infra internally)
-    FiscalPresentationModule,
-
     // BFF Modules
-    WmsApiModule,
-    ShopfloorApiModule,
     StoreApiModule,
   ],
   controllers: [AppController, HealthController],

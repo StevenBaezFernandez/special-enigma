@@ -1,10 +1,103 @@
-<div class="p-6">
-  <h1 class="text-2xl font-bold mb-4">Accounting Dashboard</h1>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-xl font-semibold mb-2">Manage Journalentrys</h2>
-      <p class="mb-4">View, create, and edit Journalentry records.</p>
-      <a routerLink="list" class="text-blue-600 hover:underline">Go to List &rarr;</a>
+<div class="p-6 bg-gray-50 min-h-screen">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Accounting Dashboard</h1>
+    <div class="flex space-x-4">
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">New Journal Entry</button>
+      <button class="bg-white text-gray-700 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition">Reports</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Accounts Card -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-700">Accounts</h2>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Active</span>
+      </div>
+      <ng-container *ngIf="accounts$ | async as accounts; else loadingAccounts">
+        <p class="text-4xl font-bold text-gray-900 mb-1">{{ accounts.length }}</p>
+        <p class="text-sm text-gray-500">Total Chart of Accounts</p>
+      </ng-container>
+      <ng-template #loadingAccounts>
+        <div class="animate-pulse flex space-x-4">
+          <div class="h-10 w-20 bg-gray-200 rounded"></div>
+        </div>
+      </ng-template>
+      <div class="mt-4 pt-4 border-t border-gray-100">
+        <a routerLink="accounts" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+          Manage Accounts <span class="ml-1">&rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Journal Entries Card -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-700">Journal Entries</h2>
+        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Posted</span>
+      </div>
+      <ng-container *ngIf="journalEntries$ | async as entries; else loadingEntries">
+        <p class="text-4xl font-bold text-gray-900 mb-1">{{ entries.length }}</p>
+        <p class="text-sm text-gray-500">Total Recorded Entries</p>
+      </ng-container>
+      <ng-template #loadingEntries>
+        <div class="animate-pulse flex space-x-4">
+          <div class="h-10 w-20 bg-gray-200 rounded"></div>
+        </div>
+      </ng-template>
+      <div class="mt-4 pt-4 border-t border-gray-100">
+        <a routerLink="journal-entries" class="text-green-600 hover:text-green-800 text-sm font-medium flex items-center">
+          View Entries <span class="ml-1">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Section -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+      <h2 class="text-xl font-semibold text-gray-800">Recent Journal Entries</h2>
+      <a routerLink="journal-entries" class="text-gray-500 hover:text-gray-700 text-sm">View All</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200" *ngIf="journalEntries$ | async as entries; else loadingTable">
+          <tr *ngFor="let entry of entries | slice:0:5" class="hover:bg-gray-50 transition">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ entry.date | date:'mediumDate' }}</td>
+            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ entry.description }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-right font-mono">{{ entry.totalAmount | currency }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-right">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                Posted
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="entries.length === 0">
+            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+              <p>No recent activity found.</p>
+              <button class="mt-2 text-blue-600 hover:underline text-sm">Create your first journal entry</button>
+            </td>
+          </tr>
+        </tbody>
+        <ng-template #loadingTable>
+           <tbody class="bg-white divide-y divide-gray-200">
+             <tr *ngFor="let i of [1,2,3]">
+               <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-24 animate-pulse"></div></td>
+               <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-48 animate-pulse"></div></td>
+               <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-20 animate-pulse ml-auto"></div></td>
+               <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-16 animate-pulse ml-auto"></div></td>
+             </tr>
+           </tbody>
+        </ng-template>
+      </table>
     </div>
   </div>
 </div>
