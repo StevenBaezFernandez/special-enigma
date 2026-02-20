@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Module, Global, forwardRef } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
   Supplier, PurchaseOrder, PurchaseOrderItem, Requisition, VendorBill,
@@ -8,11 +8,13 @@ import { MikroOrmSupplierRepository } from './repositories/mikro-orm-supplier.re
 import { MikroOrmPurchaseOrderRepository } from './repositories/mikro-orm-purchase-order.repository';
 import { MikroOrmRequisitionRepository } from './repositories/mikro-orm-requisition.repository';
 import { MikroOrmVendorBillRepository } from './repositories/mikro-orm-vendor-bill.repository';
+// import { PurchasingApplicationModule } from '../../../application/src/index';
 
 @Global()
 @Module({
   imports: [
     MikroOrmModule.forFeature([Supplier, PurchaseOrder, PurchaseOrderItem, Requisition, VendorBill])
+    // forwardRef(() => PurchasingApplicationModule)
   ],
   providers: [
     {

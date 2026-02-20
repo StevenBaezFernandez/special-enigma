@@ -1,0 +1,17 @@
+<div class="marketplace-container">
+  <h1>Plugin Marketplace</h1>
+
+  <div class="plugin-grid">
+    <div class="plugin-card" *ngFor="let plugin of plugins">
+      <h3>{{ plugin.name }}</h3>
+      <p>{{ plugin.description }}</p>
+      <div class="meta">
+        <span>v{{ plugin.version }}</span>
+        <span>{{ plugin.author }}</span>
+      </div>
+      <button (click)="install(plugin.id)" [disabled]="plugin.installed">
+        {{ plugin.installed ? 'Installed' : 'Install' }}
+      </button>
+    </div>
+  </div>
+</div>
