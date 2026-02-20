@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import { Stock } from './stock.entity';
 import { Warehouse } from './warehouse.entity';
 

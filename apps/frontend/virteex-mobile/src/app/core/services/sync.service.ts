@@ -8,6 +8,7 @@ interface SyncItem {
   method: 'POST' | 'PUT' | 'DELETE';
   payload: any;
   timestamp: number;
+  retryCount: number;
 }
 
 @Injectable({
@@ -16,6 +17,7 @@ interface SyncItem {
 export class SyncService {
   private queue = signal<SyncItem[]>([]);
   private isOnline = signal<boolean>(navigator.onLine);
+  private isProcessing = false;
 
   constructor(private http: HttpClient) {
     this.loadQueue();
@@ -27,14 +29,18 @@ export class SyncService {
     if (this.isOnline()) {
       try {
         return await firstValueFrom(this.http.request(method, url, { body: payload }));
-      } catch (e) {
-        // Fallback to queue if network fails unexpectedly
-        console.warn('Network request failed, queueing for retry', e);
-        this.addToQueue({ id: crypto.randomUUID(), url, method, payload, timestamp: Date.now() });
-        return { offline: true, message: 'Request queued' };
+      } catch (e: any) {
+        // Fallback to queue if network fails (status 0) or server error (5xx)
+        if (e.status === 0 || e.status >= 500) {
+            console.warn('Network/Server request failed, queueing for retry', e);
+            this.addToQueue({ id: crypto.randomUUID(), url, method, payload, timestamp: Date.now(), retryCount: 0 });
+            return { offline: true, message: 'Request queued' };
+        }
+        // 4xx errors bubble up immediately
+        throw e;
       }
     } else {
-      this.addToQueue({ id: crypto.randomUUID(), url, method, payload, timestamp: Date.now() });
+      this.addToQueue({ id: crypto.randomUUID(), url, method, payload, timestamp: Date.now(), retryCount: 0 });
       return { offline: true, message: 'Request queued' };
     }
   }
@@ -51,7 +57,7 @@ export class SyncService {
     const current = this.queue();
     const updated = [...current, item];
     this.queue.set(updated);
-    localStorage.setItem('sync_queue', JSON.stringify(updated));
+    this.saveQueue(updated);
   }
 
   private loadQueue() {
@@ -61,25 +67,61 @@ export class SyncService {
     }
   }
 
+  private saveQueue(queue: SyncItem[]) {
+      localStorage.setItem('sync_queue', JSON.stringify(queue));
+  }
+
   private async processQueue() {
-    const currentQueue = this.queue();
-    if (currentQueue.length === 0) return;
+    if (this.isProcessing) return;
+    this.isProcessing = true;
 
-    console.log(`Processing ${currentQueue.length} offline items...`);
+    try {
+        const snapshot = [...this.queue()]; // Snapshot for iteration
 
-    const remaining: SyncItem[] = [];
+        console.log(`Processing ${snapshot.length} offline items...`);
 
-    for (const item of currentQueue) {
-      try {
-        await firstValueFrom(this.http.request(item.method, item.url, { body: item.payload }));
-        console.log(`Synced item ${item.id}`);
-      } catch (e) {
-        console.error(`Failed to sync item ${item.id}`, e);
-        remaining.push(item); // Keep in queue if it fails again
-      }
+        for (const item of snapshot) {
+            // Check if item still exists in live queue
+            if (!this.queue().some(i => i.id === item.id)) continue;
+
+            // Exponential Backoff Check
+            const backoffTime = Math.pow(2, item.retryCount) * 1000;
+            if (Date.now() - item.timestamp < backoffTime) continue;
+
+            try {
+                await firstValueFrom(this.http.request(item.method, item.url, { body: item.payload }));
+                console.log(`Synced item ${item.id}`);
+                this.removeFromQueue(item.id);
+            } catch (e: any) {
+                console.error(`Failed to sync item ${item.id}`, e);
+
+                if (e.status >= 400 && e.status < 500) {
+                    // Client error (4xx) - discard
+                    console.warn(`Discarding item ${item.id} due to client error ${e.status}`);
+                    this.removeFromQueue(item.id);
+                } else {
+                    // Server/Network error - keep and retry
+                    this.updateItem(item.id, {
+                        retryCount: item.retryCount + 1,
+                        timestamp: Date.now()
+                    });
+                }
+            }
+        }
+    } finally {
+        this.isProcessing = false;
     }
+  }
 
-    this.queue.set(remaining);
-    localStorage.setItem('sync_queue', JSON.stringify(remaining));
+  private removeFromQueue(id: string) {
+      const updated = this.queue().filter(i => i.id !== id);
+      this.queue.set(updated);
+      this.saveQueue(updated);
+  }
+
+  private updateItem(id: string, updates: Partial<SyncItem>) {
+      const updated = this.queue().map(i => i.id === id ? { ...i, ...updates } : i);
+      this.queue.set(updated);
+      this.saveQueue(updated);
   }
 }

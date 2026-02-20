@@ -5,6 +5,7 @@
   "projectType": "library",
   "prefix": "virteex",
   "tags": ["type:domain", "scope:payroll"],
+  "implicitDependencies": ["payroll-contracts"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

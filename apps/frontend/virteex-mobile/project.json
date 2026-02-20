@@ -3,24 +3,24 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "virteex",
-  "sourceRoot": "apps/virteex-mobile/src",
+  "sourceRoot": "apps/frontend/virteex-mobile/src",
   "tags": ["platform:mobile"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/virteex-mobile",
-        "browser": "apps/virteex-mobile/src/main.ts",
-        "tsConfig": "apps/virteex-mobile/tsconfig.app.json",
+        "outputPath": "dist/apps/frontend/virteex-mobile",
+        "browser": "apps/frontend/virteex-mobile/src/main.ts",
+        "tsConfig": "apps/frontend/virteex-mobile/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/virteex-mobile/public"
+            "input": "apps/frontend/virteex-mobile/public"
           }
         ],
-        "styles": ["apps/virteex-mobile/src/styles.scss"]
+        "styles": ["apps/frontend/virteex-mobile/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -68,7 +68,7 @@
       "options": {
         "buildTarget": "virteex-mobile:build",
         "port": 4200,
-        "staticFilePath": "dist/apps/virteex-mobile/browser",
+        "staticFilePath": "dist/apps/frontend/virteex-mobile/browser",
         "spa": true
       }
     },
@@ -76,7 +76,7 @@
       "executor": "@nx/vitest:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/apps/virteex-mobile"
+        "reportsDirectory": "../../coverage/apps/frontend/virteex-mobile"
       }
     }
   }

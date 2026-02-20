@@ -3,24 +3,24 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "virteex",
-  "sourceRoot": "apps/virteex-web/src",
+  "sourceRoot": "apps/frontend/virteex-web/src",
   "tags": ["platform:web"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/virteex-web",
-        "browser": "apps/virteex-web/src/main.ts",
-        "tsConfig": "apps/virteex-web/tsconfig.app.json",
+        "outputPath": "dist/apps/frontend/virteex-web",
+        "browser": "apps/frontend/virteex-web/src/main.ts",
+        "tsConfig": "apps/frontend/virteex-web/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/virteex-web/public"
+            "input": "apps/frontend/virteex-web/public"
           }
         ],
-        "styles": ["apps/virteex-web/src/styles.scss"],
+        "styles": ["apps/frontend/virteex-web/src/styles.scss"],
         "stylePreprocessorOptions": {
           "includePaths": ["libs/shared/ui/src/lib/styles"]
         }
@@ -29,8 +29,8 @@
         "production": {
           "fileReplacements": [
             {
-              "replace": "apps/virteex-web/src/environments/environment.ts",
-              "with": "apps/virteex-web/src/environments/environment.prod.ts"
+              "replace": "apps/frontend/virteex-web/src/environments/environment.ts",
+              "with": "apps/frontend/virteex-web/src/environments/environment.prod.ts"
             }
           ],
           "budgets": [
@@ -68,7 +68,7 @@
       },
       "defaultConfiguration": "development",
       "options": {
-        "proxyConfig": "apps/virteex-web/proxy.conf.json"
+        "proxyConfig": "apps/frontend/virteex-web/proxy.conf.json"
       }
     },
     "lint": {
@@ -80,7 +80,7 @@
       "options": {
         "buildTarget": "virteex-web:build",
         "port": 4200,
-        "staticFilePath": "dist/apps/virteex-web/browser",
+        "staticFilePath": "dist/apps/frontend/virteex-web/browser",
         "spa": true
       }
     },
@@ -88,7 +88,7 @@
       "executor": "@nx/vitest:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/apps/virteex-web"
+        "reportsDirectory": "../../coverage/apps/frontend/virteex-web"
       }
     }
   }

@@ -13,9 +13,9 @@ export class GetSubscriptionStatusUseCase {
     }
 
     return {
-      status: tenant.settings?.subscriptionStatus || 'INACTIVE',
+      status: (tenant.settings as any)?.['subscriptionStatus'] || 'INACTIVE',
       plan: tenant.plan || 'TRIAL',
-      billingCycle: tenant.settings?.billingCycle || 'MONTHLY'
+      billingCycle: (tenant.settings as any)?.['billingCycle'] || 'MONTHLY'
     };
   }
 }
