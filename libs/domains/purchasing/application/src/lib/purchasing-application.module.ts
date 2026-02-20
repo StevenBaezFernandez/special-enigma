@@ -1,26 +1,26 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { CreateSupplierUseCase } from './use-cases/create-supplier.use-case';
 import { CreatePurchaseOrderUseCase } from './use-cases/create-purchase-order.use-case';
 import { CreateRequisitionUseCase } from './use-cases/create-requisition.use-case';
 import { GetRequisitionsUseCase } from './use-cases/get-requisitions.use-case';
-import { ApproveRequisitionUseCase } from './use-cases/approve-requisition.use-case'; // Added
-import { RejectRequisitionUseCase } from './use-cases/reject-requisition.use-case'; // Added
+import { ApproveRequisitionUseCase } from './use-cases/approve-requisition.use-case';
+import { RejectRequisitionUseCase } from './use-cases/reject-requisition.use-case';
 import { CreateVendorBillUseCase } from './use-cases/create-vendor-bill.use-case';
 import { UpdateVendorBillUseCase } from './use-cases/update-vendor-bill.use-case';
 import { GetVendorBillUseCase } from './use-cases/get-vendor-bill.use-case';
-// import { PurchasingInfrastructureModule } from '../../../infrastructure/src/index';
+import { PurchasingInfrastructureModule } from '../../../infrastructure/src/index';
 
 @Module({
   imports: [
-      // PurchasingInfrastructureModule
+      forwardRef(() => PurchasingInfrastructureModule) // Use forwardRef to resolve circular dependency
   ],
   providers: [
     CreateSupplierUseCase,
     CreatePurchaseOrderUseCase,
     CreateRequisitionUseCase,
     GetRequisitionsUseCase,
-    ApproveRequisitionUseCase, // Added
-    RejectRequisitionUseCase, // Added
+    ApproveRequisitionUseCase,
+    RejectRequisitionUseCase,
     CreateVendorBillUseCase,
     UpdateVendorBillUseCase,
     GetVendorBillUseCase
@@ -30,8 +30,8 @@ import { GetVendorBillUseCase } from './use-cases/get-vendor-bill.use-case';
     CreatePurchaseOrderUseCase,
     CreateRequisitionUseCase,
     GetRequisitionsUseCase,
-    ApproveRequisitionUseCase, // Added
-    RejectRequisitionUseCase, // Added
+    ApproveRequisitionUseCase,
+    RejectRequisitionUseCase,
     CreateVendorBillUseCase,
     UpdateVendorBillUseCase,
     GetVendorBillUseCase
