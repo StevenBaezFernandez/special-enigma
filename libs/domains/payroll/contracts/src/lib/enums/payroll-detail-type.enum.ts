@@ -1,4 +1,6 @@
 export enum PayrollDetailType {
   EARNING = 'EARNING',
-  DEDUCTION = 'DEDUCTION'
+  DEDUCTION = 'DEDUCTION',
+  TAX = 'TAX',
+  REIMBURSEMENT = 'REIMBURSEMENT'
 }

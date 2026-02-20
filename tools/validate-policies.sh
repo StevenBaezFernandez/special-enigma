@@ -14,6 +14,6 @@ else
 fi
 
 echo "Validating OPA policies..."
-$OPA_BIN check policies/compliance/*.rego policies/security/*.rego
+$OPA_BIN check platform/policies/compliance/*.rego platform/policies/security/*.rego
 
 echo "Policies validated successfully."

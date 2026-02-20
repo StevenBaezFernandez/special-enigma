@@ -1,6 +1,6 @@
 import { Injectable, Inject, NotFoundException, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { PayrollStatus, PayrollDetailType } from '@virteex/contracts';
+import { PayrollStatus, PayrollDetailType } from '@virteex/payroll-contracts';
 import {
   PayrollRepository,
   PAYROLL_REPOSITORY,

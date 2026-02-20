@@ -12,6 +12,6 @@ build:
     push: false
 manifests:
   rawYaml:
-    - infrastructure/k8s/base/deployment.yaml
+    - platform/kubernetes/manifests/base/deployment.yaml
 deploy:
   kubectl: {}

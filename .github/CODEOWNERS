@@ -1,0 +1,23 @@
+# Global owners
+* @virteex/core-team
+
+# Platform & Infrastructure
+/platform/ @virteex/platform-team
+/.github/ @virteex/platform-team
+/tools/ @virteex/platform-team
+
+# Core Kernel & Shared
+/libs/kernel/ @virteex/architects
+/libs/shared/ @virteex/architects
+
+# Backend Services (by domain)
+/apps/*-service/ @virteex/backend-leads
+/libs/domains/*/application/ @virteex/backend-leads
+/libs/domains/*/domain/ @virteex/backend-leads
+/libs/domains/*/contracts/ @virteex/backend-leads
+
+# Frontend
+/apps/virteex-web/ @virteex/frontend-leads
+/apps/virteex-mobile/ @virteex/frontend-leads
+/libs/domains/*/ui/ @virteex/frontend-leads
+/libs/domains/*/presentation/ @virteex/frontend-leads
