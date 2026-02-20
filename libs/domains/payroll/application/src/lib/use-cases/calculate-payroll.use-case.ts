@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException, BadRequestException, ConflictException, Logger } from '@nestjs/common';
-import { PayrollStatus, PayrollType, PayrollDetailType } from '@virteex/contracts';
+import { PayrollStatus, PayrollType, PayrollDetailType } from '@virteex/payroll-contracts';
 import {
   EmployeeRepository,
   EMPLOYEE_REPOSITORY,

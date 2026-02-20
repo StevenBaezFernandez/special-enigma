@@ -3,5 +3,6 @@ export enum AttendanceStatus {
   ABSENT = 'ABSENT',
   LATE = 'LATE',
   LEAVE = 'LEAVE',
-  HOLIDAY = 'HOLIDAY'
+  HOLIDAY = 'HOLIDAY',
+  EXCUSED = 'EXCUSED'
 }
