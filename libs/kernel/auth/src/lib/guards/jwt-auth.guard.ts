@@ -3,10 +3,15 @@ import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { SecretManagerService } from '../services/secret-manager.service';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector, private configService: ConfigService) {}
+  constructor(
+      private reflector: Reflector,
+      private configService: ConfigService,
+      private secretManager: SecretManagerService
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -33,25 +38,30 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Missing Authentication Token');
     }
 
-    const secret = this.configService.get<string>('JWT_SECRET');
-    if (!secret) {
-      throw new Error('JWT_SECRET is not defined in configuration');
+    const secrets = this.secretManager.getJwtVerificationSecrets();
+
+    // P1: Enforce strict audience and issuer validation if configured
+    const audience = this.configService.get<string>('JWT_AUDIENCE');
+    const issuer = this.configService.get<string>('JWT_ISSUER');
+
+    const verifyOptions: jwt.VerifyOptions = {};
+    if (audience) verifyOptions.audience = audience;
+    if (issuer) verifyOptions.issuer = issuer;
+
+    for (const secret of secrets) {
+        try {
+            const payload = jwt.verify(token, secret, verifyOptions);
+            request.user = payload;
+            return true;
+        } catch (err: any) {
+            if (err.name === 'TokenExpiredError') {
+                 // If signature matches but expired, it is expired.
+                 throw new UnauthorizedException('Token Expired');
+            }
+            // If invalid signature, try next key (rotation support)
+        }
     }
 
-    try {
-      // P1: Enforce strict audience and issuer validation if configured
-      const audience = this.configService.get<string>('JWT_AUDIENCE');
-      const issuer = this.configService.get<string>('JWT_ISSUER');
-
-      const verifyOptions: jwt.VerifyOptions = {};
-      if (audience) verifyOptions.audience = audience;
-      if (issuer) verifyOptions.issuer = issuer;
-
-      const payload = jwt.verify(token, secret, verifyOptions);
-      request.user = payload;
-      return true;
-    } catch (err) {
-      throw new UnauthorizedException('Invalid or Expired Token');
-    }
+    throw new UnauthorizedException('Invalid Token');
   }
 }

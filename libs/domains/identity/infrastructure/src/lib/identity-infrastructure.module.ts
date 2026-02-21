@@ -33,12 +33,14 @@ import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructur
 import { StorageAdapter } from './adapters/storage.adapter';
 import { RedisCacheModule } from '@virteex/shared/infrastructure/cache';
 import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
+import { AuthModule } from '@virteex/auth';
 
 @Global()
 @Module({
   imports: [
     ConfigModule,
     EventEmitterModule,
+    AuthModule,
     MikroOrmModule.forFeature([User, Company, AuditLog, Session, JobTitle]),
     SharedInfrastructureStorageModule,
     RedisCacheModule.forRootAsync({

@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { DatabaseService } from './database.service';
 import { v4 as uuidv4 } from 'uuid';
+import { environment } from '../../../environments/environment';
 
 export interface SyncItem {
   id: string;
@@ -27,7 +28,7 @@ export class SyncService {
   public isOnline = signal<boolean>(navigator.onLine);
   private isProcessing = false;
   private readonly STORAGE_KEY = 'virteex_sync_queue_v2';
-  private readonly API_URL = 'http://localhost:3333/api'; // Should be env var
+  private readonly API_URL = environment.apiUrl;
 
   constructor(
       private http: HttpClient,

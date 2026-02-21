@@ -7,3 +7,4 @@ export * from './lib/storage/tenant-context.storage';
 export * from './lib/guards/jwt-auth.guard';
 export * from './lib/decorators/public.decorator';
 export * from './lib/middleware/csrf.middleware';
+export * from './lib/services/secret-manager.service';

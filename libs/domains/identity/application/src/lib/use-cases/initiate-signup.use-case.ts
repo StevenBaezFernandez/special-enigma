@@ -37,6 +37,6 @@ export class InitiateSignupUseCase {
 
     await this.cachePort.set(`signup:${dto.email}`, payload, 600);
 
-    console.log(`[MOCK EMAIL] Sending OTP ${otp} to ${dto.email}`);
+    await this.notificationService.sendOtp(dto.email, otp);
   }
 }

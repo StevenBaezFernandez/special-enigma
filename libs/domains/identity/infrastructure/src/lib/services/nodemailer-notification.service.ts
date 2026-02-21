@@ -64,4 +64,23 @@ export class NodemailerNotificationService implements NotificationService {
       html: htmlContent,
     });
   }
+
+  async sendOtp(email: string, otp: string): Promise<void> {
+    this.logger.log(`Queueing OTP email for ${email}`);
+
+    const htmlContent = `
+        <h1>Virteex Verification</h1>
+        <p>Your verification code is:</p>
+        <p style="font-size: 2em; font-weight: bold; letter-spacing: 5px; background-color: #f0f0f0; padding: 10px; display: inline-block;">${otp}</p>
+        <p>This code will expire in 10 minutes.</p>
+    `;
+    const textContent = `Your Virteex verification code is: ${otp}`;
+
+    await this.mailQueueProducer.addEmailJob({
+      to: email,
+      subject: 'Verify your email - Virteex',
+      text: textContent,
+      html: htmlContent,
+    });
+  }
 }

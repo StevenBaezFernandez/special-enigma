@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SyncService } from './core/services/sync.service';
 
 @Component({
   imports: [RouterModule],
@@ -9,4 +10,5 @@ import { RouterModule } from '@angular/router';
 })
 export class App {
   protected title = 'virteex-mobile';
+  private syncService = inject(SyncService);
 }

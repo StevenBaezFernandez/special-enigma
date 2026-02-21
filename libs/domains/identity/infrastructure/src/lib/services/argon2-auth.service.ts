@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { authenticator } from '@otplib/preset-default';
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2';
+import { SecretManagerService } from '@virteex/auth';
 
 interface JwtPayload {
   [key: string]: unknown;
@@ -15,10 +16,10 @@ export class Argon2AuthService implements AuthService {
   private readonly encryptionKey: Buffer;
   private readonly algorithm = 'aes-256-gcm';
 
-  constructor() {
-    this.secret = process.env['JWT_SECRET'] || '';
+  constructor(private secretManager: SecretManagerService) {
+    this.secret = this.secretManager.getJwtSecret();
     if (!this.secret) {
-      throw new Error('JWT_SECRET is not defined in environment variables.');
+      throw new Error('JWT_SECRET is not defined in secret manager.');
     }
     const mfaKey = process.env['MFA_ENCRYPTION_KEY'] || this.secret;
     const salt = process.env['ENCRYPTION_SALT'] || 'virteex-secure-salt';
@@ -50,11 +51,17 @@ export class Argon2AuthService implements AuthService {
   }
 
   async verifyToken(token: string): Promise<any> {
-    try {
-      return jwt.verify(token, this.secret);
-    } catch (error) {
-      throw new UnauthorizedException('Invalid or expired token');
+    const secrets = this.secretManager.getJwtVerificationSecrets();
+    for (const secret of secrets) {
+      try {
+        return jwt.verify(token, secret);
+      } catch (error: any) {
+        if (error.name === 'TokenExpiredError') {
+             throw new UnauthorizedException('Token expired');
+        }
+      }
     }
+    throw new UnauthorizedException('Invalid or expired token');
   }
 
   generateMfaSecret(): string {
