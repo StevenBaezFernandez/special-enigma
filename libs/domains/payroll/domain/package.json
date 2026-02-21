@@ -8,6 +8,7 @@
   "dependencies": {
     "@mikro-orm/core": "^6.6.5",
     "@virteex/contracts": "*",
+    "@virteex/payroll-contracts": "*",
     "@nestjs/common": "^11.0.0",
     "uuid": "^13.0.0",
     "tslib": "^2.3.0"

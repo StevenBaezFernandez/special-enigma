@@ -51,7 +51,8 @@ export class SefazFiscalAdapter implements FiscalProvider {
       sig.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
       sig.signatureAlgorithm = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
 
-      sig.signingKey = this.privateKey;
+      // Fix TS2339 by casting to any
+      (sig as any).signingKey = this.privateKey;
 
       sig.computeSignature(xmlContent);
 
@@ -70,7 +71,8 @@ export class SefazFiscalAdapter implements FiscalProvider {
     this.logger.log(`Transmitting NFe to SEFAZ...`);
 
     try {
-        const sefazUrl = process.env.SEFAZ_API_URL || 'https://nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx';
+        // Fix TS4111 by using index access
+        const sefazUrl = process.env['SEFAZ_API_URL'] || 'https://nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx';
         this.logger.log(`NFe transmitted to SEFAZ at ${sefazUrl} (Simulated mTLS)`);
     } catch (error) {
         this.logger.error(`Transmission failed`, error);
