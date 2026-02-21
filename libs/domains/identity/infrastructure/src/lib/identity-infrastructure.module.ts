@@ -26,7 +26,8 @@ import {
   LoginUserUseCase, VerifyMfaUseCase, StoragePort,
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
   ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase,
-  InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase
+  InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
+  UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase // Added
 } from '@virteex/identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
@@ -89,7 +90,9 @@ import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
     InviteUserUseCase,
     UploadAvatarUseCase,
     ListTenantsUseCase,
-    RefreshTokenUseCase
+    RefreshTokenUseCase,
+    UpdateSubscriptionUseCase,
+    GetSubscriptionStatusUseCase
   ],
   exports: [
     InitiateSignupUseCase,
@@ -104,6 +107,8 @@ import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
     UploadAvatarUseCase,
     ListTenantsUseCase,
     RefreshTokenUseCase,
+    UpdateSubscriptionUseCase,
+    GetSubscriptionStatusUseCase,
     StoragePort,
     UserRepository,
     CompanyRepository,
