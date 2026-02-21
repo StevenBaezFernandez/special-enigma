@@ -1,7 +1,7 @@
 {
   "name": "virteex-crm-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-crm-service/src",
+  "sourceRoot": "apps/backend/virteex-crm-service/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,7 +11,7 @@
         "args": [
           "--node-env=production"
         ],
-        "cwd": "apps/virteex-crm-service"
+        "cwd": "apps/backend/virteex-crm-service"
       },
       "configurations": {
         "development": {

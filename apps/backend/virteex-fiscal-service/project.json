@@ -1,7 +1,7 @@
 {
   "name": "virteex-fiscal-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-fiscal-service/src",
+  "sourceRoot": "apps/backend/virteex-fiscal-service/src",
   "projectType": "application",
   "tags": ["type:application", "platform:fiscal"],
   "targets": {
@@ -10,7 +10,7 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "apps/virteex-fiscal-service"
+        "cwd": "apps/backend/virteex-fiscal-service"
       },
       "configurations": {
         "development": {

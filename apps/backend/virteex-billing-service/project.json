@@ -1,7 +1,7 @@
 {
   "name": "virteex-billing-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-billing-service/src",
+  "sourceRoot": "apps/backend/virteex-billing-service/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,7 +11,7 @@
         "args": [
           "--node-env=production"
         ],
-        "cwd": "apps/virteex-billing-service"
+        "cwd": "apps/backend/virteex-billing-service"
       },
       "configurations": {
         "development": {

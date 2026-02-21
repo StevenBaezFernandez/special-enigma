@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "virteex",
-  "sourceRoot": "apps/virteex-ops/src",
+  "sourceRoot": "apps/backend/virteex-ops/src",
   "tags": [],
   "targets": {
     "build": {
@@ -11,16 +11,16 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/virteex-ops",
-        "browser": "apps/virteex-ops/src/main.ts",
-        "tsConfig": "apps/virteex-ops/tsconfig.app.json",
+        "browser": "apps/backend/virteex-ops/src/main.ts",
+        "tsConfig": "apps/backend/virteex-ops/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/virteex-ops/public"
+            "input": "apps/backend/virteex-ops/public"
           }
         ],
-        "styles": ["apps/virteex-ops/src/styles.scss"]
+        "styles": ["apps/backend/virteex-ops/src/styles.scss"]
       },
       "configurations": {
         "production": {

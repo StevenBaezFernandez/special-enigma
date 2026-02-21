@@ -460,6 +460,12 @@
       "@virteex/shared-infrastructure-storage/*": [
         "libs/shared/infrastructure/storage/src/*"
       ],
+      "@virteex/shared/infrastructure/cache": [
+        "libs/shared/infrastructure/cache/src/index.ts"
+      ],
+      "@virteex/shared/infrastructure/cache/*": [
+        "libs/shared/infrastructure/cache/src/*"
+      ],
       "@virteex/finops": ["libs/kernel/finops/src/index.ts"],
       "@virteex/finops/*": ["libs/kernel/finops/src/*"],
       "@virteex/shared-infrastructure-xslt": [

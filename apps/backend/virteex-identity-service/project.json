@@ -1,7 +1,7 @@
 {
   "name": "virteex-identity-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-identity-service/src",
+  "sourceRoot": "apps/backend/virteex-identity-service/src",
   "projectType": "application",
   "tags": ["type:application", "platform:identity"],
   "targets": {
@@ -10,7 +10,7 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "apps/virteex-identity-service"
+        "cwd": "apps/backend/virteex-identity-service"
       },
       "configurations": {
         "development": {

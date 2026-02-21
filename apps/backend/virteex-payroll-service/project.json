@@ -1,7 +1,7 @@
 {
   "name": "virteex-payroll-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-payroll-service/src",
+  "sourceRoot": "apps/backend/virteex-payroll-service/src",
   "projectType": "application",
   "tags": [
     "type:app",
@@ -18,12 +18,12 @@
         "target": "node",
         "compiler": "tsc",
         "outputPath": "dist/apps/virteex-payroll-service",
-        "main": "apps/virteex-payroll-service/src/main.ts",
-        "tsConfig": "apps/virteex-payroll-service/tsconfig.app.json",
+        "main": "apps/backend/virteex-payroll-service/src/main.ts",
+        "tsConfig": "apps/backend/virteex-payroll-service/tsconfig.app.json",
         "assets": [
-          "apps/virteex-payroll-service/src/assets"
+          "apps/backend/virteex-payroll-service/src/assets"
         ],
-        "webpackConfig": "apps/virteex-payroll-service/webpack.config.js"
+        "webpackConfig": "apps/backend/virteex-payroll-service/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -33,8 +33,8 @@
           "inspect": false,
           "fileReplacements": [
             {
-              "replace": "apps/virteex-payroll-service/src/environments/environment.ts",
-              "with": "apps/virteex-payroll-service/src/environments/environment.prod.ts"
+              "replace": "apps/backend/virteex-payroll-service/src/environments/environment.ts",
+              "with": "apps/backend/virteex-payroll-service/src/environments/environment.prod.ts"
             }
           ]
         }

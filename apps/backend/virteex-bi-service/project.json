@@ -1,7 +1,7 @@
 {
   "name": "virteex-bi-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-bi-service/src",
+  "sourceRoot": "apps/backend/virteex-bi-service/src",
   "projectType": "application",
   "tags": [
     "type:app",
@@ -18,12 +18,12 @@
         "target": "node",
         "compiler": "tsc",
         "outputPath": "dist/apps/virteex-bi-service",
-        "main": "apps/virteex-bi-service/src/main.ts",
-        "tsConfig": "apps/virteex-bi-service/tsconfig.app.json",
+        "main": "apps/backend/virteex-bi-service/src/main.ts",
+        "tsConfig": "apps/backend/virteex-bi-service/tsconfig.app.json",
         "assets": [
-          "apps/virteex-bi-service/src/assets"
+          "apps/backend/virteex-bi-service/src/assets"
         ],
-        "webpackConfig": "apps/virteex-bi-service/webpack.config.js"
+        "webpackConfig": "apps/backend/virteex-bi-service/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -33,8 +33,8 @@
           "inspect": false,
           "fileReplacements": [
             {
-              "replace": "apps/virteex-bi-service/src/environments/environment.ts",
-              "with": "apps/virteex-bi-service/src/environments/environment.prod.ts"
+              "replace": "apps/backend/virteex-bi-service/src/environments/environment.ts",
+              "with": "apps/backend/virteex-bi-service/src/environments/environment.prod.ts"
             }
           ]
         }
