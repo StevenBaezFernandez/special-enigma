@@ -1,7 +1,7 @@
 {
   "name": "virteex-gateway",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-gateway/src",
+  "sourceRoot": "apps/gateways/virteex-gateway/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,7 +9,7 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "apps/virteex-gateway"
+        "cwd": "apps/gateways/virteex-gateway"
       },
       "configurations": {
         "development": {

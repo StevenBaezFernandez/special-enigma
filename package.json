@@ -106,6 +106,7 @@
     "@apollo/gateway": "^2.13.0",
     "@apollo/server": "^5.3.0",
     "@apollo/subgraph": "^2.13.0",
+    "@as-integrations/express5": "^1.1.2",
     "@aws-sdk/client-s3": "^3.989.0",
     "@capacitor/core": "^8.0.1",
     "@ionic/angular": "^8.7.17",
