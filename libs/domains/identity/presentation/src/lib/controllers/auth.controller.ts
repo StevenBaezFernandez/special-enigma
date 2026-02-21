@@ -7,7 +7,7 @@ import {
   InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto
 } from '@virteex/identity-application';
 import { Request, Response } from 'express';
-import { Public } from '@virteex/auth';
+import { Public, JwtAuthGuard } from '@virteex/auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as geoip from 'geoip-lite';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
@@ -16,7 +16,7 @@ import { SessionGuard } from '../guards/session.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
-@UseGuards(ThrottlerGuard, SessionGuard)
+@UseGuards(ThrottlerGuard, JwtAuthGuard, SessionGuard)
 export class AuthController {
   constructor(
     private readonly loginUserUseCase: LoginUserUseCase,

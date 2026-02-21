@@ -1,9 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { API_URL } from '@virteex/shared-config';
+import { SessionService } from '@virteex/shared-util-auth';
 
 @Component({
   selector: 'virteex-mobile-login',
@@ -15,6 +17,9 @@ export class LoginPage {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
   private router = inject(Router);
+  private sessionService = inject(SessionService);
+
+  constructor(@Inject(API_URL) private apiUrl: string) {}
 
   isLoading = false;
   errorMessage: string | null = null;
@@ -31,14 +36,15 @@ export class LoginPage {
 
       try {
         const { email, password } = this.loginForm.value;
-        // Real implementation: Call Identity Service via Gateway
-        // const response = await firstValueFrom(this.http.post<{ token: string }>('/api/auth/login', { email, password }));
 
-        // Simulate successful login for now as we don't have the full gateway locally reachable in this env without more setup
-        // In a real scenario, we would store the JWT
-        // localStorage.setItem('token', response.token);
+        // Real implementation: Call Identity Service via Gateway/API
+        // This sets the HttpOnly cookie for the session
+        await firstValueFrom(this.http.post(`${this.apiUrl}/auth/login`, { email, password, rememberMe: true }));
 
-        console.log('Login attempt for:', email);
+        // Refresh session state in the client
+        this.sessionService.login();
+
+        console.log('Login successful for:', email);
 
         // Determine offline/online status to show capabilities
         if (!navigator.onLine) {
