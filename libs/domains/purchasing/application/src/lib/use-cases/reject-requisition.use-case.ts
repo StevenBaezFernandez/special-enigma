@@ -18,7 +18,7 @@ export class RejectRequisitionUseCase {
       throw new UnauthorizedException('Access denied');
     }
 
-    requisition.status = 'REJECTED';
+    requisition.status = 'Rejected';
 
     await this.requisitionRepository.save(requisition);
   }

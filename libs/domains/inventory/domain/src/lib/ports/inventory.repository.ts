@@ -4,6 +4,7 @@ import { Stock } from '../entities/stock.entity';
 export interface InventoryRepository {
   saveMovement(movement: InventoryMovement): Promise<void>;
   findStock(warehouseId: string, productId: string, locationId?: string): Promise<Stock | null>;
+  findStockWithBatches(warehouseId: string, productId: string, locationId?: string): Promise<Stock | null>;
   saveStock(stock: Stock): Promise<void>;
   saveBatch(stocks: Stock[], movements: InventoryMovement[]): Promise<void>;
 }

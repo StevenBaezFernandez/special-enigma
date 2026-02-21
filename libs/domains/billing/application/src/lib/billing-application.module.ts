@@ -11,10 +11,9 @@ import { GetPaymentMethodUseCase } from './use-cases/get-payment-method.use-case
 import { ProcessPaymentUseCase } from './use-cases/process-payment.use-case';
 import { BillingDomainModule } from '@virteex/billing-domain';
 import { BillingInfrastructureModule } from '@virteex/billing-infrastructure';
-import { forwardRef } from '@nestjs/common';
 
 @Module({
-  imports: [BillingDomainModule, forwardRef(() => BillingInfrastructureModule)],
+  imports: [BillingDomainModule, BillingInfrastructureModule],
   providers: [
     CreateInvoiceUseCase,
     GetInvoicesUseCase,
