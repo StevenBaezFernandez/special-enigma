@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CreateSupplierUseCase } from './use-cases/create-supplier.use-case';
 import { CreatePurchaseOrderUseCase } from './use-cases/create-purchase-order.use-case';
 import { CreateRequisitionUseCase } from './use-cases/create-requisition.use-case';
@@ -12,7 +12,7 @@ import { PurchasingInfrastructureModule } from '../../../infrastructure/src/inde
 
 @Module({
   imports: [
-      forwardRef(() => PurchasingInfrastructureModule) // Use forwardRef to resolve circular dependency
+      PurchasingInfrastructureModule
   ],
   providers: [
     CreateSupplierUseCase,

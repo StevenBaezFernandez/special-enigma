@@ -18,7 +18,7 @@ export class ApproveRequisitionUseCase {
       throw new UnauthorizedException('Access denied');
     }
 
-    requisition.status = 'APPROVED';
+    requisition.status = 'Approved';
     // Ideally, we would emit an event here (e.g., requisition.approved)
 
     await this.requisitionRepository.save(requisition);

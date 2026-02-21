@@ -25,6 +25,16 @@ export class MikroOrmInventoryRepository implements InventoryRepository {
     return this.em.findOne(Stock, where);
   }
 
+  async findStockWithBatches(warehouseId: string, productId: string, locationId?: string): Promise<Stock | null> {
+    const where: any = { warehouse: warehouseId, productId };
+    if (locationId) {
+      where.location = locationId;
+    } else {
+      where.location = null;
+    }
+    return this.em.findOne(Stock, where, { populate: ['batches'] });
+  }
+
   async saveStock(stock: Stock): Promise<void> {
     await this.em.persist(stock);
     await this.em.flush();

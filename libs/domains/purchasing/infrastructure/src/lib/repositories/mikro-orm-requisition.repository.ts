@@ -13,4 +13,8 @@ export class MikroOrmRequisitionRepository implements RequisitionRepository {
   async findAll(tenantId: string): Promise<Requisition[]> {
     return this.em.find(Requisition, { tenantId });
   }
+
+  async findById(id: string): Promise<Requisition | null> {
+    return this.em.findOne(Requisition, { id });
+  }
 }
