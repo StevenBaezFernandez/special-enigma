@@ -39,7 +39,15 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      const payload = jwt.verify(token, secret);
+      // P1: Enforce strict audience and issuer validation if configured
+      const audience = this.configService.get<string>('JWT_AUDIENCE');
+      const issuer = this.configService.get<string>('JWT_ISSUER');
+
+      const verifyOptions: jwt.VerifyOptions = {};
+      if (audience) verifyOptions.audience = audience;
+      if (issuer) verifyOptions.issuer = issuer;
+
+      const payload = jwt.verify(token, secret, verifyOptions);
       request.user = payload;
       return true;
     } catch (err) {

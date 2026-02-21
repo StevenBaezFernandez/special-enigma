@@ -1,5 +1,6 @@
 export * from './lib/services/session.service';
 export * from './lib/services/token.service';
+export * from './lib/services/storage/secure-storage.service';
 export * from './lib/guards/auth.guard';
 export * from './lib/interceptors/auth.interceptor';
 
