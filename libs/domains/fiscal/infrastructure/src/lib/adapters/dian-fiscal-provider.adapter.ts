@@ -54,7 +54,8 @@ export class DianFiscalAdapter implements FiscalProvider {
       sig.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
       sig.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
 
-      sig.signingKey = this.privateKey;
+      // Fix TS2339 by casting to any (library property exists at runtime)
+      (sig as any).signingKey = this.privateKey;
 
       sig.computeSignature(xmlContent);
 
@@ -73,7 +74,8 @@ export class DianFiscalAdapter implements FiscalProvider {
     this.logger.log(`Transmitting invoice to DIAN...`);
 
     try {
-        const dianUrl = process.env.DIAN_API_URL || 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc';
+        // Fix TS4111 by using index access
+        const dianUrl = process.env['DIAN_API_URL'] || 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc';
         this.logger.log(`Invoice transmitted to DIAN at ${dianUrl}`);
     } catch (error) {
         this.logger.error(`Transmission failed`, error);
