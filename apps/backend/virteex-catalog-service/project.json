@@ -1,7 +1,7 @@
 {
   "name": "virteex-catalog-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-catalog-service/src",
+  "sourceRoot": "apps/backend/virteex-catalog-service/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,7 +9,7 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "apps/virteex-catalog-service"
+        "cwd": "apps/backend/virteex-catalog-service"
       },
       "configurations": {
         "development": {

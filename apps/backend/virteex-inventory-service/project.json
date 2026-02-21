@@ -1,7 +1,7 @@
 {
   "name": "virteex-inventory-service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-inventory-service/src",
+  "sourceRoot": "apps/backend/virteex-inventory-service/src",
   "projectType": "application",
   "tags": ["type:app", "domain:inventory"],
   "targets": {
@@ -10,7 +10,7 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "apps/virteex-inventory-service"
+        "cwd": "apps/backend/virteex-inventory-service"
       },
       "configurations": {
         "development": {

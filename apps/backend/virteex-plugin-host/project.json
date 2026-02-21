@@ -1,7 +1,7 @@
 {
   "name": "virteex-plugin-host",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-plugin-host/src",
+  "sourceRoot": "apps/backend/virteex-plugin-host/src",
   "projectType": "application",
   "prefix": "virteex",
   "tags": ["platform:plugin-host"],
@@ -15,9 +15,9 @@
         "outputPath": "dist/apps/virteex-plugin-host",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/virteex-plugin-host/src/main.ts",
-        "tsConfig": "apps/virteex-plugin-host/tsconfig.app.json",
-        "assets": ["apps/virteex-plugin-host/src/assets"],
+        "main": "apps/backend/virteex-plugin-host/src/main.ts",
+        "tsConfig": "apps/backend/virteex-plugin-host/tsconfig.app.json",
+        "assets": ["apps/backend/virteex-plugin-host/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,

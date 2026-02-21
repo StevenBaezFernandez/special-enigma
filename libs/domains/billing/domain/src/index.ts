@@ -10,6 +10,7 @@ export * from './lib/services/tax-calculator.service';
 export * from './lib/services/tax-rule.engine';
 export * from './lib/services/fiscal-stamping.service';
 export * from './lib/strategies/tax-strategy.interface';
+export * from './lib/strategies/tax-strategy.factory';
 
 export * from './lib/ports/pac-provider.port';
 export * from './lib/ports/invoice.repository';

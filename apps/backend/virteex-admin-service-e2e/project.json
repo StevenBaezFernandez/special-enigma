@@ -12,7 +12,7 @@
         "{workspaceRoot}/coverage/{e2eProjectRoot}"
       ],
       "options": {
-        "jestConfig": "apps/virteex-admin-service-e2e/jest.config.cts",
+        "jestConfig": "apps/backend/virteex-admin-service-e2e/jest.config.cts",
         "passWithNoTests": true
       },
       "dependsOn": [

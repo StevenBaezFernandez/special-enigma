@@ -11,6 +11,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { BillingPresentationModule } from '@virteex/billing-presentation';
 import { BillingInfrastructureModule } from '@virteex/billing-infrastructure';
+import { BillingApplicationModule } from '@virteex/billing-application';
 import { InitialSeederService } from './seeds/initial-seeder.service';
 import { BillingResolver } from './billing.resolver';
 
@@ -68,6 +69,7 @@ import { BillingResolver } from './billing.resolver';
     }),
     BillingInfrastructureModule,
     BillingPresentationModule,
+    BillingApplicationModule,
   ],
   providers: [InitialSeederService, BillingResolver],
 })

@@ -1,79 +1,32 @@
-import json
 import os
+import glob
 
-services = [
-    "accounting",
-    "payroll",
-    "projects",
-    "manufacturing",
-    "treasury",
-    "purchasing",
-    "bi",
-    "admin",
-    "fixed-assets"
-]
+def fix_project_json():
+    # Find all project.json files in apps/backend
+    files = glob.glob('apps/backend/*/project.json')
 
-for service in services:
-    app_name = f"virteex-{service}-service"
-    project_json_path = f"apps/{app_name}/project.json"
+    for filepath in files:
+        print(f"Processing {filepath}...")
+        with open(filepath, 'r') as f:
+            content = f.read()
 
-    if not os.path.exists(project_json_path):
-        print(f"Skipping {app_name}, file not found.")
-        continue
+        # Replace 'apps/virteex-' with 'apps/backend/virteex-'
+        # But avoid double replacement if 'apps/backend/virteex-' already exists
+        # A simple way is to replace 'apps/virteex-' and then fix any 'apps/backend/backend/virteex-' if that happens?
+        # No, better to be precise.
 
-    with open(project_json_path, "r") as f:
-        data = json.load(f)
+        # We can just replace "apps/virteex-" with "apps/backend/virteex-"
+        # and then verify.
 
-    # Standard build config
-    build_config = {
-        "executor": "@nx/webpack:webpack",
-        "outputs": ["{options.outputPath}"],
-        "defaultConfiguration": "production",
-        "options": {
-            "target": "node",
-            "compiler": "tsc",
-            "outputPath": f"dist/apps/{app_name}",
-            "main": f"apps/{app_name}/src/main.ts",
-            "tsConfig": f"apps/{app_name}/tsconfig.app.json",
-            "assets": [f"apps/{app_name}/src/assets"],
-            "webpackConfig": f"apps/{app_name}/webpack.config.js"
-        },
-        "configurations": {
-            "development": {},
-            "production": {
-                "optimization": True,
-                "extractLicenses": True,
-                "inspect": False,
-                "fileReplacements": [
-                    {
-                        "replace": f"apps/{app_name}/src/environments/environment.ts",
-                        "with": f"apps/{app_name}/src/environments/environment.prod.ts"
-                    }
-                ]
-            }
-        }
-    }
+        new_content = content.replace('"apps/virteex-', '"apps/backend/virteex-')
+        new_content = new_content.replace('"cwd": "apps/virteex-', '"cwd": "apps/backend/virteex-')
 
-    data["targets"]["build"] = build_config
+        if content != new_content:
+            print(f"  Fixing {filepath}")
+            with open(filepath, 'w') as f:
+                f.write(new_content)
+        else:
+            print(f"  No changes needed for {filepath}")
 
-    # Also update serve config to rely on build correctly
-    data["targets"]["serve"] = {
-        "executor": "@nx/js:node",
-        "defaultConfiguration": "development",
-        "options": {
-            "buildTarget": f"{app_name}:build"
-        },
-        "configurations": {
-            "development": {
-                "buildTarget": f"{app_name}:build:development"
-            },
-            "production": {
-                "buildTarget": f"{app_name}:build:production"
-            }
-        }
-    }
-
-    with open(project_json_path, "w") as f:
-        json.dump(data, f, indent=2)
-
-    print(f"Updated {app_name}/project.json")
+if __name__ == "__main__":
+    fix_project_json()

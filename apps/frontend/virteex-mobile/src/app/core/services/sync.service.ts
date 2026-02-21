@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { StorageService } from './storage.service';
 
 export interface SyncItem {
   id: string;
@@ -25,7 +26,7 @@ export class SyncService {
   private isProcessing = false;
   private readonly STORAGE_KEY = 'virteex_sync_queue_v2';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private storage: StorageService) {
     this.loadQueue();
     this.setupListeners();
   }
@@ -109,20 +110,15 @@ export class SyncService {
     this.saveQueue(updated);
   }
 
-  private loadQueue() {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
+  private async loadQueue() {
+    const stored = await this.storage.get<SyncItem[]>(this.STORAGE_KEY);
     if (stored) {
-      try {
-        this.queue.set(JSON.parse(stored));
-      } catch (e) {
-        console.error('Failed to parse sync queue', e);
-        this.queue.set([]);
-      }
+      this.queue.set(stored);
     }
   }
 
-  private saveQueue(queue: SyncItem[]) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(queue));
+  private async saveQueue(queue: SyncItem[]) {
+      await this.storage.set(this.STORAGE_KEY, queue);
   }
 
   private async processQueue() {

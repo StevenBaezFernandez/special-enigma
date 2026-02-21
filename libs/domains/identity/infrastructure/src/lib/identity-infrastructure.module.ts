@@ -41,7 +41,6 @@ import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
     MikroOrmModule.forFeature([User, Company, AuditLog, Session, JobTitle]),
     SharedInfrastructureStorageModule,
     RedisCacheModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const url = configService.get<string>('REDIS_URL');
