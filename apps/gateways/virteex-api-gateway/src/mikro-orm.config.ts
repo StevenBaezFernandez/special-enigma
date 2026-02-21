@@ -30,8 +30,8 @@ const config: Options = {
   entities: ['./libs/domains/**/domain/src/lib/entities/*.entity.ts'],
   entitiesTs: ['./libs/domains/**/domain/src/lib/entities/*.entity.ts'],
   migrations: {
-    path: './apps/virteex-api-gateway/src/migrations',
-    pathTs: './apps/virteex-api-gateway/src/migrations',
+    path: './apps/gateways/virteex-api-gateway/src/migrations',
+    pathTs: './apps/gateways/virteex-api-gateway/src/migrations',
     disableForeignKeys: false,
   },
 };

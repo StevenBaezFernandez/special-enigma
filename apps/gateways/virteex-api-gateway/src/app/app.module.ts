@@ -12,6 +12,8 @@ import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/auth';
 import { TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/tenant';
 import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
 import { AuditModule } from '@virteex/audit';
+import { InventoryPresentationModule } from '@virteex/inventory-presentation';
+import { AccountingPresentationModule } from '@virteex/accounting-presentation';
 import { AppController } from './app.controller';
 import { HealthController } from './health.controller';
 import { AppService } from './app.service';
@@ -26,6 +28,8 @@ import { createServiceProxy } from './middleware/proxy.middleware';
 
 @Module({
   imports: [
+    InventoryPresentationModule,
+    AccountingPresentationModule,
     TerminusModule,
     EventEmitterModule.forRoot(),
     KafkaModule.forRoot({
@@ -100,12 +104,12 @@ export class AppModule implements NestModule {
       .forRoutes('*');
 
     // Proxy Routes for Microservices
-    consumer.apply(createServiceProxy('http://virteex-accounting-service:3000')).forRoutes('accounting');
+    // consumer.apply(createServiceProxy('http://virteex-accounting-service:3000')).forRoutes('accounting'); // Running in-process
     // consumer.apply(createServiceProxy('http://virteex-payroll-service:3000')).forRoutes('payroll'); // Migrated to GraphQL Federation
     consumer.apply(createServiceProxy('http://virteex-crm-service:3000')).forRoutes('crm');
     consumer.apply(createServiceProxy('http://virteex-projects-service:3000')).forRoutes('projects');
     consumer.apply(createServiceProxy('http://virteex-manufacturing-service:3000')).forRoutes('manufacturing');
-    consumer.apply(createServiceProxy('http://virteex-inventory-service:3000')).forRoutes('inventory');
+    // consumer.apply(createServiceProxy('http://virteex-inventory-service:3000')).forRoutes('inventory'); // Running in-process
 
     // Proxy for GraphQL Gateway
     // Assuming virteex-gateway runs on port 3000 and has global prefix 'api', exposing GraphQL at '/api/graphql'

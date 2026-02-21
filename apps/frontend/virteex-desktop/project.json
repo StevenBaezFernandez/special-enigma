@@ -1,7 +1,7 @@
 {
   "name": "virteex-desktop",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/virteex-desktop/src",
+  "sourceRoot": "apps/frontend/virteex-desktop/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -10,11 +10,11 @@
         "{options.outputPath}"
       ],
       "options": {
-        "outputPath": "dist/apps/virteex-desktop",
-        "main": "apps/virteex-desktop/src/main.ts",
-        "tsConfig": "apps/virteex-desktop/tsconfig.app.json",
+        "outputPath": "dist/apps/frontend/virteex-desktop",
+        "main": "apps/frontend/virteex-desktop/src/main.ts",
+        "tsConfig": "apps/frontend/virteex-desktop/tsconfig.app.json",
         "assets": [
-          "apps/virteex-desktop/src/assets"
+          "apps/frontend/virteex-desktop/src/assets"
         ]
       },
       "configurations": {
@@ -24,8 +24,8 @@
           "inspect": false,
           "fileReplacements": [
             {
-              "replace": "apps/virteex-desktop/src/environments/environment.ts",
-              "with": "apps/virteex-desktop/src/environments/environment.prod.ts"
+              "replace": "apps/frontend/virteex-desktop/src/environments/environment.ts",
+              "with": "apps/frontend/virteex-desktop/src/environments/environment.prod.ts"
             }
           ]
         }
@@ -57,7 +57,7 @@
       }
     },
     "lint": {
-      "command": "eslint apps/virteex-desktop/**/*.ts"
+      "command": "eslint apps/frontend/virteex-desktop/**/*.ts"
     }
   },
   "prefix": "virteex"
