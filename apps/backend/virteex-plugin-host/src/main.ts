@@ -106,7 +106,7 @@ server.post('/execute', async (request, reply) => {
   }
 
   // 2. Execution in Sandbox
-  const result = await sandbox.run(codeToRun);
+  const result = await sandbox.run(codeToRun, admission.signature);
 
   if (!result.success) {
     return reply.send({

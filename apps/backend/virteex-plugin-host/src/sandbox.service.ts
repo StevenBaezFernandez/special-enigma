@@ -2,6 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as ivm from 'isolated-vm';
 import { Worker } from 'worker_threads';
 import * as path from 'path';
+import * as crypto from 'crypto';
+import { PluginAdmissionService } from './services/plugin-admission.service';
 
 export interface SandboxResult {
   success: boolean;
@@ -79,6 +81,7 @@ export class SandboxService {
 
   async run(
     code: string,
+    signature?: string,
     timeout = this.DEFAULT_TIMEOUT_MS,
   ): Promise<SandboxResult> {
     let isolate: ivm.Isolate | null = null;
@@ -88,6 +91,17 @@ export class SandboxService {
     const start = Date.now();
 
     try {
+      // 1. Verify Signature (Security Requirement)
+      if (!this.verifyCodeSignature(code, signature)) {
+          this.logger.error('Signature verification failed for plugin execution attempt.');
+          return {
+              success: false,
+              logs: [],
+              error: 'Security Error: Invalid or missing digital signature.',
+              executionTimeMs: 0
+          };
+      }
+
       // Create a fresh isolate for every execution (Strict Isolation)
       isolate = new ivm.Isolate({
         memoryLimit: this.MEMORY_LIMIT_MB,
@@ -142,5 +156,28 @@ export class SandboxService {
       if (context) context.release();
       if (isolate && !isolate.isDisposed) isolate.dispose();
     }
+  }
+
+  private verifyCodeSignature(code: string, signature?: string): boolean {
+      if (!signature) {
+          this.logger.warn('No signature provided for execution.');
+          return false;
+      }
+
+      const publicKey = PluginAdmissionService.publicKey;
+      if (!publicKey) {
+          this.logger.error('No public key available for verification.');
+          return false;
+      }
+
+      try {
+          const verify = crypto.createVerify('SHA256');
+          verify.update(code);
+          verify.end();
+          return verify.verify(publicKey, signature, 'hex');
+      } catch (e) {
+          this.logger.error('Signature verification error', e);
+          return false;
+      }
   }
 }

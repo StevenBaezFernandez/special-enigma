@@ -3,20 +3,18 @@ import { FiscalProvider } from '../../../../domain/src/lib/ports/fiscal-provider
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { SignedXml } from 'xml-crypto';
-// @ts-ignore
-import { DOMParser } from '@xmldom/xmldom';
 import * as crypto from 'crypto';
 
 @Injectable()
-export class DianFiscalAdapter implements FiscalProvider {
-  private readonly logger = new Logger(DianFiscalAdapter.name);
+export class SefazFiscalAdapter implements FiscalProvider {
+  private readonly logger = new Logger(SefazFiscalAdapter.name);
   private privateKey: string;
 
   constructor(private readonly httpService: HttpService) {
       if (process.env['FISCAL_PRIVATE_KEY']) {
           this.privateKey = process.env['FISCAL_PRIVATE_KEY'];
       } else {
-          this.logger.warn('FISCAL_PRIVATE_KEY not provided. Generating ephemeral RSA key for simulation.');
+          this.logger.warn('FISCAL_PRIVATE_KEY not provided. Generating ephemeral RSA key for simulation (SEFAZ).');
           const { privateKey } = crypto.generateKeyPairSync('rsa', {
               modulusLength: 2048,
               publicKeyEncoding: { type: 'spki', format: 'pem' },
@@ -27,13 +25,12 @@ export class DianFiscalAdapter implements FiscalProvider {
   }
 
   async validateInvoice(invoice: any): Promise<boolean> {
-    this.logger.log(`Validating invoice ${invoice?.id} with DIAN (Robust Integration)...`);
-    // Validation logic (e.g., schema validation)
+    this.logger.log(`Validating invoice ${invoice?.id} with SEFAZ (Brazil)...`);
     return true;
   }
 
   async signInvoice(invoice: any): Promise<string> {
-    this.logger.log(`Signing invoice ${invoice?.id || 'UNKNOWN'} with DIAN Digital Certificate (XAdES-EPES)...`);
+    this.logger.log(`Signing invoice ${invoice?.id || 'UNKNOWN'} with SEFAZ Digital Certificate (A1/A3)...`);
 
     try {
       let xmlContent = '';
@@ -41,18 +38,18 @@ export class DianFiscalAdapter implements FiscalProvider {
           xmlContent = invoice;
       } else {
           this.logger.warn('Received object in signInvoice, expecting XML string. Using fallback wrapper.');
-          xmlContent = `<Invoice><ID>${invoice?.id || 'TEST'}</ID></Invoice>`;
+          xmlContent = `<NFe><infNFe Id="NFe${invoice?.id || 'TEST'}"></infNFe></NFe>`;
       }
 
       const sig = new SignedXml();
 
       sig.addReference({
-          xpath: "//*[local-name(.)='Invoice']",
+          xpath: "//*[local-name(.)='infNFe']",
           transforms: ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']
       });
 
       sig.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
-      sig.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+      sig.signatureAlgorithm = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
 
       sig.signingKey = this.privateKey;
 
@@ -60,21 +57,21 @@ export class DianFiscalAdapter implements FiscalProvider {
 
       const signedXml = sig.getSignedXml();
 
-      this.logger.log(`Invoice signed successfully.`);
+      this.logger.log(`NFe signed successfully.`);
       return signedXml;
 
     } catch (error: any) {
-      this.logger.error(`Failed to sign invoice: ${error.message}`, error.stack);
+      this.logger.error(`Failed to sign NFe: ${error.message}`, error.stack);
       throw new Error(`Signing failed: ${error.message}`);
     }
   }
 
   async transmitInvoice(invoice: any): Promise<void> {
-    this.logger.log(`Transmitting invoice to DIAN...`);
+    this.logger.log(`Transmitting NFe to SEFAZ...`);
 
     try {
-        const dianUrl = process.env.DIAN_API_URL || 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc';
-        this.logger.log(`Invoice transmitted to DIAN at ${dianUrl}`);
+        const sefazUrl = process.env.SEFAZ_API_URL || 'https://nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx';
+        this.logger.log(`NFe transmitted to SEFAZ at ${sefazUrl} (Simulated mTLS)`);
     } catch (error) {
         this.logger.error(`Transmission failed`, error);
         throw error;

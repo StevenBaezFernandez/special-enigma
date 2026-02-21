@@ -2,6 +2,8 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
+import { DatabaseService } from './database.service';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface SyncItem {
   id: string;
@@ -22,13 +24,22 @@ export type ConflictStrategy = 'serverWins' | 'clientWins' | 'manual';
 })
 export class SyncService {
   private queue = signal<SyncItem[]>([]);
-  private isOnline = signal<boolean>(navigator.onLine);
+  public isOnline = signal<boolean>(navigator.onLine);
   private isProcessing = false;
   private readonly STORAGE_KEY = 'virteex_sync_queue_v2';
+  private readonly API_URL = 'http://localhost:3333/api'; // Should be env var
 
-  constructor(private http: HttpClient, private storage: StorageService) {
+  constructor(
+      private http: HttpClient,
+      private storage: StorageService,
+      private database: DatabaseService
+  ) {
     this.loadQueue();
     this.setupListeners();
+    // Initial DownSync check if online
+    if (this.isOnline()) {
+        this.downSync();
+    }
   }
 
   get queueItems() {
@@ -46,7 +57,7 @@ export class SyncService {
         if (e.status === 0 || e.status >= 500) {
             console.warn('Network/Server request failed, queueing for retry', e);
             this.addToQueue({
-                id: crypto.randomUUID(),
+                id: uuidv4(),
                 url,
                 method,
                 payload,
@@ -68,7 +79,7 @@ export class SyncService {
       }
     } else {
       this.addToQueue({
-          id: crypto.randomUUID(),
+          id: uuidv4(),
           url,
           method,
           payload,
@@ -78,6 +89,28 @@ export class SyncService {
       });
       return { offline: true, message: 'Request queued (offline)' };
     }
+  }
+
+  async downSync() {
+      if (!this.isOnline()) return;
+
+      console.log('Starting Down-Sync (Replication)...');
+      try {
+          // 1. Fetch Warehouses
+          // Use absolute URL or relative if proxy configured. Assuming absolute for mobile.
+          const warehouses = await firstValueFrom(this.http.get<any[]>(`${this.API_URL}/inventory/warehouses`));
+
+          // 2. Save to SQLite
+          if (warehouses && Array.isArray(warehouses)) {
+              await this.database.upsertWarehouses(warehouses);
+              console.log(`Down-Sync: ${warehouses.length} warehouses replicated.`);
+          }
+
+          // Add Products sync here similarly...
+
+      } catch (e) {
+          console.error('Down-Sync failed', e);
+      }
   }
 
   private handleConflict(strategy: ConflictStrategy, method: string, url: string, payload: any, error: any) {
@@ -99,6 +132,7 @@ export class SyncService {
     window.addEventListener('online', () => {
       this.isOnline.set(true);
       this.processQueue();
+      this.downSync();
     });
     window.addEventListener('offline', () => this.isOnline.set(false));
   }

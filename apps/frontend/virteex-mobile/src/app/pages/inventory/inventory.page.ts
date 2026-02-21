@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ViewDidEnter, RefresherEventDetail } from '@ionic/angular';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { DatabaseService } from '../../core/services/database.service';
+import { SyncService } from '../../core/services/sync.service';
 
 @Component({
   selector: 'app-inventory',
@@ -11,7 +11,7 @@ import { firstValueFrom } from 'rxjs';
   template: `
     <ion-header>
       <ion-toolbar>
-        <ion-title>Inventario</ion-title>
+        <ion-title>Inventario (Offline First)</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -29,33 +29,53 @@ import { firstValueFrom } from 'rxjs';
         </ion-item>
 
         <div *ngIf="warehouses.length === 0" class="ion-text-center ion-padding">
-           <p>No se encontraron almacenes.</p>
+           <p>No se encontraron almacenes localmente.</p>
+           <p *ngIf="isOnline()">Desliza para sincronizar.</p>
+           <p *ngIf="!isOnline()">Sin conexión.</p>
         </div>
       </ion-list>
     </ion-content>
   `
 })
 export class InventoryPage implements ViewDidEnter {
-  private http = inject(HttpClient);
+  private database = inject(DatabaseService);
+  private sync = inject(SyncService);
+
   warehouses: any[] = [];
 
-  // TODO: Use Env injection token
-  private apiUrl = 'http://localhost:3333/api';
+  // Expose signal for template
+  get isOnline() {
+      return this.sync.isOnline;
+  }
 
   async ionViewDidEnter() {
+    // Ensure DB is initialized
+    if (!this.database.isReady()) {
+        await this.database.init();
+    }
     await this.loadData();
   }
 
   async loadData() {
     try {
-      this.warehouses = await firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/inventory/warehouses`));
+      this.warehouses = await this.database.getWarehouses();
+
+      // If empty and online, try auto-sync once (implicit)
+      if (this.warehouses.length === 0 && this.sync.isOnline()) {
+           console.log('Local DB empty, triggering auto down-sync...');
+           await this.sync.downSync();
+           this.warehouses = await this.database.getWarehouses();
+      }
     } catch (e) {
-      console.error('Failed to load warehouses', e);
+      console.error('Failed to load warehouses from DB', e);
     }
   }
 
   async refresh(event: CustomEvent<RefresherEventDetail>) {
-    await this.loadData();
+    if (this.sync.isOnline()) {
+        await this.sync.downSync();
+        await this.loadData();
+    }
     event.detail.complete();
   }
 }
