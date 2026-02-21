@@ -4,26 +4,32 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TokenService {
-  // We no longer store tokens in LocalStorage for security (HttpOnly Cookies are used)
+  // Access Token is stored in memory for security (XSS protection vs LocalStorage)
+  // Refresh Token is stored in HttpOnly Cookie (handled by browser)
+  private accessToken: string | null = null;
 
-  setTokens(accessToken: string, refreshToken?: string): void {
-    // No-op
+  setAccessToken(token: string): void {
+    this.accessToken = token;
   }
 
   getAccessToken(): string | null {
-    return null;
+    return this.accessToken;
+  }
+
+  // Legacy/Shim methods to maintain compatibility if called elsewhere
+  setTokens(accessToken: string, refreshToken?: string): void {
+    this.setAccessToken(accessToken);
   }
 
   getRefreshToken(): string | null {
-    return null;
+    return null; // Not accessible to JS
   }
 
   clearTokens(): void {
-    // No-op
+    this.accessToken = null;
   }
 
   hasAccessToken(): boolean {
-    // We assume true if we have a session, but really we rely on API calls now
-    return false;
+    return !!this.accessToken;
   }
 }
