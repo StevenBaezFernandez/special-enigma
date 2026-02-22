@@ -29,28 +29,21 @@ export class StripeWebhookController {
 
   @Post()
   async handleWebhook(@Headers('stripe-signature') signature: string, @Req() req: any) {
-    if (!signature || !this.endpointSecret) {
-       this.logger.warn('Missing stripe signature or secret');
-       // Don't throw if testing locally without webhook secret, just warn.
-       // But for production, this should block.
+    if (!signature) {
+       throw new BadRequestException('Missing stripe-signature header');
+    }
+    if (!this.endpointSecret) {
+       this.logger.error('Stripe webhook secret is not configured');
+       throw new BadRequestException('Webhook secret not configured');
     }
 
     let event: Stripe.Event;
 
     try {
-      const payload = req.rawBody || req.body;
-
-      if (req.rawBody && this.endpointSecret) {
-          event = this.stripe.webhooks.constructEvent(req.rawBody, signature, this.endpointSecret);
-      } else {
-          // Fallback for local testing or if rawBody is missing
-          if (!this.endpointSecret) {
-             this.logger.warn('No webhook secret configured, skipping signature verification.');
-          } else {
-             this.logger.warn('Raw body not found, skipping signature verification (INSECURE).');
-          }
-          event = req.body as Stripe.Event;
+      if (!req.rawBody) {
+        throw new Error('Raw body not available on request. Ensure raw body parsing is enabled.');
       }
+      event = this.stripe.webhooks.constructEvent(req.rawBody, signature, this.endpointSecret);
     } catch (err: any) {
       this.logger.error(`Webhook signature verification failed: ${err.message}`);
       throw new BadRequestException(`Webhook Error: ${err.message}`);
@@ -63,6 +56,9 @@ export class StripeWebhookController {
     switch (event.type) {
       case 'invoice.payment_succeeded':
         await this.handlePaymentSucceeded(event.data.object as any);
+        break;
+      case 'invoice.payment_failed':
+        await this.handlePaymentFailed(event.data.object as any);
         break;
       case 'customer.subscription.deleted':
         await this.handleSubscriptionDeleted(event.data.object as any);
@@ -136,6 +132,18 @@ export class StripeWebhookController {
           subscription.status = SubscriptionStatus.ACTIVE;
           await this.subscriptionRepository.save(subscription);
       }
+    }
+  }
+
+  private async handlePaymentFailed(invoice: any) {
+    if (!invoice.subscription) return;
+    const subId = typeof invoice.subscription === 'string' ? invoice.subscription : invoice.subscription.id;
+
+    const subscription = await this.subscriptionRepository.findByStripeId(subId);
+    if (subscription) {
+      subscription.status = SubscriptionStatus.PAST_DUE;
+      await this.subscriptionRepository.save(subscription);
+      this.logger.warn(`Subscription ${subId} payment failed. Status set to PAST_DUE.`);
     }
   }
 

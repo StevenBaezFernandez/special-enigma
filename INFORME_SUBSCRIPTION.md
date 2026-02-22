@@ -1,106 +1,89 @@
-# Informe de Auditoría del Módulo de Suscripciones (Subscription & Billing)
+# Informe de Auditoría del Módulo de Subscription
 
-**Fecha:** 2025-05-24
-**Autor:** Jules (AI Software Engineer)
-**Alcance:** Frontend (Angular) y Backend (NestJS/MikroORM)
+**Fecha:** 24 de Mayo de 2025
+**Auditor:** Jules (AI Software Engineer)
+**Alcance:** Frontend (`apps/frontend/virteex-web`, `libs/domains/billing/ui`) y Backend (`libs/domains/subscription`)
+
+---
 
 ## 1. Resumen Ejecutivo
 
-El módulo de suscripciones se encuentra en un estado **incipiente e incompleto**. Si bien la arquitectura base (Modular Monolith con DDD) es sólida, la implementación actual es superficial. El backend simula la creación de suscripciones sin integrarse realmente con una pasarela de pagos (Stripe) para cobros recurrentes, y el frontend intenta comunicarse con endpoints que no existen.
+El módulo de suscripción presenta una base arquitectónica sólida siguiendo principios de Domain-Driven Design (DDD) y utilizando tecnologías modernas (NestJS en backend, Angular con Signals en frontend). Sin embargo, la implementación actual contiene **vulnerabilidades de seguridad críticas**, lógica de negocio incompleta (especialmente en actualizaciones de planes) y carencias en el manejo de robustez y errores que impiden que esté listo para producción.
 
-**Estado General:** 🔴 Crítico / Inutilizable en producción.
-**Porcentaje de Avance Estimado:** ~25%
+**Calificación General:** 5/10
+**Nivel de Completitud:** 60%
 
 ---
 
 ## 2. Análisis Detallado
 
-### 2.1 Arquitectura y Diseño
-El proyecto sigue una arquitectura limpia (Clean Architecture) con separación clara de capas:
--   `Domain`: Entidades puras (`Subscription`).
--   `Application`: Casos de uso (`CreateSubscriptionUseCase`).
--   `Infrastructure`: Adaptadores (Repositorios).
--   `Presentation`: Controladores (`SubscriptionController`).
+### 🛡️ Seguridad (Calificación: 4/10)
 
-**Puntos Fuertes:**
--   La estructura de carpetas y módulos es correcta y escalable.
--   Uso de MikroORM para persistencia.
+*   **Vulnerabilidad Crítica de Autorización:** El controlador `SubscriptionController` no tiene `Guard`s (`@UseGuards`) aplicados a nivel de clase o método. Cualquiera puede acceder a los endpoints si conoce la URL.
+*   **Suplantación de Tenant:** El método `create` permite pasar un `tenantId` en el cuerpo (`dto.tenantId`) que sobrescribe el `tenantId` obtenido del decorador `@CurrentTenant()`. Esto permite a un usuario malintencionado crear suscripciones para otros tenants.
+    *   *Código afectado:* `dto.tenantId = tenantId || dto.tenantId || 'default-tenant';`
+*   **Manejo de Secretos:**
+    *   El adaptador de Stripe (`StripeSubscriptionAdapter`) utiliza un valor por defecto (`'sk_test_placeholder'`) si no encuentra la variable de entorno. Esto es peligroso si se despliega sin configuración.
+    *   Las variables `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY` y `STRIPE_WEBHOOK_SECRET` no están documentadas en `.env.example`.
+*   **Validación de Webhooks:** El controlador de webhooks tiene una ruta de escape insegura que omite la verificación de firma si no hay secreto configurado (`if (!this.endpointSecret) ...`), lo cual no debería permitirse en entornos productivos.
 
-**Puntos Débiles:**
--   Fragmentación confusa entre los dominios `billing` y `subscription`. La lógica de pagos está en `billing`, pero las suscripciones en `subscription`. El frontend de suscripciones (`BillingPage`) vive en `billing`, lo cual rompe la cohesión del dominio `subscription`.
+### ⚙️ Robustez (Calificación: 5/10)
 
-### 2.2 Backend (Lógica y Seguridad)
-El backend presenta deficiencias críticas para un sistema de cobros real:
+*   **Lógica de Actualización Destructiva:** El caso de uso `CreateSubscriptionUseCase` cancela la suscripción existente (`cancelSubscription`) antes de crear una nueva al cambiar de plan. Esto es incorrecto para actualizaciones (upgrades/downgrades), ya que:
+    *   Se pierde el historial de facturación.
+    *   No se maneja el prorrateo correctamente (Stripe lo hace automáticamente si se usa `update`, pero aquí se destruye y crea de nuevo).
+    *   Puede generar cobros duplicados o ciclos de facturación extraños.
+*   **Manejo de Errores:**
+    *   El frontend (`BillingPage`) solo hace `console.error` en caso de fallos. No hay feedback visual para el usuario (toasts, alertas).
+    *   El backend no maneja casos como `invoice.payment_failed` en los webhooks, lo que significa que el sistema no reaccionará si un pago recurrente falla (el usuario seguirá teniendo acceso).
+*   **Dependencia de Datos:** El frontend asume que `subscription()` siempre traerá un `stripeCustomerId`. Si un usuario nuevo entra a la página de facturación sin haber pasado por un flujo de creación de cliente previo, las acciones fallarán silenciosamente o con errores de consola.
 
-1.  **Falsa Implementación de Suscripciones:**
-    -   El caso de uso `CreateSubscriptionUseCase` simplemente guarda un registro en la base de datos local.
-    -   **NO** llama a la API de Stripe para crear una suscripción (`stripe.subscriptions.create`).
-    -   Calcula la fecha de renovación (`nextBillingDate`) manualmente sumando 1 mes o 1 año, sin tener en cuenta la lógica de facturación real del proveedor.
+### 🏗️ Arquitectura y Buenas Prácticas (Calificación: 8/10)
 
-2.  **Falta de Webhooks:**
-    -   No se encontró evidencia de manejo de Webhooks de Stripe (`stripe-webhook.controller` o similar).
-    -   Sin webhooks, el sistema no se enterará si un pago falla, si una tarjeta expira o si el usuario cancela la suscripción desde el panel de Stripe.
+*   **Backend (NestJS + DDD):** La estructura es excelente. Separación clara entre `Infrastructure` (Adapter, Repository), `Application` (Use Cases), `Domain` (Entities) y `Presentation` (Controllers).
+*   **Frontend (Angular):** Uso moderno de **Signals** (`toSignal`, `signal`, `effect`) y componentes `standalone`. La estrategia `OnPush` mejora el rendimiento.
+*   **Código Limpio:** El código es legible, tipado (aunque con algunos `any` en las respuestas de Stripe) y modular.
 
-3.  **Seguridad (Vulnerabilidades):**
-    -   **IDOR (Insecure Direct Object References):** Los controladores aceptan `tenantId` como query param sin validar si el usuario autenticado pertenece a ese tenant (e.g., `@Query('tenantId') tenantId: string`).
-    -   **Validación:** No se observaron validaciones robustas (e.g., `class-validator`) en los DTOs para evitar inyección de datos inválidos.
+### 📈 Escalabilidad (Calificación: 6/10)
 
-4.  **Endpoints Faltantes:**
-    -   El frontend llama a `/billing/checkout` y `/billing/portal`, pero estos endpoints **no existen** en `BillingController` ni en `SubscriptionController`.
+*   **Base de Datos:** Uso de MikroORM con entidades bien definidas.
+*   **Desacoplamiento:** El uso de puertos y adaptadores (`SubscriptionGateway`) permite cambiar Stripe por otro proveedor (ej. PayPal) con relativo poco esfuerzo.
+*   **Limitaciones:** La lógica de "cancelar y recrear" suscripciones no escalará bien con reglas de negocio complejas (descuentos, tiers, asientos).
 
-### 2.3 Frontend (UX e Integración)
-La interfaz de usuario está ubicada incorrectamente en `libs/domains/billing/ui` y presenta los siguientes problemas:
+### 🚀 Competitividad (Calificación: 4/10)
 
-1.  **Funcionalidad Rota:**
-    -   El método `upgradePlan` llama a `billingService.createCheckoutSession`, el cual apunta a una ruta inexistente del backend.
-    -   El método `manageSubscription` llama a `billingService.createPortalSession`, también inexistente.
+Para ser un módulo competitivo en el mercado SaaS actual, faltan características clave:
+*   **Manejo de Prorrateo:** Vital para upgrades a mitad de mes.
+*   **Facturación por Uso (Metered Billing):** Aunque hay interfaces de `UsageItem`, no se ve lógica de reporte de uso a Stripe.
+*   **Gestión de Métodos de Pago:** No hay UI ni lógica clara para actualizar tarjetas vencidas o cambiar método de pago por defecto desde la configuración.
+*   **Periodos de Prueba:** La lógica de `trial` es muy básica y mapea estados incorrectamente (`incomplete` -> `TRIAL`).
+*   **Facturas (Invoices):** No hay visualización ni descarga de facturas en PDF en el frontend (solo una lista básica en `PaymentHistory`).
 
-2.  **Manejo de Estado:**
-    -   Depende de propiedades como `stripeCustomerId` en la entidad `Subscription`, pero dicha entidad en el backend no tiene ese campo definido en su esquema (`subscription.entity.ts`).
+### 🔧 Infraestructura (Calificación: 6/10)
 
----
-
-## 3. Calificación por Puntos
-
-| Criterio | Calificación (1-10) | Justificación |
-| :--- | :---: | :--- |
-| **Seguridad** | 3/10 | Falta validación de acceso por Tenant (IDOR). No hay verificación de firmas de Webhooks (porque no existen). |
-| **Robustez** | 2/10 | El sistema se desincronizará inmediatamente de la realidad (Stripe) al no tener integración real ni webhooks. |
-| **Buenas Prácticas** | 8/10 | La estructura del código (DDD, Nx, Clean Arch) es excelente. El problema es la *falta* de código, no la calidad del código existente. |
-| **Escalabilidad** | 7/10 | La arquitectura base permite escalar bien, pero la falta de manejo de eventos asíncronos (Webhooks) sería un cuello de botella operativo. |
-| **Competitividad** | 1/10 | Faltan features estándar: Trials, Cupones, Prorrateo, Manejo de Impuestos, Facturas en PDF, Cancelación, Reactivación. |
-| **Infraestructura** | 6/10 | El uso de NestJS y Angular en un Monorepo Nx es moderno y sólido. La integración con Stripe es obsoleta (API de Charges vs PaymentIntents/Subscriptions). |
-| **Arquitectura** | 8/10 | Bien planteada, pero mal ejecutada en la integración entre módulos (`billing` vs `subscription`). |
+*   **Dependencias:** Versiones de librerías modernas (`stripe` v20+, `nestjs` v11).
+*   **Configuración:** Falta documentación de variables de entorno críticas en `.env.example`.
 
 ---
 
-## 4. Estado de Finalización (Gap Analysis)
+## 3. Plan de Acción Recomendado (Roadmap to 100%)
 
-**Falta para estar 100% terminado:**
+Para llevar este módulo al 100% y listo para producción, se recomiendan los siguientes pasos prioritarios:
 
-1.  **Integración Real con Stripe (Backend):**
-    -   Implementar `stripe.subscriptions.create` en `CreateSubscriptionUseCase`.
-    -   Implementar `stripe.billingPortal.sessions.create` para el portal de cliente.
-    -   Migrar de `stripe.charges` (Legacy) a `stripe.paymentIntents` o Stripe Checkout.
+1.  **Seguridad Inmediata:**
+    *   Implementar `Guards` de autenticación y roles en `SubscriptionController`.
+    *   Eliminar la posibilidad de inyectar `tenantId` desde el body en los controladores; usar estrictamente el token de usuario.
+    *   Forzar la verificación de firma de Webhooks en producción.
 
-2.  **Manejo de Webhooks (Backend - Crítico):**
-    -   Crear un endpoint para recibir eventos de Stripe (`invoice.payment_succeeded`, `customer.subscription.deleted`, etc.).
-    -   Sincronizar el estado local (`SubscriptionStatus`) con los eventos de Stripe.
+2.  **Refactorización de Lógica de Negocio:**
+    *   Reescribir `CreateSubscriptionUseCase` para distinguir entre *creación* y *actualización*. Usar `stripe.subscriptions.update` para cambios de plan.
+    *   Implementar manejo correcto de estados de suscripción (`past_due`, `unpaid`) en los webhooks para bloquear acceso.
 
-3.  **Corrección del Modelo de Datos:**
-    -   Agregar campos `stripeSubscriptionId`, `stripeCustomerId`, `currentPeriodEnd` a la entidad `Subscription`.
-    -   Relacionar `Subscription` con `User` o `Tenant` de forma segura.
+3.  **Mejoras en Frontend:**
+    *   Implementar manejo de errores visual (Notificaciones/Toasts).
+    *   Agregar gestión de métodos de pago (Agregar/Eliminar tarjeta).
+    *   Mostrar lista de facturas con enlace de descarga.
 
-4.  **Frontend:**
-    -   Mover la lógica de suscripción a `libs/domains/subscription/ui`.
-    -   Implementar manejo de errores real (no solo `console.error`).
-    -   Mostrar estado real de la suscripción (fecha de renovación, método de pago).
-
-5.  **Seguridad:**
-    -   Implementar Guards (`@UseGuards(AuthGuard)`) y Decoradores de Usuario (`@CurrentUser()`) para evitar enviar `tenantId` manualmente desde el frontend.
-
----
-
-## 5. Conclusión
-
-El módulo es un **esqueleto arquitectónico** más que una funcionalidad terminada. Se ha preparado el terreno (Estructura de carpetas, Clases base) pero la lógica de negocio vital para cobrar dinero y gestionar suscripciones está ausente o simulada. Se requiere un esfuerzo significativo de desarrollo backend para hacerlo funcional.
+4.  **DevOps & Config:**
+    *   Actualizar `.env.example` con las claves de Stripe.
+    *   Crear seeders o scripts de inicialización para planes de suscripción en la BD local.

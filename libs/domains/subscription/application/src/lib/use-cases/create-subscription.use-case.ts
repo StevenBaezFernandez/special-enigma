@@ -49,11 +49,17 @@ export class CreateSubscriptionUseCase {
       customerId = await this.subscriptionGateway.createCustomer(dto.email, dto.name, dto.paymentMethodId);
     }
 
-    if (subscription && subscription.stripeSubscriptionId && subscription.status === SubscriptionStatus.ACTIVE) {
-        await this.subscriptionGateway.cancelSubscription(subscription.stripeSubscriptionId);
-    }
+    let stripeSub;
 
-    const stripeSub = await this.subscriptionGateway.createSubscription(customerId, dto.price);
+    // Check if we should update or create
+    if (subscription && subscription.stripeSubscriptionId &&
+        (subscription.status === SubscriptionStatus.ACTIVE || subscription.status === SubscriptionStatus.TRIAL)) {
+        // Update existing subscription
+        stripeSub = await this.subscriptionGateway.updateSubscription(subscription.stripeSubscriptionId, dto.price);
+    } else {
+        // Create new subscription
+        stripeSub = await this.subscriptionGateway.createSubscription(customerId, dto.price);
+    }
 
     if (!subscription) {
         subscription = new Subscription(dto.tenantId, plan);

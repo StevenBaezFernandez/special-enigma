@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, UseGuards, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentTenant } from '@virteex/shared-util-server-config';
+import { JwtAuthGuard } from '@virteex/auth';
 import {
   CreateSubscriptionUseCase,
   CreateSubscriptionDto,
@@ -14,6 +15,7 @@ import {
 @ApiTags('Subscription')
 @Controller('subscription')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class SubscriptionController {
   constructor(
     private readonly createSubscriptionUseCase: CreateSubscriptionUseCase,
@@ -25,14 +27,22 @@ export class SubscriptionController {
   @Post()
   @ApiOperation({ summary: 'Create a subscription (Direct)' })
   async create(@Body() dto: CreateSubscriptionDto, @CurrentTenant() tenantId: string) {
-    dto.tenantId = tenantId || dto.tenantId || 'default-tenant';
+    // Only allow tenantId from token
+    if (!tenantId) {
+      throw new Error('Tenant ID is required from authentication token');
+    }
+    dto.tenantId = tenantId;
     return await this.createSubscriptionUseCase.execute(dto);
   }
 
   @Post('checkout')
   @ApiOperation({ summary: 'Create Stripe Checkout Session' })
   async createCheckout(@Body() dto: CreateCheckoutSessionDto, @CurrentTenant() tenantId: string) {
-    dto.tenantId = tenantId || dto.tenantId || 'default-tenant';
+    // Only allow tenantId from token
+    if (!tenantId) {
+      throw new Error('Tenant ID is required from authentication token');
+    }
+    dto.tenantId = tenantId;
     return { url: await this.createCheckoutSessionUseCase.execute(dto) };
   }
 

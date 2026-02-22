@@ -11,6 +11,10 @@ export class NotificationService {
     this.toastService.showSuccess(message);
   }
 
+  error(message: string): void {
+    this.toastService.showError(message);
+  }
+
   showError(message: string): void {
     this.toastService.showError(message);
   }

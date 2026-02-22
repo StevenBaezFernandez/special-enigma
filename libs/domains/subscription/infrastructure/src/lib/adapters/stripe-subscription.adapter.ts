@@ -58,6 +58,37 @@ export class StripeSubscriptionAdapter implements SubscriptionGateway {
     }
   }
 
+  async updateSubscription(subscriptionId: string, priceId: string): Promise<CreateSubscriptionResult> {
+    try {
+      const subscription = await this.stripe.subscriptions.retrieve(subscriptionId);
+      const itemId = subscription.items.data[0].id;
+
+      const updatedSubscription = await this.stripe.subscriptions.update(subscriptionId, {
+        items: [{
+          id: itemId,
+          price: priceId,
+        }],
+        proration_behavior: 'always_invoice',
+        payment_behavior: 'default_incomplete',
+        expand: ['latest_invoice.payment_intent'],
+      });
+
+      const invoice = updatedSubscription.latest_invoice as any;
+      const paymentIntent = invoice?.payment_intent as any;
+
+      return {
+        subscriptionId: updatedSubscription.id,
+        customerId: updatedSubscription.customer as string,
+        clientSecret: paymentIntent?.client_secret || '',
+        status: updatedSubscription.status,
+        currentPeriodEnd: new Date((updatedSubscription as any).current_period_end * 1000),
+      };
+    } catch (error: any) {
+      this.logger.error('Failed to update Stripe subscription', error);
+      throw new Error(`Stripe Update Error: ${error.message}`);
+    }
+  }
+
   async cancelSubscription(subscriptionId: string): Promise<void> {
     try {
       await this.stripe.subscriptions.cancel(subscriptionId);

@@ -5,10 +5,10 @@ import {
   CreateInvoiceUseCase,
   CreateInvoiceDto,
   GetInvoicesUseCase,
-  GetSubscriptionPlansUseCase,
   GetPaymentHistoryUseCase,
   GetUsageUseCase
 } from '../../../../application/src/index';
+import { GetSubscriptionPlansUseCase } from '@virteex/subscription-application';
 
 @ApiTags('Billing')
 @Controller('billing')
