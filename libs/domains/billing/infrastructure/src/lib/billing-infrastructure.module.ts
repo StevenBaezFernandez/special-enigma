@@ -3,8 +3,6 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
   Invoice,
   InvoiceItem,
-  Subscription,
-  SubscriptionPlan,
   TaxLine,
   TaxRule,
   PAC_PROVIDER,
@@ -12,8 +10,6 @@ import {
   TENANT_CONFIG_REPOSITORY,
   PaymentMethod,
   INVOICE_REPOSITORY,
-  SUBSCRIPTION_REPOSITORY,
-  SUBSCRIPTION_PLAN_REPOSITORY,
   PAYMENT_METHOD_REPOSITORY,
   PRODUCT_REPOSITORY,
   CUSTOMER_REPOSITORY,
@@ -35,8 +31,6 @@ import { BrTaxStrategy } from './strategies/br-tax.strategy';
 import { UsTaxStrategy } from './strategies/us-tax.strategy';
 
 import { MikroOrmInvoiceRepository } from './repositories/mikro-orm-invoice.repository';
-import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscription.repository';
-import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';
 import { MikroOrmPaymentMethodRepository } from './repositories/mikro-orm-payment-method.repository';
 import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
 import { LocalProductRepository } from './repositories/local-product.repository';
@@ -55,8 +49,6 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
     MikroOrmModule.forFeature([
       Invoice,
       InvoiceItem,
-      Subscription,
-      SubscriptionPlan,
       PaymentMethod,
       TaxLine,
       TaxRule,
@@ -68,14 +60,6 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
     {
       provide: INVOICE_REPOSITORY,
       useClass: MikroOrmInvoiceRepository
-    },
-    {
-      provide: SUBSCRIPTION_REPOSITORY,
-      useClass: MikroOrmSubscriptionRepository
-    },
-    {
-      provide: SUBSCRIPTION_PLAN_REPOSITORY,
-      useClass: MikroOrmSubscriptionPlanRepository
     },
     {
       provide: PAYMENT_METHOD_REPOSITORY,
@@ -123,8 +107,6 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
   ],
   exports: [
     INVOICE_REPOSITORY,
-    SUBSCRIPTION_REPOSITORY,
-    SUBSCRIPTION_PLAN_REPOSITORY,
     PAYMENT_METHOD_REPOSITORY,
     PRODUCT_REPOSITORY,
     CUSTOMER_REPOSITORY,

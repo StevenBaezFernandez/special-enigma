@@ -91,6 +91,30 @@
       "@virteex/billing-infrastructure/*": [
         "libs/domains/billing/infrastructure/src/*"
       ],
+      "@virteex/subscription-domain": [
+        "libs/domains/subscription/domain/src/index.ts"
+      ],
+      "@virteex/subscription-domain/*": [
+        "libs/domains/subscription/domain/src/*"
+      ],
+      "@virteex/subscription-application": [
+        "libs/domains/subscription/application/src/index.ts"
+      ],
+      "@virteex/subscription-application/*": [
+        "libs/domains/subscription/application/src/*"
+      ],
+      "@virteex/subscription-infrastructure": [
+        "libs/domains/subscription/infrastructure/src/index.ts"
+      ],
+      "@virteex/subscription-infrastructure/*": [
+        "libs/domains/subscription/infrastructure/src/*"
+      ],
+      "@virteex/subscription-presentation": [
+        "libs/domains/subscription/presentation/src/index.ts"
+      ],
+      "@virteex/subscription-presentation/*": [
+        "libs/domains/subscription/presentation/src/*"
+      ],
       "@virteex/shared-validators": ["libs/shared/validators/src/index.ts"],
       "@virteex/shared-validators/*": ["libs/shared/validators/src/*"],
       "@virteex/accounting-domain": [

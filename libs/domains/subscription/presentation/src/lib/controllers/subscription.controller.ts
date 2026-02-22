@@ -4,10 +4,10 @@ import {
   CreateSubscriptionUseCase,
   CreateSubscriptionDto,
   GetSubscriptionUseCase
-} from '../../../../application/src/index';
+} from '@virteex/subscription-application';
 
-@ApiTags('Billing')
-@Controller('billing/subscription')
+@ApiTags('Subscription')
+@Controller('subscription')
 export class SubscriptionController {
   constructor(
     private readonly createSubscriptionUseCase: CreateSubscriptionUseCase,

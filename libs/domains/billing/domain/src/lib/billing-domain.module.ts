@@ -6,11 +6,10 @@ import { FiscalStampingService } from './services/fiscal-stamping.service';
 import { TaxRule } from './entities/tax-rule.entity';
 import { Invoice } from './entities/invoice.entity';
 import { TaxLine } from './entities/tax-line.entity';
-import { SubscriptionPlan } from './entities/subscription-plan.entity';
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature([Invoice, TaxLine, TaxRule, SubscriptionPlan])
+    MikroOrmModule.forFeature([Invoice, TaxLine, TaxRule])
   ],
   providers: [
     TaxCalculatorService,

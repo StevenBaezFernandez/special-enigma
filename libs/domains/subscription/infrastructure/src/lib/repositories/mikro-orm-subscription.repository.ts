@@ -1,6 +1,6 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { Subscription, SubscriptionRepository } from '@virteex/billing-domain';
+import { Subscription, SubscriptionRepository } from '@virteex/subscription-domain';
 
 export class MikroOrmSubscriptionRepository implements SubscriptionRepository {
   constructor(

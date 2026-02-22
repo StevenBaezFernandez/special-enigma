@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { BillingController } from './controllers/billing.controller';
-import { SubscriptionController } from './controllers/subscription.controller';
 import { PaymentMethodController } from './controllers/payment-method.controller';
 import { PaymentController } from './controllers/payment.controller';
 import {
@@ -12,7 +11,6 @@ import { BillingInfrastructureModule } from '../../../infrastructure/src/index';
   imports: [BillingApplicationModule, BillingInfrastructureModule],
   controllers: [
     BillingController,
-    SubscriptionController,
     PaymentMethodController,
     PaymentController
   ]

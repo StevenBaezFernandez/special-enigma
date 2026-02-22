@@ -5,7 +5,7 @@ import {
   SUBSCRIPTION_REPOSITORY,
   SubscriptionPlanRepository,
   SUBSCRIPTION_PLAN_REPOSITORY
-} from '@virteex/billing-domain';
+} from '@virteex/subscription-domain';
 
 export interface CreateSubscriptionDto {
   tenantId: string;
