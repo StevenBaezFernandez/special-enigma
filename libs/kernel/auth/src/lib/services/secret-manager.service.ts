@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as fs from 'fs';
 
 @Injectable()
 export class SecretManagerService {
@@ -8,12 +9,12 @@ export class SecretManagerService {
   private previousSecrets: string[] = [];
 
   constructor(private readonly configService: ConfigService) {
-    const secret = this.configService.get<string>('JWT_SECRET');
-    if (!secret) {
-        // Critical security check
-        throw new Error('JWT_SECRET must be defined in environment variables. Application cannot start securely.');
+    try {
+        this.currentSecret = this.loadSecret('JWT_SECRET');
+    } catch (e: any) {
+        this.logger.error(e.message);
+        throw e;
     }
-    this.currentSecret = secret;
 
     const rotation = this.configService.get<string>('JWT_SECRET_ROTATION');
     if (rotation) {
@@ -33,5 +34,26 @@ export class SecretManagerService {
   async rotateSecret(): Promise<void> {
       // Logic to fetch new secret from Vault
       this.logger.log('Rotating secrets...');
+  }
+
+  private loadSecret(key: string): string {
+    // 1. Try file (e.g. Docker Secret)
+    const filePath = this.configService.get<string>(`${key}_FILE`);
+    if (filePath && fs.existsSync(filePath)) {
+        try {
+            return fs.readFileSync(filePath, 'utf8').trim();
+        } catch (e: any) {
+            this.logger.error(`Failed to read secret from file ${filePath}: ${e.message}`);
+        }
+    }
+
+    // 2. Try Env Var
+    const envSecret = this.configService.get<string>(key);
+    if (envSecret) {
+        return envSecret;
+    }
+
+    // 3. Fail secure
+    throw new Error(`${key} must be defined in environment variables (or via _FILE suffix). Application cannot start securely.`);
   }
 }

@@ -48,6 +48,7 @@ export class AuthController {
     // Return Access Token (but not Refresh Token) in body
     return {
         accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
         expiresIn: result.expiresIn,
         mfaRequired: false,
         user: (result as any).user
@@ -83,6 +84,7 @@ export class AuthController {
 
       return {
           accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
           expiresIn: result.expiresIn,
           user: result.user
       };
@@ -103,6 +105,7 @@ export class AuthController {
 
     return {
         accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
         expiresIn: result.expiresIn,
         user: (result as any).user
     };
@@ -112,9 +115,14 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const refreshToken = req.cookies['refresh_token'];
+    let refreshToken = req.cookies['refresh_token'];
+
+    if (!refreshToken && req.body && req.body.refreshToken) {
+        refreshToken = req.body.refreshToken;
+    }
+
     if (!refreshToken) {
-        throw new UnauthorizedException('No refresh token found in cookies');
+        throw new UnauthorizedException('No refresh token found in cookies or body');
     }
 
     const context = {
@@ -129,6 +137,7 @@ export class AuthController {
 
     return {
         accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
         expiresIn: result.expiresIn
     };
   }

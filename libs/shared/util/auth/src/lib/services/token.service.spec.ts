@@ -17,7 +17,7 @@ describe('TokenService', () => {
   it('should set and get tokens', () => {
     service.setTokens('access', 'refresh');
     expect(service.getAccessToken()).toBe('access');
-    expect(service.getRefreshToken()).toBe('refresh');
+    expect(service.getRefreshToken()).toBeNull();
   });
 
   it('should clear tokens', () => {

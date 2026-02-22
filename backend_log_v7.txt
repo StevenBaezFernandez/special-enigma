@@ -1,0 +1,3073 @@
+
+ NX   Running target serve for project virteex-identity-service and 9 tasks it depends on:
+
+
+
+> nx run identity-domain:build  [existing outputs match the cache, left as is]
+
+
+> nx run telemetry:build  [existing outputs match the cache, left as is]
+
+
+> nx run shared-infrastructure-storage:build  [existing outputs match the cache, left as is]
+
+
+> nx run auth:build  [existing outputs match the cache, left as is]
+
+
+> nx run tenant:build  [existing outputs match the cache, left as is]
+
+
+> nx run identity-application:build  [existing outputs match the cache, left as is]
+
+
+> nx run identity-infrastructure:build  [existing outputs match the cache, left as is]
+
+
+> nx run identity-presentation:build  [existing outputs match the cache, left as is]
+
+
+> nx run virteex-identity-service:build  [local cache]
+
+> webpack-cli build --node-env=production
+
+webpack compiled [1m[32msuccessfully[39m[22m (ff1ab56e146873e5)
+
+> nx run virteex-identity-service:serve:development
+
+[1m[33mNX Daemon is not running. Node process will not restart automatically after file changes.[39m[22m
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project virteex-identity-service and [1m8[22m tasks it depends on:[39m
+[2m> [22m[2mnx run[22m identity-domain:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m telemetry:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m shared-infrastructure-storage:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m tenant:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-application:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-infrastructure:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m identity-presentation:build  [2m[existing outputs match the cache, left as is][22m
+[2m> [22m[2mnx run[22m virteex-identity-service:build:development  [2m[local cache][22m
+[2m> [22mwebpack-cli build --node-env=development
+webpack compiled [1m[32msuccessfully[39m[22m (ff1ab56e146873e5)
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project virteex-identity-service and [1m8[22m tasks it depends on[39m
+[2mNx read the output from the cache instead of running the command for 9 out of 9 tasks.[22m
+[1m[31mDebugger listening on ws://localhost:9229/c073c39d-8c60-4908-8f13-e8a963c83d12[39m[22m
+[1m[31mDebugger listening on ws://localhost:9229/c073c39d-8c60-4908-8f13-e8a963c83d12[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[1m[31mSupport for driver specific imports in modules defined with `useFactory` and `inject` requires an explicit `driver` option. See https://github.com/mikro-orm/nestjs/pull/204[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mEventEmitterModule dependencies initialized[39m[38;5;3m +43ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTelemetryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mThrottlerModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mEventEmitterModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSharedInfrastructureStorageModule dependencies initialized[39m[38;5;3m +119ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRedisCacheModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mGraphQLSchemaBuilderModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mGraphQLModule dependencies initialized[39m[38;5;3m +1ms[39m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMikroOrmCoreModule dependencies initialized[39m[38;5;3m +18ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMikroOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTenantModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mIdentityInfrastructureModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mIdentityPresentationModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+[33m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [33m   WARN[39m [38;5;3m[LegacyRouteConverter] [39m[33mUnsupported route path: "/api/*". In previous versions, the symbols ?, *, and + were used to denote optional or repeating path parameters. The latest version of "path-to-regexp" now requires the use of named parameters. For example, instead of using a route like /users/* to capture all routes starting with "/users", you should use /users/*path. For more details, refer to the migration guide. Attempting to auto-convert...[39m
+[33m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [33m   WARN[39m [38;5;3m[LegacyRouteConverter] [39m[33mUnsupported route path: "/api/*". In previous versions, the symbols ?, *, and + were used to denote optional or repeating path parameters. The latest version of "path-to-regexp" now requires the use of named parameters. For example, instead of using a route like /users/* to capture all routes starting with "/users", you should use /users/*path. For more details, refer to the migration guide. Attempting to auto-convert...[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/api}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/api/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/login, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/signup/initiate, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/signup/verify, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/signup/complete, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/verify-mfa, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/refresh, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/logout, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/location, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/api/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/job-titles, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/profile, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/profile, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/invite, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/avatar, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTenantController {/api/admin/tenants}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/tenants, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSubscriptionController {/api/subscription}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/subscription/upgrade, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/subscription/status, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[TelemetryService] [39m[32mTelemetry SDK started[39m
+Enabling inline tracing for this subgraph. To disable, use ApolloServerPluginInlineTraceDisabled.
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[GraphQLModule] [39m[32mMapped {/graphql, POST} route[39m[38;5;3m +183ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +8ms[39m
+[32m[Nest] 28778  - [39m02/22/2026, 3:59:38 AM [32m    LOG[39m [32m🚀 Application is running on: http://localhost:3000/api[39m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:38 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:39 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:39 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:39 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:39 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:39 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:39 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:40 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:40 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:40 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:40 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:41 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:41 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:41 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:41 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:42 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:42 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:42 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:42 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:43 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:43 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:44 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:44 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:45 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:45 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:45 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:45 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:46 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:46 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:47 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:47 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:48 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:48 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:49 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:49 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:50 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:50 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:52 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:52 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:53 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:53 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:54 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:54 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:55 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:55 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:57 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:57 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:58 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 3:59:58 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:00 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:00 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:01 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:01 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:03 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:03 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:04 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:04 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:06 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:06 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:08 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:08 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:09 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:09 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:11 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:11 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:13 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:13 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:15 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:15 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:17 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:17 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:19 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:19 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:21 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:21 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:23 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:23 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:25 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:25 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:27 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:27 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:29 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:29 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:31 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:31 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:33 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:33 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:35 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:35 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:37 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:37 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:39 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:39 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:41 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:41 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:43 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:43 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:45 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:45 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:47 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:47 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:49 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:49 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:51 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:51 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:53 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:53 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:55 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:55 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:57 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:57 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+[1m[31m[ioredis] Unhandled error event: AggregateError: [39m[22m
+[1m[31m    at internalConnectMultiple (node:net:1134:18)[39m[22m
+[1m[31m    at afterConnectMultiple (node:net:1715:7)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:59 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31m[31mRedis error:[39m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[31m[Nest] 28778  - [39m[31m02/22/2026, 4:00:59 AM [31m  ERROR[39m[31m [38;5;3m[TenantService] [39m[31mAggregateError: [39m[22m
+[1m[31m[90m    at internalConnectMultiple (node:net:1134:18)[39m[31m[39m[22m
+[1m[31m[90m    at afterConnectMultiple (node:net:1715:7)[39m[31m {[39m[22m
+[1m[31m  code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m  [errors]: [[39m[22m
+[1m[31m    Error: connect ECONNREFUSED ::1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'::1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    },[39m[22m
+[1m[31m    Error: connect ECONNREFUSED 127.0.0.1:6379[39m[22m
+[1m[31m    [90m    at createConnectionError (node:net:1678:14)[39m[31m[39m[22m
+[1m[31m    [90m    at afterConnectMultiple (node:net:1708:16)[39m[31m {[39m[22m
+[1m[31m      errno: [33m-111[39m[31m,[39m[22m
+[1m[31m      code: [32m'ECONNREFUSED'[39m[31m,[39m[22m
+[1m[31m      syscall: [32m'connect'[39m[31m,[39m[22m
+[1m[31m      address: [32m'127.0.0.1'[39m[31m,[39m[22m
+[1m[31m      port: [33m6379[39m[31m[39m[22m
+[1m[31m    }[39m[22m
+[1m[31m  ][39m[22m
+[1m[31m}[39m[22m
+[1m[31m[39m[22m
+Task "virteex-identity-service:serve:development" is continuous but exited with code 143

@@ -1,32 +1,33 @@
 import { Injectable } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
+import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SecureStorageService {
-  private memoryStorage: Map<string, string> = new Map();
-
   async set(key: string, value: string): Promise<void> {
-    if (this.isBrowser()) {
-      // BROWSER FALLBACK:
-      // In a real production PWA, this should use IndexedDB with Web Crypto API.
-      // For this audit remediation, we move away from localStorage to sessionStorage
-      // to reduce persistent XSS vector (cleared on tab close) and perform basic obfuscation.
-      // This is NOT encryption-at-rest but prevents casual token extraction via devtools.
-      // TODO: Implement Web Crypto API with non-exportable key.
+    if (Capacitor.isNativePlatform()) {
+      try {
+        await SecureStoragePlugin.set({ key, value });
+      } catch (error) {
+        console.error('SecureStorage set error', error);
+      }
+    } else {
       const encoded = btoa(value);
       sessionStorage.setItem(key, encoded);
-    } else {
-      // NATIVE MOBILE:
-      // This is where the @capacitor-community/secure-storage-sqlite plugin would be called.
-      // Due to sandbox limitations preventing plugin installation, this interface mimics the native behavior.
-      // In production build, this would map to: await SecureStoragePlugin.set({ key, value });
-      this.memoryStorage.set(key, value);
     }
   }
 
   async get(key: string): Promise<string | null> {
-    if (this.isBrowser()) {
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const { value } = await SecureStoragePlugin.get({ key });
+        return value;
+      } catch (error) {
+        return null;
+      }
+    } else {
       const encoded = sessionStorage.getItem(key);
       if (!encoded) return null;
       try {
@@ -34,28 +35,30 @@ export class SecureStorageService {
       } catch {
         return null;
       }
-    } else {
-      return this.memoryStorage.get(key) || null;
     }
   }
 
   async remove(key: string): Promise<void> {
-    if (this.isBrowser()) {
-      sessionStorage.removeItem(key);
+    if (Capacitor.isNativePlatform()) {
+        try {
+            await SecureStoragePlugin.remove({ key });
+        } catch (error) {
+            console.warn('SecureStorage remove error', error);
+        }
     } else {
-      this.memoryStorage.delete(key);
+      sessionStorage.removeItem(key);
     }
   }
 
   async clear(): Promise<void> {
-    if (this.isBrowser()) {
-      sessionStorage.clear();
+    if (Capacitor.isNativePlatform()) {
+        try {
+            await SecureStoragePlugin.clear();
+        } catch (error) {
+            console.warn('SecureStorage clear error', error);
+        }
     } else {
-      this.memoryStorage.clear();
+      sessionStorage.clear();
     }
-  }
-
-  private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined';
   }
 }
