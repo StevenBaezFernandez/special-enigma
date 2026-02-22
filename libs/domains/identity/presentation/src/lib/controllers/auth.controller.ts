@@ -45,13 +45,10 @@ export class AuthController {
 
     this.setCookies(res, result.accessToken!, result.refreshToken!, dto.rememberMe);
 
-    // Return Access Token (but not Refresh Token) in body
+    // Secure Response: No tokens in body
     return {
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
         expiresIn: result.expiresIn,
-        mfaRequired: false,
-        user: (result as any).user
+        mfaRequired: false
     };
   }
 
@@ -83,10 +80,7 @@ export class AuthController {
       this.setCookies(res, result.accessToken, result.refreshToken);
 
       return {
-          accessToken: result.accessToken,
-          refreshToken: result.refreshToken,
-          expiresIn: result.expiresIn,
-          user: result.user
+          expiresIn: result.expiresIn
       };
   }
 
@@ -104,10 +98,8 @@ export class AuthController {
     this.setCookies(res, result.accessToken!, result.refreshToken!);
 
     return {
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
         expiresIn: result.expiresIn,
-        user: (result as any).user
+        mfaRequired: false
     };
   }
 
@@ -136,8 +128,6 @@ export class AuthController {
     this.setCookies(res, result.accessToken!, result.refreshToken!);
 
     return {
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
         expiresIn: result.expiresIn
     };
   }

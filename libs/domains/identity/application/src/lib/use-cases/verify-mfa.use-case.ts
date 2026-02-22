@@ -2,9 +2,10 @@ import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { VerifyMfaDto } from '../dto/verify-mfa.dto';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import {
-  UserRepository, SessionRepository, Session, AuditLogRepository, AuditLog,
+  UserRepository, AuditLogRepository, AuditLog,
   AuthService
 } from '@virteex/identity-domain';
+import { TokenGenerationService } from '../services/token-generation.service';
 
 export interface VerifyMfaContext {
   ip: string;
@@ -16,8 +17,8 @@ export class VerifyMfaUseCase {
   constructor(
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     @Inject(AuthService) private readonly authService: AuthService,
-    @Inject(SessionRepository) private readonly sessionRepository: SessionRepository,
-    @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository
+    @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
+    @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService
   ) {}
 
   async execute(dto: VerifyMfaDto, context: VerifyMfaContext = { ip: 'unknown', userAgent: 'unknown' }): Promise<LoginResponseDto> {
@@ -53,31 +54,17 @@ export class VerifyMfaUseCase {
         throw new UnauthorizedException('Invalid verification code');
     }
 
-    // 3. Create Session
+    // 3. Create Session and Generate Tokens
     const riskScore = payload.riskScore || 0;
-    const expiresAt = new Date(Date.now() + 3600 * 1000); // 1 hour
-    const session = new Session(user, context.ip, context.userAgent, expiresAt, riskScore);
-    await this.sessionRepository.save(session);
 
-    // 4. Generate Full Tokens
-    const token = await this.authService.generateToken({
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-      companyId: user.company.id,
-      country: user.country,
-      sessionId: session.id
-      // No 'partial' flag
-    });
-
-    const refreshToken = `refresh-${session.id}`;
+    const { accessToken, refreshToken, expiresIn, session } = await this.tokenGenerationService.createSessionAndTokens(user, context, riskScore);
 
     await this.auditLogRepository.save(new AuditLog('MFA_SUCCESS', user.id, { ip: context.ip, sessionId: session.id }));
 
     return {
-      accessToken: token,
-      refreshToken: refreshToken,
-      expiresIn: 3600,
+      accessToken,
+      refreshToken,
+      expiresIn,
       mfaRequired: false
     };
   }

@@ -27,7 +27,8 @@ import {
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
   ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase,
   InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
-  UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase // Added
+  UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase, // Added
+  TokenGenerationService
 } from '@virteex/identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
@@ -94,7 +95,8 @@ import { AuthModule } from '@virteex/auth';
     ListTenantsUseCase,
     RefreshTokenUseCase,
     UpdateSubscriptionUseCase,
-    GetSubscriptionStatusUseCase
+    GetSubscriptionStatusUseCase,
+    TokenGenerationService
   ],
   exports: [
     InitiateSignupUseCase,
@@ -111,6 +113,7 @@ import { AuthModule } from '@virteex/auth';
     RefreshTokenUseCase,
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
+    TokenGenerationService,
     StoragePort,
     UserRepository,
     CompanyRepository,

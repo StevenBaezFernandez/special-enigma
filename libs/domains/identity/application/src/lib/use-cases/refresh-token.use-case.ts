@@ -6,19 +6,19 @@ import {
   SessionRepository,
   AuditLogRepository,
   AuditLog,
-  AuthService,
   UserRepository,
   CachePort
 } from '@virteex/identity-domain';
+import { TokenGenerationService } from '../services/token-generation.service';
 
 @Injectable()
 export class RefreshTokenUseCase {
   constructor(
     @Inject(SessionRepository) private readonly sessionRepository: SessionRepository,
     @Inject(UserRepository) private readonly userRepository: UserRepository,
-    @Inject(AuthService) private readonly authService: AuthService,
     @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
-    @Inject(CachePort) private readonly cachePort: CachePort
+    @Inject(CachePort) private readonly cachePort: CachePort,
+    @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService
   ) {}
 
   async execute(dto: RefreshTokenDto, context: { ip: string; userAgent: string }): Promise<LoginResponseDto> {
@@ -68,17 +68,6 @@ export class RefreshTokenUseCase {
         throw new UnauthorizedException('Token reuse detected. Session revoked.');
     }
 
-    const newSecret = crypto.randomBytes(32).toString('hex');
-    const newHash = crypto.createHash('sha256').update(newSecret).digest('hex');
-
-    session.currentRefreshTokenHash = newHash;
-    const SESSION_TTL = 7 * 24 * 3600;
-    session.expiresAt = new Date(Date.now() + SESSION_TTL * 1000);
-
-    await this.sessionRepository.save(session);
-
-    await this.cachePort.set(`session:${session.id}`, 'valid', SESSION_TTL);
-
     let user = session.user;
     if (!user.email) {
         const foundUser = await this.userRepository.findById(user.id);
@@ -86,23 +75,14 @@ export class RefreshTokenUseCase {
         user = foundUser;
     }
 
-    const accessToken = await this.authService.generateToken({
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-      companyId: user.company.id,
-      country: user.country,
-      sessionId: session.id
-    });
-
-    const newRefreshToken = Buffer.from(`${session.id}:${newSecret}`).toString('base64');
+    const { accessToken, refreshToken, expiresIn } = await this.tokenGenerationService.rotateSessionToken(session, user);
 
     await this.auditLogRepository.save(new AuditLog('TOKEN_REFRESHED', user.id, { sessionId: session.id, ip: context.ip }));
 
     return {
       accessToken,
-      refreshToken: newRefreshToken,
-      expiresIn: 900,
+      refreshToken,
+      expiresIn,
       mfaRequired: false
     };
   }

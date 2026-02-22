@@ -1,18 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoginUserUseCase } from './login-user.use-case';
 import {
-  UserRepository, SessionRepository, AuditLogRepository,
+  UserRepository, AuditLogRepository,
   AuthService, RiskEngineService
 } from '@virteex/identity-domain';
+import { TokenGenerationService } from '../services/token-generation.service';
 import { UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import { vi, Mock } from 'vitest';
 
 describe('LoginUserUseCase', () => {
   let useCase: LoginUserUseCase;
   let userRepository: UserRepository;
   let authService: AuthService;
-  let sessionRepository: SessionRepository;
   let auditLogRepository: AuditLogRepository;
   let riskEngineService: RiskEngineService;
+  let tokenGenerationService: TokenGenerationService;
 
   const mockUser = {
       id: '123',
@@ -27,29 +29,38 @@ describe('LoginUserUseCase', () => {
       lockedUntil: undefined
   };
 
+  const mockSession = { id: 'session_123' };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LoginUserUseCase,
         {
           provide: UserRepository,
-          useValue: { findByEmail: jest.fn().mockResolvedValue(mockUser), save: jest.fn() }
+          useValue: { findByEmail: vi.fn().mockResolvedValue(mockUser), save: vi.fn() }
         },
         {
           provide: AuthService,
-          useValue: { verifyPassword: jest.fn().mockResolvedValue(true), generateToken: jest.fn().mockResolvedValue('token') }
-        },
-        {
-          provide: SessionRepository,
-          useValue: { save: jest.fn() }
+          useValue: { verifyPassword: vi.fn().mockResolvedValue(true), generateToken: vi.fn().mockResolvedValue('token') }
         },
         {
           provide: AuditLogRepository,
-          useValue: { save: jest.fn() }
+          useValue: { save: vi.fn() }
         },
         {
           provide: RiskEngineService,
-          useValue: { calculateRisk: jest.fn().mockResolvedValue(0) }
+          useValue: { calculateRisk: vi.fn().mockResolvedValue(0) }
+        },
+        {
+          provide: TokenGenerationService,
+          useValue: {
+              createSessionAndTokens: vi.fn().mockResolvedValue({
+                  accessToken: 'token',
+                  refreshToken: 'refresh',
+                  expiresIn: 900,
+                  session: mockSession
+              })
+          }
         }
       ]
     }).compile();
@@ -59,6 +70,7 @@ describe('LoginUserUseCase', () => {
     authService = module.get<AuthService>(AuthService);
     auditLogRepository = module.get<AuditLogRepository>(AuditLogRepository);
     riskEngineService = module.get<RiskEngineService>(RiskEngineService);
+    tokenGenerationService = module.get<TokenGenerationService>(TokenGenerationService);
   });
 
   it('should allow valid login', async () => {
@@ -70,10 +82,10 @@ describe('LoginUserUseCase', () => {
 
   it('should lock account after 3 failed attempts', async () => {
       const dto = { email: 'test@test.com', password: 'wrong' };
-      (authService.verifyPassword as jest.Mock).mockResolvedValue(false);
+      (authService.verifyPassword as Mock).mockResolvedValue(false);
 
       const userClone = { ...mockUser, failedLoginAttempts: 2 };
-      (userRepository.findByEmail as jest.Mock).mockResolvedValue(userClone);
+      (userRepository.findByEmail as Mock).mockResolvedValue(userClone);
 
       await expect(useCase.execute(dto)).rejects.toThrow(UnauthorizedException);
 
@@ -84,7 +96,7 @@ describe('LoginUserUseCase', () => {
 
   it('should require MFA if risk score is high', async () => {
       const dto = { email: 'test@test.com', password: 'pass' };
-      (riskEngineService.calculateRisk as jest.Mock).mockResolvedValue(75);
+      (riskEngineService.calculateRisk as Mock).mockResolvedValue(75);
 
       const result = await useCase.execute(dto);
       expect(result.mfaRequired).toBe(true);
@@ -94,7 +106,7 @@ describe('LoginUserUseCase', () => {
 
   it('should block login if risk score is critical (> 90)', async () => {
       const dto = { email: 'test@test.com', password: 'pass' };
-      (riskEngineService.calculateRisk as jest.Mock).mockResolvedValue(95);
+      (riskEngineService.calculateRisk as Mock).mockResolvedValue(95);
 
       await expect(useCase.execute(dto)).rejects.toThrow(ForbiddenException);
       expect(auditLogRepository.save).toHaveBeenCalledWith(expect.objectContaining({ event: 'LOGIN_BLOCKED_HIGH_RISK' }));

@@ -1,11 +1,11 @@
 import { Injectable, Inject, UnauthorizedException, ForbiddenException } from '@nestjs/common';
-import * as crypto from 'crypto';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import {
-  UserRepository, SessionRepository, Session, AuditLogRepository, AuditLog,
-  RiskEngineService, AuthService, CachePort
+  UserRepository, AuditLogRepository, AuditLog,
+  RiskEngineService, AuthService
 } from '@virteex/identity-domain';
+import { TokenGenerationService } from '../services/token-generation.service';
 
 export interface LoginContext {
   ip: string;
@@ -18,10 +18,9 @@ export class LoginUserUseCase {
   constructor(
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     @Inject(AuthService) private readonly authService: AuthService,
-    @Inject(SessionRepository) private readonly sessionRepository: SessionRepository,
     @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
     @Inject(RiskEngineService) private readonly riskEngineService: RiskEngineService,
-    @Inject(CachePort) private readonly cachePort: CachePort
+    @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService
   ) {}
 
   async execute(dto: LoginUserDto, context: LoginContext = { ip: 'unknown', userAgent: 'unknown' }): Promise<LoginResponseDto> {
@@ -96,35 +95,14 @@ export class LoginUserUseCase {
         };
     }
 
-    const refreshTokenSecret = crypto.randomBytes(32).toString('hex');
-    const refreshTokenHash = crypto.createHash('sha256').update(refreshTokenSecret).digest('hex');
-
-    const SESSION_TTL = 7 * 24 * 3600; // seconds
-    const expiresAt = new Date(Date.now() + SESSION_TTL * 1000);
-
-    const session = new Session(user, context.ip, context.userAgent, expiresAt, riskScore);
-    session.currentRefreshTokenHash = refreshTokenHash;
-    await this.sessionRepository.save(session);
-
-    await this.cachePort.set(`session:${session.id}`, 'valid', SESSION_TTL);
-
-    const token = await this.authService.generateToken({
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-      companyId: user.company.id,
-      country: user.country,
-      sessionId: session.id
-    });
-
-    const refreshToken = Buffer.from(`${session.id}:${refreshTokenSecret}`).toString('base64');
+    const { accessToken, refreshToken, expiresIn, session } = await this.tokenGenerationService.createSessionAndTokens(user, context, riskScore);
 
     await this.auditLogRepository.save(new AuditLog('LOGIN_SUCCESS', user.id, { ip: context.ip, sessionId: session.id, risk: riskScore }));
 
     return {
-      accessToken: token,
-      refreshToken: refreshToken,
-      expiresIn: 900,
+      accessToken,
+      refreshToken,
+      expiresIn,
       mfaRequired: false
     };
   }

@@ -8,6 +8,7 @@ import { Tenant, TenantMode } from '@virteex/tenant';
 import { IsString, IsNotEmpty } from 'class-validator';
 import { EntityManager } from '@mikro-orm/core';
 import * as crypto from 'crypto';
+import { TokenGenerationService } from '../services/token-generation.service';
 
 export class CompleteOnboardingDto {
   @IsString()
@@ -50,7 +51,8 @@ export class CompleteOnboardingUseCase {
     @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
     @Inject(RiskEngineService) private readonly riskEngineService: RiskEngineService,
     @Inject(CachePort) private readonly cachePort: CachePort,
-    private readonly em: EntityManager
+    private readonly em: EntityManager,
+    @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService
   ) {}
 
   async execute(dto: CompleteOnboardingDto, context: { ip: string, userAgent: string }) {
@@ -129,29 +131,7 @@ export class CompleteOnboardingUseCase {
 
     await this.cachePort.del(key);
 
-    const refreshTokenSecret = crypto.randomBytes(32).toString('hex');
-    const refreshTokenHash = crypto.createHash('sha256').update(refreshTokenSecret).digest('hex');
-    const SESSION_TTL = 7 * 24 * 3600;
-    const expiresAt = new Date(Date.now() + SESSION_TTL * 1000);
-
-    const riskScore = 0;
-
-    const session = new Session(user, context.ip, context.userAgent, expiresAt, riskScore);
-    session.currentRefreshTokenHash = refreshTokenHash;
-
-    await this.sessionRepository.save(session);
-    await this.cachePort.set(`session:${session.id}`, 'valid', SESSION_TTL);
-
-    const accessToken = await this.authService.generateToken({
-        sub: user.id,
-        email: user.email,
-        role: user.role,
-        companyId: user.company.id,
-        country: user.country,
-        sessionId: session.id
-    });
-
-    const refreshToken = Buffer.from(`${session.id}:${refreshTokenSecret}`).toString('base64');
+    const { accessToken, refreshToken, expiresIn } = await this.tokenGenerationService.createSessionAndTokens(user, context, 0);
 
     await this.auditLogRepository.save(new AuditLog('REGISTER_SUCCESS', user.id, { ip: context.ip }));
 
@@ -160,7 +140,7 @@ export class CompleteOnboardingUseCase {
     return {
         accessToken,
         refreshToken,
-        expiresIn: 900,
+        expiresIn,
         user: {
             id: user.id,
             email: user.email,

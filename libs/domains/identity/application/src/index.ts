@@ -21,3 +21,4 @@ export * from './lib/dto/refresh-token.dto';
 export * from './lib/use-cases/refresh-token.use-case';
 export * from './lib/use-cases/update-subscription.use-case';
 export * from './lib/use-cases/get-subscription-status.use-case'; // Added
+export * from './lib/services/token-generation.service';

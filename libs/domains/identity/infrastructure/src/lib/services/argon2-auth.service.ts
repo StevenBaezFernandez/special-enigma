@@ -22,7 +22,11 @@ export class Argon2AuthService implements AuthService {
       throw new Error('JWT_SECRET is not defined in secret manager.');
     }
     const mfaKey = process.env['MFA_ENCRYPTION_KEY'] || this.secret;
-    const salt = process.env['ENCRYPTION_SALT'] || 'virteex-secure-salt';
+    const salt = process.env['ENCRYPTION_SALT'];
+
+    if (!salt) {
+        throw new Error('ENCRYPTION_SALT is not defined in environment variables. Please set it to a secure random string.');
+    }
 
     // Derive a 32-byte key using strict scrypt params
     this.encryptionKey = crypto.scryptSync(mfaKey, salt, 32);

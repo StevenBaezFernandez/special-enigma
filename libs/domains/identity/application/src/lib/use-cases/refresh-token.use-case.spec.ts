@@ -5,12 +5,15 @@ import {
   UserRepository,
   AuthService,
   AuditLogRepository,
+  CachePort,
   User,
   Session,
   Company
 } from '@virteex/identity-domain';
+import { TokenGenerationService } from '../services/token-generation.service';
 import { UnauthorizedException } from '@nestjs/common';
 import * as crypto from 'crypto';
+import { vi, Mock } from 'vitest';
 
 describe('RefreshTokenUseCase', () => {
   let useCase: RefreshTokenUseCase;
@@ -18,22 +21,34 @@ describe('RefreshTokenUseCase', () => {
   let userRepository: UserRepository;
   let authService: AuthService;
   let auditLogRepository: AuditLogRepository;
+  let cachePort: CachePort;
+  let tokenGenerationService: TokenGenerationService;
 
   const mockSessionRepository = {
-    findById: jest.fn(),
-    save: jest.fn(),
+    findById: vi.fn(),
+    save: vi.fn(),
   };
 
   const mockUserRepository = {
-    findById: jest.fn(),
+    findById: vi.fn(),
   };
 
   const mockAuthService = {
-    generateToken: jest.fn(),
+    generateToken: vi.fn(),
   };
 
   const mockAuditLogRepository = {
-    save: jest.fn(),
+    save: vi.fn(),
+  };
+
+  const mockCachePort = {
+    get: vi.fn(),
+    del: vi.fn(),
+    set: vi.fn()
+  };
+
+  const mockTokenGenerationService = {
+    rotateSessionToken: vi.fn()
   };
 
   beforeEach(async () => {
@@ -44,6 +59,8 @@ describe('RefreshTokenUseCase', () => {
         { provide: UserRepository, useValue: mockUserRepository },
         { provide: AuthService, useValue: mockAuthService },
         { provide: AuditLogRepository, useValue: mockAuditLogRepository },
+        { provide: CachePort, useValue: mockCachePort },
+        { provide: TokenGenerationService, useValue: mockTokenGenerationService }
       ],
     }).compile();
 
@@ -52,6 +69,8 @@ describe('RefreshTokenUseCase', () => {
     userRepository = module.get<UserRepository>(UserRepository);
     authService = module.get<AuthService>(AuthService);
     auditLogRepository = module.get<AuditLogRepository>(AuditLogRepository);
+    cachePort = module.get<CachePort>(CachePort);
+    tokenGenerationService = module.get<TokenGenerationService>(TokenGenerationService);
   });
 
   it('should be defined', () => {
@@ -59,6 +78,7 @@ describe('RefreshTokenUseCase', () => {
   });
 
   it('should throw if token format is invalid', async () => {
+      // Mock base64 failure implicitly by passing garbage that might fail split
     await expect(useCase.execute({ refreshToken: 'invalid' }, { ip: '1.2.3.4', userAgent: 'test' }))
       .rejects.toThrow(UnauthorizedException);
   });
@@ -67,7 +87,8 @@ describe('RefreshTokenUseCase', () => {
     const sessionId = 'session-1';
     const secret = 'secret';
     const token = Buffer.from(`${sessionId}:${secret}`).toString('base64');
-    mockSessionRepository.findById.mockResolvedValue(null);
+    (mockCachePort.get as Mock).mockResolvedValue('valid');
+    (mockSessionRepository.findById as Mock).mockResolvedValue(null);
 
     await expect(useCase.execute({ refreshToken: token }, { ip: '1.2.3.4', userAgent: 'test' }))
       .rejects.toThrow(UnauthorizedException);
@@ -77,6 +98,7 @@ describe('RefreshTokenUseCase', () => {
     const sessionId = 'session-1';
     const secret = 'secret';
     const token = Buffer.from(`${sessionId}:${secret}`).toString('base64');
+    const secretHash = crypto.createHash('sha256').update(secret).digest('hex');
 
     const user = { id: 'user-1' } as User;
     const session = {
@@ -87,7 +109,8 @@ describe('RefreshTokenUseCase', () => {
       user: user
     } as Session;
 
-    mockSessionRepository.findById.mockResolvedValue(session);
+    (mockCachePort.get as Mock).mockResolvedValue('valid');
+    (mockSessionRepository.findById as Mock).mockResolvedValue(session);
 
     await expect(useCase.execute({ refreshToken: token }, { ip: '1.2.3.4', userAgent: 'test' }))
       .rejects.toThrow(UnauthorizedException);
@@ -112,14 +135,20 @@ describe('RefreshTokenUseCase', () => {
       user: user
     } as Session;
 
-    mockSessionRepository.findById.mockResolvedValue(session);
-    mockAuthService.generateToken.mockResolvedValue('new-access-token');
+    (mockCachePort.get as Mock).mockResolvedValue('valid');
+    (mockSessionRepository.findById as Mock).mockResolvedValue(session);
+
+    (mockTokenGenerationService.rotateSessionToken as Mock).mockResolvedValue({
+        accessToken: 'new-access-token',
+        refreshToken: 'new-refresh-token',
+        expiresIn: 900,
+        session: session
+    });
 
     const result = await useCase.execute({ refreshToken: token }, { ip: '1.2.3.4', userAgent: 'test' });
 
     expect(result.accessToken).toBe('new-access-token');
-    expect(result.refreshToken).toBeDefined();
-    expect(session.currentRefreshTokenHash).not.toBe(secretHash); // Rotated
-    expect(mockSessionRepository.save).toHaveBeenCalledWith(session);
+    expect(result.refreshToken).toBe('new-refresh-token');
+    expect(mockTokenGenerationService.rotateSessionToken).toHaveBeenCalledWith(session, user);
   });
 });
