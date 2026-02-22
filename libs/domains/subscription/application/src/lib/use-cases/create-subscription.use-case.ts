@@ -1,17 +1,28 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import {
   Subscription,
+  SubscriptionStatus,
   SubscriptionRepository,
   SUBSCRIPTION_REPOSITORY,
   SubscriptionPlanRepository,
-  SUBSCRIPTION_PLAN_REPOSITORY
+  SUBSCRIPTION_PLAN_REPOSITORY,
+  SubscriptionGateway,
+  SUBSCRIPTION_GATEWAY
 } from '@virteex/subscription-domain';
 
 export interface CreateSubscriptionDto {
   tenantId: string;
   planId: string;
-  price: string;
+  price: string; // Stripe Price ID
   billingCycle: string;
+  email: string;
+  name: string;
+  paymentMethodId: string;
+}
+
+export interface SubscriptionResult {
+  subscription: Subscription;
+  clientSecret: string;
 }
 
 @Injectable()
@@ -20,32 +31,56 @@ export class CreateSubscriptionUseCase {
     @Inject(SUBSCRIPTION_REPOSITORY)
     private readonly subscriptionRepository: SubscriptionRepository,
     @Inject(SUBSCRIPTION_PLAN_REPOSITORY)
-    private readonly subscriptionPlanRepository: SubscriptionPlanRepository
+    private readonly subscriptionPlanRepository: SubscriptionPlanRepository,
+    @Inject(SUBSCRIPTION_GATEWAY)
+    private readonly subscriptionGateway: SubscriptionGateway
   ) {}
 
-  async execute(dto: CreateSubscriptionDto): Promise<Subscription> {
+  async execute(dto: CreateSubscriptionDto): Promise<SubscriptionResult> {
     const plan = await this.subscriptionPlanRepository.findById(dto.planId);
     if (!plan) {
       throw new NotFoundException(`Plan with ID ${dto.planId} not found`);
     }
 
-    const nextBillingDate = new Date();
-    if (dto.billingCycle === 'monthly') {
-        nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
-    } else if (dto.billingCycle === 'yearly') {
-        nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
+    let subscription = await this.subscriptionRepository.findByTenantId(dto.tenantId);
+    let customerId = subscription?.stripeCustomerId;
+
+    if (!customerId) {
+      customerId = await this.subscriptionGateway.createCustomer(dto.email, dto.name, dto.paymentMethodId);
     }
 
-    const subscription = new Subscription(
-      dto.tenantId,
-      plan
-    );
-    // If Subscription entity supports endDate, we set it.
-    // Based on previous read, Subscription has endDate property but constructor doesn't take it.
-    // We can set it manually.
-    subscription.endDate = nextBillingDate;
+    if (subscription && subscription.stripeSubscriptionId && subscription.status === SubscriptionStatus.ACTIVE) {
+        await this.subscriptionGateway.cancelSubscription(subscription.stripeSubscriptionId);
+    }
+
+    const stripeSub = await this.subscriptionGateway.createSubscription(customerId, dto.price);
+
+    if (!subscription) {
+        subscription = new Subscription(dto.tenantId, plan);
+    }
+
+    // Update subscription details
+    subscription.plan = plan;
+    subscription.stripeCustomerId = customerId;
+    subscription.stripeSubscriptionId = stripeSub.subscriptionId;
+    // We set status to INCOMPLETE initially if payment is required.
+    // If status is incomplete, frontend uses clientSecret to confirm payment.
+    const statusMap: Record<string, SubscriptionStatus> = {
+        'active': SubscriptionStatus.ACTIVE,
+        'incomplete': SubscriptionStatus.TRIAL, // Or PENDING_PAYMENT
+        'trialing': SubscriptionStatus.TRIAL
+    };
+    subscription.status = statusMap[stripeSub.status] || SubscriptionStatus.TRIAL;
+
+    subscription.currentPeriodEnd = stripeSub.currentPeriodEnd;
+    subscription.endDate = stripeSub.currentPeriodEnd;
+    subscription.cancelAtPeriodEnd = false;
 
     await this.subscriptionRepository.save(subscription);
-    return subscription;
+
+    return {
+        subscription,
+        clientSecret: stripeSub.clientSecret
+    };
   }
 }

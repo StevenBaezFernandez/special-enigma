@@ -12,6 +12,8 @@ export interface Subscription {
   billingCycle: string;
   nextBillingDate: string;
   trialEndsDate?: string;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
 }
 
 export interface PaymentMethod {
@@ -70,7 +72,7 @@ export class BillingService {
   }
 
   getSubscription(tenantId: string = 'default'): Observable<Subscription> {
-    return this.http.get<Subscription>(`${this.apiUrl}/billing/subscription?tenantId=${tenantId}`);
+    return this.http.get<Subscription>(`${this.apiUrl}/subscription?tenantId=${tenantId}`);
   }
 
   getPaymentMethod(tenantId: string = 'default'): Observable<PaymentMethod[]> {
@@ -86,7 +88,7 @@ export class BillingService {
   }
 
   changePlan(planId: string, tenantId: string = 'default') {
-      return this.http.post(`${this.apiUrl}/billing/subscription`, { planId, tenantId });
+      return this.http.post(`${this.apiUrl}/subscription`, { planId, tenantId });
   }
 
   addPaymentMethod(paymentMethod: CreatePaymentMethodPayload, tenantId: string = 'default') {
@@ -94,10 +96,18 @@ export class BillingService {
   }
 
   createCheckoutSession(priceId: string, customerId: string) {
-      return this.http.post<{ url: string }>(`${this.apiUrl}/billing/checkout`, { priceId, customerId });
+      return this.http.post<{ url: string }>(`${this.apiUrl}/subscription/checkout`, {
+        priceId,
+        customerId,
+        successUrl: window.location.origin + '/settings/billing?success=true',
+        cancelUrl: window.location.origin + '/settings/billing?canceled=true'
+      });
   }
 
   createPortalSession(customerId: string) {
-      return this.http.post<{ url: string }>(`${this.apiUrl}/billing/portal`, { customerId });
+      return this.http.post<{ url: string }>(`${this.apiUrl}/subscription/portal`, {
+        customerId,
+        returnUrl: window.location.origin + '/settings/billing'
+      });
   }
 }

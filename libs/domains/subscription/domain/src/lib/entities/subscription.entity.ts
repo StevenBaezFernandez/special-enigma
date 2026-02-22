@@ -6,7 +6,8 @@ export enum SubscriptionStatus {
   ACTIVE = 'ACTIVE',
   CANCELED = 'CANCELED',
   EXPIRED = 'EXPIRED',
-  TRIAL = 'TRIAL'
+  TRIAL = 'TRIAL',
+  PAST_DUE = 'PAST_DUE'
 }
 
 @Entity()
@@ -22,6 +23,18 @@ export class Subscription {
 
   @Enum(() => SubscriptionStatus)
   status: SubscriptionStatus = SubscriptionStatus.ACTIVE;
+
+  @Property({ nullable: true })
+  stripeSubscriptionId?: string;
+
+  @Property({ nullable: true })
+  stripeCustomerId?: string;
+
+  @Property({ nullable: true })
+  currentPeriodEnd?: Date;
+
+  @Property({ type: 'boolean' })
+  cancelAtPeriodEnd: boolean = false;
 
   @Property()
   startDate: Date = new Date();
@@ -43,12 +56,35 @@ export class Subscription {
 
   isValid(): boolean {
     const now = new Date();
+    // Allow PAST_DUE for a grace period if needed, but strictly:
     if (this.status !== SubscriptionStatus.ACTIVE && this.status !== SubscriptionStatus.TRIAL) {
       return false;
     }
-    if (this.endDate && this.endDate < now) {
+    // Check if subscription has ended (and not renewed)
+    if (this.currentPeriodEnd && this.currentPeriodEnd < now) {
+      // If Stripe says it ended, it ended.
+      // But usually status reflects that.
+      // Fallback to local endDate if currentPeriodEnd is not set.
+      return false;
+    }
+    if (this.endDate && !this.currentPeriodEnd && this.endDate < now) {
       return false;
     }
     return true;
+  }
+
+  markAsActive(stripeSubId: string, currentPeriodEnd: Date) {
+    this.status = SubscriptionStatus.ACTIVE;
+    this.stripeSubscriptionId = stripeSubId;
+    this.currentPeriodEnd = currentPeriodEnd;
+    this.endDate = currentPeriodEnd; // Sync local endDate
+  }
+
+  markAsCanceled(atPeriodEnd: boolean) {
+    this.cancelAtPeriodEnd = atPeriodEnd;
+    if (!atPeriodEnd) {
+      this.status = SubscriptionStatus.CANCELED;
+      this.endDate = new Date();
+    }
   }
 }
