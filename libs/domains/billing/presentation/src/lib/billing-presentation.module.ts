@@ -6,9 +6,16 @@ import {
   BillingApplicationModule
 } from '../../../application/src/index';
 import { BillingInfrastructureModule } from '../../../infrastructure/src/index';
+import { SubscriptionApplicationModule } from '@virteex/subscription-application';
+import { SubscriptionInfrastructureModule } from '@virteex/subscription-infrastructure';
 
 @Module({
-  imports: [BillingApplicationModule, BillingInfrastructureModule],
+  imports: [
+    BillingApplicationModule,
+    BillingInfrastructureModule,
+    SubscriptionApplicationModule,
+    SubscriptionInfrastructureModule
+  ],
   controllers: [
     BillingController,
     PaymentMethodController,

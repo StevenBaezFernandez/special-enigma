@@ -48,6 +48,7 @@ export interface SubscriptionPlan {
   price: number;
   description: string;
   features?: string;
+  stripePriceId: string;
 }
 
 export interface UsageItem {

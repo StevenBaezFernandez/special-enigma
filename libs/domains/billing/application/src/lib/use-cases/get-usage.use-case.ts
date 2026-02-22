@@ -2,11 +2,13 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   InvoiceRepository,
-  INVOICE_REPOSITORY,
+  INVOICE_REPOSITORY
+} from '@virteex/billing-domain';
+import {
   SubscriptionRepository,
   SUBSCRIPTION_REPOSITORY,
   SubscriptionPlan
-} from '@virteex/billing-domain';
+} from '@virteex/subscription-domain';
 
 export interface UsageItem {
   resource: string;
