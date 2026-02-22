@@ -1,29 +1,51 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, UseGuards, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentTenant } from '@virteex/shared-util-server-config';
 import {
   CreateSubscriptionUseCase,
   CreateSubscriptionDto,
-  GetSubscriptionUseCase
+  GetSubscriptionUseCase,
+  CreateCheckoutSessionUseCase,
+  CreateCheckoutSessionDto,
+  CreatePortalSessionUseCase,
+  CreatePortalSessionDto
 } from '@virteex/subscription-application';
 
 @ApiTags('Subscription')
 @Controller('subscription')
+@ApiBearerAuth()
 export class SubscriptionController {
   constructor(
     private readonly createSubscriptionUseCase: CreateSubscriptionUseCase,
-    private readonly getSubscriptionUseCase: GetSubscriptionUseCase
+    private readonly getSubscriptionUseCase: GetSubscriptionUseCase,
+    private readonly createCheckoutSessionUseCase: CreateCheckoutSessionUseCase,
+    private readonly createPortalSessionUseCase: CreatePortalSessionUseCase
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a subscription' })
-  async create(@Body() dto: CreateSubscriptionDto) {
+  @ApiOperation({ summary: 'Create a subscription (Direct)' })
+  async create(@Body() dto: CreateSubscriptionDto, @CurrentTenant() tenantId: string) {
+    dto.tenantId = tenantId || dto.tenantId || 'default-tenant';
     return await this.createSubscriptionUseCase.execute(dto);
+  }
+
+  @Post('checkout')
+  @ApiOperation({ summary: 'Create Stripe Checkout Session' })
+  async createCheckout(@Body() dto: CreateCheckoutSessionDto, @CurrentTenant() tenantId: string) {
+    dto.tenantId = tenantId || dto.tenantId || 'default-tenant';
+    return { url: await this.createCheckoutSessionUseCase.execute(dto) };
+  }
+
+  @Post('portal')
+  @ApiOperation({ summary: 'Create Stripe Portal Session' })
+  async createPortal(@Body() dto: CreatePortalSessionDto) {
+    return { url: await this.createPortalSessionUseCase.execute(dto) };
   }
 
   @Get()
   @ApiOperation({ summary: 'Get subscription by tenant' })
-  async findOne(@Query('tenantId') tenantId: string) {
-    const tid = tenantId || 'default-tenant';
+  async findOne(@CurrentTenant() tenantId: string, @Query('tenantId') queryTenantId?: string) {
+    const tid = tenantId || queryTenantId || 'default-tenant';
     return await this.getSubscriptionUseCase.execute(tid);
   }
 }

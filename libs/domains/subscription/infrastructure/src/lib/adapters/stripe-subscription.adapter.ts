@@ -1,0 +1,116 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { SubscriptionGateway, CreateSubscriptionResult } from '../../../../domain/src/lib/ports/subscription-gateway.port';
+import Stripe from 'stripe';
+
+@Injectable()
+export class StripeSubscriptionAdapter implements SubscriptionGateway {
+  private readonly logger = new Logger(StripeSubscriptionAdapter.name);
+  private stripe: Stripe;
+
+  constructor(private readonly configService: ConfigService) {
+    const secretKey = this.configService.get<string>('STRIPE_SECRET_KEY') || 'sk_test_placeholder';
+    this.stripe = new Stripe(secretKey, {
+      apiVersion: '2025-01-27.acacia',
+    } as any);
+  }
+
+  async createCustomer(email: string, name: string, paymentMethodId: string): Promise<string> {
+    try {
+      const customer = await this.stripe.customers.create({
+        email,
+        name,
+        payment_method: paymentMethodId,
+        invoice_settings: {
+          default_payment_method: paymentMethodId,
+        },
+      });
+      return customer.id;
+    } catch (error: any) {
+      this.logger.error('Failed to create Stripe customer', error);
+      throw new Error(`Stripe Customer Error: ${error.message}`);
+    }
+  }
+
+  async createSubscription(customerId: string, priceId: string): Promise<CreateSubscriptionResult> {
+    try {
+      const subscription = await this.stripe.subscriptions.create({
+        customer: customerId,
+        items: [{ price: priceId }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
+      });
+
+      const invoice = subscription.latest_invoice as any;
+      const paymentIntent = invoice.payment_intent as any;
+
+      return {
+        subscriptionId: subscription.id,
+        customerId: customerId,
+        clientSecret: paymentIntent?.client_secret || '',
+        status: subscription.status,
+        currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+      };
+    } catch (error: any) {
+       this.logger.error('Failed to create Stripe subscription', error);
+       throw new Error(`Stripe Subscription Error: ${error.message}`);
+    }
+  }
+
+  async cancelSubscription(subscriptionId: string): Promise<void> {
+    try {
+      await this.stripe.subscriptions.cancel(subscriptionId);
+    } catch (error: any) {
+      this.logger.error(`Failed to cancel subscription ${subscriptionId}`, error);
+      throw error;
+    }
+  }
+
+  async createPortalSession(customerId: string, returnUrl: string): Promise<string> {
+    try {
+      const session = await this.stripe.billingPortal.sessions.create({
+        customer: customerId,
+        return_url: returnUrl,
+      });
+      return session.url;
+    } catch (error: any) {
+       this.logger.error('Failed to create portal session', error);
+       throw error;
+    }
+  }
+
+  async createCheckoutSession(
+    priceId: string,
+    customerId: string,
+    successUrl: string,
+    cancelUrl: string,
+    clientReferenceId?: string,
+    metadata?: Record<string, string>
+  ): Promise<string> {
+     try {
+       const session = await this.stripe.checkout.sessions.create({
+         mode: 'subscription',
+         payment_method_types: ['card'],
+         customer: customerId,
+         client_reference_id: clientReferenceId,
+         metadata: metadata,
+         subscription_data: {
+            metadata: metadata,
+         },
+         line_items: [
+           {
+             price: priceId,
+             quantity: 1,
+           },
+         ],
+         success_url: successUrl,
+         cancel_url: cancelUrl,
+       });
+       return session.url || '';
+     } catch (error: any) {
+        this.logger.error('Failed to create checkout session', error);
+        throw error;
+     }
+  }
+}

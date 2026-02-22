@@ -13,9 +13,12 @@ export class MikroOrmSubscriptionRepository implements SubscriptionRepository {
   }
 
   async findByTenantId(tenantId: string): Promise<Subscription | null> {
-    return this.repository.findOne({
-      tenantId,
-      status: 'ACTIVE' as any
-    });
+    // Return the most recent subscription, regardless of status.
+    // The use case will handle filtering active/inactive.
+    return this.repository.findOne({ tenantId }, { orderBy: { createdAt: 'DESC' } });
+  }
+
+  async findByStripeId(stripeSubscriptionId: string): Promise<Subscription | null> {
+    return this.repository.findOne({ stripeSubscriptionId });
   }
 }

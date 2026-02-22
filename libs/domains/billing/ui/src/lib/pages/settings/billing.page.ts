@@ -37,13 +37,8 @@ export class BillingPage implements OnInit {
   constructor() {
     effect(() => {
       const sub = this.subscription();
-      // Assuming the subscription object now returns the stripeCustomerId or we fetch it separately.
-      // If the DTO doesn't have it, we should update the DTO.
-      // For this robust implementation, let's assume the subscription endpoint returns it
-      // or we use the subscription ID as a proxy if needed, but ideally customer ID is needed.
-      // Let's assume the backend 'getSubscription' response was updated or we should update the interface.
-      if (sub && (sub as any).stripeCustomerId) {
-          this.customerId.set((sub as any).stripeCustomerId);
+      if (sub && sub.stripeCustomerId) {
+          this.customerId.set(sub.stripeCustomerId);
       }
     });
   }

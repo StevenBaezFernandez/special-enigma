@@ -21,6 +21,9 @@ export class SubscriptionPlan {
   @Property({ type: 'decimal', precision: 10, scale: 2 })
   price!: string;
 
+  @Property({ nullable: true })
+  stripePriceId?: string;
+
   @Property()
   description!: string;
 
