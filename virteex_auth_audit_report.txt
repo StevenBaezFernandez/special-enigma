@@ -1,115 +1,178 @@
-INFORME DE AUDITORÍA TÉCNICA Y DE READINESS COMERCIAL
-MÓDULO DE AUTENTICACIÓN - ECOSISTEMA VIRTEEX
+INFORME DE AUDITORÍA TÉCNICA Y DE SEGURIDAD - MÓDULO DE AUTENTICACIÓN VIRTEEX
+============================================================================
 
-FECHA: 24/10/2023
-AUDITOR: Jules (AI Software Analyst)
-VERSIÓN: 4.0 (Final Remediation)
+FECHA: 24 de Octubre de 2023
+AUDITOR: Jules (AI Software Engineer Analyst)
+VERSIÓN: 2.1
+CLASIFICACIÓN: CONFIDENCIAL / USO INTERNO
 
----
+(PORTADA)
 
-1. PORTADA
-Análisis Integral de Madurez - Identity Domain Virteex
-
----
-
+----------------------------------------------------------------------------
 2. INTRODUCCIÓN Y ALCANCE
+----------------------------------------------------------------------------
+El presente informe detalla los hallazgos de la auditoría técnica realizada al módulo de autenticación del ecosistema Virteex ERP. El análisis abarca la implementación del Identity Service (Backend), las aplicaciones cliente (Web y Móvil), la infraestructura de soporte y los mecanismos de seguridad y cumplimiento.
 
-El presente informe detalla el estado actual de madurez técnica, seguridad y preparación comercial del módulo de autenticación ("Identity Domain") del ecosistema Virteex. El análisis se ha realizado sobre el código fuente en producción, evaluando componentes de Backend (NestJS), Frontend Web (Angular), y Aplicación Móvil (Ionic/Capacitor).
+El objetivo es determinar la brecha entre el estado actual del código y los estándares de madurez técnica y comercial definidos en el documento AGENTS.md (Nivel 10/10), identificando riesgos críticos que impidan la comercialización segura en LATAM y EE. UU.
 
----
+Alcance:
+- Backend: virteex-identity-service (NestJS, GraphQL, REST)
+- Frontend Web: virteex-web (Angular)
+- Frontend Móvil: virteex-mobile (Ionic/Capacitor/Angular)
+- Librerías Compartidas: libs/kernel/auth, libs/shared/util/auth
+- Infraestructura: Docker, Postgres, Redis
 
+----------------------------------------------------------------------------
 3. RESUMEN EJECUTIVO
+----------------------------------------------------------------------------
 
-% COMPLETITUD FUNCIONAL REAL: 95%
-Justificación: Se han cerrado las brechas operativas críticas. El envío de emails transaccionales (OTP) es funcional. La aplicación móvil cuenta con soporte offline real para Login (vía caché de tokens segura) y Sincronización (cola de peticiones persistente). La gestión de secretos ahora soporta rotación y previene arranques inseguros.
-La única funcionalidad pendiente es la federación Enterprise (SAML/OIDC), que se mantiene en roadmap.
+% COMPLETITUD FUNCIONAL REAL: 45%
+Justificación: El sistema implementa login básico, registro y MFA (TOTP). Sin embargo, carece de funcionalidades críticas como renovación automática de tokens (refresh token) en clientes web y móvil, recuperación de contraseña, gestión de sesiones robusta (logout global real) y soporte para proveedores de identidad externos (SAML, OIDC, Social Login) requeridos para el segmento Enterprise.
 
-% READINESS COMERCIAL: 85%
-Justificación: El sistema es robusto y seguro para el mercado SMB y Mid-Market. Las prácticas de seguridad (Secret Management, Token Validation) cumplen estándares. El soporte Enterprise (SSO) es el único limitante para grandes corporaciones.
+% READINESS COMERCIAL: 15%
+Justificación: La seguridad en el cliente móvil es inexistente (almacenamiento en Base64/Memoria), lo que expone las sesiones a robo trivial. No existen pruebas E2E reales (0% cobertura efectiva). La infraestructura carece de gestión de secretos robusta (Vault) y headers de seguridad (Helmet). La ausencia de renovación de sesión hace que el ERP sea inutilizable para tareas que duren más de 15 minutos.
 
----
-
+----------------------------------------------------------------------------
 4. ANÁLISIS DETALLADO POR ÁREAS
+----------------------------------------------------------------------------
 
-4.1. FRONTEND (WEB)
+4.1. HALLAZGO: ALMACENAMIENTO INSEGURO DE TOKENS EN MÓVIL
+1. Descripción técnica precisa del problema: El servicio `SecureStorageService` utilizado en la aplicación móvil `virteex-mobile` implementa un fallback inseguro. En entorno nativo, usa almacenamiento en memoria (`Map<string, string>`), perdiendo la sesión al cerrar la app. En entorno web/PWA, usa `sessionStorage` con codificación Base64 (`btoa`), sin cifrado real. El código menciona `@capacitor-community/secure-storage-sqlite` pero no está implementado.
+2. Impacto (seguridad, negocio, cumplimiento, UX): Seguridad Crítica. Permite la extracción trivial de tokens de acceso y refresh tokens mediante ataques XSS o acceso físico al dispositivo desbloqueado. Incumple estándares OWASP MASVS L1/L2.
+3. Nivel de criticidad: P0 (Crítico)
+4. Recomendación técnica concreta y accionable: Implementar el plugin `@capacitor-community/secure-storage-sqlite` o `ionic-secure-storage` para usar Keystore/Keychain nativo. Eliminar el fallback a Base64 en producción.
+5. Evidencia requerida para validación: Revisión de código en `libs/shared/util/auth/src/lib/services/secure-storage.service.ts`.
+6. Dependencias: Plugin de Capacitor, configuración nativa Android/iOS.
 
-HALLAZGO 1: Cola de peticiones (AuthQueue) volátil
-1. Estado: EN PROGRESO (Mejora P2).
-2. Impacto: Menor UX en casos de red inestable. No bloqueante.
+4.2. HALLAZGO: FALTA DE RENOVACIÓN DE TOKENS (REFRESH TOKEN) EN CLIENTES
+1. Descripción técnica precisa del problema: Tanto `virteex-web` como `virteex-mobile` carecen de lógica para interceptar errores 401 (Unauthorized) y utilizar el Refresh Token para obtener un nuevo Access Token. El `GlobalErrorInterceptor` simplemente muestra un mensaje de error y el `AuthService` no tiene método `refreshToken` implementado ni llamado automáticamente.
+2. Impacto (seguridad, negocio, cumplimiento, UX): UX Crítica / Negocio Alto. El usuario es desconectado forzosamente cada 15 minutos (TTL del token JWT), perdiendo trabajo no guardado. Hace inviable el uso operativo continuo del ERP.
+3. Nivel de criticidad: P0 (Crítico)
+4. Recomendación técnica concreta y accionable: Implementar un `HttpInterceptor` que capture el error 401, pause la cola de peticiones, llame al endpoint `/auth/refresh` (enviando la cookie o token según corresponda), actualice el token y reintente la petición original.
+5. Evidencia requerida para validación: Revisión de `apps/frontend/virteex-web/src/app/core/interceptors/global-error.interceptor.ts` y ausencia de `RefreshTokenInterceptor`.
+6. Dependencias: Endpoint `/auth/refresh` en Backend (ya existe).
 
-4.2. BACKEND / IDENTITY SERVICE
+4.3. HALLAZGO: VULNERABILIDAD DE REPLAY EN OFFLINE SYNC
+1. Descripción técnica precisa del problema: El servicio `SyncService` en `virteex-mobile` encola peticiones fallidas (offline) con el payload y headers originales, incluyendo el token de autorización. Al recuperar conexión, reintenta estas peticiones tal cual. Si el token ha expirado (15m) mientras estaba offline, el servidor rechazará las peticiones (401) y los datos se perderán o quedarán en estado de error irrecuperable automáticamente.
+2. Impacto (seguridad, negocio, cumplimiento, UX): Integridad de Datos Alta. Riesgo de pérdida masiva de datos capturados en campo (ventas, inventario) si el dispositivo pasa más de 15 minutos desconectado.
+3. Nivel de criticidad: P1 (Alto)
+4. Recomendación técnica concreta y accionable: Modificar `SyncService` para verificar la validez del token antes de procesar la cola. Si está expirado, intentar un refresh silencioso antes de enviar el lote de peticiones pendientes.
+5. Evidencia requerida para validación: Revisión de `apps/frontend/virteex-mobile/src/app/core/services/sync.service.ts` método `processQueue`.
+6. Dependencias: Corrección del Hallazgo 4.2 (Lógica de Refresh).
 
-HALLAZGO 2: Servicio de Email Simulado (Mock) -> RESUELTO
-1. Estado: OK.
-2. Solución Implementada: Se integró `NodemailerNotificationService` con `MailQueueProducer` para envío asíncrono y real de correos.
+4.4. HALLAZGO: GESTIÓN DE SECRETOS INSEGURA (ENV VARS)
+1. Descripción técnica precisa del problema: El backend `virteex-identity-service` y la librería `auth` leen secretos críticos (JWT_SECRET, claves de cifrado) directamente de variables de entorno (`process.env`) sin integración con un gestor de secretos (Vault, AWS Secrets Manager) como exige el estándar AGENTS.md.
+2. Impacto (seguridad, negocio, cumplimiento, UX): Seguridad Alta. Aumenta la superficie de ataque y riesgo de fuga de credenciales en logs, repositorios o configuraciones de CI/CD. Dificulta la rotación automatizada.
+3. Nivel de criticidad: P1 (Alto)
+4. Recomendación técnica concreta y accionable: Integrar HashiCorp Vault o AWS Parameter Store mediante `@nestjs/config` o librería dedicada, inyectando los secretos en tiempo de ejecución.
+5. Evidencia requerida para validación: Revisión de `libs/kernel/auth/src/lib/services/secret-manager.service.ts` y `docker-compose.yml` (ausencia de Vault).
+6. Dependencias: Infraestructura de Vault/KMS.
 
-4.3. SEGURIDAD AVANZADA
+4.5. HALLAZGO: FALTA DE HEADERS DE SEGURIDAD (HELMET)
+1. Descripción técnica precisa del problema: La aplicación backend NestJS no implementa `helmet` ni headers de seguridad HTTP básicos (HSTS, X-Frame-Options, CSP, X-Content-Type-Options) en su punto de entrada `main.ts`.
+2. Impacto (seguridad, negocio, cumplimiento, UX): Seguridad Media. Expone la API y clientes a ataques de Clickjacking, MIME Sniffing y downgrade de protocolo.
+3. Nivel de criticidad: P2 (Medio)
+4. Recomendación técnica concreta y accionable: Instalar `helmet` y registrarlo como middleware global en `main.ts` (`app.use(helmet())`).
+5. Evidencia requerida para validación: Revisión de `apps/backend/virteex-identity-service/src/main.ts`.
+6. Dependencias: Paquete `helmet`.
 
-HALLAZGO 3: Gestión de Secretos Insegura -> RESUELTO
-1. Estado: OK.
-2. Solución Implementada: `SecretManagerService` implementado. El sistema falla de forma segura si no se configuran secretos. Soporte para rotación de claves en `JwtAuthGuard`.
+4.6. HALLAZGO: COBERTURA DE PRUEBAS E2E NULA
+1. Descripción técnica precisa del problema: El proyecto contiene una suite de pruebas E2E (`virteex-identity-service-e2e`), pero el único test existente (`virteex-auth-server.spec.ts`) realiza una petición GET dummy a `/api`. No hay pruebas de flujos de autenticación, MFA, ni manejo de errores.
+2. Impacto (seguridad, negocio, cumplimiento, UX): Calidad Crítica / Readiness Comercial. Imposible garantizar la estabilidad del módulo ante cambios o regresiones.
+3. Nivel de criticidad: P1 (Alto)
+4. Recomendación técnica concreta y accionable: Implementar suite completa de pruebas E2E cubriendo: Login exitoso, Login fallido, MFA challenge, Refresh Token flow, Logout, y Bloqueo de cuenta.
+5. Evidencia requerida para validación: Revisión de `apps/backend/virteex-identity-service-e2e/src/virteex-auth-server/virteex-auth-server.spec.ts`.
+6. Dependencias: Ninguna.
 
-4.4. MULTI-TENANCIA Y MULTI-REGIÓN
+----------------------------------------------------------------------------
+5. THREAT MODEL (MODELO DE AMENAZAS)
+----------------------------------------------------------------------------
 
-HALLAZGO 4: Aislamiento Lógico Débil en Tokens
-1. Estado: RIESGO MITIGADO (Guard Validation).
-2. Recomendación: Mantener auditoría continua de endpoints.
+| Amenaza | Vector de Ataque | Probabilidad | Impacto | Mitigación Actual | Mitigación Recomendada |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| Robo de Sesión Móvil | Acceso físico / Malware | ALTA | CRÍTICO | Ninguna (Base64) | Cifrado nativo (Keystore) |
+| Secuestro de Sesión Web | XSS / Man-in-the-Middle | MEDIA | ALTO | Cookies HttpOnly | CSP Estricto + HSTS |
+| Pérdida de Datos Offline | Expiración de Token | ALTA | ALTO | Ninguna | Refresh automático en Sync |
+| Fuga de Secretos | Acceso a Env Vars / Logs | MEDIA | ALTO | .env file | Vault / KMS |
+| Ataque de Fuerza Bruta | Credential Stuffing | MEDIA | MEDIO | ThrottlerGuard (Rate Limit) | WAF + IP Reputation |
 
-4.5. MOBILE Y OFFLINE-FIRST
+----------------------------------------------------------------------------
+6. CHECKLIST GENERAL CON ESTADO
+----------------------------------------------------------------------------
 
-HALLAZGO 5: Modo Offline No Implementado -> RESUELTO
-1. Estado: OK.
-2. Solución Implementada:
-   - Login Offline: Validación local de tokens (JWT expiration check) y `SecureStorage`.
-   - Sync: `SyncService` implementado con cola persistente (`IndexedDB` wrapper) y reintentos automáticos.
+[FAIL] Keycloak/Auth0 Integration (Se usa implementación Custom)
+[OK]   Password Hashing (Argon2id)
+[OK]   MFA Support (TOTP, Risk-based)
+[FAIL] Refresh Token Rotation en Cliente (Backend OK, Cliente ROTO)
+[FAIL] Secure Storage Mobile (Base64/Memoria)
+[FAIL] Offline Sync Resilience (Token Replay)
+[FAIL] E2E Testing Coverage (>80%)
+[FAIL] Secret Management (Vault/KMS)
+[FAIL] Security Headers (Helmet)
+[OK]   Multi-tenancy Isolation (TenantGuard)
+[OK]   Rate Limiting (ThrottlerGuard)
+[FAIL] OIDC/SAML Support
 
-HALLAZGO 6: Falta de Biometría
-1. Estado: PARCIAL.
-2. Nota: Se utiliza almacenamiento seguro, pero la integración biométrica nativa requiere plugin nativo (fuera de scope de corrección inmediata en sandbox).
+----------------------------------------------------------------------------
+7. PLAN DE REMEDIACIÓN PRIORIZADO
+----------------------------------------------------------------------------
 
-4.6. INTEGRACIONES (ENTERPRISE)
+FASE 1: CORRECCIÓN DE BLOQUEANTES (P0) - T+1 Semana
+1. Implementar `SecureStorageService` real en Móvil.
+2. Implementar `TokenInterceptor` con lógica de Refresh en Web y Móvil.
+3. Corregir lógica de `SyncService` para manejar expiración de tokens.
 
-HALLAZGO 10: Ausencia de Protocolos Enterprise (SAML/SCIM)
-1. Estado: FAIL (Roadmap).
-2. Impacto: Venta Enterprise limitada.
-3. Plan: Integrar librería SAML en Q4.
+FASE 2: SEGURIDAD Y ESTABILIDAD (P1) - T+2 Semanas
+1. Habilitar `helmet` y CORS seguro en Backend.
+2. Desarrollar suite de pruebas E2E mínima viable (Happy Paths).
+3. Migrar gestión de secretos a solución segura (aunque sea AWS SSM en lugar de .env).
 
----
+FASE 3: FUNCIONALIDAD ENTERPRISE (P2) - T+4 Semanas
+1. Implementar adaptadores OIDC/SAML.
+2. Implementar Logout Global real (revocación en DB/Redis).
+3. Refinar auditoría y dashboards de seguridad.
 
-5. THREAT MODEL (ACTUALIZADO)
+----------------------------------------------------------------------------
+8. MÉTRICAS Y MONITOREO RECOMENDADO
+----------------------------------------------------------------------------
+Se recomienda instrumentar los siguientes KPIs en Datadog/Prometheus:
 
-Amenaza: Robo de Refresh Token (XSS)
-Mitigación: HttpOnly Cookies (Web) / SecureStorage (Móvil)
-Estado: OK.
+1. Tasa de Éxito de Login (Login Success Rate): `auth.login.success / auth.login.total`
+2. Adopción de MFA: `% usuarios con MFA habilitado`
+3. Tasa de Refresco de Token: `auth.refresh.success` vs `auth.refresh.failed` (Indicador de problemas de sesión)
+4. Latencia de Autenticación: `p95` y `p99` de `/auth/login`
+5. Intentos de Login Fallidos por IP: Detección de fuerza bruta.
+6. Uso de Offline Sync: Volumen de datos sincronizados y tasa de errores 401 en sync.
 
-Amenaza: Fuerza Bruta / Credential Stuffing
-Mitigación: Throttling + Argon2 + Recaptcha v3
-Estado: OK.
+----------------------------------------------------------------------------
+9. CONCLUSIÓN FINAL DE READINESS
+----------------------------------------------------------------------------
 
-Amenaza: Fuga de PII en Logs
-Mitigación: Revisión de loggers.
-Estado: OK.
+El módulo de autenticación de Virteex presenta una arquitectura backend razonable pero una implementación frontend deficiente e insegura. La falta de persistencia segura en móvil y la ausencia de renovación de sesiones (refresh token) en ambos clientes constituyen bloqueantes absolutos para cualquier despliegue en producción.
 
-Amenaza: Suplantación de Identidad (Email Spoofing)
-Mitigación: Verificación de Email (Real)
-Estado: OK.
+El nivel de madurez actual (45% Funcional, 15% Comercial) está muy por debajo del objetivo 10/10 definido en `AGENTS.md`. Se requiere una intervención urgente de ingeniería (sprint de seguridad) de al menos 2 semanas para resolver los hallazgos P0 y P1 antes de considerar una beta controlada.
 
----
+----------------------------------------------------------------------------
+10. ANEXOS
+----------------------------------------------------------------------------
 
-6. CHECKLIST GENERAL
+ANEXO A: DIAGRAMA DE SECUENCIA LOGIN (ACTUAL)
+Usuario -> Web/Mobile: Ingresa Credenciales
+Web/Mobile -> Backend: POST /auth/login
+Backend -> DB: Valida Hash (Argon2)
+Backend -> Web/Mobile: Retorna Access Token (15m) + Cookie Refresh
+Web/Mobile -> Storage: Guarda Token (Inseguro en Móvil)
+... 15 minutos después ...
+Web/Mobile -> Backend: Petición API con Token Expirado
+Backend -> Web/Mobile: 401 Unauthorized
+Web/Mobile -> Usuario: Toast "Error" (Sesión Perdida)
 
-[OK] Login (Password, Social, Passkey)
-[OK] Logout (Global & Local)
-[OK] Password Hashing (Argon2)
-[OK] CSRF Protection (Web Manual + Cookies)
-[OK] Rate Limiting (Throttling)
-[OK] Email Verification (Real)
-[OK] Offline Sync (Mobile)
-[OK] Secrets Management (Rotation)
-[FAIL] SAML/SCIM Support (Enterprise Only)
-
----
-
-7. CONCLUSIÓN FINAL
-
-El módulo de autenticación ha sido remediado exitosamente en sus aspectos críticos de seguridad y funcionalidad base. Es apto para producción en segmentos B2C y SMB.
+ANEXO B: DIAGRAMA DE SECUENCIA REFRESH (ESPERADO)
+... 15 minutos después ...
+Web/Mobile -> Backend: Petición API con Token Expirado
+Backend -> Web/Mobile: 401 Unauthorized
+Web/Mobile (Interceptor) -> Backend: POST /auth/refresh (Cookie)
+Backend -> DB: Valida Refresh Hash
+Backend -> Web/Mobile: Nuevo Access Token + Nuevo Refresh Cookie
+Web/Mobile (Interceptor) -> Backend: Reintenta Petición Original
+Backend -> Web/Mobile: 200 OK

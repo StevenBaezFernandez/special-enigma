@@ -1,10 +1,11 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { DatabaseService } from './database.service';
 import { v4 as uuidv4 } from 'uuid';
 import { environment } from '../../../environments/environment';
+import { TokenService } from '@virteex/shared-util-auth'; // Ensure this is available
 
 export interface SyncItem {
   id: string;
@@ -29,6 +30,7 @@ export class SyncService {
   private isProcessing = false;
   private readonly STORAGE_KEY = 'virteex_sync_queue_v2';
   private readonly API_URL = environment.apiUrl;
+  private tokenService = inject(TokenService);
 
   constructor(
       private http: HttpClient,
@@ -166,6 +168,13 @@ export class SyncService {
 
         console.log(`Processing ${snapshot.length} offline items...`);
 
+        // Check token before processing queue
+        if (!this.tokenService.hasAccessToken()) {
+            console.warn('Sync delayed: No access token available. Waiting for valid session.');
+            // Ideally trigger a refresh or login flow here, but simpler to just abort sync until user logs in/refreshes manually via interceptor activity
+            return;
+        }
+
         for (const item of snapshot) {
             // Check if item still exists in live queue (might be removed by UI)
             if (!this.queue().some(i => i.id === item.id)) continue;
@@ -175,6 +184,8 @@ export class SyncService {
             if (Date.now() - item.timestamp < backoffTime) continue;
 
             try {
+                // The request call here will be intercepted by RefreshTokenInterceptor if 401 occurs,
+                // ensuring token refresh happens seamlessly before failing the sync item.
                 await firstValueFrom(this.http.request(item.method, item.url, { body: item.payload }));
                 console.log(`Synced item ${item.id}`);
                 this.removeFromQueue(item.id);
