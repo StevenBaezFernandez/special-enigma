@@ -1,11 +1,11 @@
 {
   "name": "finops",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/kernel/finops/src",
+  "sourceRoot": "libs/domains/finops/src",
   "projectType": "library",
   "tags": [
-    "scope:kernel",
-    "type:util",
+    "scope:finops",
+    "type:domain",
     "platform:agnostic",
     "criticality:medium"
   ],

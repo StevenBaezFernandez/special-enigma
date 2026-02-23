@@ -1,4 +1,4 @@
-# finops (Kernel - FinOps)
+# finops (Domain - FinOps)
 
 ## 🎯 Purpose
 This library implements **Financial Operations** logic, calculating costs and usage for tenants.

@@ -9,6 +9,7 @@ import {
 } from '@virteex/identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
+import { UserOrmEntity } from './persistence/entities/user.orm-entity';
 import { MikroOrmCompanyRepository } from './persistence/mikro-orm-company.repository';
 import { MikroOrmAuditLogRepository } from './persistence/mikro-orm-audit-log.repository';
 import { MikroOrmSessionRepository } from './persistence/mikro-orm-session.repository';
@@ -30,7 +31,8 @@ import {
   UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase, // Added
   TokenGenerationService,
   GetJobTitlesUseCase,
-  CheckSecurityContextUseCase
+  CheckSecurityContextUseCase,
+  LogoutUserUseCase
 } from '@virteex/identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
@@ -44,7 +46,7 @@ import { AuthModule } from '@virteex/auth';
     ConfigModule,
     EventEmitterModule,
     AuthModule,
-    MikroOrmModule.forFeature([User, Company, AuditLog, Session, JobTitle]),
+    MikroOrmModule.forFeature([UserOrmEntity, Company, AuditLog, Session, JobTitle]),
     SharedInfrastructureStorageModule,
     RedisCacheModule.forRootAsync({
       inject: [ConfigService],
@@ -101,7 +103,8 @@ import { AuthModule } from '@virteex/auth';
     GetSubscriptionStatusUseCase,
     TokenGenerationService,
     GetJobTitlesUseCase,
-    CheckSecurityContextUseCase
+    CheckSecurityContextUseCase,
+    LogoutUserUseCase
   ],
   exports: [
     InitiateSignupUseCase,
@@ -121,6 +124,7 @@ import { AuthModule } from '@virteex/auth';
     TokenGenerationService,
     GetJobTitlesUseCase,
     CheckSecurityContextUseCase,
+    LogoutUserUseCase,
     StoragePort,
     UserRepository,
     CompanyRepository,
@@ -130,7 +134,8 @@ import { AuthModule } from '@virteex/auth';
     AuthService,
     RiskEngineService,
     RiskEvaluatorService,
-    CachePort
+    CachePort,
+    GEO_IP_PORT
   ]
 })
 export class IdentityInfrastructureModule {}

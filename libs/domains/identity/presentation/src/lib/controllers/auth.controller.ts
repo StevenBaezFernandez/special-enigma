@@ -1,17 +1,20 @@
 import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException, UseGuards, Inject } from '@nestjs/common';
 import {
-  LoginUserDto, VerifyMfaDto,
   LoginUserUseCase, VerifyMfaUseCase,
-  RefreshTokenDto, RefreshTokenUseCase,
+  RefreshTokenUseCase,
   InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
-  InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto, CheckSecurityContextUseCase
+  CheckSecurityContextUseCase, LogoutUserUseCase
 } from '@virteex/identity-application';
+import {
+  LoginUserDto, VerifyMfaDto,
+  RefreshTokenDto,
+  InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto
+} from '@virteex/identity-contracts';
 import { Request, Response } from 'express';
 import { Public, JwtAuthGuard } from '@virteex/auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import * as geoip from 'geoip-lite';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
-import { CachePort } from '@virteex/identity-domain';
+import { GeoIpPort, GEO_IP_PORT } from '@virteex/identity-domain';
 import { SessionGuard } from '../guards/session.guard';
 
 @ApiTags('Auth')
@@ -26,7 +29,8 @@ export class AuthController {
     private readonly verifySignupUseCase: VerifySignupUseCase,
     private readonly completeOnboardingUseCase: CompleteOnboardingUseCase,
     private readonly checkSecurityContextUseCase: CheckSecurityContextUseCase,
-    @Inject(CachePort) private readonly cachePort: CachePort
+    private readonly logoutUserUseCase: LogoutUserUseCase,
+    @Inject(GEO_IP_PORT) private readonly geoIpPort: GeoIpPort
   ) {}
 
   @Public()
@@ -141,7 +145,7 @@ export class AuthController {
 
       const user = (req as any).user;
       if (user && user.sessionId) {
-          await this.cachePort.del(`session:${user.sessionId}`);
+          await this.logoutUserUseCase.execute(user.sessionId);
       }
 
       return { message: 'Logged out successfully' };
@@ -210,7 +214,7 @@ export class AuthController {
           }
       }
 
-      const geo = geoip.lookup(ip);
+      const geo = await this.geoIpPort.lookup(ip);
 
       if (!geo) {
           if (process.env['NODE_ENV'] !== 'production') {

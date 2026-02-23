@@ -17,3 +17,4 @@ export * from './lib/use-cases/get-subscription-status.use-case'; // Added
 export * from './lib/services/token-generation.service';
 export * from './lib/use-cases/get-job-titles.use-case';
 export * from './lib/use-cases/check-security-context.use-case';
+export * from './lib/use-cases/logout-user.use-case';

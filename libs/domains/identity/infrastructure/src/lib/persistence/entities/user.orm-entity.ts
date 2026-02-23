@@ -1,31 +1,78 @@
-import type { Company } from './company.entity';
+import { Entity, PrimaryKey, Property, ManyToOne, Unique } from '@mikro-orm/core';
+import { Company } from '@virteex/identity-domain';
 import { v4 as uuidv4 } from 'uuid';
 
-export class User {
+@Entity({ schema: 'identity', tableName: 'user' })
+export class UserOrmEntity {
+  @PrimaryKey({ type: 'uuid' })
   id: string = uuidv4();
+
+  @Property()
+  @Unique()
   email!: string;
+
+  @Property()
   passwordHash!: string;
+
+  @Property()
   firstName!: string;
+
+  @Property()
   lastName!: string;
+
+  @Property()
   country!: string;
+
+  @Property()
   timezone!: string;
+
+  @Property({ nullable: true })
   phone?: string;
+
+  @Property({ nullable: true })
   avatarUrl?: string;
+
+  @Property()
   role = 'user'; // 'admin', 'user', etc.
+
+  @ManyToOne('Company')
   company!: Company;
+
+  @Property()
   isActive = true;
+
+  @Property()
   status = 'PENDING';
+
+  @Property({ nullable: true })
   invitationToken?: string;
+
+  @Property({ nullable: true })
   invitationExpiresAt?: Date;
 
   // New fields for Authentication Security
+  @Property()
   riskScore = 0; // 0-100, dynamic or static baseline
+
+  @Property()
   mfaEnabled = false;
+
+  @Property({ nullable: true })
   mfaSecret?: string;
+
+  @Property({ nullable: true })
   lastLoginAt?: Date;
+
+  @Property()
   failedLoginAttempts = 0;
+
+  @Property({ nullable: true })
   lockedUntil?: Date;
+
+  @Property()
   createdAt: Date = new Date();
+
+  @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
   constructor(email: string, passwordHash: string, firstName: string, lastName: string, country: string, company: Company) {
@@ -36,16 +83,5 @@ export class User {
     this.country = country;
     this.company = company;
     this.timezone = 'UTC';
-  }
-
-  updateProfile(firstName?: string, lastName?: string, phone?: string): void {
-    if (firstName) this.firstName = firstName;
-    if (lastName) this.lastName = lastName;
-    if (phone) this.phone = phone;
-  }
-
-  activate(): void {
-    this.isActive = true;
-    this.status = 'ACTIVE';
   }
 }
