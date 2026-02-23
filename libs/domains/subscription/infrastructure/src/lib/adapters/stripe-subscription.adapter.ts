@@ -1,10 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SubscriptionGateway, CreateSubscriptionResult } from '../../../../domain/src/lib/ports/subscription-gateway.port';
+import {
+  CustomerRegistryGateway,
+  SubscriptionProviderGateway,
+  SubscriptionProviderResult,
+  PaymentSessionProvider
+} from '@virteex/subscription-domain';
 import Stripe from 'stripe';
+import { StripeMapper } from './stripe.mapper';
 
 @Injectable()
-export class StripeSubscriptionAdapter implements SubscriptionGateway {
+export class StripeSubscriptionAdapter implements CustomerRegistryGateway, SubscriptionProviderGateway, PaymentSessionProvider {
   private readonly logger = new Logger(StripeSubscriptionAdapter.name);
   private stripe: Stripe;
 
@@ -32,7 +38,7 @@ export class StripeSubscriptionAdapter implements SubscriptionGateway {
     }
   }
 
-  async createSubscription(customerId: string, priceId: string): Promise<CreateSubscriptionResult> {
+  async createSubscription(customerId: string, priceId: string): Promise<SubscriptionProviderResult> {
     try {
       const subscription = await this.stripe.subscriptions.create({
         customer: customerId,
@@ -49,7 +55,7 @@ export class StripeSubscriptionAdapter implements SubscriptionGateway {
         subscriptionId: subscription.id,
         customerId: customerId,
         clientSecret: paymentIntent?.client_secret || '',
-        status: subscription.status,
+        status: StripeMapper.toSubscriptionStatus(subscription.status),
         currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
       };
     } catch (error: any) {
@@ -58,7 +64,7 @@ export class StripeSubscriptionAdapter implements SubscriptionGateway {
     }
   }
 
-  async updateSubscription(subscriptionId: string, priceId: string): Promise<CreateSubscriptionResult> {
+  async updateSubscription(subscriptionId: string, priceId: string): Promise<SubscriptionProviderResult> {
     try {
       const subscription = await this.stripe.subscriptions.retrieve(subscriptionId);
       const itemId = subscription.items.data[0].id;
@@ -80,7 +86,7 @@ export class StripeSubscriptionAdapter implements SubscriptionGateway {
         subscriptionId: updatedSubscription.id,
         customerId: updatedSubscription.customer as string,
         clientSecret: paymentIntent?.client_secret || '',
-        status: updatedSubscription.status,
+        status: StripeMapper.toSubscriptionStatus(updatedSubscription.status),
         currentPeriodEnd: new Date((updatedSubscription as any).current_period_end * 1000),
       };
     } catch (error: any) {

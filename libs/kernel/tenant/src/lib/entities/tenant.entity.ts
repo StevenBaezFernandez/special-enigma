@@ -15,9 +15,6 @@ export class Tenant {
   @Property({ nullable: true })
   schemaName?: string; // For SCHEMA mode
 
-  @Property({ nullable: true })
-  plan?: string;
-
   @Property({ type: 'json', nullable: true })
   settings?: Record<string, any>;
 

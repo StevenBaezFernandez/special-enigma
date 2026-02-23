@@ -12,8 +12,8 @@ export interface Subscription {
   billingCycle: string;
   nextBillingDate: string;
   trialEndsDate?: string;
-  stripeCustomerId?: string;
-  stripeSubscriptionId?: string;
+  externalCustomerId?: string;
+  externalSubscriptionId?: string;
 }
 
 export interface PaymentMethod {

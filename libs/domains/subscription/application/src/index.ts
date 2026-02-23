@@ -6,3 +6,7 @@ export * from './lib/use-cases/get-subscription-plans.use-case';
 export * from './lib/use-cases/get-subscription.use-case';
 export * from './lib/use-cases/create-checkout-session.use-case';
 export * from './lib/use-cases/create-portal-session.use-case';
+export * from './lib/use-cases/process-checkout-success.use-case';
+export * from './lib/use-cases/handle-invoice-paid.use-case';
+export * from './lib/use-cases/handle-subscription-updated.use-case';
+export * from './lib/use-cases/handle-subscription-deleted.use-case';

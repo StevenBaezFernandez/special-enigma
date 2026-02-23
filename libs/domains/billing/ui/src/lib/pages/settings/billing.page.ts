@@ -41,8 +41,8 @@ export class BillingPage implements OnInit {
   constructor() {
     effect(() => {
       const sub = this.subscription();
-      if (sub && sub.stripeCustomerId) {
-          this.customerId.set(sub.stripeCustomerId);
+      if (sub && sub.externalCustomerId) {
+          this.customerId.set(sub.externalCustomerId);
       }
     });
   }

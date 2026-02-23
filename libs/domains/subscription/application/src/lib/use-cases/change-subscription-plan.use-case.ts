@@ -1,13 +1,12 @@
 import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
 import {
   Subscription,
-  SubscriptionStatus,
   SubscriptionRepository,
   SUBSCRIPTION_REPOSITORY,
   SubscriptionPlanRepository,
   SUBSCRIPTION_PLAN_REPOSITORY,
-  SubscriptionGateway,
-  SUBSCRIPTION_GATEWAY
+  SubscriptionProviderGateway,
+  SUBSCRIPTION_PROVIDER_GATEWAY
 } from '@virteex/subscription-domain';
 
 export interface ChangeSubscriptionPlanDto {
@@ -28,8 +27,8 @@ export class ChangeSubscriptionPlanUseCase {
     private readonly subscriptionRepository: SubscriptionRepository,
     @Inject(SUBSCRIPTION_PLAN_REPOSITORY)
     private readonly subscriptionPlanRepository: SubscriptionPlanRepository,
-    @Inject(SUBSCRIPTION_GATEWAY)
-    private readonly subscriptionGateway: SubscriptionGateway
+    @Inject(SUBSCRIPTION_PROVIDER_GATEWAY)
+    private readonly subscriptionProviderGateway: SubscriptionProviderGateway
   ) {}
 
   async execute(dto: ChangeSubscriptionPlanDto): Promise<ChangeSubscriptionResult> {
@@ -40,31 +39,24 @@ export class ChangeSubscriptionPlanUseCase {
 
     const subscription = await this.subscriptionRepository.findByTenantId(dto.tenantId);
 
-    if (!subscription || !subscription.stripeSubscriptionId) {
+    if (!subscription || !subscription.externalSubscriptionId) {
         throw new BadRequestException('No active subscription found for this tenant.');
     }
 
-    const stripeSub = await this.subscriptionGateway.updateSubscription(subscription.stripeSubscriptionId, dto.price);
+    const externalSub = await this.subscriptionProviderGateway.updateSubscription(subscription.externalSubscriptionId, dto.price);
 
     // Update subscription details
     subscription.plan = plan;
-
-    const statusMap: Record<string, SubscriptionStatus> = {
-        'active': SubscriptionStatus.ACTIVE,
-        'incomplete': SubscriptionStatus.PAYMENT_PENDING,
-        'trialing': SubscriptionStatus.TRIAL
-    };
-    subscription.status = statusMap[stripeSub.status] || SubscriptionStatus.ACTIVE;
-
-    subscription.currentPeriodEnd = stripeSub.currentPeriodEnd;
-    subscription.endDate = stripeSub.currentPeriodEnd;
+    subscription.status = externalSub.status;
+    subscription.currentPeriodEnd = externalSub.currentPeriodEnd;
+    subscription.endDate = externalSub.currentPeriodEnd;
     subscription.cancelAtPeriodEnd = false;
 
     await this.subscriptionRepository.save(subscription);
 
     return {
         subscription,
-        clientSecret: stripeSub.clientSecret
+        clientSecret: externalSub.clientSecret
     };
   }
 }

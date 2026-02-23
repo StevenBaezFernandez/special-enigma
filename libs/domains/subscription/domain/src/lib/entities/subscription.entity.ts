@@ -26,16 +26,16 @@ export class Subscription {
   status: SubscriptionStatus = SubscriptionStatus.ACTIVE;
 
   @Property({ nullable: true })
-  stripeSubscriptionId?: string;
+  externalSubscriptionId?: string;
 
   @Property({ nullable: true })
-  stripeCustomerId?: string;
+  externalCustomerId?: string;
 
   @Property({ nullable: true })
   currentPeriodEnd?: Date;
 
-  @Property({ type: 'boolean' })
-  cancelAtPeriodEnd: boolean = false;
+  @Property()
+  cancelAtPeriodEnd = false;
 
   @Property()
   startDate: Date = new Date();
@@ -57,15 +57,10 @@ export class Subscription {
 
   isValid(): boolean {
     const now = new Date();
-    // Allow PAST_DUE for a grace period if needed, but strictly:
     if (this.status !== SubscriptionStatus.ACTIVE && this.status !== SubscriptionStatus.TRIAL) {
       return false;
     }
-    // Check if subscription has ended (and not renewed)
     if (this.currentPeriodEnd && this.currentPeriodEnd < now) {
-      // If Stripe says it ended, it ended.
-      // But usually status reflects that.
-      // Fallback to local endDate if currentPeriodEnd is not set.
       return false;
     }
     if (this.endDate && !this.currentPeriodEnd && this.endDate < now) {
@@ -74,11 +69,11 @@ export class Subscription {
     return true;
   }
 
-  markAsActive(stripeSubId: string, currentPeriodEnd: Date) {
+  markAsActive(externalSubId: string, currentPeriodEnd: Date) {
     this.status = SubscriptionStatus.ACTIVE;
-    this.stripeSubscriptionId = stripeSubId;
+    this.externalSubscriptionId = externalSubId;
     this.currentPeriodEnd = currentPeriodEnd;
-    this.endDate = currentPeriodEnd; // Sync local endDate
+    this.endDate = currentPeriodEnd;
   }
 
   markAsCanceled(atPeriodEnd: boolean) {

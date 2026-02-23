@@ -2,16 +2,16 @@ import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Subscription } from './entities/subscription.entity';
 import { SubscriptionPlan } from './entities/subscription-plan.entity';
-import { CustomerManagementService } from './services/customer-management.service';
+import { CustomerIdentityService } from './services/customer-identity.service';
 
 @Module({
   imports: [
     MikroOrmModule.forFeature([Subscription, SubscriptionPlan])
   ],
-  providers: [CustomerManagementService],
+  providers: [CustomerIdentityService],
   exports: [
     MikroOrmModule,
-    CustomerManagementService
+    CustomerIdentityService
   ]
 })
 export class SubscriptionDomainModule {}

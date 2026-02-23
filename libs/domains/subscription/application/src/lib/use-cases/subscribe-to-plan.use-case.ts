@@ -6,9 +6,9 @@ import {
   SUBSCRIPTION_REPOSITORY,
   SubscriptionPlanRepository,
   SUBSCRIPTION_PLAN_REPOSITORY,
-  SubscriptionGateway,
-  SUBSCRIPTION_GATEWAY,
-  CustomerManagementService
+  SubscriptionProviderGateway,
+  SUBSCRIPTION_PROVIDER_GATEWAY,
+  CustomerIdentityService
 } from '@virteex/subscription-domain';
 
 export interface SubscribeToPlanDto {
@@ -33,9 +33,9 @@ export class SubscribeToPlanUseCase {
     private readonly subscriptionRepository: SubscriptionRepository,
     @Inject(SUBSCRIPTION_PLAN_REPOSITORY)
     private readonly subscriptionPlanRepository: SubscriptionPlanRepository,
-    @Inject(SUBSCRIPTION_GATEWAY)
-    private readonly subscriptionGateway: SubscriptionGateway,
-    private readonly customerManagementService: CustomerManagementService
+    @Inject(SUBSCRIPTION_PROVIDER_GATEWAY)
+    private readonly subscriptionProviderGateway: SubscriptionProviderGateway,
+    private readonly customerIdentityService: CustomerIdentityService
   ) {}
 
   async execute(dto: SubscribeToPlanDto): Promise<SubscriptionResult> {
@@ -46,19 +46,19 @@ export class SubscribeToPlanUseCase {
 
     let subscription = await this.subscriptionRepository.findByTenantId(dto.tenantId);
 
-    if (subscription && subscription.stripeSubscriptionId &&
+    if (subscription && subscription.externalSubscriptionId &&
         (subscription.status === SubscriptionStatus.ACTIVE || subscription.status === SubscriptionStatus.TRIAL)) {
         throw new BadRequestException('Tenant already has an active subscription. Use change plan instead.');
     }
 
-    const customerId = await this.customerManagementService.getOrCreateCustomerId(
+    const customerId = await this.customerIdentityService.getOrCreateExternalId(
         dto.email,
         dto.name,
         dto.paymentMethodId,
         dto.tenantId
     );
 
-    const stripeSub = await this.subscriptionGateway.createSubscription(customerId, dto.price);
+    const externalSub = await this.subscriptionProviderGateway.createSubscription(customerId, dto.price);
 
     if (!subscription) {
         subscription = new Subscription(dto.tenantId, plan);
@@ -66,25 +66,18 @@ export class SubscribeToPlanUseCase {
 
     // Update subscription details
     subscription.plan = plan;
-    subscription.stripeCustomerId = customerId;
-    subscription.stripeSubscriptionId = stripeSub.subscriptionId;
-
-    const statusMap: Record<string, SubscriptionStatus> = {
-        'active': SubscriptionStatus.ACTIVE,
-        'incomplete': SubscriptionStatus.PAYMENT_PENDING,
-        'trialing': SubscriptionStatus.TRIAL
-    };
-    subscription.status = statusMap[stripeSub.status] || SubscriptionStatus.PAYMENT_PENDING;
-
-    subscription.currentPeriodEnd = stripeSub.currentPeriodEnd;
-    subscription.endDate = stripeSub.currentPeriodEnd;
+    subscription.externalCustomerId = customerId;
+    subscription.externalSubscriptionId = externalSub.subscriptionId;
+    subscription.status = externalSub.status;
+    subscription.currentPeriodEnd = externalSub.currentPeriodEnd;
+    subscription.endDate = externalSub.currentPeriodEnd;
     subscription.cancelAtPeriodEnd = false;
 
     await this.subscriptionRepository.save(subscription);
 
     return {
         subscription,
-        clientSecret: stripeSub.clientSecret
+        clientSecret: externalSub.clientSecret
     };
   }
 }

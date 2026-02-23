@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { SubscriptionGateway, SUBSCRIPTION_GATEWAY } from '@virteex/subscription-domain';
+import { PaymentSessionProvider, PAYMENT_SESSION_PROVIDER } from '@virteex/subscription-domain';
 
 export interface CreatePortalSessionDto {
   customerId: string;
@@ -9,12 +9,12 @@ export interface CreatePortalSessionDto {
 @Injectable()
 export class CreatePortalSessionUseCase {
   constructor(
-    @Inject(SUBSCRIPTION_GATEWAY)
-    private readonly subscriptionGateway: SubscriptionGateway
+    @Inject(PAYMENT_SESSION_PROVIDER)
+    private readonly paymentSessionProvider: PaymentSessionProvider
   ) {}
 
   async execute(dto: CreatePortalSessionDto): Promise<string> {
-    return this.subscriptionGateway.createPortalSession(
+    return this.paymentSessionProvider.createPortalSession(
       dto.customerId,
       dto.returnUrl
     );

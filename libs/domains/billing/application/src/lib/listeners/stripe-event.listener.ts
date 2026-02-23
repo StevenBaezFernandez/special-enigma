@@ -3,7 +3,7 @@ import { OnEvent, EventEmitter2 } from '@nestjs/event-emitter';
 
 export class InvoicePaidEvent {
   constructor(
-    public readonly stripeSubscriptionId: string,
+    public readonly externalSubscriptionId: string,
     public readonly amount: number,
     public readonly currency: string,
     public readonly customerId: string

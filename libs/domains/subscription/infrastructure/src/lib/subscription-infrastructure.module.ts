@@ -1,22 +1,27 @@
-import { Module, Global } from '@nestjs/common';
+import { Module, Global, forwardRef } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
   Subscription,
   SubscriptionPlan,
   SUBSCRIPTION_REPOSITORY,
   SUBSCRIPTION_PLAN_REPOSITORY,
-  SUBSCRIPTION_GATEWAY,
+  CUSTOMER_REGISTRY_GATEWAY,
+  SUBSCRIPTION_PROVIDER_GATEWAY,
+  PAYMENT_SESSION_PROVIDER,
   SubscriptionDomainModule
 } from '@virteex/subscription-domain';
+import { SubscriptionApplicationModule } from '@virteex/subscription-application';
 
 import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscription.repository';
 import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';
 import { StripeSubscriptionAdapter } from './adapters/stripe-subscription.adapter';
+import { StripeSubscriptionListener } from './listeners/stripe-subscription.listener';
 
 @Global()
 @Module({
   imports: [
     SubscriptionDomainModule,
+    forwardRef(() => SubscriptionApplicationModule),
     MikroOrmModule.forFeature([
       Subscription,
       SubscriptionPlan
@@ -32,14 +37,25 @@ import { StripeSubscriptionAdapter } from './adapters/stripe-subscription.adapte
       useClass: MikroOrmSubscriptionPlanRepository
     },
     {
-      provide: SUBSCRIPTION_GATEWAY,
+      provide: CUSTOMER_REGISTRY_GATEWAY,
       useClass: StripeSubscriptionAdapter
-    }
+    },
+    {
+      provide: SUBSCRIPTION_PROVIDER_GATEWAY,
+      useClass: StripeSubscriptionAdapter
+    },
+    {
+      provide: PAYMENT_SESSION_PROVIDER,
+      useClass: StripeSubscriptionAdapter
+    },
+    StripeSubscriptionListener
   ],
   exports: [
     SUBSCRIPTION_REPOSITORY,
     SUBSCRIPTION_PLAN_REPOSITORY,
-    SUBSCRIPTION_GATEWAY,
+    CUSTOMER_REGISTRY_GATEWAY,
+    SUBSCRIPTION_PROVIDER_GATEWAY,
+    PAYMENT_SESSION_PROVIDER,
     MikroOrmModule
   ]
 })

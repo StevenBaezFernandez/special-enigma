@@ -1,0 +1,28 @@
+{
+  "name": "subscription-presentation",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domains/subscription/presentation/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": ["scope:subscription", "type:presentation"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/domains/subscription/presentation",
+        "main": "libs/domains/subscription/presentation/src/index.ts",
+        "tsConfig": "libs/domains/subscription/presentation/tsconfig.lib.json",
+        "assets": ["libs/domains/subscription/presentation/*.md"],
+        "rootDir": "libs/domains/subscription/presentation"
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domains/subscription/presentation"
+      }
+    }
+  }
+}
