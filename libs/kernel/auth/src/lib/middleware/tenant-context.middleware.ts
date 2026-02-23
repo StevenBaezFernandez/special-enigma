@@ -4,29 +4,30 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { TenantContext } from '../interfaces/tenant-context.interface';
 import { runWithTenantContext } from '../storage/tenant-context.storage';
 import { TelemetryService } from '@virteex/telemetry';
+import { SecretManagerService } from '../services/secret-manager.service';
+import '../interfaces/express.interface'; // Import for side-effects (type merging)
 
 @Injectable()
 export class TenantContextMiddleware implements NestMiddleware, OnModuleInit {
-  private readonly secret: string;
+  private secret: string;
 
-  constructor(private readonly telemetryService: TelemetryService) {
-    // If not set, it will be undefined, validated in onModuleInit
-    this.secret = process.env['VIRTEEX_HMAC_SECRET'] || '';
-  }
+  constructor(
+    private readonly telemetryService: TelemetryService,
+    private readonly secretManager: SecretManagerService
+  ) {}
 
   onModuleInit() {
-    if (!this.secret) {
+    // Fetch secret using SecretManagerService instead of process.env
+    try {
+        this.secret = this.secretManager.getSecret('VIRTEEX_HMAC_SECRET');
+    } catch (_e) {
         throw new Error('FATAL: VIRTEEX_HMAC_SECRET is not defined. Application cannot start securely.');
     }
   }
 
   use(req: Request, res: Response, next: NextFunction) {
-    const contextHeader = Array.isArray(req.headers['x-virteex-context'])
-      ? req.headers['x-virteex-context'][0]
-      : req.headers['x-virteex-context'];
-    const signatureHeader = Array.isArray(req.headers['x-virteex-signature'])
-      ? req.headers['x-virteex-signature'][0]
-      : req.headers['x-virteex-signature'];
+    const contextHeader = this.getHeader(req, 'x-virteex-context');
+    const signatureHeader = this.getHeader(req, 'x-virteex-signature');
 
     if (!contextHeader || !signatureHeader) {
       this.telemetryService.recordSecurityEvent('MISSING_CONTEXT_HEADERS', {
@@ -36,14 +37,7 @@ export class TenantContextMiddleware implements NestMiddleware, OnModuleInit {
       throw new UnauthorizedException('Missing Tenant Context Headers');
     }
 
-    const expectedSignature = createHmac('sha256', this.secret)
-      .update(contextHeader)
-      .digest('hex');
-
-    const expectedBuffer = Buffer.from(expectedSignature);
-    const signatureBuffer = Buffer.from(signatureHeader);
-
-    if (expectedBuffer.length !== signatureBuffer.length || !timingSafeEqual(expectedBuffer, signatureBuffer)) {
+    if (!this.verifySignature(contextHeader, signatureHeader)) {
       this.telemetryService.recordSecurityEvent('INVALID_SIGNATURE', {
         ip: req.ip,
         headers: req.headers,
@@ -53,14 +47,12 @@ export class TenantContextMiddleware implements NestMiddleware, OnModuleInit {
 
     try {
       const context: TenantContext = JSON.parse(Buffer.from(contextHeader, 'base64').toString('utf-8'));
-      // Attach to request object. We might need to extend the Express Request interface for type safety globally,
-      // but for now we attach it to 'user' or a custom property.
-      // NestJS usually uses request['user'] for auth, but this is tenant context.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (req as any).tenantContext = context;
+
+      // Type-safe assignment thanks to declaration merging
+      req.tenantContext = context;
 
       // Add Telemetry attributes
-      const requestId = (req.headers['x-request-id'] as string) || 'unknown';
+      const requestId = this.getHeader(req, 'x-request-id') || 'unknown';
       this.telemetryService.setTraceAttributes({
         'tenant.id': context.tenantId,
         'request.id': requestId,
@@ -69,12 +61,35 @@ export class TenantContextMiddleware implements NestMiddleware, OnModuleInit {
       runWithTenantContext(context, () => {
         next();
       });
-    } catch {
+    } catch (_error) {
       this.telemetryService.recordSecurityEvent('INVALID_CONTEXT_FORMAT', {
         ip: req.ip,
         headers: req.headers,
       });
       throw new UnauthorizedException('Invalid Tenant Context Format');
     }
+  }
+
+  private getHeader(req: Request, key: string): string | undefined {
+    const value = req.headers[key];
+    if (Array.isArray(value)) {
+      return value[0];
+    }
+    return value;
+  }
+
+  private verifySignature(payload: string, signature: string): boolean {
+    const expectedSignature = createHmac('sha256', this.secret)
+      .update(payload)
+      .digest('hex');
+
+    const expectedBuffer = Buffer.from(expectedSignature);
+    const signatureBuffer = Buffer.from(signature);
+
+    if (expectedBuffer.length !== signatureBuffer.length) {
+      return false;
+    }
+
+    return timingSafeEqual(expectedBuffer, signatureBuffer);
   }
 }

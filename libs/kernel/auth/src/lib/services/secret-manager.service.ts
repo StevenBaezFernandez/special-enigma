@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as fs from 'fs';
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import { SecretProvider } from '../interfaces/secret-provider.interface';
+
+export const SECRET_PROVIDER = 'SECRET_PROVIDER';
 
 @Injectable()
 export class SecretManagerService {
@@ -8,18 +9,40 @@ export class SecretManagerService {
   private currentSecret: string;
   private previousSecrets: string[] = [];
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    @Inject(SECRET_PROVIDER) private readonly provider: SecretProvider
+  ) {
+    this.initSecrets();
+  }
+
+  private initSecrets() {
     try {
-        this.currentSecret = this.loadSecret('JWT_SECRET');
-    } catch (e: any) {
-        this.logger.error(e.message);
+        const secret = this.provider.getSecret('JWT_SECRET');
+        if (!secret) {
+             throw new Error('JWT_SECRET must be defined in environment variables (or via _FILE suffix). Application cannot start securely.');
+        }
+        this.currentSecret = secret;
+    } catch (e: unknown) {
+        if (e instanceof Error) {
+            this.logger.error(e.message);
+        } else {
+            this.logger.error('Unknown error during secret initialization');
+        }
         throw e;
     }
 
-    const rotation = this.configService.get<string>('JWT_SECRET_ROTATION');
+    const rotation = this.provider.getSecret('JWT_SECRET_ROTATION');
     if (rotation) {
         this.previousSecrets = rotation.split(',');
     }
+  }
+
+  getSecret(key: string): string {
+    const value = this.provider.getSecret(key);
+    if (!value) {
+      throw new Error(`Secret ${key} not found.`);
+    }
+    return value;
   }
 
   getJwtSecret(): string {
@@ -32,28 +55,9 @@ export class SecretManagerService {
 
   // Example of rotation trigger (would be called by a scheduler or webhook)
   async rotateSecret(): Promise<void> {
-      // Logic to fetch new secret from Vault
+      // Logic to re-fetch secrets could go here, potentially calling initSecrets again
       this.logger.log('Rotating secrets...');
-  }
-
-  private loadSecret(key: string): string {
-    // 1. Try file (e.g. Docker Secret)
-    const filePath = this.configService.get<string>(`${key}_FILE`);
-    if (filePath && fs.existsSync(filePath)) {
-        try {
-            return fs.readFileSync(filePath, 'utf8').trim();
-        } catch (e: any) {
-            this.logger.error(`Failed to read secret from file ${filePath}: ${e.message}`);
-        }
-    }
-
-    // 2. Try Env Var
-    const envSecret = this.configService.get<string>(key);
-    if (envSecret) {
-        return envSecret;
-    }
-
-    // 3. Fail secure
-    throw new Error(`${key} must be defined in environment variables (or via _FILE suffix). Application cannot start securely.`);
+      // In a real implementation, this would fetch new secrets from the provider.
+      // this.initSecrets();
   }
 }
