@@ -4,7 +4,7 @@ import {
   LoginUserUseCase, VerifyMfaUseCase,
   RefreshTokenDto, RefreshTokenUseCase,
   InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
-  InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto
+  InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto, CheckSecurityContextUseCase
 } from '@virteex/identity-application';
 import { Request, Response } from 'express';
 import { Public, JwtAuthGuard } from '@virteex/auth';
@@ -25,6 +25,7 @@ export class AuthController {
     private readonly initiateSignupUseCase: InitiateSignupUseCase,
     private readonly verifySignupUseCase: VerifySignupUseCase,
     private readonly completeOnboardingUseCase: CompleteOnboardingUseCase,
+    private readonly checkSecurityContextUseCase: CheckSecurityContextUseCase,
     @Inject(CachePort) private readonly cachePort: CachePort
   ) {}
 
@@ -149,6 +150,26 @@ export class AuthController {
   @Get('me')
   async getMe(@Req() req: Request) {
       return (req as any).user;
+  }
+
+  @Public()
+  @Post('security/context-check')
+  @HttpCode(HttpStatus.OK)
+  async checkContext(@Body() body: { urlCountry: string }, @Req() req: Request) {
+      let ip: string = req.ip || '127.0.0.1';
+      const forwarded = req.headers['x-forwarded-for'];
+      if (forwarded) {
+          if (Array.isArray(forwarded)) {
+              ip = forwarded[0];
+          } else {
+              ip = forwarded.split(',')[0].trim();
+          }
+      }
+
+      return this.checkSecurityContextUseCase.execute({
+          urlCountry: body.urlCountry,
+          ip
+      });
   }
 
   private setCookies(res: Response, accessToken: string, refreshToken: string, rememberMe = true) {

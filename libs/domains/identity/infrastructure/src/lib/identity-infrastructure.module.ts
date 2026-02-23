@@ -5,7 +5,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import {
   UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository,
   AuthService, NotificationService, RiskEngineService, CachePort,
-  User, Company, AuditLog, Session, JobTitle
+  User, Company, AuditLog, Session, JobTitle, RiskEvaluatorService
 } from '@virteex/identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
@@ -28,7 +28,9 @@ import {
   ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase,
   InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
   UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase, // Added
-  TokenGenerationService
+  TokenGenerationService,
+  GetJobTitlesUseCase,
+  CheckSecurityContextUseCase
 } from '@virteex/identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
@@ -77,6 +79,7 @@ import { AuthModule } from '@virteex/auth';
     { provide: AuthService, useClass: Argon2AuthService },
     { provide: NotificationService, useClass: NodemailerNotificationService },
     { provide: RiskEngineService, useClass: DefaultRiskEngineService },
+    RiskEvaluatorService,
     { provide: StoragePort, useClass: StorageAdapter },
     { provide: GEO_IP_PORT, useClass: GeoIpLiteAdapter },
     { provide: CachePort, useClass: RedisCacheAdapter },
@@ -96,7 +99,9 @@ import { AuthModule } from '@virteex/auth';
     RefreshTokenUseCase,
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
-    TokenGenerationService
+    TokenGenerationService,
+    GetJobTitlesUseCase,
+    CheckSecurityContextUseCase
   ],
   exports: [
     InitiateSignupUseCase,
@@ -114,6 +119,8 @@ import { AuthModule } from '@virteex/auth';
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
     TokenGenerationService,
+    GetJobTitlesUseCase,
+    CheckSecurityContextUseCase,
     StoragePort,
     UserRepository,
     CompanyRepository,
@@ -122,6 +129,7 @@ import { AuthModule } from '@virteex/auth';
     JobTitleRepository,
     AuthService,
     RiskEngineService,
+    RiskEvaluatorService,
     CachePort
   ]
 })

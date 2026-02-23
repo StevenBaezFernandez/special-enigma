@@ -5,9 +5,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
-  UpdateUserDto, InviteUserDto
+  UpdateUserDto, InviteUserDto, GetJobTitlesUseCase
 } from '@virteex/identity-application';
-import { User, JobTitleRepository } from '@virteex/identity-domain';
+import { User } from '@virteex/identity-domain';
 import { JwtAuthGuard } from '@virteex/auth';
 import { Request } from 'express';
 
@@ -19,13 +19,12 @@ export class UsersController {
     private readonly updateProfile: UpdateUserProfileUseCase,
     private readonly inviteUser: InviteUserUseCase,
     private readonly uploadAvatar: UploadAvatarUseCase,
-    private readonly jobTitleRepository: JobTitleRepository
+    private readonly getJobTitlesUseCase: GetJobTitlesUseCase
   ) {}
 
   @Get('job-titles')
   async getJobTitles(): Promise<string[]> {
-    await this.jobTitleRepository.ensureDefaults();
-    const titles = await this.jobTitleRepository.findAll();
+    const titles = await this.getJobTitlesUseCase.execute();
     return titles.map(t => t.title);
   }
 

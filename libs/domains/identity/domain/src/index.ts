@@ -14,3 +14,4 @@ export * from './lib/ports/risk-engine.service';
 export * from './lib/ports/geo-ip.port';
 export * from './lib/events/user-invited.event';
 export * from './lib/ports/cache.port';
+export * from './lib/services/risk-evaluator.service';
