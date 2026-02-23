@@ -7,7 +7,8 @@ export enum SubscriptionStatus {
   CANCELED = 'CANCELED',
   EXPIRED = 'EXPIRED',
   TRIAL = 'TRIAL',
-  PAST_DUE = 'PAST_DUE'
+  PAST_DUE = 'PAST_DUE',
+  PAYMENT_PENDING = 'PAYMENT_PENDING'
 }
 
 @Entity()
