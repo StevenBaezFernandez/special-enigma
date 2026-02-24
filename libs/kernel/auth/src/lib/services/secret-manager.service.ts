@@ -18,11 +18,14 @@ export class SecretManagerService {
   private initSecrets() {
     try {
         const secret = this.provider.getSecret('JWT_SECRET');
+        const isProd = process.env['NODE_ENV'] === 'production';
+
         if (!secret) {
-             // Fallback to a development secret if not in production?
-             // Better to fail fast for JWT_SECRET if it's supposed to be secure.
-             this.currentSecret = 'dev-secret-change-me-in-production';
-             this.logger.warn('JWT_SECRET not found, using insecure development secret!');
+            if (isProd) {
+                throw new Error('JWT_SECRET not found in production environment!');
+            }
+            this.currentSecret = 'dev-secret-change-me-in-production';
+            this.logger.warn('JWT_SECRET not found, using insecure development secret!');
         } else {
             this.currentSecret = secret;
         }

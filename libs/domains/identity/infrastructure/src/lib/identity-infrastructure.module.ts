@@ -30,6 +30,7 @@ import {
   ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase,
   InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
   UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase, // Added
+  GetAuditLogsUseCase,
   TokenGenerationService,
   GetJobTitlesUseCase,
   CheckSecurityContextUseCase,
@@ -111,6 +112,7 @@ import { AuthModule } from '@virteex/auth';
     RefreshTokenUseCase,
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
+    GetAuditLogsUseCase,
     TokenGenerationService,
     GetJobTitlesUseCase,
     CheckSecurityContextUseCase,
@@ -131,6 +133,7 @@ import { AuthModule } from '@virteex/auth';
     RefreshTokenUseCase,
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
+    GetAuditLogsUseCase,
     TokenGenerationService,
     GetJobTitlesUseCase,
     CheckSecurityContextUseCase,

@@ -5,11 +5,13 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
-  GetJobTitlesUseCase
+  GetJobTitlesUseCase, GetAuditLogsUseCase
 } from '@virteex/identity-application';
 import { UpdateUserDto, InviteUserDto, UserResponseDto } from '@virteex/identity-contracts';
 import { JwtAuthGuard, CurrentUser } from '@virteex/auth';
 import { UserMapper } from '../mappers/user.mapper';
+import { AuditLogMapper } from '../mappers/audit-log.mapper';
+import { UserResponseDto, AuditLogDto } from '@virteex/identity-contracts';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -19,7 +21,8 @@ export class UsersController {
     private readonly updateProfile: UpdateUserProfileUseCase,
     private readonly inviteUser: InviteUserUseCase,
     private readonly uploadAvatar: UploadAvatarUseCase,
-    private readonly getJobTitlesUseCase: GetJobTitlesUseCase
+    private readonly getJobTitlesUseCase: GetJobTitlesUseCase,
+    private readonly getAuditLogsUseCase: GetAuditLogsUseCase
   ) {}
 
   @Get('job-titles')
@@ -33,6 +36,13 @@ export class UsersController {
     const userId = user?.sub;
     const userEntity = await this.getProfile.execute(userId);
     return UserMapper.toDto(userEntity);
+  }
+
+  @Get('audit-logs')
+  async getMyAuditLogs(@CurrentUser() user: any): Promise<AuditLogDto[]> {
+    const userId = user?.sub;
+    const logs = await this.getAuditLogsUseCase.execute(userId);
+    return AuditLogMapper.toDtoList(logs);
   }
 
   @Patch('profile')

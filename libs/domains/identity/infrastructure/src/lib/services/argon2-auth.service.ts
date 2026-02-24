@@ -23,11 +23,11 @@ export class Argon2AuthService implements AuthService {
     }
 
     const mfaKey = this.secretManager.getSecret('MFA_ENCRYPTION_KEY', this.secret);
-    const salt = this.secretManager.getSecret('ENCRYPTION_SALT', 'default-salt-for-dev-only');
+    const isProd = process.env['NODE_ENV'] === 'production';
+    const salt = this.secretManager.getSecret('ENCRYPTION_SALT', isProd ? undefined : 'default-salt-for-dev-only');
 
-    if (salt === 'default-salt-for-dev-only') {
-        // In production this would be a critical security issue if not set.
-        // We could log a warning or throw.
+    if (isProd && !salt) {
+        throw new Error('ENCRYPTION_SALT must be defined in production!');
     }
 
     // Derive a 32-byte key using strict scrypt params

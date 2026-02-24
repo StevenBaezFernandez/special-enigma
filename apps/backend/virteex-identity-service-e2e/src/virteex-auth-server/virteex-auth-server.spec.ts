@@ -86,6 +86,46 @@ describe('Authentication E2E Tests', () => {
       });
   });
 
+  describe('Audit Ledger Integrity', () => {
+    it('should create audit logs with chained hashes', async () => {
+        // Login to generate logs
+        const loginRes = await axios.post(`${BASE_URL}/auth/login`, testUser);
+        if (loginRes.data.mfaRequired) return;
+
+        const cookies = loginRes.headers['set-cookie'] || [];
+        const accessTokenCookie = cookies.find(c => c.startsWith('access_token='));
+
+        // Fetch logs
+        const logsRes = await axios.get(`${BASE_URL}/users/audit-logs`, {
+            headers: { Cookie: accessTokenCookie }
+        });
+
+        const logs = logsRes.data;
+        expect(logs.length).toBeGreaterThan(0);
+
+        // Verify chain if more than one log exists
+        if (logs.length > 1) {
+            // Sort by timestamp to ensure order
+            const sortedLogs = logs.sort((a: any, b: any) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+            for (let i = 1; i < sortedLogs.length; i++) {
+                expect(sortedLogs[i].previousHash).toBe(sortedLogs[i-1].hash);
+                expect(sortedLogs[i].hash).toBeDefined();
+                expect(sortedLogs[i].hash).not.toBe(sortedLogs[i].previousHash);
+            }
+        }
+    });
+  });
+
+  describe('Security Hardening', () => {
+      it('should have security headers (helmet)', async () => {
+          const res = await axios.get(`${BASE_URL}/auth/location`);
+          // Helmet default headers
+          expect(res.headers['x-content-type-options']).toBe('nosniff');
+          expect(res.headers['x-frame-options']).toBeDefined();
+      });
+  });
+
   describe('MFA Flow', () => {
       it('should require MFA if enabled', async () => {
           const res = await axios.post(`${BASE_URL}/auth/login`, {

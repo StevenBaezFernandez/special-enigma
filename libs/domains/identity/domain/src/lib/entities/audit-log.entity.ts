@@ -18,9 +18,21 @@ export class AuditLog {
   @Property()
   timestamp: Date = new Date();
 
+  @Property({ nullable: true })
+  hash?: string;
+
+  @Property({ nullable: true })
+  previousHash?: string;
+
   constructor(event: string, userId?: string, metadata?: Record<string, any>) {
+    this.id = uuidv4();
     this.event = event;
     this.userId = userId;
     this.metadata = metadata;
+  }
+
+  setHash(hash: string, previousHash?: string) {
+    this.hash = hash;
+    this.previousHash = previousHash;
   }
 }
