@@ -1,5 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { AuthModule } from '@virteex/auth';
 import {
   Invoice,
   InvoiceItem,
@@ -45,6 +46,7 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
 @Global()
 @Module({
   imports: [
+    AuthModule,
     BillingDomainModule,
     MikroOrmModule.forFeature([
       Invoice,

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException, UseGuards, Inject } from '@nestjs/common';
+import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException, UseGuards, Inject, Optional } from '@nestjs/common';
 import {
   LoginUserUseCase, VerifyMfaUseCase,
   RefreshTokenUseCase,
@@ -11,7 +11,7 @@ import {
   InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto
 } from '@virteex/identity-contracts';
 import { Request, Response } from 'express';
-import { Public, JwtAuthGuard } from '@virteex/auth';
+import { Public, JwtAuthGuard, SecretManagerService } from '@virteex/auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { GeoIpPort, GEO_IP_PORT } from '@virteex/identity-domain';
@@ -30,7 +30,8 @@ export class AuthController {
     private readonly completeOnboardingUseCase: CompleteOnboardingUseCase,
     private readonly checkSecurityContextUseCase: CheckSecurityContextUseCase,
     private readonly logoutUserUseCase: LogoutUserUseCase,
-    @Inject(GEO_IP_PORT) private readonly geoIpPort: GeoIpPort
+    @Inject(GEO_IP_PORT) private readonly geoIpPort: GeoIpPort,
+    @Optional() private readonly secretManager?: SecretManagerService
   ) {}
 
   @Public()
@@ -177,24 +178,27 @@ export class AuthController {
   }
 
   private setCookies(res: Response, accessToken: string, refreshToken: string, rememberMe = true) {
+      const isProd = this.secretManager?.getSecret('NODE_ENV', 'development') === 'production' || process.env['NODE_ENV'] === 'production';
+      const secure = this.secretManager?.getSecret('COOKIE_SECURE', String(isProd)) === 'true';
+      const sameSite = (this.secretManager?.getSecret('COOKIE_SAME_SITE', 'lax') as 'lax' | 'strict' | 'none') || 'lax';
+
       res.cookie('access_token', accessToken, {
           httpOnly: true,
-          secure: process.env['NODE_ENV'] === 'production',
-          sameSite: 'lax',
+          secure: secure,
+          sameSite: sameSite,
           maxAge: 15 * 60 * 1000
       });
 
       const refreshOptions: any = {
           httpOnly: true,
-          secure: process.env['NODE_ENV'] === 'production',
-          sameSite: 'lax',
+          secure: secure,
+          sameSite: sameSite,
           path: '/auth/refresh'
       };
 
       if (rememberMe) {
           refreshOptions.maxAge = 7 * 24 * 3600 * 1000;
       }
-      // If !rememberMe, no maxAge -> Session Cookie
 
       res.cookie('refresh_token', refreshToken, refreshOptions);
   }
@@ -217,7 +221,8 @@ export class AuthController {
       const geo = await this.geoIpPort.lookup(ip);
 
       if (!geo) {
-          if (process.env['NODE_ENV'] !== 'production') {
+          const isProd = this.secretManager?.getSecret('NODE_ENV', 'development') === 'production' || process.env['NODE_ENV'] === 'production';
+          if (!isProd) {
              return {
                  country_code: 'MX',
                  city: 'Development City',

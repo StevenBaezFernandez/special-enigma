@@ -16,6 +16,7 @@ import { MikroOrmSessionRepository } from './persistence/mikro-orm-session.repos
 import { MikroOrmJobTitleRepository } from './persistence/mikro-orm-job-title.repository';
 
 import { Argon2AuthService } from './services/argon2-auth.service';
+import { KeycloakAuthService } from './services/keycloak-auth.service';
 import { NodemailerNotificationService } from './services/nodemailer-notification.service';
 import { DefaultRiskEngineService } from './services/risk-engine.service';
 import { MailQueueProducer } from './services/mail-queue.producer';
@@ -78,7 +79,16 @@ import { AuthModule } from '@virteex/auth';
     { provide: SessionRepository, useClass: MikroOrmSessionRepository },
     { provide: JobTitleRepository, useClass: MikroOrmJobTitleRepository },
 
-    { provide: AuthService, useClass: Argon2AuthService },
+    Argon2AuthService,
+    KeycloakAuthService,
+    {
+        provide: AuthService,
+        useFactory: (config: ConfigService, argon: Argon2AuthService, keycloak: KeycloakAuthService) => {
+            const type = config.get('AUTH_STRATEGY', 'argon2');
+            return type === 'keycloak' ? keycloak : argon;
+        },
+        inject: [ConfigService, Argon2AuthService, KeycloakAuthService]
+    },
     { provide: NotificationService, useClass: NodemailerNotificationService },
     { provide: RiskEngineService, useClass: DefaultRiskEngineService },
     RiskEvaluatorService,
