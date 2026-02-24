@@ -1,5 +1,5 @@
 {
-  "name": "identity-domain",
+  "name": "domain-identity-domain",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/identity/domain/src",
   "projectType": "library",
@@ -14,12 +14,16 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/identity/domain",
         "main": "libs/domains/identity/domain/src/index.ts",
         "tsConfig": "libs/domains/identity/domain/tsconfig.lib.json",
-        "assets": ["libs/domains/identity/domain/*.md"]
+        "assets": [
+          "libs/domains/identity/domain/*.md"
+        ]
       }
     },
     "lint": {
@@ -27,7 +31,9 @@
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/identity/domain"
       }

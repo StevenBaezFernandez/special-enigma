@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { Product } from '@virteex/catalog-domain';
-import { ProductRepository } from '@virteex/catalog-domain';
+import { Product } from '@virteex/domain-catalog-domain';
+import { ProductRepository } from '@virteex/domain-catalog-domain';
 
 @Injectable()
 export class MikroOrmProductRepository implements ProductRepository {

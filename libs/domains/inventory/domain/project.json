@@ -1,5 +1,5 @@
 {
-  "name": "inventory-domain",
+  "name": "domain-inventory-domain",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/inventory/domain/src",
   "projectType": "library",

@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Product } from '@virteex/catalog-domain/lib/entities/product.entity';
-import { ProductRepository } from '@virteex/catalog-domain/lib/repositories/product.repository';
-import { ProductCreatedEvent } from '@virteex/catalog-domain';
+import { Product } from '@virteex/domain-catalog-domain/lib/entities/product.entity';
+import { ProductRepository } from '@virteex/domain-catalog-domain/lib/repositories/product.repository';
+import { ProductCreatedEvent } from '@virteex/domain-catalog-domain';
 
 export interface CreateProductDto {
   sku: string;

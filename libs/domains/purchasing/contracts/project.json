@@ -1,5 +1,5 @@
 {
-  "name": "purchasing-contracts",
+  "name": "contracts-purchasing-contracts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/purchasing/contracts/src",
   "projectType": "library",

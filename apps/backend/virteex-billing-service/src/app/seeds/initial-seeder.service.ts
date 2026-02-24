@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { TaxRule } from '@virteex/billing-domain';
+import { TaxRule } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class InitialSeederService {

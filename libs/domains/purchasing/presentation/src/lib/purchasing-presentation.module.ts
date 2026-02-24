@@ -13,8 +13,8 @@ import {
   CreateVendorBillUseCase,
   UpdateVendorBillUseCase,
   GetVendorBillUseCase
-} from '@virteex/purchasing-application';
-import { PurchasingInfrastructureModule } from '@virteex/purchasing-infrastructure';
+} from '@virteex/application-purchasing-application';
+import { PurchasingInfrastructureModule } from '@virteex/infra-purchasing-infrastructure';
 
 @Module({
   imports: [PurchasingApplicationModule, PurchasingInfrastructureModule],

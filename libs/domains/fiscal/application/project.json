@@ -1,25 +1,34 @@
 {
-  "name": "fiscal-application",
+  "name": "application-fiscal-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/fiscal/application/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:application", "scope:fiscal"],
+  "tags": [
+    "type:application",
+    "scope:fiscal"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/fiscal/application",
         "main": "libs/domains/fiscal/application/src/index.ts",
         "tsConfig": "libs/domains/fiscal/application/tsconfig.lib.json",
-        "assets": ["libs/domains/fiscal/application/*.md"],
+        "assets": [
+          "libs/domains/fiscal/application/*.md"
+        ],
         "rootDir": "libs/domains/fiscal/application/src"
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/fiscal/application"
       }

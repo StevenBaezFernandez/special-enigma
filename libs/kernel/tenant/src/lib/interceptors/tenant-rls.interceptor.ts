@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { Observable, from, lastValueFrom } from 'rxjs';
-import { getTenantContext } from '@virteex/auth';
+import { getTenantContext } from '@virteex/kernel-auth';
 import { TenantService } from '../tenant.service';
 
 @Injectable()

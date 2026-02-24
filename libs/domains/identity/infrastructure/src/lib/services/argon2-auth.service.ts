@@ -1,10 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from '@virteex/identity-domain';
+import { AuthService } from '@virteex/domain-identity-domain';
 import * as jwt from 'jsonwebtoken';
 import { authenticator } from '@otplib/preset-default';
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2';
-import { SecretManagerService } from '@virteex/auth';
+import { SecretManagerService } from '@virteex/kernel-auth';
 
 interface JwtPayload {
   [key: string]: unknown;

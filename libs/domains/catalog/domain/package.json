@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/catalog-domain",
+  "name": "@virteex/domain-catalog-domain",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

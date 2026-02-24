@@ -1,25 +1,34 @@
 {
-  "name": "crm-domain",
+  "name": "domain-crm-domain",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/crm/domain/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:domain", "scope:crm"],
+  "tags": [
+    "type:domain",
+    "scope:crm"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/crm/domain",
         "main": "libs/domains/crm/domain/src/index.ts",
         "tsConfig": "libs/domains/crm/domain/tsconfig.lib.json",
-        "assets": ["libs/domains/crm/domain/*.md"],
+        "assets": [
+          "libs/domains/crm/domain/*.md"
+        ],
         "rootDir": "libs/domains/crm/domain"
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/crm/domain"
       }

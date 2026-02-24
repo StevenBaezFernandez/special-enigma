@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/inventory-application",
+  "name": "@virteex/application-inventory-application",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -8,7 +8,7 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
-    "@virteex/inventory-domain": "*",
+    "@virteex/domain-inventory-domain": "*",
     "class-validator": "^0.14.3"
   }
 }

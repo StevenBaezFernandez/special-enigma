@@ -5,9 +5,9 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { InvoiceConsumer } from './invoice.consumer';
-import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
-import { FiscalPresentationModule } from '@virteex/fiscal-presentation';
-import { FiscalInfrastructureModule, MockFiscalProvider, DianFiscalAdapter, SatFiscalAdapter } from '@virteex/fiscal-infrastructure';
+import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
+import { FiscalPresentationModule } from '@virteex/api-fiscal-presentation';
+import { FiscalInfrastructureModule, MockFiscalProvider, DianFiscalAdapter, SatFiscalAdapter } from '@virteex/infra-fiscal-infrastructure';
 import { HttpModule, HttpService } from '@nestjs/axios';
 
 @Module({

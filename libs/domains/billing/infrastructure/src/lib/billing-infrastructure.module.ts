@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { AuthModule } from '@virteex/auth';
+import { AuthModule } from '@virteex/kernel-auth';
 import {
   Invoice,
   InvoiceItem,
@@ -15,7 +15,7 @@ import {
   PRODUCT_REPOSITORY,
   CUSTOMER_REPOSITORY,
   BillingDomainModule
-} from '@virteex/billing-domain';
+} from '@virteex/domain-billing-domain';
 import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '../../../domain/src/lib/ports/fiscal-document-builder.port';
 import { BILLING_TAX_STRATEGY_FACTORY } from '../../../domain/src/lib/strategies/tax-strategy.factory';
 

@@ -2,7 +2,7 @@ import { Controller, Logger } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { EntityManager } from '@mikro-orm/core';
 import { BillingProductEntity } from '../entities/billing-product.entity';
-import { ProductCreatedEvent, ProductUpdatedEvent } from '@virteex/catalog-domain';
+import { ProductCreatedEvent, ProductUpdatedEvent } from '@virteex/domain-catalog-domain';
 
 @Controller()
 export class ProductEventsController {

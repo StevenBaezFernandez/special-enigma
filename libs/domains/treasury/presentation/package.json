@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/treasury-presentation",
+  "name": "@virteex/api-treasury-presentation",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

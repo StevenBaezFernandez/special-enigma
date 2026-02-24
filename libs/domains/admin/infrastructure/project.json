@@ -1,25 +1,34 @@
 {
-  "name": "admin-infrastructure",
+  "name": "infra-admin-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/admin/infrastructure/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:infrastructure", "scope:admin"],
+  "tags": [
+    "type:infrastructure",
+    "scope:admin"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/admin/infrastructure",
         "main": "libs/domains/admin/infrastructure/src/index.ts",
         "tsConfig": "libs/domains/admin/infrastructure/tsconfig.lib.json",
-        "assets": ["libs/domains/admin/infrastructure/*.md"],
+        "assets": [
+          "libs/domains/admin/infrastructure/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/admin/infrastructure"
       }

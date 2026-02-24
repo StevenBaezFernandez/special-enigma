@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, ManyToOne, Unique } from '@mikro-orm/core';
-import { Company } from '@virteex/identity-domain';
+import { Company } from '@virteex/domain-identity-domain';
 import { v4 as uuidv4 } from 'uuid';
 
 @Entity({ schema: 'identity', tableName: 'user' })

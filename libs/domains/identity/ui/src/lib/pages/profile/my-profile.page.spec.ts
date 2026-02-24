@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MyProfilePage } from './my-profile.page';
 import { AuthService, UsersService, SecurityService } from '@virteex/shared-ui';
-import { NotificationService } from '@virteex/identity-domain';
+import { NotificationService } from '@virteex/domain-identity-domain';
 import { of } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';

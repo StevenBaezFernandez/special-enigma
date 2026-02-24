@@ -1,5 +1,5 @@
 {
-  "name": "inventory-application",
+  "name": "application-inventory-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/inventory/application/src",
   "projectType": "library",

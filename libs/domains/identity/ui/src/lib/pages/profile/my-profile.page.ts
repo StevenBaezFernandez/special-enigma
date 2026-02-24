@@ -29,7 +29,7 @@ import {
   Check,
 } from 'lucide-angular';
 import { AuthService, UsersService, FileUtil } from '@virteex/shared-ui';
-import { NotificationService } from '@virteex/identity-domain';
+import { NotificationService } from '@virteex/domain-identity-domain';
 import { SecuritySettingsComponent } from '../components/security-settings/security-settings.component';
 import { PhoneVerificationModalComponent } from '../components/phone-verification-modal/phone-verification-modal.component';
 import { toSignal } from '@angular/core/rxjs-interop';

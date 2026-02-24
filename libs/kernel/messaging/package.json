@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/messaging",
+  "name": "@virteex/kernel-messaging",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

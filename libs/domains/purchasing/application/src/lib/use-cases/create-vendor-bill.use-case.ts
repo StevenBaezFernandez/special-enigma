@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { CreateVendorBillDto } from '@virteex/purchasing-contracts';
-import { VendorBill, VendorBillRepository, VENDOR_BILL_REPOSITORY } from '@virteex/purchasing-domain';
+import { CreateVendorBillDto } from '@virteex/contracts-purchasing-contracts';
+import { VendorBill, VendorBillRepository, VENDOR_BILL_REPOSITORY } from '@virteex/domain-purchasing-domain';
 
 @Injectable()
 export class CreateVendorBillUseCase {

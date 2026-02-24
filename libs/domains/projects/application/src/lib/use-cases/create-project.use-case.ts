@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Project, ProjectRepository, PROJECT_REPOSITORY } from '@virteex/projects-domain';
+import { Project, ProjectRepository, PROJECT_REPOSITORY } from '@virteex/domain-projects-domain';
 
 export class CreateProjectDto {
   tenantId!: string;

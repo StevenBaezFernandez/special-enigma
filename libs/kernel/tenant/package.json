@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/tenant",
+  "name": "@virteex/kernel-tenant",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -10,7 +10,7 @@
     "@nestjs/common": "^11.0.0",
     "@mikro-orm/core": "^6.6.5",
     "rxjs": "^7.8.0",
-    "@virteex/auth": "*",
+    "@virteex/kernel-auth": "*",
     "@nestjs/core": "^11.0.0",
     "ioredis": "^5.9.2"
   }

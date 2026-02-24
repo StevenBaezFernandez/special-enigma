@@ -6,12 +6,12 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import {
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
   GetJobTitlesUseCase, GetAuditLogsUseCase
-} from '@virteex/identity-application';
-import { UpdateUserDto, InviteUserDto, UserResponseDto } from '@virteex/identity-contracts';
-import { JwtAuthGuard, CurrentUser } from '@virteex/auth';
+} from '@virteex/application-identity-application';
+import { UpdateUserDto, InviteUserDto, UserResponseDto } from '@virteex/contracts-identity-contracts';
+import { JwtAuthGuard, CurrentUser } from '@virteex/kernel-auth';
 import { UserMapper } from '../mappers/user.mapper';
 import { AuditLogMapper } from '../mappers/audit-log.mapper';
-import { UserResponseDto, AuditLogDto } from '@virteex/identity-contracts';
+import { UserResponseDto, AuditLogDto } from '@virteex/contracts-identity-contracts';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)

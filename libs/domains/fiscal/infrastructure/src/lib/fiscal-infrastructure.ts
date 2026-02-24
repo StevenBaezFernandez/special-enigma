@@ -9,7 +9,7 @@ import {
   FiscalTaxRule,
   TAX_RULE_REPOSITORY,
   TENANT_CONFIG_REPOSITORY
-} from '@virteex/fiscal-domain';
+} from '@virteex/domain-fiscal-domain';
 import { MikroOrmTaxDeclarationRepository } from './repositories/mikro-orm-tax-declaration.repository';
 import { MikroOrmTaxRuleRepository } from './repositories/mikro-orm-tax-rule.repository';
 import { FiscalDataAdapter } from './adapters/fiscal-data.adapter';

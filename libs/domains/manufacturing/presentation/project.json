@@ -1,25 +1,34 @@
 {
-  "name": "manufacturing-presentation",
+  "name": "api-manufacturing-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/manufacturing/presentation/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:presentation", "scope:manufacturing"],
+  "tags": [
+    "type:presentation",
+    "scope:manufacturing"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/manufacturing/presentation",
         "main": "libs/domains/manufacturing/presentation/src/index.ts",
         "tsConfig": "libs/domains/manufacturing/presentation/tsconfig.lib.json",
-        "assets": ["libs/domains/manufacturing/presentation/*.md"],
+        "assets": [
+          "libs/domains/manufacturing/presentation/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/manufacturing/presentation"
       }

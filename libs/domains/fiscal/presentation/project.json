@@ -1,25 +1,34 @@
 {
-  "name": "fiscal-presentation",
+  "name": "api-fiscal-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/fiscal/presentation/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:presentation", "scope:fiscal"],
+  "tags": [
+    "type:presentation",
+    "scope:fiscal"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/fiscal/presentation",
         "main": "libs/domains/fiscal/presentation/src/index.ts",
         "tsConfig": "libs/domains/fiscal/presentation/tsconfig.lib.json",
-        "assets": ["libs/domains/fiscal/presentation/*.md"],
+        "assets": [
+          "libs/domains/fiscal/presentation/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/fiscal/presentation"
       }

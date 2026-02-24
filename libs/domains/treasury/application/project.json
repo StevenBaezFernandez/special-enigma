@@ -1,25 +1,34 @@
 {
-  "name": "treasury-application",
+  "name": "application-treasury-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/treasury/application/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:application", "scope:treasury"],
+  "tags": [
+    "type:application",
+    "scope:treasury"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/treasury/application",
         "main": "libs/domains/treasury/application/src/index.ts",
         "tsConfig": "libs/domains/treasury/application/tsconfig.lib.json",
-        "assets": ["libs/domains/treasury/application/*.md"],
+        "assets": [
+          "libs/domains/treasury/application/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/treasury/application"
       }

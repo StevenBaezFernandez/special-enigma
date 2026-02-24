@@ -1,5 +1,5 @@
 {
-  "name": "accounting-infrastructure",
+  "name": "infra-accounting-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/accounting/infrastructure/src",
   "projectType": "library",

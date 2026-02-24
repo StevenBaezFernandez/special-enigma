@@ -6,7 +6,7 @@ import {
   SUBSCRIPTION_REPOSITORY,
   SubscriptionPlanRepository,
   SUBSCRIPTION_PLAN_REPOSITORY,
-} from '@virteex/subscription-domain';
+} from '@virteex/domain-subscription-domain';
 
 export interface ProcessCheckoutSuccessDto {
   tenantId: string;

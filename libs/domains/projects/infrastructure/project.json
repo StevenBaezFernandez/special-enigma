@@ -1,25 +1,34 @@
 {
-  "name": "projects-infrastructure",
+  "name": "infra-projects-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/projects/infrastructure/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:infrastructure", "scope:projects"],
+  "tags": [
+    "type:infrastructure",
+    "scope:projects"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/projects/infrastructure",
         "main": "libs/domains/projects/infrastructure/src/index.ts",
         "tsConfig": "libs/domains/projects/infrastructure/tsconfig.lib.json",
-        "assets": ["libs/domains/projects/infrastructure/*.md"],
+        "assets": [
+          "libs/domains/projects/infrastructure/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/projects/infrastructure"
       }

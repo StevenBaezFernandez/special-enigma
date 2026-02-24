@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/fixed-assets-presentation",
+  "name": "@virteex/api-fixed-assets-presentation",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -9,6 +9,6 @@
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/swagger": "^11.2.6",
-    "@virteex/fixed-assets-application": "0.0.1"
+    "@virteex/application-fixed-assets-application": "0.0.1"
   }
 }

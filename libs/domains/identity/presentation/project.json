@@ -1,5 +1,5 @@
 {
-  "name": "identity-presentation",
+  "name": "api-identity-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/identity/presentation/src",
   "projectType": "library",
@@ -14,12 +14,16 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/identity/presentation",
         "main": "libs/domains/identity/presentation/src/index.ts",
         "tsConfig": "libs/domains/identity/presentation/tsconfig.lib.json",
-        "assets": ["libs/domains/identity/presentation/*.md"]
+        "assets": [
+          "libs/domains/identity/presentation/*.md"
+        ]
       }
     },
     "lint": {
@@ -27,7 +31,9 @@
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/identity/presentation"
       }

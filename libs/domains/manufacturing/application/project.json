@@ -1,25 +1,34 @@
 {
-  "name": "manufacturing-application",
+  "name": "application-manufacturing-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/manufacturing/application/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:application", "scope:manufacturing"],
+  "tags": [
+    "type:application",
+    "scope:manufacturing"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/manufacturing/application",
         "main": "libs/domains/manufacturing/application/src/index.ts",
         "tsConfig": "libs/domains/manufacturing/application/tsconfig.lib.json",
-        "assets": ["libs/domains/manufacturing/application/*.md"],
+        "assets": [
+          "libs/domains/manufacturing/application/*.md"
+        ],
         "rootDir": "libs/domains/manufacturing/application/src"
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/manufacturing/application"
       }

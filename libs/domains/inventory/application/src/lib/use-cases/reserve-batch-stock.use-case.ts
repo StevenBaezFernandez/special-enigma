@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
-import { INVENTORY_REPOSITORY, InventoryRepository } from '@virteex/inventory-domain';
+import { INVENTORY_REPOSITORY, InventoryRepository } from '@virteex/domain-inventory-domain';
 import { EntityManager, LockMode } from '@mikro-orm/core';
 import Decimal from 'decimal.js';
 

@@ -1,5 +1,5 @@
 {
-  "name": "billing-domain",
+  "name": "domain-billing-domain",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/billing/domain/src",
   "projectType": "library",
@@ -14,18 +14,24 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/billing/domain",
         "main": "libs/domains/billing/domain/src/index.ts",
         "tsConfig": "libs/domains/billing/domain/tsconfig.lib.json",
-        "assets": ["libs/domains/billing/domain/*.md"],
+        "assets": [
+          "libs/domains/billing/domain/*.md"
+        ],
         "rootDir": "libs/domains/billing/domain"
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/billing/domain"
       }

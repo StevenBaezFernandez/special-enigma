@@ -1,5 +1,5 @@
 {
-  "name": "inventory-contracts",
+  "name": "contracts-inventory-contracts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/inventory/contracts/src",
   "projectType": "library",

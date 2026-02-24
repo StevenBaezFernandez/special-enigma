@@ -8,7 +8,7 @@ import {
   INVENTORY_REPOSITORY,
   WAREHOUSE_REPOSITORY,
   PRODUCT_GATEWAY
-} from '@virteex/inventory-domain';
+} from '@virteex/domain-inventory-domain';
 import { MikroOrmInventoryRepository } from './repositories/mikro-orm-inventory.repository';
 import { MikroOrmWarehouseRepository } from './repositories/mikro-orm-warehouse.repository';
 import { CatalogProductAdapter } from './adapters/catalog-product.adapter';

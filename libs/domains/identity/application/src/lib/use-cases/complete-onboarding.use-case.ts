@@ -3,12 +3,12 @@ import {
   AuthService, NotificationService, UserRepository, CompanyRepository,
   AuditLogRepository, AuditLog, RiskEngineService,
   User, Company, Session, SessionRepository, CachePort
-} from '@virteex/identity-domain';
-import { Tenant, TenantMode } from '@virteex/tenant';
+} from '@virteex/domain-identity-domain';
+import { Tenant, TenantMode } from '@virteex/kernel-tenant';
 import { EntityManager } from '@mikro-orm/core';
 import * as crypto from 'crypto';
 import { TokenGenerationService } from '../services/token-generation.service';
-import { CompleteOnboardingDto } from '@virteex/identity-contracts';
+import { CompleteOnboardingDto } from '@virteex/contracts-identity-contracts';
 
 @Injectable()
 export class CompleteOnboardingUseCase {

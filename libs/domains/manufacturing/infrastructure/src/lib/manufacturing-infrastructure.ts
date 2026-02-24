@@ -9,7 +9,7 @@ import {
   BillOfMaterials,
   BillOfMaterialsComponent,
   BILL_OF_MATERIALS_REPOSITORY
-} from '@virteex/manufacturing-domain';
+} from '@virteex/domain-manufacturing-domain';
 import { MikroOrmProductionOrderRepository } from './repositories/mikro-orm-production-order.repository';
 import { MikroOrmBillOfMaterialsRepository } from './repositories/mikro-orm-bill-of-materials.repository';
 import { HttpInventoryAdapter } from './adapters/http-inventory.adapter';

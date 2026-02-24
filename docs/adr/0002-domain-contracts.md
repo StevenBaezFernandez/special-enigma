@@ -22,7 +22,7 @@ We have decided to move domain-specific contracts (Enums, DTOs, Interfaces) to t
 
 As a Proof of Concept (POC), we have migrated the **Payroll** domain contracts:
 - Consolidated duplicated Enums (`PayrollType`, `AttendanceStatus`, etc.) into `libs/domains/payroll/contracts`.
-- Updated imports in `libs/domains/payroll` to use `@virteex/payroll-contracts`.
+- Updated imports in `libs/domains/payroll` to use `@virteex/contracts-payroll-contracts`.
 - Removed Payroll Enums from `libs/shared/contracts`.
 
 ## Consequences
@@ -30,7 +30,7 @@ As a Proof of Concept (POC), we have migrated the **Payroll** domain contracts:
 ### Positive
 - **Decoupling:** Payroll domain is now self-contained.
 - **Single Source of Truth:** No more confusion between Shared and Domain definitions.
-- **Better API:** `@virteex/payroll-contracts` is the clear public API for Payroll data structures.
+- **Better API:** `@virteex/contracts-payroll-contracts` is the clear public API for Payroll data structures.
 
 ### Negative
 - **Refactor Effort:** Requires updating imports across the codebase (though `grep` helps).

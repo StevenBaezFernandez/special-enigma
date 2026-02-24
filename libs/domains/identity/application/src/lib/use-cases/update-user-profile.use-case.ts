@@ -1,6 +1,6 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { User, UserRepository } from '@virteex/identity-domain';
-import { UpdateUserDto } from '@virteex/identity-contracts';
+import { User, UserRepository } from '@virteex/domain-identity-domain';
+import { UpdateUserDto } from '@virteex/contracts-identity-contracts';
 
 @Injectable()
 export class UpdateUserProfileUseCase {

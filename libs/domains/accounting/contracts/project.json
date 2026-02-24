@@ -1,5 +1,5 @@
 {
-  "name": "accounting-contracts",
+  "name": "contracts-accounting-contracts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/accounting/contracts/src",
   "projectType": "library",

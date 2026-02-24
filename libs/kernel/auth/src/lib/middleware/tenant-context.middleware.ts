@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { TenantContext } from '../interfaces/tenant-context.interface';
 import { runWithTenantContext } from '../storage/tenant-context.storage';
-import { TelemetryService } from '@virteex/telemetry';
+import { TelemetryService } from '@virteex/kernel-telemetry';
 import { SecretManagerService } from '../services/secret-manager.service';
 import '../interfaces/express.interface'; // Import for side-effects (type merging)
 

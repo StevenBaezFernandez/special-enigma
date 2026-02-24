@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Param, UseGuards, UnauthorizedException } from '@nestjs/common';
-import { JwtAuthGuard, getTenantContext } from '@virteex/auth';
-import { GetRequisitionsUseCase, ApproveRequisitionUseCase, RejectRequisitionUseCase } from '@virteex/purchasing-application';
+import { JwtAuthGuard, getTenantContext } from '@virteex/kernel-auth';
+import { GetRequisitionsUseCase, ApproveRequisitionUseCase, RejectRequisitionUseCase } from '@virteex/application-purchasing-application';
 
 @Controller('approvals')
 @UseGuards(JwtAuthGuard)

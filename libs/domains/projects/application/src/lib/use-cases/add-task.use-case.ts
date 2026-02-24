@@ -1,6 +1,6 @@
 import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
-import { ProjectRepository, PROJECT_REPOSITORY } from '@virteex/projects-domain';
-import { Task } from '@virteex/projects-domain';
+import { ProjectRepository, PROJECT_REPOSITORY } from '@virteex/domain-projects-domain';
+import { Task } from '@virteex/domain-projects-domain';
 
 @Injectable()
 export class AddTaskUseCase {

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { TaxStrategyFactory, TaxService } from '@virteex/payroll-domain';
+import { TaxStrategyFactory, TaxService } from '@virteex/domain-payroll-domain';
 import { MexicanTaxStrategy } from '../strategies/mexican-tax.strategy';
 import { USPayrollStrategy } from '../strategies/us-payroll.strategy';
 import { GenericLatamStrategy } from '../strategies/generic-latam.strategy';

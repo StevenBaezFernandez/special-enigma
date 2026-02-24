@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/crm-domain",
+  "name": "@virteex/domain-crm-domain",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -8,7 +8,7 @@
   "dependencies": {
     "@mikro-orm/core": "^6.6.5",
     "tslib": "^2.3.0",
-    "@virteex/contracts": "0.0.1",
+    "@virteex/shared-contracts": "0.0.1",
     "uuid": "^13.0.0"
   }
 }

@@ -9,7 +9,7 @@ import {
   SubscriptionProviderGateway,
   SUBSCRIPTION_PROVIDER_GATEWAY,
   CustomerIdentityService
-} from '@virteex/subscription-domain';
+} from '@virteex/domain-subscription-domain';
 
 export interface SubscribeToPlanDto {
   tenantId: string;

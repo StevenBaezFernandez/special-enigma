@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { CreateRequisitionDto } from '@virteex/purchasing-contracts';
-import { Requisition, RequisitionRepository, REQUISITION_REPOSITORY } from '@virteex/purchasing-domain';
+import { CreateRequisitionDto } from '@virteex/contracts-purchasing-contracts';
+import { Requisition, RequisitionRepository, REQUISITION_REPOSITORY } from '@virteex/domain-purchasing-domain';
 
 @Injectable()
 export class CreateRequisitionUseCase {

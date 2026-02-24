@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { Customer, CustomerRepository } from '@virteex/crm-domain';
+import { Customer, CustomerRepository } from '@virteex/domain-crm-domain';
 
 @Injectable()
 export class MikroOrmCustomerRepository implements CustomerRepository {

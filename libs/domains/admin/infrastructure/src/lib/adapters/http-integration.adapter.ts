@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { INTEGRATION_GATEWAY, IntegrationGateway, ProductDto, CustomerDto, SupplierDto } from '@virteex/admin-domain';
+import { INTEGRATION_GATEWAY, IntegrationGateway, ProductDto, CustomerDto, SupplierDto } from '@virteex/domain-admin-domain';
 
 @Injectable()
 export class HttpIntegrationAdapter implements IntegrationGateway {

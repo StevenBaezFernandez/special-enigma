@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
   WAREHOUSE_REPOSITORY,
   WarehouseRepository,
-} from '@virteex/inventory-domain';
+} from '@virteex/domain-inventory-domain';
 
 @Injectable()
 export class GetWarehouseUseCase {

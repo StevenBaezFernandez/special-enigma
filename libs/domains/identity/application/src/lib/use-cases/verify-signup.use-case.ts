@@ -1,6 +1,6 @@
 import { Injectable, Inject, UnauthorizedException, BadRequestException } from '@nestjs/common';
-import { AuthService, CachePort } from '@virteex/identity-domain';
-import { VerifySignupDto, VerifySignupResponse } from '@virteex/identity-contracts';
+import { AuthService, CachePort } from '@virteex/domain-identity-domain';
+import { VerifySignupDto, VerifySignupResponse } from '@virteex/contracts-identity-contracts';
 
 @Injectable()
 export class VerifySignupUseCase {

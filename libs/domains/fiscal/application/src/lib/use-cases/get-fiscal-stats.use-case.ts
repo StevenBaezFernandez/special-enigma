@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { FiscalDataProvider, FISCAL_DATA_PROVIDER } from '@virteex/fiscal-domain';
+import { FiscalDataProvider, FISCAL_DATA_PROVIDER } from '@virteex/domain-fiscal-domain';
 
 @Injectable()
 export class GetFiscalStatsUseCase {

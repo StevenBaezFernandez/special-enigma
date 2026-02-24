@@ -4,7 +4,7 @@ import {
   ChangeSetType,
 } from '@mikro-orm/core';
 import { DataAuditLog } from '../entities/data-audit-log.entity';
-import { getTenantContext } from '@virteex/auth';
+import { getTenantContext } from '@virteex/kernel-auth';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()

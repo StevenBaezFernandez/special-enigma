@@ -6,7 +6,7 @@ import {
   CachePort,
   User,
   Session
-} from '@virteex/identity-domain';
+} from '@virteex/domain-identity-domain';
 
 export interface TokenGenerationResult {
   accessToken: string;

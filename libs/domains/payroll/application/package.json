@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/payroll-application",
+  "name": "@virteex/application-payroll-application",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -7,10 +7,10 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "@nestjs/common": "^11.0.0",
-    "@virteex/payroll-domain": "*",
+    "@virteex/domain-payroll-domain": "*",
     "tslib": "^2.3.0",
     "@virteex/shared-infrastructure-xslt": "0.0.1",
-    "@virteex/contracts": "0.0.1",
+    "@virteex/shared-contracts": "0.0.1",
     "@nestjs/event-emitter": "^3.0.1",
     "fast-xml-parser": "^4.2.7"
   }

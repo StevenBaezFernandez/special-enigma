@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetUsageUseCase } from './get-usage.use-case';
 import { ConfigService } from '@nestjs/config';
-import { INVOICE_REPOSITORY, SUBSCRIPTION_REPOSITORY } from '@virteex/billing-domain';
+import { INVOICE_REPOSITORY, SUBSCRIPTION_REPOSITORY } from '@virteex/domain-billing-domain';
 
 const mockInvoiceRepository = {
   countByTenantId: jest.fn(),

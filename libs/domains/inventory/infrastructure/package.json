@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/inventory-infrastructure",
+  "name": "@virteex/infra-inventory-infrastructure",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -9,8 +9,8 @@
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
     "@mikro-orm/nestjs": "^6.1.1",
-    "@virteex/inventory-domain": "*",
+    "@virteex/domain-inventory-domain": "*",
     "@mikro-orm/postgresql": "^6.6.5",
-    "@virteex/catalog-domain": "0.0.1"
+    "@virteex/domain-catalog-domain": "0.0.1"
   }
 }

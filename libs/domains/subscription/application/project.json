@@ -1,25 +1,34 @@
 {
-  "name": "subscription-application",
+  "name": "application-subscription-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/subscription/application/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["scope:subscription", "type:application"],
+  "tags": [
+    "scope:subscription",
+    "type:application"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/subscription/application",
         "main": "libs/domains/subscription/application/src/index.ts",
         "tsConfig": "libs/domains/subscription/application/tsconfig.lib.json",
-        "assets": ["libs/domains/subscription/application/*.md"],
+        "assets": [
+          "libs/domains/subscription/application/*.md"
+        ],
         "rootDir": "libs/domains/subscription/application"
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/subscription/application"
       }

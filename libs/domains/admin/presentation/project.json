@@ -1,25 +1,34 @@
 {
-  "name": "admin-presentation",
+  "name": "api-admin-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/admin/presentation/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:presentation", "scope:admin"],
+  "tags": [
+    "type:presentation",
+    "scope:admin"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/admin/presentation",
         "main": "libs/domains/admin/presentation/src/index.ts",
         "tsConfig": "libs/domains/admin/presentation/tsconfig.lib.json",
-        "assets": ["libs/domains/admin/presentation/*.md"],
+        "assets": [
+          "libs/domains/admin/presentation/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/admin/presentation"
       }

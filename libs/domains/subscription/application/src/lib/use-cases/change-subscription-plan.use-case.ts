@@ -7,7 +7,7 @@ import {
   SUBSCRIPTION_PLAN_REPOSITORY,
   SubscriptionProviderGateway,
   SUBSCRIPTION_PROVIDER_GATEWAY
-} from '@virteex/subscription-domain';
+} from '@virteex/domain-subscription-domain';
 
 export interface ChangeSubscriptionPlanDto {
   tenantId: string;

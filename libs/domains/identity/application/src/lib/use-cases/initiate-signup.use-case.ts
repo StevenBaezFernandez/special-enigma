@@ -1,6 +1,6 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import { AuthService, NotificationService, UserRepository, CachePort } from '@virteex/identity-domain';
-import { InitiateSignupDto } from '@virteex/identity-contracts';
+import { AuthService, NotificationService, UserRepository, CachePort } from '@virteex/domain-identity-domain';
+import { InitiateSignupDto } from '@virteex/contracts-identity-contracts';
 
 @Injectable()
 export class InitiateSignupUseCase {

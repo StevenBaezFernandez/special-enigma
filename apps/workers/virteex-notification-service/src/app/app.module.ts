@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NotificationConsumer } from './notification.consumer';
 import { NotificationInfrastructureModule } from '../../../../libs/domains/notification/infrastructure/src/lib/notification-infrastructure.module';
-import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
+import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
 
 @Module({
   imports: [

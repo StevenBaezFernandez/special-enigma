@@ -1,5 +1,5 @@
 {
-  "name": "catalog-presentation",
+  "name": "api-catalog-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/catalog/presentation/src",
   "projectType": "library",

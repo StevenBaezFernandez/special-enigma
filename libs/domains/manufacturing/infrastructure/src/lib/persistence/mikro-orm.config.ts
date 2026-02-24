@@ -1,7 +1,7 @@
 import { defineConfig } from '@mikro-orm/postgresql';
-import { ProductionOrder } from '@virteex/manufacturing-domain';
-import { TenantModelSubscriber } from '@virteex/tenant';
-import { getTenantContext } from '@virteex/auth';
+import { ProductionOrder } from '@virteex/domain-manufacturing-domain';
+import { TenantModelSubscriber } from '@virteex/kernel-tenant';
+import { getTenantContext } from '@virteex/kernel-auth';
 import { join } from 'path';
 
 export default defineConfig({

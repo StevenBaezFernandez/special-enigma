@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ProductGateway } from '@virteex/inventory-domain';
-import { ProductRepository } from '@virteex/catalog-domain';
+import { ProductGateway } from '@virteex/domain-inventory-domain';
+import { ProductRepository } from '@virteex/domain-catalog-domain';
 
 @Injectable()
 export class CatalogProductAdapter implements ProductGateway {

@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
-import { AuthService } from '@virteex/identity-domain';
-import { SecretManagerService } from '@virteex/auth';
+import { AuthService } from '@virteex/domain-identity-domain';
+import { SecretManagerService } from '@virteex/kernel-auth';
 import * as jwt from 'jsonwebtoken';
 import { authenticator } from '@otplib/preset-default';
 import * as crypto from 'crypto';

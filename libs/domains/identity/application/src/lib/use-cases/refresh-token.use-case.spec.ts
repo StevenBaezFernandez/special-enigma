@@ -9,7 +9,7 @@ import {
   User,
   Session,
   Company
-} from '@virteex/identity-domain';
+} from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
 import { UnauthorizedException } from '@nestjs/common';
 import * as crypto from 'crypto';

@@ -93,7 +93,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/manufacturing-infrastructure",
+              "packageName": "@virteex/infra-manufacturing-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -198,7 +198,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fixed-assets-infrastructure",
+              "packageName": "@virteex/infra-fixed-assets-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -303,7 +303,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/manufacturing-presentation",
+              "packageName": "@virteex/api-manufacturing-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -398,7 +398,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/accounting-infrastructure",
+              "packageName": "@virteex/infra-accounting-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -503,7 +503,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fixed-assets-presentation",
+              "packageName": "@virteex/api-fixed-assets-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -608,7 +608,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/manufacturing-application",
+              "packageName": "@virteex/application-manufacturing-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -789,7 +789,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fixed-assets-application",
+              "packageName": "@virteex/application-fixed-assets-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -923,7 +923,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/inventory-infrastructure",
+              "packageName": "@virteex/infra-inventory-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -1018,7 +1018,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/accounting-presentation",
+              "packageName": "@virteex/api-accounting-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -1101,7 +1101,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/identity-infrastructure",
+              "packageName": "@virteex/infra-identity-infrastructure",
               "packageVersion": "0.0.1",
               "isInPackageManagerWorkspaces": false
             }
@@ -1205,7 +1205,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/manufacturing-contracts",
+              "packageName": "@virteex/contracts-manufacturing-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -1310,7 +1310,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/projects-infrastructure",
+              "packageName": "@virteex/infra-projects-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -1474,7 +1474,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/treasury-infrastructure",
+              "packageName": "@virteex/infra-treasury-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -1609,7 +1609,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/accounting-application",
+              "packageName": "@virteex/application-accounting-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -1834,7 +1834,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fixed-assets-contracts",
+              "packageName": "@virteex/contracts-fixed-assets-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -1969,7 +1969,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/inventory-presentation",
+              "packageName": "@virteex/api-inventory-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -2074,7 +2074,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/payroll-infrastructure",
+              "packageName": "@virteex/infra-payroll-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -2255,7 +2255,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fiscal-infrastructure",
+              "packageName": "@virteex/infra-fiscal-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -2338,7 +2338,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/identity-presentation",
+              "packageName": "@virteex/api-identity-presentation",
               "packageVersion": "0.0.1",
               "isInPackageManagerWorkspaces": false
             }
@@ -2472,7 +2472,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/inventory-application",
+              "packageName": "@virteex/application-inventory-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -2577,7 +2577,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/projects-presentation",
+              "packageName": "@virteex/api-projects-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -2731,7 +2731,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/treasury-presentation",
+              "packageName": "@virteex/api-treasury-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -2866,7 +2866,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/accounting-contracts",
+              "packageName": "@virteex/contracts-accounting-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -2971,7 +2971,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/admin-infrastructure",
+              "packageName": "@virteex/infra-admin-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -3114,7 +3114,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/identity-application",
+              "packageName": "@virteex/application-identity-application",
               "packageVersion": "0.0.1",
               "isInPackageManagerWorkspaces": false
             }
@@ -3218,7 +3218,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/manufacturing-domain",
+              "packageName": "@virteex/domain-manufacturing-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -3323,7 +3323,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/payroll-presentation",
+              "packageName": "@virteex/api-payroll-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -3428,7 +3428,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/projects-application",
+              "packageName": "@virteex/application-projects-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -3592,7 +3592,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/treasury-application",
+              "packageName": "@virteex/application-treasury-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -3727,7 +3727,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/catalog-application",
+              "packageName": "@virteex/application-catalog-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -3832,7 +3832,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fiscal-presentation",
+              "packageName": "@virteex/api-fiscal-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -3937,7 +3937,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fixed-assets-domain",
+              "packageName": "@virteex/domain-fixed-assets-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4071,7 +4071,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/inventory-contracts",
+              "packageName": "@virteex/contracts-inventory-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4176,7 +4176,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/payroll-application",
+              "packageName": "@virteex/application-payroll-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4281,7 +4281,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/admin-presentation",
+              "packageName": "@virteex/api-admin-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4386,7 +4386,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/crm-infrastructure",
+              "packageName": "@virteex/infra-crm-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4491,7 +4491,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fiscal-application",
+              "packageName": "@virteex/application-fiscal-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4596,7 +4596,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/projects-contracts",
+              "packageName": "@virteex/contracts-projects-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4701,7 +4701,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/treasury-contracts",
+              "packageName": "@virteex/contracts-treasury-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4808,7 +4808,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/accounting-domain",
+              "packageName": "@virteex/domain-accounting-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -4913,7 +4913,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/admin-application",
+              "packageName": "@virteex/application-admin-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5018,7 +5018,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/bi-infrastructure",
+              "packageName": "@virteex/infra-bi-infrastructure",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5123,7 +5123,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/payroll-contracts",
+              "packageName": "@virteex/contracts-payroll-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5340,7 +5340,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/crm-presentation",
+              "packageName": "@virteex/api-crm-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5445,7 +5445,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fiscal-contracts",
+              "packageName": "@virteex/contracts-fiscal-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5579,7 +5579,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/inventory-domain",
+              "packageName": "@virteex/domain-inventory-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5684,7 +5684,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/admin-contracts",
+              "packageName": "@virteex/contracts-admin-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5789,7 +5789,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/bi-presentation",
+              "packageName": "@virteex/api-bi-presentation",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5894,7 +5894,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/crm-application",
+              "packageName": "@virteex/application-crm-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -5977,7 +5977,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/identity-domain",
+              "packageName": "@virteex/domain-identity-domain",
               "packageVersion": "0.0.1",
               "isInPackageManagerWorkspaces": false
             }
@@ -6081,7 +6081,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/projects-domain",
+              "packageName": "@virteex/domain-projects-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -6186,7 +6186,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/treasury-domain",
+              "packageName": "@virteex/domain-treasury-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -6363,7 +6363,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/bi-application",
+              "packageName": "@virteex/application-bi-application",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -6582,7 +6582,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/catalog-domain",
+              "packageName": "@virteex/domain-catalog-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -6687,7 +6687,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/payroll-domain",
+              "packageName": "@virteex/domain-payroll-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -6792,7 +6792,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/crm-contracts",
+              "packageName": "@virteex/contracts-crm-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -6897,7 +6897,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/fiscal-domain",
+              "packageName": "@virteex/domain-fiscal-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -7002,7 +7002,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/admin-domain",
+              "packageName": "@virteex/domain-admin-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -7107,7 +7107,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/bi-contracts",
+              "packageName": "@virteex/contracts-bi-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -7704,7 +7704,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/crm-domain",
+              "packageName": "@virteex/domain-crm-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -8098,7 +8098,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/bi-domain",
+              "packageName": "@virteex/domain-bi-domain",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -8312,7 +8312,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/contracts",
+              "packageName": "@virteex/shared-contracts",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -8442,7 +8442,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/messaging",
+              "packageName": "@virteex/kernel-messaging",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -8612,7 +8612,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/telemetry",
+              "packageName": "@virteex/kernel-telemetry",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -9616,7 +9616,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/tenant",
+              "packageName": "@virteex/kernel-tenant",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false
@@ -9869,7 +9869,7 @@
           "metadata": {
             "targetGroups": {},
             "js": {
-              "packageName": "@virteex/auth",
+              "packageName": "@virteex/kernel-auth",
               "packageVersion": "0.0.1",
               "packageMain": "./src/index.js",
               "isInPackageManagerWorkspaces": false

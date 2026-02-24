@@ -1,8 +1,8 @@
 import { Resolver, Mutation, Query, Args, InputType, Field, Float, ObjectType, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { CreateVendorBillUseCase, GetVendorBillUseCase, UpdateVendorBillUseCase } from '@virteex/purchasing-application';
-import { CreateVendorBillDto, VendorBillLineItemDto, UpdateVendorBillDto } from '@virteex/purchasing-contracts';
-import { CurrentTenant, JwtAuthGuard } from '@virteex/auth';
+import { CreateVendorBillUseCase, GetVendorBillUseCase, UpdateVendorBillUseCase } from '@virteex/application-purchasing-application';
+import { CreateVendorBillDto, VendorBillLineItemDto, UpdateVendorBillDto } from '@virteex/contracts-purchasing-contracts';
+import { CurrentTenant, JwtAuthGuard } from '@virteex/kernel-auth';
 
 @InputType()
 class VendorBillLineItemInput implements VendorBillLineItemDto {

@@ -1,6 +1,6 @@
 import { Module, Global, OnModuleInit } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Product, SAT_CATALOG_REPOSITORY, SatPaymentForm, SatPaymentMethod, SatCfdiUsage } from '@virteex/catalog-domain';
+import { Product, SAT_CATALOG_REPOSITORY, SatPaymentForm, SatPaymentMethod, SatCfdiUsage } from '@virteex/domain-catalog-domain';
 import { MikroOrmProductRepository } from './repositories/mikro-orm-product.repository';
 import { MikroOrmSatCatalogRepository } from './repositories/mikro-orm-sat-catalog.repository';
 import { CatalogSeederService } from './services/catalog-seeder.service';

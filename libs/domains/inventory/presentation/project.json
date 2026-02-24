@@ -1,5 +1,5 @@
 {
-  "name": "inventory-presentation",
+  "name": "api-inventory-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/inventory/presentation/src",
   "projectType": "library",

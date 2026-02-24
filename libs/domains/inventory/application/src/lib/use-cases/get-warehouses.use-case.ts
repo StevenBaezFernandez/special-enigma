@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   WAREHOUSE_REPOSITORY,
   WarehouseRepository,
-} from '@virteex/inventory-domain';
-import { WarehouseDto } from '@virteex/inventory-contracts';
+} from '@virteex/domain-inventory-domain';
+import { WarehouseDto } from '@virteex/contracts-inventory-contracts';
 
 @Injectable()
 export class GetWarehousesUseCase {

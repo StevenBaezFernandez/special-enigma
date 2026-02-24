@@ -1,5 +1,5 @@
 {
-  "name": "auth",
+  "name": "kernel-auth",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kernel/auth/src",
   "projectType": "library",

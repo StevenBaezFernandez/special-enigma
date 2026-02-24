@@ -8,9 +8,9 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { TenantModule } from '@virteex/tenant';
-import { JwtTenantMiddleware } from '@virteex/auth';
-import { IdentityPresentationModule } from '@virteex/identity-presentation';
+import { TenantModule } from '@virteex/kernel-tenant';
+import { JwtTenantMiddleware } from '@virteex/kernel-auth';
+import { IdentityPresentationModule } from '@virteex/api-identity-presentation';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';

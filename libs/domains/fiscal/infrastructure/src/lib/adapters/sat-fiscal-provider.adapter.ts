@@ -1,5 +1,5 @@
 import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
-import { FiscalProvider } from '@virteex/fiscal-domain';
+import { FiscalProvider } from '@virteex/domain-fiscal-domain';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';

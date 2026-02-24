@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { TaxRuleRepository, TAX_RULE_REPOSITORY, FiscalTaxRule } from '@virteex/fiscal-domain';
+import { TaxRuleRepository, TAX_RULE_REPOSITORY, FiscalTaxRule } from '@virteex/domain-fiscal-domain';
 
 @Injectable()
 export class GetTaxRulesUseCase {

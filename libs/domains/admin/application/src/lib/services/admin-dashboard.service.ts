@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { DashboardGateway, DASHBOARD_GATEWAY, DashboardMetrics } from '@virteex/admin-domain';
+import { DashboardGateway, DASHBOARD_GATEWAY, DashboardMetrics } from '@virteex/domain-admin-domain';
 
 @Injectable()
 export class AdminDashboardService {

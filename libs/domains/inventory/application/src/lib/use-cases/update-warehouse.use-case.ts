@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { WarehouseRepository, WAREHOUSE_REPOSITORY, Warehouse } from '@virteex/inventory-domain';
+import { WarehouseRepository, WAREHOUSE_REPOSITORY, Warehouse } from '@virteex/domain-inventory-domain';
 
 export interface UpdateWarehouseDto {
   id: string;

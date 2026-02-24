@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/identity-domain",
+  "name": "@virteex/domain-identity-domain",
   "version": "0.0.1",
   "dependencies": {
     "@mikro-orm/core": "^6.6.5",

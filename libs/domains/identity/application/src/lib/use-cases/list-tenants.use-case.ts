@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Company, CompanyRepository } from '@virteex/identity-domain';
+import { Company, CompanyRepository } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class ListTenantsUseCase {

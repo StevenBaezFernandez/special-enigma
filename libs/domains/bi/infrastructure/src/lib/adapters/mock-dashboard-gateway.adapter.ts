@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DashboardGateway, DashboardStats } from '@virteex/bi-domain';
+import { DashboardGateway, DashboardStats } from '@virteex/domain-bi-domain';
 
 @Injectable()
 export class MockDashboardGateway extends DashboardGateway {

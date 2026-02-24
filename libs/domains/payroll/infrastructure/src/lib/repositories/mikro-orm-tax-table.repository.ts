@@ -1,7 +1,7 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { TaxTable, TaxTableRepository } from '@virteex/payroll-domain';
+import { TaxTable, TaxTableRepository } from '@virteex/domain-payroll-domain';
 
 @Injectable()
 export class MikroOrmTaxTableRepository implements TaxTableRepository {

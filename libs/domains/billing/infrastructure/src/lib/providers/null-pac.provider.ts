@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PacProvider, FiscalStamp } from '@virteex/billing-domain';
+import { PacProvider, FiscalStamp } from '@virteex/domain-billing-domain';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

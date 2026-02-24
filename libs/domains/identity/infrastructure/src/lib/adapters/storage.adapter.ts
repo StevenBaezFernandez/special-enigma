@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { StoragePort } from '@virteex/identity-application';
+import { StoragePort } from '@virteex/application-identity-application';
 import { StorageService as SharedStorageService } from '@virteex/shared-infrastructure-storage';
 
 @Injectable()

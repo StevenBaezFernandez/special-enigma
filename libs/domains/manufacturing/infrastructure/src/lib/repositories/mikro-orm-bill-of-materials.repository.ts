@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BillOfMaterialsRepository, BillOfMaterials } from '@virteex/manufacturing-domain';
+import { BillOfMaterialsRepository, BillOfMaterials } from '@virteex/domain-manufacturing-domain';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 

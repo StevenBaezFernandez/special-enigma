@@ -1,5 +1,5 @@
 {
-  "name": "cache",
+  "name": "shared-infrastructure-cache",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/infrastructure/cache/src",
   "projectType": "library",

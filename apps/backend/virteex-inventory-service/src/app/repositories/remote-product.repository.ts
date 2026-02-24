@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ProductRepository, Product } from '@virteex/catalog-domain';
+import { ProductRepository, Product } from '@virteex/domain-catalog-domain';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';

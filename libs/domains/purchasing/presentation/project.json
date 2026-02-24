@@ -1,5 +1,5 @@
 {
-  "name": "purchasing-presentation",
+  "name": "api-purchasing-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/purchasing/presentation/src",
   "projectType": "library",

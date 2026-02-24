@@ -13,7 +13,7 @@ import {
   TenantConfigRepository,
   Invoice,
   InvoiceItem
-} from '@virteex/billing-domain';
+} from '@virteex/domain-billing-domain';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DomainException } from '@virteex/shared-util-server-config';
 

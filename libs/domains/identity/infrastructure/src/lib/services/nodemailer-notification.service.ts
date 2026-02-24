@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NotificationService, User } from '@virteex/identity-domain';
+import { NotificationService, User } from '@virteex/domain-identity-domain';
 import { MailQueueProducer } from './mail-queue.producer';
 
 @Injectable()

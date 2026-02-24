@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { SatCatalogRepository, SatCatalogItem, SatPaymentForm, SatPaymentMethod, SatCfdiUsage } from '@virteex/catalog-domain';
+import { SatCatalogRepository, SatCatalogItem, SatPaymentForm, SatPaymentMethod, SatCfdiUsage } from '@virteex/domain-catalog-domain';
 
 @Injectable()
 export class MikroOrmSatCatalogRepository implements SatCatalogRepository {

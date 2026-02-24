@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { AuthModule } from '@virteex/auth';
+import { AuthModule } from '@virteex/kernel-auth';
 import {
   TaxTable,
   Employee,
@@ -14,7 +14,7 @@ import {
   ATTENDANCE_REPOSITORY,
   PAC_PROVIDER,
   TENANT_CONFIG_REPOSITORY
-} from '@virteex/payroll-domain';
+} from '@virteex/domain-payroll-domain';
 import { MikroOrmEmployeeRepository } from './repositories/mikro-orm-employee.repository';
 import { MikroOrmPayrollRepository } from './repositories/mikro-orm-payroll.repository';
 import { MikroOrmTaxTableRepository } from './repositories/mikro-orm-tax-table.repository';

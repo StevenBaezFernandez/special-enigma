@@ -7,7 +7,7 @@ import {
   GetInvoiceStatusUseCase,
   GetArAgingUseCase,
   GetExpensesUseCase
-} from '@virteex/bi-application';
+} from '@virteex/application-bi-application';
 
 @ApiTags('BI')
 @Controller('bi')

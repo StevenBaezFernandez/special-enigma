@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
-import { JobTitle, JobTitleRepository } from '@virteex/identity-domain';
+import { JobTitle, JobTitleRepository } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class MikroOrmJobTitleRepository implements JobTitleRepository {

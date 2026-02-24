@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { SalesPort, SALES_PORT } from '@virteex/bi-domain';
+import { SalesPort, SALES_PORT } from '@virteex/domain-bi-domain';
 
 @Injectable()
 export class GetTopProductsUseCase {

@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { Tenant } from '@virteex/tenant';
+import { Tenant } from '@virteex/kernel-tenant';
 import { EntityManager } from '@mikro-orm/core';
 
 export class UpdateSubscriptionDto {

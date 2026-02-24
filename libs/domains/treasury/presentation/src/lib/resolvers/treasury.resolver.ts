@@ -1,8 +1,8 @@
 import { Resolver, Mutation, Query, Args, InputType, Field, ObjectType, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { CreateBankAccountUseCase, GetBankAccountsUseCase } from '@virteex/treasury-application';
-import { CreateBankAccountDto, BankAccountDto } from '@virteex/treasury-contracts';
-import { CurrentTenant, JwtAuthGuard } from '@virteex/auth';
+import { CreateBankAccountUseCase, GetBankAccountsUseCase } from '@virteex/application-treasury-application';
+import { CreateBankAccountDto, BankAccountDto } from '@virteex/contracts-treasury-contracts';
+import { CurrentTenant, JwtAuthGuard } from '@virteex/kernel-auth';
 
 @InputType()
 class CreateBankAccountInput {

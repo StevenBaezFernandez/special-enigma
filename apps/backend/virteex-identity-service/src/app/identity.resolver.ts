@@ -5,7 +5,7 @@ import {
     InitiateSignupUseCase,
     VerifySignupUseCase,
     CompleteOnboardingUseCase
-} from '@virteex/identity-application';
+} from '@virteex/application-identity-application';
 import { LoginInput } from './dto/login.input';
 import { LoginResponse } from './dto/login.response';
 import { InitiateSignupInput, VerifySignupInput, CompleteOnboardingInput } from './dto/signup.input';

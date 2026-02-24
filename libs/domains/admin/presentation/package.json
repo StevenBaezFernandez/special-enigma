@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/admin-presentation",
+  "name": "@virteex/api-admin-presentation",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -9,7 +9,7 @@
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
-    "@virteex/admin-application": "*",
+    "@virteex/application-admin-application": "*",
     "@nestjs/swagger": "^11.2.6",
     "express": "^4.21.2",
     "multer": "2.0.2"

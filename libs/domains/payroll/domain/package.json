@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/payroll-domain",
+  "name": "@virteex/domain-payroll-domain",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -7,8 +7,8 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "@mikro-orm/core": "^6.6.5",
-    "@virteex/contracts": "*",
-    "@virteex/payroll-contracts": "*",
+    "@virteex/shared-contracts": "*",
+    "@virteex/contracts-payroll-contracts": "*",
     "@nestjs/common": "^11.0.0",
     "uuid": "^13.0.0",
     "tslib": "^2.3.0"

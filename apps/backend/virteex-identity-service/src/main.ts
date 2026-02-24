@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AppModule } from './app/app.module';
-import { CsrfMiddleware } from '@virteex/auth';
+import { CsrfMiddleware } from '@virteex/kernel-auth';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

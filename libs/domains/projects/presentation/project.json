@@ -1,25 +1,34 @@
 {
-  "name": "projects-presentation",
+  "name": "api-projects-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/projects/presentation/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:presentation", "scope:projects"],
+  "tags": [
+    "type:presentation",
+    "scope:projects"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/projects/presentation",
         "main": "libs/domains/projects/presentation/src/index.ts",
         "tsConfig": "libs/domains/projects/presentation/tsconfig.lib.json",
-        "assets": ["libs/domains/projects/presentation/*.md"],
+        "assets": [
+          "libs/domains/projects/presentation/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/projects/presentation"
       }

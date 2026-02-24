@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TreasuryService } from '../../services/treasury.service';
-import { CreateBankAccountDto } from '@virteex/treasury-contracts';
+import { CreateBankAccountDto } from '@virteex/contracts-treasury-contracts';
 import { BehaviorSubject, switchMap } from 'rxjs';
 
 @Component({

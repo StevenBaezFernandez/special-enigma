@@ -13,7 +13,7 @@ import {
   TaxCalculatorService,
   TENANT_CONFIG_REPOSITORY,
   TenantConfigRepository
-} from '@virteex/billing-domain';
+} from '@virteex/domain-billing-domain';
 import { DomainException } from '@virteex/shared-util-server-config';
 import { CreateInvoiceDto } from '../dtos/create-invoice.dto';
 import { Decimal } from 'decimal.js';

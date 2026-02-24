@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/fiscal-application",
+  "name": "@virteex/application-fiscal-application",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -8,6 +8,6 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
-    "@virteex/fiscal-domain": "0.0.1"
+    "@virteex/domain-fiscal-domain": "0.0.1"
   }
 }

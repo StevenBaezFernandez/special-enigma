@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, ManyToOne } from '@mikro-orm/core';
-import { PayrollDetailType } from '@virteex/payroll-contracts';
+import { PayrollDetailType } from '@virteex/contracts-payroll-contracts';
 import type { Payroll } from './payroll.entity';
 
 @Entity()

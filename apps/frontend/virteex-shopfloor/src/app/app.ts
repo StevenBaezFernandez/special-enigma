@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NxWelcome } from './nx-welcome';
-import { KioskComponent } from '@virteex/ui-shopfloor';
+import { KioskComponent } from '@virteex/manufacturing-ui-shopfloor';
 
 @Component({
   imports: [NxWelcome, RouterModule, KioskComponent],

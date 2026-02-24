@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { NotificationService, UserInvitedEvent } from '@virteex/identity-domain';
+import { NotificationService, UserInvitedEvent } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class UserInvitedListener {

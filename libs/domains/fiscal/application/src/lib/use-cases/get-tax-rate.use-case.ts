@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { TenantConfigRepository, TENANT_CONFIG_REPOSITORY } from '@virteex/fiscal-domain';
+import { TenantConfigRepository, TENANT_CONFIG_REPOSITORY } from '@virteex/domain-fiscal-domain';
 
 @Injectable()
 export class GetTaxRateUseCase {

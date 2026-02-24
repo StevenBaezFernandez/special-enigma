@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
-import { SubscriptionPlan, SubscriptionPlanRepository } from '@virteex/subscription-domain';
+import { SubscriptionPlan, SubscriptionPlanRepository } from '@virteex/domain-subscription-domain';
 
 @Injectable()
 export class MikroOrmSubscriptionPlanRepository implements SubscriptionPlanRepository {

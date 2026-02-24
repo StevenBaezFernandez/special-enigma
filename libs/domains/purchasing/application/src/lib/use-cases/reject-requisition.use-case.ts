@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { RequisitionRepository } from '@virteex/purchasing-domain';
+import { RequisitionRepository } from '@virteex/domain-purchasing-domain';
 
 @Injectable()
 export class RejectRequisitionUseCase {

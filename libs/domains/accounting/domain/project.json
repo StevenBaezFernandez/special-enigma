@@ -1,5 +1,5 @@
 {
-  "name": "accounting-domain",
+  "name": "domain-accounting-domain",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/accounting/domain/src",
   "projectType": "library",
@@ -14,17 +14,23 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/accounting/domain",
         "main": "libs/domains/accounting/domain/src/index.ts",
         "tsConfig": "libs/domains/accounting/domain/tsconfig.lib.json",
-        "assets": ["libs/domains/accounting/domain/*.md"]
+        "assets": [
+          "libs/domains/accounting/domain/*.md"
+        ]
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/accounting/domain"
       }

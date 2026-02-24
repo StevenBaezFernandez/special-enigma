@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException, Inject } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY } from '@virteex/auth';
-import { CachePort } from '@virteex/identity-domain';
+import { IS_PUBLIC_KEY } from '@virteex/kernel-auth';
+import { CachePort } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class SessionGuard implements CanActivate {

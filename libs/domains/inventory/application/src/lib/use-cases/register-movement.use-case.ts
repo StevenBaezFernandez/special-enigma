@@ -12,7 +12,7 @@ import {
   WarehouseNotFoundException,
   PRODUCT_GATEWAY,
   ProductGateway
-} from '@virteex/inventory-domain';
+} from '@virteex/domain-inventory-domain';
 
 export class RegisterMovementDto {
   @IsUUID()

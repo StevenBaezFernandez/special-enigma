@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { TaxDeclaration, TaxDeclarationRepository, TAX_DECLARATION_REPOSITORY } from '@virteex/fiscal-domain';
+import { TaxDeclaration, TaxDeclarationRepository, TAX_DECLARATION_REPOSITORY } from '@virteex/domain-fiscal-domain';
 
 export class CreateDeclarationDto {
   tenantId!: string;

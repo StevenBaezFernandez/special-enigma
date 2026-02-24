@@ -1,11 +1,11 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { RecordJournalEntryUseCase } from '../use-cases/record-journal-entry.use-case';
-import { AccountRepository, ACCOUNT_REPOSITORY } from '@virteex/accounting-domain';
+import { AccountRepository, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
 // Remove imports to avoid build cycles/rootDir issues
-// import { InvoiceStampedEvent } from '@virteex/billing-domain';
-// import { PayrollStampedEvent } from '@virteex/payroll-domain';
-import { RecordJournalEntryDto } from '@virteex/accounting-contracts';
+// import { InvoiceStampedEvent } from '@virteex/domain-billing-domain';
+// import { PayrollStampedEvent } from '@virteex/domain-payroll-domain';
+import { RecordJournalEntryDto } from '@virteex/contracts-accounting-contracts';
 
 // Local definitions for Duck Typing
 interface InvoiceStampedEvent {

@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { CreateProjectUseCase, CreateProjectDto } from '@virteex/projects-application';
-import { GetProjectsUseCase } from '@virteex/projects-application';
+import { CreateProjectUseCase, CreateProjectDto } from '@virteex/application-projects-application';
+import { GetProjectsUseCase } from '@virteex/application-projects-application';
 
 @ApiTags('Projects')
 @Controller('projects')

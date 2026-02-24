@@ -3,12 +3,12 @@ import {
   CreateSupplierUseCase, CreatePurchaseOrderUseCase,
   CreateRequisitionUseCase, GetRequisitionsUseCase,
   CreateVendorBillUseCase, UpdateVendorBillUseCase, GetVendorBillUseCase
-} from '@virteex/purchasing-application';
+} from '@virteex/application-purchasing-application';
 import {
   CreateSupplierDto, CreatePurchaseOrderDto,
   CreateRequisitionDto, CreateVendorBillDto, UpdateVendorBillDto
-} from '@virteex/purchasing-contracts';
-import { getTenantContext } from '@virteex/auth';
+} from '@virteex/contracts-purchasing-contracts';
+import { getTenantContext } from '@virteex/kernel-auth';
 
 @Controller('purchasing')
 export class PurchasingController {

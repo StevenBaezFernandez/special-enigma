@@ -1,5 +1,5 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { INTEGRATION_GATEWAY, IntegrationGateway } from '@virteex/admin-domain';
+import { INTEGRATION_GATEWAY, IntegrationGateway } from '@virteex/domain-admin-domain';
 import * as xlsx from 'xlsx';
 
 @Injectable()

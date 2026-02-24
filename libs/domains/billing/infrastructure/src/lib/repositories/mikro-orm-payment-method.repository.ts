@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { IPaymentMethodRepository, PaymentMethod } from '@virteex/billing-domain';
+import { IPaymentMethodRepository, PaymentMethod } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class MikroOrmPaymentMethodRepository implements IPaymentMethodRepository {

@@ -10,9 +10,9 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/auth';
-import { TenantRlsInterceptor, TenantModule } from '@virteex/tenant';
-import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
+import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
+import { TenantRlsInterceptor, TenantModule } from '@virteex/kernel-tenant';
+import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { AppController } from './app.controller';
@@ -21,8 +21,8 @@ import { RemoteProductRepository } from './repositories/remote-product.repositor
 import { InventoryResolver } from './inventory.resolver';
 
 // Domain Modules
-import { InventoryApplicationModule } from '@virteex/inventory-application';
-import { InventoryPresentationModule } from '@virteex/inventory-presentation';
+import { InventoryApplicationModule } from '@virteex/application-inventory-application';
+import { InventoryPresentationModule } from '@virteex/api-inventory-presentation';
 
 @Module({
   imports: [

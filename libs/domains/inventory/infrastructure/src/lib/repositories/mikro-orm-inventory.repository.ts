@@ -4,7 +4,7 @@ import {
   InventoryRepository,
   InventoryMovement,
   Stock
-} from '@virteex/inventory-domain';
+} from '@virteex/domain-inventory-domain';
 
 @Injectable()
 export class MikroOrmInventoryRepository implements InventoryRepository {

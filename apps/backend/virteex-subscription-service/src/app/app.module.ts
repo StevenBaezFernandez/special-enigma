@@ -6,12 +6,12 @@ import { SqliteDriver } from '@mikro-orm/sqlite';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
 import { ServerConfigModule } from '@virteex/shared-util-server-config';
-import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
+import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { SubscriptionPresentationModule } from '@virteex/subscription-presentation';
-import { SubscriptionInfrastructureModule } from '@virteex/subscription-infrastructure';
-import { SubscriptionApplicationModule } from '@virteex/subscription-application';
+import { SubscriptionPresentationModule } from '@virteex/api-subscription-presentation';
+import { SubscriptionInfrastructureModule } from '@virteex/infra-subscription-infrastructure';
+import { SubscriptionApplicationModule } from '@virteex/application-subscription-application';
 
 @Module({
   imports: [

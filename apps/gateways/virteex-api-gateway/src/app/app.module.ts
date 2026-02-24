@@ -8,12 +8,12 @@ import { ServerConfigModule, IdempotencyInterceptor } from '@virteex/shared-util
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/auth';
-import { TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/tenant';
-import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
-import { AuditModule } from '@virteex/audit';
-import { InventoryPresentationModule } from '@virteex/inventory-presentation';
-import { AccountingPresentationModule } from '@virteex/accounting-presentation';
+import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
+import { TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/kernel-tenant';
+import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
+import { AuditModule } from '@virteex/kernel-audit';
+import { InventoryPresentationModule } from '@virteex/api-inventory-presentation';
+import { AccountingPresentationModule } from '@virteex/api-accounting-presentation';
 import { AppController } from './app.controller';
 import { HealthController } from './health.controller';
 import { AppService } from './app.service';

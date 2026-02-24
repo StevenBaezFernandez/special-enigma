@@ -8,7 +8,7 @@ import {
   GetPaymentHistoryUseCase,
   GetUsageUseCase
 } from '../../../../application/src/index';
-import { GetSubscriptionPlansUseCase } from '@virteex/subscription-application';
+import { GetSubscriptionPlansUseCase } from '@virteex/application-subscription-application';
 
 @ApiTags('Billing')
 @Controller('billing')

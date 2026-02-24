@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { WarehouseRepository, WAREHOUSE_REPOSITORY } from '@virteex/inventory-domain';
+import { WarehouseRepository, WAREHOUSE_REPOSITORY } from '@virteex/domain-inventory-domain';
 
 @Injectable()
 export class DeleteWarehouseUseCase {

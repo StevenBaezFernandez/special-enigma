@@ -3,12 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import {
   InvoiceRepository,
   INVOICE_REPOSITORY
-} from '@virteex/billing-domain';
+} from '@virteex/domain-billing-domain';
 import {
   SubscriptionRepository,
   SUBSCRIPTION_REPOSITORY,
   SubscriptionPlan
-} from '@virteex/subscription-domain';
+} from '@virteex/domain-subscription-domain';
 
 export interface UsageItem {
   resource: string;

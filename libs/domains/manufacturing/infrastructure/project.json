@@ -1,25 +1,34 @@
 {
-  "name": "manufacturing-infrastructure",
+  "name": "infra-manufacturing-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/manufacturing/infrastructure/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:infrastructure", "scope:manufacturing"],
+  "tags": [
+    "type:infrastructure",
+    "scope:manufacturing"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/manufacturing/infrastructure",
         "main": "libs/domains/manufacturing/infrastructure/src/index.ts",
         "tsConfig": "libs/domains/manufacturing/infrastructure/tsconfig.lib.json",
-        "assets": ["libs/domains/manufacturing/infrastructure/*.md"],
+        "assets": [
+          "libs/domains/manufacturing/infrastructure/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/manufacturing/infrastructure"
       }

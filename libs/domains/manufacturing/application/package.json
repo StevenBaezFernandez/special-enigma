@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/manufacturing-application",
+  "name": "@virteex/application-manufacturing-application",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -8,6 +8,6 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
-    "@virteex/manufacturing-domain": "0.0.1"
+    "@virteex/domain-manufacturing-domain": "0.0.1"
   }
 }

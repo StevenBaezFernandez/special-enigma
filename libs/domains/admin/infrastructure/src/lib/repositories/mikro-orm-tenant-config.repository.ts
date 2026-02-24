@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TenantConfigRepository, TenantConfig } from '@virteex/admin-domain';
+import { TenantConfigRepository, TenantConfig } from '@virteex/domain-admin-domain';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 

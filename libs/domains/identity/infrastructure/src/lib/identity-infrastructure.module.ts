@@ -6,7 +6,7 @@ import {
   UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository,
   AuthService, NotificationService, RiskEngineService, CachePort,
   User, Company, AuditLog, Session, JobTitle, RiskEvaluatorService
-} from '@virteex/identity-domain';
+} from '@virteex/domain-identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
 import { UserOrmEntity } from './persistence/entities/user.orm-entity';
@@ -22,7 +22,7 @@ import { DefaultRiskEngineService } from './services/risk-engine.service';
 import { MailQueueProducer } from './services/mail-queue.producer';
 import { MailProcessor } from './services/mail.processor';
 import { GeoIpLiteAdapter } from './adapters/geo-ip-lite.adapter';
-import { GEO_IP_PORT } from '@virteex/identity-domain';
+import { GEO_IP_PORT } from '@virteex/domain-identity-domain';
 
 import {
   LoginUserUseCase, VerifyMfaUseCase, StoragePort,
@@ -35,12 +35,12 @@ import {
   GetJobTitlesUseCase,
   CheckSecurityContextUseCase,
   LogoutUserUseCase
-} from '@virteex/identity-application';
+} from '@virteex/application-identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
-import { RedisCacheModule } from '@virteex/shared/infrastructure/cache';
+import { RedisCacheModule } from '@virteex/shared-infrastructure-cache';
 import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
-import { AuthModule } from '@virteex/auth';
+import { AuthModule } from '@virteex/kernel-auth';
 
 @Global()
 @Module({

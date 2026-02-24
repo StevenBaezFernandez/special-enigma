@@ -1,25 +1,34 @@
 {
-  "name": "billing-infrastructure",
+  "name": "infra-billing-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/billing/infrastructure/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:infrastructure", "scope:billing"],
+  "tags": [
+    "type:infrastructure",
+    "scope:billing"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/billing/infrastructure",
         "main": "libs/domains/billing/infrastructure/src/index.ts",
         "tsConfig": "libs/domains/billing/infrastructure/tsconfig.lib.json",
-        "assets": ["libs/domains/billing/infrastructure/*.md"],
+        "assets": [
+          "libs/domains/billing/infrastructure/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/billing/infrastructure"
       }

@@ -4,8 +4,8 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { AccountingInfrastructureModule } from '@virteex/accounting-infrastructure';
-import { AccountingPresentationModule } from '@virteex/accounting-presentation';
+import { AccountingInfrastructureModule } from '@virteex/infra-accounting-infrastructure';
+import { AccountingPresentationModule } from '@virteex/api-accounting-presentation';
 
 @Module({
   imports: [

@@ -1,5 +1,5 @@
 {
-  "name": "inventory-infrastructure",
+  "name": "infra-inventory-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/inventory/infrastructure/src",
   "projectType": "library",

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { User, UserRepository } from '@virteex/identity-domain';
+import { User, UserRepository } from '@virteex/domain-identity-domain';
 import { UserOrmEntity } from './entities/user.orm-entity';
 import { UserMapper } from '../mappers/user.mapper';
 

@@ -5,7 +5,7 @@ import {
   SubscriptionProviderGateway,
   SubscriptionProviderResult,
   PaymentSessionProvider
-} from '@virteex/subscription-domain';
+} from '@virteex/domain-subscription-domain';
 import Stripe from 'stripe';
 import { StripeMapper } from './stripe.mapper';
 

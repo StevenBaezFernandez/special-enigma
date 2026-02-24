@@ -6,8 +6,8 @@ import {
   CreateProductUseCase,
   UpdateProductUseCase,
   DeleteProductUseCase
-} from '@virteex/catalog-application';
-import { CatalogInfrastructureModule } from '@virteex/catalog-infrastructure';
+} from '@virteex/application-catalog-application';
+import { CatalogInfrastructureModule } from '@virteex/infra-catalog-infrastructure';
 import { CatalogController } from './controllers/catalog.controller';
 
 @Module({

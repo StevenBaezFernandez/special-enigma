@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CustomerRepository, CustomerBillingInfo } from '@virteex/billing-domain';
+import { CustomerRepository, CustomerBillingInfo } from '@virteex/domain-billing-domain';
 import axios from 'axios';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Injectable, Logger, Optional } from '@nestjs/common';
 import { Twilio } from 'twilio';
-import { SecretManagerService } from '@virteex/auth';
+import { SecretManagerService } from '@virteex/kernel-auth';
 
 @Injectable()
 export class SmsService {

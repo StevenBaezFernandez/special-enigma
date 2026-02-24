@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { FiscalDataProvider, FiscalStats } from '../../../../domain/src/lib/ports/fiscal-data-provider.port';
-import { Invoice } from '@virteex/billing-domain';
+import { Invoice } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class FiscalDataAdapter implements FiscalDataProvider {

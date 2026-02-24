@@ -1,6 +1,6 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { UpdateVendorBillDto } from '@virteex/purchasing-contracts';
-import { VendorBill, VendorBillRepository, VENDOR_BILL_REPOSITORY } from '@virteex/purchasing-domain';
+import { UpdateVendorBillDto } from '@virteex/contracts-purchasing-contracts';
+import { VendorBill, VendorBillRepository, VENDOR_BILL_REPOSITORY } from '@virteex/domain-purchasing-domain';
 
 @Injectable()
 export class UpdateVendorBillUseCase {

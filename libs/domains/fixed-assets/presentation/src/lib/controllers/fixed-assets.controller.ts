@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { CreateFixedAssetUseCase, CreateFixedAssetDto, GetFixedAssetsUseCase } from '@virteex/fixed-assets-application';
+import { CreateFixedAssetUseCase, CreateFixedAssetDto, GetFixedAssetsUseCase } from '@virteex/application-fixed-assets-application';
 
 @ApiTags('Fixed Assets')
 @Controller('fixed-assets')

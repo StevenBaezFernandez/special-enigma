@@ -3,7 +3,7 @@ import {
   SubscriptionStatus,
   SubscriptionRepository,
   SUBSCRIPTION_REPOSITORY,
-} from '@virteex/subscription-domain';
+} from '@virteex/domain-subscription-domain';
 
 export interface HandleSubscriptionUpdatedDto {
   subscriptionId: string;

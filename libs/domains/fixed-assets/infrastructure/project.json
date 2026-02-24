@@ -1,25 +1,34 @@
 {
-  "name": "fixed-assets-infrastructure",
+  "name": "infra-fixed-assets-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/fixed-assets/infrastructure/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:infrastructure", "scope:fixed-assets"],
+  "tags": [
+    "type:infrastructure",
+    "scope:fixed-assets"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/fixed-assets/infrastructure",
         "main": "libs/domains/fixed-assets/infrastructure/src/index.ts",
         "tsConfig": "libs/domains/fixed-assets/infrastructure/tsconfig.lib.json",
-        "assets": ["libs/domains/fixed-assets/infrastructure/*.md"],
+        "assets": [
+          "libs/domains/fixed-assets/infrastructure/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/fixed-assets/infrastructure"
       }

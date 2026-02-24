@@ -7,7 +7,7 @@ import {
   GetTaxRulesUseCase,
   CreateTaxRuleUseCase,
   GetTaxRateUseCase
-} from '@virteex/fiscal-application';
+} from '@virteex/application-fiscal-application';
 import { FiscalInfrastructureModule } from '../../../infrastructure/src/index';
 
 @Module({

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InvoiceRepository } from '@virteex/billing-domain';
-import { Invoice } from '@virteex/billing-domain';
+import { InvoiceRepository } from '@virteex/domain-billing-domain';
+import { Invoice } from '@virteex/domain-billing-domain';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 

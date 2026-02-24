@@ -1,25 +1,34 @@
 {
-  "name": "manufacturing-contracts",
+  "name": "contracts-manufacturing-contracts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/manufacturing/contracts/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:contract", "scope:manufacturing"],
+  "tags": [
+    "type:contract",
+    "scope:manufacturing"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/manufacturing/contracts",
         "main": "libs/domains/manufacturing/contracts/src/index.ts",
         "tsConfig": "libs/domains/manufacturing/contracts/tsconfig.lib.json",
-        "assets": ["libs/domains/manufacturing/contracts/*.md"],
+        "assets": [
+          "libs/domains/manufacturing/contracts/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/manufacturing/contracts"
       }

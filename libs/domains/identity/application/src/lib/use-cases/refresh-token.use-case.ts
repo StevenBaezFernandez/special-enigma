@@ -1,13 +1,13 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import * as crypto from 'crypto';
-import { RefreshTokenDto, LoginResponseDto } from '@virteex/identity-contracts';
+import { RefreshTokenDto, LoginResponseDto } from '@virteex/contracts-identity-contracts';
 import {
   SessionRepository,
   AuditLogRepository,
   AuditLog,
   UserRepository,
   CachePort
-} from '@virteex/identity-domain';
+} from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
 
 @Injectable()

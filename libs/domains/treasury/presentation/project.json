@@ -1,25 +1,34 @@
 {
-  "name": "treasury-presentation",
+  "name": "api-treasury-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/treasury/presentation/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:presentation", "scope:treasury"],
+  "tags": [
+    "type:presentation",
+    "scope:treasury"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/treasury/presentation",
         "main": "libs/domains/treasury/presentation/src/index.ts",
         "tsConfig": "libs/domains/treasury/presentation/tsconfig.lib.json",
-        "assets": ["libs/domains/treasury/presentation/*.md"],
+        "assets": [
+          "libs/domains/treasury/presentation/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/treasury/presentation"
       }

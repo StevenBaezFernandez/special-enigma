@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
-import { PacProvider, FiscalStamp } from '@virteex/payroll-domain';
+import { PacProvider, FiscalStamp } from '@virteex/domain-payroll-domain';
 import { Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SecretManagerService } from '@virteex/auth';
+import { SecretManagerService } from '@virteex/kernel-auth';
 
 @Injectable()
 export class FinkokPacProvider implements PacProvider {

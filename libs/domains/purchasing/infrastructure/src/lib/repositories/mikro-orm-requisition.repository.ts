@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { Requisition, RequisitionRepository } from '@virteex/purchasing-domain';
+import { Requisition, RequisitionRepository } from '@virteex/domain-purchasing-domain';
 
 @Injectable()
 export class MikroOrmRequisitionRepository implements RequisitionRepository {

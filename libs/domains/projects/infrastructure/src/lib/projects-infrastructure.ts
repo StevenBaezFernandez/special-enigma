@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Project, Task, PROJECT_REPOSITORY } from '@virteex/projects-domain';
+import { Project, Task, PROJECT_REPOSITORY } from '@virteex/domain-projects-domain';
 import { MikroOrmProjectRepository } from './repositories/mikro-orm-project.repository';
 
 @Global()

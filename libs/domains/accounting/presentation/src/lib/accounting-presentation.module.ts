@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AccountingApplicationModule } from '@virteex/accounting-application';
-import { AccountingInfrastructureModule } from '@virteex/accounting-infrastructure';
+import { AccountingApplicationModule } from '@virteex/application-accounting-application';
+import { AccountingInfrastructureModule } from '@virteex/infra-accounting-infrastructure';
 import { AccountingController } from './controllers/accounting.controller';
 import { AccountingEventsController } from './controllers/accounting-events.controller';
 import { AccountsResolver } from './resolvers/accounts.resolver';

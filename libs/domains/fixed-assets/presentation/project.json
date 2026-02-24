@@ -1,25 +1,34 @@
 {
-  "name": "fixed-assets-presentation",
+  "name": "api-fixed-assets-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/fixed-assets/presentation/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:presentation", "scope:fixed-assets"],
+  "tags": [
+    "type:presentation",
+    "scope:fixed-assets"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/fixed-assets/presentation",
         "main": "libs/domains/fixed-assets/presentation/src/index.ts",
         "tsConfig": "libs/domains/fixed-assets/presentation/tsconfig.lib.json",
-        "assets": ["libs/domains/fixed-assets/presentation/*.md"],
+        "assets": [
+          "libs/domains/fixed-assets/presentation/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/fixed-assets/presentation"
       }

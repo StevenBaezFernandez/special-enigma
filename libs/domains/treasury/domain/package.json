@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/treasury-domain",
+  "name": "@virteex/domain-treasury-domain",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -7,7 +7,7 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "@mikro-orm/core": "^6.6.5",
-    "@virteex/treasury-contracts": "*",
+    "@virteex/contracts-treasury-contracts": "*",
     "tslib": "^2.3.0"
   }
 }

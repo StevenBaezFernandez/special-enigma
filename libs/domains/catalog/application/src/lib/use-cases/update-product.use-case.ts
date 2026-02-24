@@ -1,8 +1,8 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ProductRepository } from '@virteex/catalog-domain/lib/repositories/product.repository';
-import { Product } from '@virteex/catalog-domain/lib/entities/product.entity';
-import { ProductUpdatedEvent } from '@virteex/catalog-domain';
+import { ProductRepository } from '@virteex/domain-catalog-domain/lib/repositories/product.repository';
+import { Product } from '@virteex/domain-catalog-domain/lib/entities/product.entity';
+import { ProductUpdatedEvent } from '@virteex/domain-catalog-domain';
 
 export interface UpdateProductDto {
   id: number;

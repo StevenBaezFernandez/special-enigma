@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { AuditLogRepository, AuditLog } from '@virteex/identity-domain';
+import { AuditLogRepository, AuditLog } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class GetAuditLogsUseCase {

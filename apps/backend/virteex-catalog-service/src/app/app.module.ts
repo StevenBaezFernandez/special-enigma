@@ -6,12 +6,12 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { TenantModule } from '@virteex/tenant';
-import { JwtTenantMiddleware } from '@virteex/auth';
-import { KafkaModule } from '@virteex/shared/infrastructure/kafka';
-import { CatalogInfrastructureModule } from '@virteex/catalog-infrastructure';
-import { CatalogApplicationModule } from '@virteex/catalog-application';
-import { CatalogPresentationModule } from '@virteex/catalog-presentation';
+import { TenantModule } from '@virteex/kernel-tenant';
+import { JwtTenantMiddleware } from '@virteex/kernel-auth';
+import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
+import { CatalogInfrastructureModule } from '@virteex/infra-catalog-infrastructure';
+import { CatalogApplicationModule } from '@virteex/application-catalog-application';
+import { CatalogPresentationModule } from '@virteex/api-catalog-presentation';
 import { CatalogResolver } from './catalog.resolver';
 import { SchemaService } from './schema.service';
 

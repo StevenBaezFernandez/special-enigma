@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, ManyToOne } from '@mikro-orm/core';
-import { OpportunityStage } from '@virteex/contracts';
+import { OpportunityStage } from '@virteex/shared-contracts';
 import type { Customer } from './customer.entity';
 
 @Entity()

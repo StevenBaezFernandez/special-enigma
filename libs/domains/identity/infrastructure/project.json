@@ -1,5 +1,5 @@
 {
-  "name": "identity-infrastructure",
+  "name": "infra-identity-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/identity/infrastructure/src",
   "projectType": "library",
@@ -14,13 +14,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/identity/infrastructure",
         "main": "libs/domains/identity/infrastructure/src/index.ts",
         "tsConfig": "libs/domains/identity/infrastructure/tsconfig.lib.json",
         "rootDir": ".",
-        "assets": ["libs/domains/identity/infrastructure/*.md"]
+        "assets": [
+          "libs/domains/identity/infrastructure/*.md"
+        ]
       }
     },
     "lint": {
@@ -28,7 +32,9 @@
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/identity/infrastructure"
       }

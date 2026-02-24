@@ -1,5 +1,5 @@
 {
-  "name": "purchasing-domain",
+  "name": "domain-purchasing-domain",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/purchasing/domain/src",
   "projectType": "library",
@@ -13,25 +13,35 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "rootDir": "libs/domains/purchasing/domain/src",
         "outputPath": "dist/libs/domains/purchasing/domain",
         "main": "libs/domains/purchasing/domain/src/index.ts",
         "tsConfig": "libs/domains/purchasing/domain/tsconfig.lib.json",
-        "assets": ["libs/domains/purchasing/domain/*.md"]
+        "assets": [
+          "libs/domains/purchasing/domain/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["libs/domains/purchasing/domain/**/*.ts"]
+        "lintFilePatterns": [
+          "libs/domains/purchasing/domain/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/purchasing/domain"
       }

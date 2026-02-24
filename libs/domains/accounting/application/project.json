@@ -1,5 +1,5 @@
 {
-  "name": "accounting-application",
+  "name": "application-accounting-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/accounting/application/src",
   "projectType": "library",

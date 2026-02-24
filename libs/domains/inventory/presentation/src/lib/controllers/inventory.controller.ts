@@ -12,10 +12,10 @@ import {
   RegisterMovementUseCase,
   CreateWarehouseDto,
   RegisterMovementDto
-} from '@virteex/inventory-application';
+} from '@virteex/application-inventory-application';
 import { IsString, IsNumber, Min, IsArray, ValidateNested, IsOptional, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
-import { JwtAuthGuard, CurrentUser, UserPayload } from '@virteex/auth';
+import { JwtAuthGuard, CurrentUser, UserPayload } from '@virteex/kernel-auth';
 
 class ReserveStockDto {
   @IsString()

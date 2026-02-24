@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/manufacturing-presentation",
+  "name": "@virteex/api-manufacturing-presentation",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -9,7 +9,7 @@
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/swagger": "^11.2.6",
-    "@virteex/manufacturing-application": "0.0.1",
-    "@virteex/auth": "0.0.1"
+    "@virteex/application-manufacturing-application": "0.0.1",
+    "@virteex/kernel-auth": "0.0.1"
   }
 }

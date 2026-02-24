@@ -1,5 +1,5 @@
 {
-  "name": "xslt",
+  "name": "shared-infrastructure-xslt",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/infrastructure/xslt/src",
   "projectType": "library",

@@ -1,25 +1,34 @@
 {
-  "name": "projects-contracts",
+  "name": "contracts-projects-contracts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/projects/contracts/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:contract", "scope:projects"],
+  "tags": [
+    "type:contract",
+    "scope:projects"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/projects/contracts",
         "main": "libs/domains/projects/contracts/src/index.ts",
         "tsConfig": "libs/domains/projects/contracts/tsconfig.lib.json",
-        "assets": ["libs/domains/projects/contracts/*.md"],
+        "assets": [
+          "libs/domains/projects/contracts/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/projects/contracts"
       }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PacStrategyFactory, PacProvider } from '@virteex/billing-domain';
+import { PacStrategyFactory, PacProvider } from '@virteex/domain-billing-domain';
 import { FinkokPacProvider } from '../providers/finkok-pac.provider';
 import { NullPacProvider } from '../providers/null-pac.provider';
 

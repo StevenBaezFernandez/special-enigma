@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CachePort } from '@virteex/identity-domain';
+import { CachePort } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class LogoutUserUseCase {

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ManufacturingController } from './controllers/manufacturing.controller';
-import { ManufacturingApplicationModule } from '@virteex/manufacturing-application';
-import { ManufacturingInfrastructureModule } from '@virteex/manufacturing-infrastructure';
+import { ManufacturingApplicationModule } from '@virteex/application-manufacturing-application';
+import { ManufacturingInfrastructureModule } from '@virteex/infra-manufacturing-infrastructure';
 
 @Module({
   imports: [ManufacturingApplicationModule, ManufacturingInfrastructureModule],

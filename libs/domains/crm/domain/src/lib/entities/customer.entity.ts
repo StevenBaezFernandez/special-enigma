@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection, Cascade, BeforeCreate, BeforeUpdate, ValidationError } from '@mikro-orm/core';
-import { CustomerType } from '@virteex/contracts';
+import { CustomerType } from '@virteex/shared-contracts';
 import { v4 as uuidv4 } from 'uuid';
 import type { Opportunity } from './opportunity.entity';
 

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ProductionOrder, ProductionOrderRepository, PRODUCTION_ORDER_REPOSITORY } from '@virteex/manufacturing-domain';
+import { ProductionOrder, ProductionOrderRepository, PRODUCTION_ORDER_REPOSITORY } from '@virteex/domain-manufacturing-domain';
 
 @Injectable()
 export class GetProductionOrdersUseCase {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { JobTitleRepository, JobTitle } from '@virteex/identity-domain';
+import { JobTitleRepository, JobTitle } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class GetJobTitlesUseCase {

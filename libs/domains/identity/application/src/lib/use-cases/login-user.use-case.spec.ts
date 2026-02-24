@@ -3,7 +3,7 @@ import { LoginUserUseCase } from './login-user.use-case';
 import {
   UserRepository, AuditLogRepository,
   AuthService, RiskEngineService
-} from '@virteex/identity-domain';
+} from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
 import { UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { vi, Mock } from 'vitest';

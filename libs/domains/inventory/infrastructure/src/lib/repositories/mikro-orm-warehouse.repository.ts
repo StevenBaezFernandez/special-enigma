@@ -4,7 +4,7 @@ import {
   WarehouseRepository,
   Warehouse,
   Location
-} from '@virteex/inventory-domain';
+} from '@virteex/domain-inventory-domain';
 
 @Injectable()
 export class MikroOrmWarehouseRepository implements WarehouseRepository {

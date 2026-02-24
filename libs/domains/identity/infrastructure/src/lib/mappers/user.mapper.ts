@@ -1,4 +1,4 @@
-import { User } from '@virteex/identity-domain';
+import { User } from '@virteex/domain-identity-domain';
 import { UserOrmEntity } from '../persistence/entities/user.orm-entity';
 
 export class UserMapper {

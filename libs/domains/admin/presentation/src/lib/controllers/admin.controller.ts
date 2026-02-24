@@ -1,7 +1,7 @@
 import { Controller, Post, UseInterceptors, UploadedFile, Body, Logger } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
-import { DataImportService } from '@virteex/admin-application';
+import { DataImportService } from '@virteex/application-admin-application';
 import { Express } from 'express';
 import 'multer';
 

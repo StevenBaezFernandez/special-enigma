@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectRepository, Project } from '@virteex/projects-domain';
+import { ProjectRepository, Project } from '@virteex/domain-projects-domain';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 

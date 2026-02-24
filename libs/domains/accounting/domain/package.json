@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/accounting-domain",
+  "name": "@virteex/domain-accounting-domain",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -8,6 +8,6 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "@mikro-orm/core": "^6.6.5",
-    "@virteex/accounting-contracts": "0.0.1"
+    "@virteex/contracts-accounting-contracts": "0.0.1"
   }
 }

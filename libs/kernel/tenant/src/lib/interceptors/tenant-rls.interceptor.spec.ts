@@ -4,9 +4,9 @@ import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { TenantService } from '../tenant.service';
 import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { of, lastValueFrom } from 'rxjs';
-import * as AuthModule from '@virteex/auth';
+import * as AuthModule from '@virteex/kernel-auth';
 
-jest.mock('@virteex/auth');
+jest.mock('@virteex/kernel-auth');
 
 describe('TenantRlsInterceptor', () => {
   let interceptor: TenantRlsInterceptor;

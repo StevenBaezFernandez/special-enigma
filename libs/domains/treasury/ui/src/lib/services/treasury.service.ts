@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BankAccountDto, CreateBankAccountDto } from '@virteex/treasury-contracts';
+import { BankAccountDto, CreateBankAccountDto } from '@virteex/contracts-treasury-contracts';
 import { GraphQLClientService } from '@virteex/shared-util-http';
 
 @Injectable({

@@ -1,25 +1,34 @@
 {
-  "name": "crm-presentation",
+  "name": "api-crm-presentation",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/crm/presentation/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:presentation", "scope:crm"],
+  "tags": [
+    "type:presentation",
+    "scope:crm"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/crm/presentation",
         "main": "libs/domains/crm/presentation/src/index.ts",
         "tsConfig": "libs/domains/crm/presentation/tsconfig.lib.json",
-        "assets": ["libs/domains/crm/presentation/*.md"],
+        "assets": [
+          "libs/domains/crm/presentation/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/crm/presentation"
       }

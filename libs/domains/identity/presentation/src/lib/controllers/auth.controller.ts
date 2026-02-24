@@ -4,17 +4,17 @@ import {
   RefreshTokenUseCase,
   InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
   CheckSecurityContextUseCase, LogoutUserUseCase
-} from '@virteex/identity-application';
+} from '@virteex/application-identity-application';
 import {
   LoginUserDto, VerifyMfaDto,
   RefreshTokenDto,
   InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto
-} from '@virteex/identity-contracts';
+} from '@virteex/contracts-identity-contracts';
 import { Request, Response } from 'express';
-import { Public, JwtAuthGuard, SecretManagerService } from '@virteex/auth';
+import { Public, JwtAuthGuard, SecretManagerService } from '@virteex/kernel-auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
-import { GeoIpPort, GEO_IP_PORT } from '@virteex/identity-domain';
+import { GeoIpPort, GEO_IP_PORT } from '@virteex/domain-identity-domain';
 import { SessionGuard } from '../guards/session.guard';
 
 @ApiTags('Auth')

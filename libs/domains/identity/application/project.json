@@ -1,5 +1,5 @@
 {
-  "name": "identity-application",
+  "name": "application-identity-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/identity/application/src",
   "projectType": "library",
@@ -14,12 +14,16 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/identity/application",
         "main": "libs/domains/identity/application/src/index.ts",
         "tsConfig": "libs/domains/identity/application/tsconfig.lib.json",
-        "assets": ["libs/domains/identity/application/*.md"]
+        "assets": [
+          "libs/domains/identity/application/*.md"
+        ]
       }
     },
     "lint": {
@@ -27,7 +31,9 @@
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/identity/application"
       }

@@ -1,9 +1,9 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
-import { VerifyMfaDto, LoginResponseDto } from '@virteex/identity-contracts';
+import { VerifyMfaDto, LoginResponseDto } from '@virteex/contracts-identity-contracts';
 import {
   UserRepository, AuditLogRepository, AuditLog,
   AuthService
-} from '@virteex/identity-domain';
+} from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
 
 export interface VerifyMfaContext {

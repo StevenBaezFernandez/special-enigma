@@ -1,25 +1,34 @@
 {
-  "name": "projects-application",
+  "name": "application-projects-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/projects/application/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:application", "scope:projects"],
+  "tags": [
+    "type:application",
+    "scope:projects"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/projects/application",
         "main": "libs/domains/projects/application/src/index.ts",
         "tsConfig": "libs/domains/projects/application/tsconfig.lib.json",
-        "assets": ["libs/domains/projects/application/*.md"],
+        "assets": [
+          "libs/domains/projects/application/*.md"
+        ],
         "rootDir": "libs/domains/projects/application/src"
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/projects/application"
       }

@@ -1,5 +1,5 @@
 {
-  "name": "messaging",
+  "name": "kernel-messaging",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kernel/messaging/src",
   "projectType": "library",

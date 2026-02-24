@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { DashboardGateway, DashboardMetrics } from '@virteex/admin-domain';
+import { DashboardGateway, DashboardMetrics } from '@virteex/domain-admin-domain';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()

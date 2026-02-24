@@ -1,5 +1,5 @@
 {
-  "name": "telemetry",
+  "name": "kernel-telemetry",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kernel/telemetry/src",
   "projectType": "library",

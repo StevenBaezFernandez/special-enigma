@@ -9,8 +9,8 @@ import {
   SUBSCRIPTION_PROVIDER_GATEWAY,
   PAYMENT_SESSION_PROVIDER,
   SubscriptionDomainModule
-} from '@virteex/subscription-domain';
-import { SubscriptionApplicationModule } from '@virteex/subscription-application';
+} from '@virteex/domain-subscription-domain';
+import { SubscriptionApplicationModule } from '@virteex/application-subscription-application';
 
 import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscription.repository';
 import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';

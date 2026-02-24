@@ -1,7 +1,7 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { Session, SessionRepository } from '@virteex/identity-domain';
+import { Session, SessionRepository } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class MikroOrmSessionRepository implements SessionRepository {

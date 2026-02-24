@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, ManyToOne } from '@mikro-orm/core';
-import { CashFlowType } from '@virteex/contracts';
+import { CashFlowType } from '@virteex/shared-contracts';
 import type { BankAccount } from './bank-account.entity';
 
 @Entity()

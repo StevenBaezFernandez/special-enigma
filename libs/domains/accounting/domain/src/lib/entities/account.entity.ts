@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, ManyToOne, Unique } from '@mikro-orm/core';
-import { AccountType } from '@virteex/accounting-contracts';
+import { AccountType } from '@virteex/contracts-accounting-contracts';
 
 @Entity()
 @Unique({ properties: ['tenantId', 'code'] })

@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheckService, HttpHealthIndicator, HealthCheck, MemoryHealthIndicator } from '@nestjs/terminus';
-import { Public } from '@virteex/auth';
+import { Public } from '@virteex/kernel-auth';
 
 @Controller('health')
 export class HealthController {

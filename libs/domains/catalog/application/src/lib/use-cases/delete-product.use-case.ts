@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { ProductRepository } from '@virteex/catalog-domain/lib/repositories/product.repository';
+import { ProductRepository } from '@virteex/domain-catalog-domain/lib/repositories/product.repository';
 
 @Injectable()
 export class DeleteProductUseCase {

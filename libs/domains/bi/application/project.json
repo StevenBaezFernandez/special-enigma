@@ -1,25 +1,34 @@
 {
-  "name": "bi-application",
+  "name": "application-bi-application",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/bi/application/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:application", "scope:bi"],
+  "tags": [
+    "type:application",
+    "scope:bi"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/bi/application",
         "main": "libs/domains/bi/application/src/index.ts",
         "tsConfig": "libs/domains/bi/application/tsconfig.lib.json",
-        "assets": ["libs/domains/bi/application/*.md"],
+        "assets": [
+          "libs/domains/bi/application/*.md"
+        ],
         "rootDir": "libs/domains/bi/application/src"
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/bi/application"
       }

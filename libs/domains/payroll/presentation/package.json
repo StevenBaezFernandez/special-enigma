@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/payroll-presentation",
+  "name": "@virteex/api-payroll-presentation",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -7,10 +7,10 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "@nestjs/common": "^11.0.0",
-    "@virteex/payroll-application": "*",
-    "@virteex/payroll-contracts": "*",
-    "@virteex/payroll-domain": "*",
-    "@virteex/payroll-infrastructure": "*",
+    "@virteex/application-payroll-application": "*",
+    "@virteex/contracts-payroll-contracts": "*",
+    "@virteex/domain-payroll-domain": "*",
+    "@virteex/infra-payroll-infrastructure": "*",
     "tslib": "^2.3.0"
   }
 }

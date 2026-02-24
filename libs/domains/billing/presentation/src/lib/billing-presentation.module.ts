@@ -6,8 +6,8 @@ import {
   BillingApplicationModule
 } from '../../../application/src/index';
 import { BillingInfrastructureModule } from '../../../infrastructure/src/index';
-import { SubscriptionApplicationModule } from '@virteex/subscription-application';
-import { SubscriptionInfrastructureModule } from '@virteex/subscription-infrastructure';
+import { SubscriptionApplicationModule } from '@virteex/application-subscription-application';
+import { SubscriptionInfrastructureModule } from '@virteex/infra-subscription-infrastructure';
 
 @Module({
   imports: [

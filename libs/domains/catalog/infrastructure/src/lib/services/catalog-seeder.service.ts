@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core'; // Changed from @mikro-orm/postgresql to @mikro-orm/core for driver agnostic
-import { SatPaymentForm, SatPaymentMethod, SatCfdiUsage } from '@virteex/catalog-domain';
+import { SatPaymentForm, SatPaymentMethod, SatCfdiUsage } from '@virteex/domain-catalog-domain';
 
 @Injectable()
 export class CatalogSeederService {

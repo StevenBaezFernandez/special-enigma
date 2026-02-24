@@ -1,6 +1,6 @@
 import { Controller, Get, Inject } from '@nestjs/common';
-import { ListTenantsUseCase } from '@virteex/identity-application';
-import { Company } from '@virteex/identity-domain';
+import { ListTenantsUseCase } from '@virteex/application-identity-application';
+import { Company } from '@virteex/domain-identity-domain';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 @ApiTags('Admin')

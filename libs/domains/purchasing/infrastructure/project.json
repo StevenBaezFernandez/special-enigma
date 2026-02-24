@@ -1,5 +1,5 @@
 {
-  "name": "purchasing-infrastructure",
+  "name": "infra-purchasing-infrastructure",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/purchasing/infrastructure/src",
   "projectType": "library",
@@ -13,25 +13,35 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "rootDir": ".",
         "outputPath": "dist/libs/domains/purchasing/infrastructure",
         "main": "libs/domains/purchasing/infrastructure/src/index.ts",
         "tsConfig": "libs/domains/purchasing/infrastructure/tsconfig.lib.json",
-        "assets": ["libs/domains/purchasing/infrastructure/*.md"]
+        "assets": [
+          "libs/domains/purchasing/infrastructure/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["libs/domains/purchasing/infrastructure/**/*.ts"]
+        "lintFilePatterns": [
+          "libs/domains/purchasing/infrastructure/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/purchasing/infrastructure"
       }

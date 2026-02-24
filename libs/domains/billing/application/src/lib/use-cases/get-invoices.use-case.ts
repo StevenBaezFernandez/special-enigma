@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Invoice, InvoiceRepository, INVOICE_REPOSITORY } from '@virteex/billing-domain';
+import { Invoice, InvoiceRepository, INVOICE_REPOSITORY } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class GetInvoicesUseCase {

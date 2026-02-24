@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { User, UserRepository } from '@virteex/identity-domain';
+import { User, UserRepository } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class GetUserProfileUseCase {

@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/accounting-application",
+  "name": "@virteex/application-accounting-application",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -8,10 +8,10 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
-    "@virteex/accounting-domain": "0.0.1",
-    "@virteex/accounting-contracts": "0.0.1",
+    "@virteex/domain-accounting-domain": "0.0.1",
+    "@virteex/contracts-accounting-contracts": "0.0.1",
     "decimal.js": "^10.6.0",
-    "@virteex/accounting-infrastructure": "0.0.1",
+    "@virteex/infra-accounting-infrastructure": "0.0.1",
     "@nestjs/event-emitter": "^3.0.1"
   }
 }

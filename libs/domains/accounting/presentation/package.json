@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/accounting-presentation",
+  "name": "@virteex/api-accounting-presentation",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -9,7 +9,7 @@
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/graphql": "^13.2.3",
-    "@virteex/accounting-application": "0.0.1",
-    "@virteex/accounting-contracts": "0.0.1"
+    "@virteex/application-accounting-application": "0.0.1",
+    "@virteex/contracts-accounting-contracts": "0.0.1"
   }
 }

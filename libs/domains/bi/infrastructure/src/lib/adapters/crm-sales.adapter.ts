@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { SalesPort, TopProductDto } from '@virteex/bi-domain';
-import { SaleRepository } from '@virteex/crm-domain';
+import { SalesPort, TopProductDto } from '@virteex/domain-bi-domain';
+import { SaleRepository } from '@virteex/domain-crm-domain';
 
 @Injectable()
 export class CrmSalesAdapter implements SalesPort {

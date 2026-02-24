@@ -1,5 +1,5 @@
 {
-  "name": "kafka",
+  "name": "shared-infrastructure-kafka",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/infrastructure/kafka/src",
   "projectType": "library",

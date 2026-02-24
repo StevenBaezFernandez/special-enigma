@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PaymentMethod, IPaymentMethodRepository, PAYMENT_METHOD_REPOSITORY } from '@virteex/billing-domain';
+import { PaymentMethod, IPaymentMethodRepository, PAYMENT_METHOD_REPOSITORY } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class GetPaymentMethodUseCase {

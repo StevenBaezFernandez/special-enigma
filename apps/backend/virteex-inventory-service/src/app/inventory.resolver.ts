@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UseGuards, InternalServerErrorException } from '@nestjs/common';
-import { JwtAuthGuard } from '@virteex/auth';
+import { JwtAuthGuard } from '@virteex/kernel-auth';
 import { CurrentTenant } from '@virteex/shared-util-server-config';
 import {
   CreateWarehouseUseCase,
@@ -9,7 +9,7 @@ import {
   UpdateWarehouseUseCase,
   DeleteWarehouseUseCase,
   InventoryMovementType
-} from '@virteex/inventory-application';
+} from '@virteex/application-inventory-application';
 import { WarehouseObject } from './dto/warehouse.object';
 import { CreateWarehouseInput } from './dto/create-warehouse.input';
 import { RegisterMovementInput } from './dto/register-movement.input';

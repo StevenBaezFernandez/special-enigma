@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/manufacturing-domain",
+  "name": "@virteex/domain-manufacturing-domain",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

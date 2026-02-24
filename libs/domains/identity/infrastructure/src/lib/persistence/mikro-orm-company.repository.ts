@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Company, CompanyRepository } from '@virteex/identity-domain';
+import { Company, CompanyRepository } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class MikroOrmCompanyRepository implements CompanyRepository {

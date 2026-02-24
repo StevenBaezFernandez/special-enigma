@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/fixed-assets-application",
+  "name": "@virteex/application-fixed-assets-application",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -8,6 +8,6 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
-    "@virteex/fixed-assets-domain": "0.0.1"
+    "@virteex/domain-fixed-assets-domain": "0.0.1"
   }
 }

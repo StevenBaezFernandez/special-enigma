@@ -1,5 +1,5 @@
 {
-  "name": "tenant",
+  "name": "kernel-tenant",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kernel/tenant/src",
   "projectType": "library",

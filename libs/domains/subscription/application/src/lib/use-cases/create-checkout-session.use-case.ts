@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PaymentSessionProvider, PAYMENT_SESSION_PROVIDER } from '@virteex/subscription-domain';
+import { PaymentSessionProvider, PAYMENT_SESSION_PROVIDER } from '@virteex/domain-subscription-domain';
 
 export interface CreateCheckoutSessionDto {
   priceId: string;

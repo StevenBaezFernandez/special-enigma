@@ -1,25 +1,34 @@
 {
-  "name": "admin-contracts",
+  "name": "contracts-admin-contracts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domains/admin/contracts/src",
   "projectType": "library",
   "prefix": "virteex",
-  "tags": ["type:contract", "scope:admin"],
+  "tags": [
+    "type:contract",
+    "scope:admin"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domains/admin/contracts",
         "main": "libs/domains/admin/contracts/src/index.ts",
         "tsConfig": "libs/domains/admin/contracts/tsconfig.lib.json",
-        "assets": ["libs/domains/admin/contracts/*.md"],
+        "assets": [
+          "libs/domains/admin/contracts/*.md"
+        ],
         "rootDir": "."
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domains/admin/contracts"
       }

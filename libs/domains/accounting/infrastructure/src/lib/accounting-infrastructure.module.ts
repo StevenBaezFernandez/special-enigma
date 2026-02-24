@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, Account, JournalEntry, JournalEntryLine, FiscalYear } from '@virteex/accounting-domain';
+import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, Account, JournalEntry, JournalEntryLine, FiscalYear } from '@virteex/domain-accounting-domain';
 import { MikroOrmAccountRepository } from './repositories/mikro-orm-account.repository';
 import { MikroOrmJournalEntryRepository } from './repositories/mikro-orm-journal-entry.repository';
 

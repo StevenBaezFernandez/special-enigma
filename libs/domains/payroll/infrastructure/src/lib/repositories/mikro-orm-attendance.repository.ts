@@ -1,7 +1,7 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { Attendance, AttendanceRepository } from '@virteex/payroll-domain';
+import { Attendance, AttendanceRepository } from '@virteex/domain-payroll-domain';
 
 @Injectable()
 export class MikroOrmAttendanceRepository implements AttendanceRepository {

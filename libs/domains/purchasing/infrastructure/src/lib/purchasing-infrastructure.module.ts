@@ -3,7 +3,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
   Supplier, PurchaseOrder, PurchaseOrderItem, Requisition, VendorBill,
   SUPPLIER_REPOSITORY, PURCHASE_ORDER_REPOSITORY, REQUISITION_REPOSITORY, VENDOR_BILL_REPOSITORY
-} from '@virteex/purchasing-domain';
+} from '@virteex/domain-purchasing-domain';
 import { MikroOrmSupplierRepository } from './repositories/mikro-orm-supplier.repository';
 import { MikroOrmPurchaseOrderRepository } from './repositories/mikro-orm-purchase-order.repository';
 import { MikroOrmRequisitionRepository } from './repositories/mikro-orm-requisition.repository';

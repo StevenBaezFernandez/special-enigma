@@ -7,8 +7,8 @@ import { AddPaymentMethodUseCase } from './use-cases/add-payment-method.use-case
 import { GetPaymentMethodUseCase } from './use-cases/get-payment-method.use-case';
 import { ProcessPaymentUseCase } from './use-cases/process-payment.use-case';
 import { StripeEventListener } from './listeners/stripe-event.listener';
-import { BillingDomainModule } from '@virteex/billing-domain';
-import { BillingInfrastructureModule } from '@virteex/billing-infrastructure';
+import { BillingDomainModule } from '@virteex/domain-billing-domain';
+import { BillingInfrastructureModule } from '@virteex/infra-billing-infrastructure';
 
 @Module({
   imports: [BillingDomainModule, BillingInfrastructureModule],

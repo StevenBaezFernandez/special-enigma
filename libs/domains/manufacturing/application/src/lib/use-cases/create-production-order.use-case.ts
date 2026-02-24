@@ -7,7 +7,7 @@ import {
   INVENTORY_SERVICE,
   BillOfMaterialsRepository,
   BILL_OF_MATERIALS_REPOSITORY
-} from '@virteex/manufacturing-domain';
+} from '@virteex/domain-manufacturing-domain';
 import { IsString, IsNumber, IsDateString, IsUUID } from 'class-validator';
 
 export class CreateProductionOrderDto {

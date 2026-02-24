@@ -1,6 +1,6 @@
 import { Injectable, ExecutionContext } from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { getTenantContext } from '@virteex/auth';
+import { getTenantContext } from '@virteex/kernel-auth';
 
 @Injectable()
 export class TenantThrottlerGuard extends ThrottlerGuard {

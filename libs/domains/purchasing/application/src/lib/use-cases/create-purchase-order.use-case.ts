@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { CreatePurchaseOrderDto } from '@virteex/purchasing-contracts';
+import { CreatePurchaseOrderDto } from '@virteex/contracts-purchasing-contracts';
 import {
   PurchaseOrder,
   PurchaseOrderItem,
@@ -7,7 +7,7 @@ import {
   PURCHASE_ORDER_REPOSITORY,
   ISupplierRepository,
   SUPPLIER_REPOSITORY
-} from '@virteex/purchasing-domain';
+} from '@virteex/domain-purchasing-domain';
 
 @Injectable()
 export class CreatePurchaseOrderUseCase {
