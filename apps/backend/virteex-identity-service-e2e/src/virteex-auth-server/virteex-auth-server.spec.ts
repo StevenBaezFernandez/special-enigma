@@ -1,10 +1,101 @@
 import axios from 'axios';
 
-describe('GET /api', () => {
-  it('should return a message', async () => {
-    const res = await axios.get(`/api`);
+// Note: These tests assume the service is running and has a test user 'test@virteex.com' with password 'Password123!'
+// In a real CI, we would use Testcontainers or a seeded database.
 
-    expect(res.status).toBe(200);
-    expect(res.data).toEqual({ message: 'Hello API' });
+const BASE_URL = process.env['API_URL'] || 'http://localhost:3000';
+
+describe('Authentication E2E Tests', () => {
+  const testUser = {
+    email: 'test@virteex.com',
+    password: 'Password123!'
+  };
+
+  describe('POST /auth/login', () => {
+    it('should fail with invalid credentials', async () => {
+      try {
+        await axios.post(`${BASE_URL}/auth/login`, {
+          email: testUser.email,
+          password: 'WrongPassword'
+        });
+        throw new Error('Should have thrown 401');
+      } catch (error: any) {
+        if (error.message === 'Should have thrown 401') throw error;
+        expect(error.response.status).toBe(401);
+      }
+    });
+
+    it('should succeed with valid credentials', async () => {
+      const res = await axios.post(`${BASE_URL}/auth/login`, {
+        email: testUser.email,
+        password: testUser.password
+      });
+
+      expect(res.status).toBe(200);
+      expect(res.data).toHaveProperty('mfaRequired');
+
+      if (!res.data.mfaRequired) {
+          expect(res.headers['set-cookie']).toBeDefined();
+          const cookies = res.headers['set-cookie'] || [];
+          expect(cookies.some(c => c.includes('access_token'))).toBe(true);
+      }
+    });
+
+    it('should lock account after 3 failed attempts', async () => {
+        for (let i = 0; i < 3; i++) {
+            try {
+                await axios.post(`${BASE_URL}/auth/login`, {
+                    email: 'lockout-test@virteex.com',
+                    password: 'WrongPassword'
+                });
+            } catch (error: any) {
+                // Ignore 401
+            }
+        }
+
+        try {
+            await axios.post(`${BASE_URL}/auth/login`, {
+                email: 'lockout-test@virteex.com',
+                password: 'AnyPassword'
+            });
+            throw new Error('Should have been locked');
+        } catch (error: any) {
+            if (error.message === 'Should have been locked') throw error;
+            expect(error.response.status).toBe(403);
+            expect(error.response.data.message).toContain('locked');
+        }
+    });
+  });
+
+  describe('Token Rotation & Refresh', () => {
+      it('should refresh access token using refresh token', async () => {
+          const loginRes = await axios.post(`${BASE_URL}/auth/login`, testUser);
+          if (loginRes.data.mfaRequired) return;
+
+          const cookies = loginRes.headers['set-cookie'] || [];
+          const refreshTokenCookie = cookies.find(c => c.startsWith('refresh_token='));
+
+          const refreshRes = await axios.post(`${BASE_URL}/auth/refresh`, {}, {
+              headers: { Cookie: refreshTokenCookie }
+          });
+
+          expect(refreshRes.status).toBe(200);
+          expect(refreshRes.headers['set-cookie']).toBeDefined();
+          const newCookies = refreshRes.headers['set-cookie'] || [];
+          expect(newCookies.some(c => c.includes('access_token'))).toBe(true);
+      });
+  });
+
+  describe('MFA Flow', () => {
+      it('should require MFA if enabled', async () => {
+          const res = await axios.post(`${BASE_URL}/auth/login`, {
+              email: 'mfa-user@virteex.com',
+              password: 'Password123!'
+          });
+
+          expect(res.status).toBe(200);
+          expect(res.data.mfaRequired).toBe(true);
+          expect(res.data).toHaveProperty('tempToken');
+      });
   });
 });

@@ -7,18 +7,14 @@ import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 })
 export class SecureStorageService {
   private encryptionKey: CryptoKey | null = null;
-  private readonly KEY_STORAGE_NAME = 'virteex_secure_storage_key';
+  private readonly DB_NAME = 'virteex_secure_db';
+  private readonly STORE_NAME = 'keys';
+  private readonly KEY_ID = 'session_encryption_key';
 
-  constructor() {
-    if (this.isBrowser() && !Capacitor.isNativePlatform()) {
-      // Lazy init or init on construction?
-      // Init on construction might be too early for async.
-      // We'll init on demand in encrypt/decrypt methods.
-    }
-  }
+  constructor() {}
 
   private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof window.crypto !== 'undefined';
+    return typeof window !== 'undefined' && typeof window.crypto !== 'undefined' && typeof window.indexedDB !== 'undefined';
   }
 
   private async getCrypto(): Promise<SubtleCrypto> {
@@ -28,57 +24,61 @@ export class SecureStorageService {
     throw new Error('Web Crypto API not available');
   }
 
+  private openDB(): Promise<IDBDatabase> {
+      return new Promise((resolve, reject) => {
+          const request = indexedDB.open(this.DB_NAME, 1);
+          request.onupgradeneeded = () => {
+              request.result.createObjectStore(this.STORE_NAME);
+          };
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+      });
+  }
+
+  private getKeyFromDB(db: IDBDatabase): Promise<CryptoKey | null> {
+      return new Promise((resolve, reject) => {
+          const transaction = db.transaction(this.STORE_NAME, 'readonly');
+          const store = transaction.objectStore(this.STORE_NAME);
+          const request = store.get(this.KEY_ID);
+          request.onsuccess = () => resolve(request.result || null);
+          request.onerror = () => reject(request.error);
+      });
+  }
+
+  private saveKeyToDB(db: IDBDatabase, key: CryptoKey): Promise<void> {
+      return new Promise((resolve, reject) => {
+          const transaction = db.transaction(this.STORE_NAME, 'readwrite');
+          const store = transaction.objectStore(this.STORE_NAME);
+          const request = store.put(key, this.KEY_ID);
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+      });
+  }
+
   private async initWebCrypto() {
     if (!this.isBrowser()) return;
 
     try {
         const subtle = await this.getCrypto();
-        // Try to load existing key
-        const storedKey = localStorage.getItem(this.KEY_STORAGE_NAME);
-        if (storedKey) {
-            try {
-                const binaryString = atob(storedKey);
-                const len = binaryString.length;
-                const bytes = new Uint8Array(len);
-                for (let i = 0; i < len; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                }
+        const db = await this.openDB();
+        let key = await this.getKeyFromDB(db);
 
-                this.encryptionKey = await subtle.importKey(
-                'raw',
-                bytes,
-                { name: 'AES-GCM' },
-                true,
-                ['encrypt', 'decrypt']
-                );
-            } catch (e) {
-                console.warn('Failed to import existing key, generating new one', e);
-            }
-        }
-
-        if (!this.encryptionKey) {
-            const key = await subtle.generateKey(
+        if (!key) {
+            key = await subtle.generateKey(
                 {
                 name: 'AES-GCM',
                 length: 256
                 },
-                true,
+                false, // Key is NOT extractable, increasing security against XSS stealing raw key
                 ['encrypt', 'decrypt']
             );
-            this.encryptionKey = key;
-            const exportedKey = await subtle.exportKey('raw', key);
-
-            const bytes = new Uint8Array(exportedKey);
-            let binary = '';
-            for (let i = 0; i < bytes.byteLength; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            const keyString = btoa(binary);
-
-            localStorage.setItem(this.KEY_STORAGE_NAME, keyString);
+            await this.saveKeyToDB(db, key);
         }
+        this.encryptionKey = key;
     } catch (e) {
-        console.error('Failed to initialize Web Crypto', e);
+        console.error('Failed to initialize SecureStorage with IndexedDB', e);
+        // Fallback or cleanup if needed
+        localStorage.removeItem('virteex_secure_storage_key'); // Cleanup old insecure key if exists
     }
   }
 
@@ -147,7 +147,7 @@ export class SecureStorageService {
         console.error('SecureStorage set error', error);
       }
     } else {
-      if (!this.isBrowser()) return; // SSR no-op
+      if (!this.isBrowser()) return;
       try {
         const encrypted = await this.encryptValue(value);
         sessionStorage.setItem(key, encrypted);

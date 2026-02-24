@@ -8,6 +8,9 @@ import { TelemetryModule } from '@virteex/telemetry';
 import { SecretManagerService, SECRET_PROVIDER } from './services/secret-manager.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { DefaultSecretProvider } from './services/providers/default-secret.provider';
+import { VaultSecretProvider } from './services/providers/vault-secret.provider';
+import { KmsSecretProvider } from './services/providers/kms-secret.provider';
+import { CompositeSecretProvider } from './services/providers/composite-secret.provider';
 
 @Module({
   imports: [ConfigModule, TelemetryModule, PassportModule.register({ defaultStrategy: 'jwt' }), JwtModule.register({})],
@@ -17,9 +20,15 @@ import { DefaultSecretProvider } from './services/providers/default-secret.provi
     SecretManagerService,
     JwtStrategy,
     DefaultSecretProvider,
+    VaultSecretProvider,
+    KmsSecretProvider,
     {
         provide: SECRET_PROVIDER,
-        useClass: DefaultSecretProvider
+        useFactory: async (defaultP: DefaultSecretProvider, vaultP: VaultSecretProvider, kmsP: KmsSecretProvider) => {
+            await vaultP.initialize();
+            return new CompositeSecretProvider([vaultP, kmsP, defaultP]);
+        },
+        inject: [DefaultSecretProvider, VaultSecretProvider, KmsSecretProvider]
     }
   ],
   exports: [TenantContextMiddleware, TenantGuard, SecretManagerService, PassportModule, JwtModule],

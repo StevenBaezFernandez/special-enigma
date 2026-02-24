@@ -1,13 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import * as admin from 'firebase-admin';
+import { SecretManagerService } from '@virteex/auth';
 
 @Injectable()
 export class PushNotificationService {
   private readonly logger = new Logger(PushNotificationService.name);
   private initialized = false;
 
-  constructor() {
-    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
+  constructor(@Optional() private readonly secretManager?: SecretManagerService) {
+    const serviceAccountPath = this.secretManager?.getSecret('FIREBASE_SERVICE_ACCOUNT_PATH', '') || process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
     if (serviceAccountPath) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires

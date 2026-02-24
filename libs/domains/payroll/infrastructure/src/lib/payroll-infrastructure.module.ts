@@ -1,5 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { AuthModule } from '@virteex/auth';
 import {
   TaxTable,
   Employee,
@@ -27,7 +28,10 @@ import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-
 
 @Global()
 @Module({
-  imports: [MikroOrmModule.forFeature([TaxTable, Employee, Payroll, Attendance, PayrollDetail])],
+  imports: [
+    AuthModule,
+    MikroOrmModule.forFeature([TaxTable, Employee, Payroll, Attendance, PayrollDetail])
+  ],
   providers: [
     { provide: EMPLOYEE_REPOSITORY, useClass: MikroOrmEmployeeRepository },
     { provide: PAYROLL_REPOSITORY, useClass: MikroOrmPayrollRepository },

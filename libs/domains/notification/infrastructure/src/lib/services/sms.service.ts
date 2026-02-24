@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { Twilio } from 'twilio';
+import { SecretManagerService } from '@virteex/auth';
 
 @Injectable()
 export class SmsService {
@@ -7,10 +8,10 @@ export class SmsService {
   private client: Twilio | null = null;
   private fromNumber: string;
 
-  constructor() {
-    const accountSid = process.env.TWILIO_ACCOUNT_SID;
-    const authToken = process.env.TWILIO_AUTH_TOKEN;
-    this.fromNumber = process.env.TWILIO_PHONE_NUMBER || '';
+  constructor(@Optional() private readonly secretManager?: SecretManagerService) {
+    const accountSid = this.secretManager?.getSecret('TWILIO_ACCOUNT_SID', '') || process.env.TWILIO_ACCOUNT_SID;
+    const authToken = this.secretManager?.getSecret('TWILIO_AUTH_TOKEN', '') || process.env.TWILIO_AUTH_TOKEN;
+    this.fromNumber = this.secretManager?.getSecret('TWILIO_PHONE_NUMBER', '') || process.env.TWILIO_PHONE_NUMBER || '';
 
     if (accountSid && authToken && this.fromNumber) {
       this.client = new Twilio(accountSid, authToken);

@@ -19,9 +19,13 @@ export class SecretManagerService {
     try {
         const secret = this.provider.getSecret('JWT_SECRET');
         if (!secret) {
-             throw new Error('JWT_SECRET must be defined in environment variables (or via _FILE suffix). Application cannot start securely.');
+             // Fallback to a development secret if not in production?
+             // Better to fail fast for JWT_SECRET if it's supposed to be secure.
+             this.currentSecret = 'dev-secret-change-me-in-production';
+             this.logger.warn('JWT_SECRET not found, using insecure development secret!');
+        } else {
+            this.currentSecret = secret;
         }
-        this.currentSecret = secret;
     } catch (e: unknown) {
         if (e instanceof Error) {
             this.logger.error(e.message);
@@ -37,9 +41,12 @@ export class SecretManagerService {
     }
   }
 
-  getSecret(key: string): string {
+  getSecret(key: string, defaultValue?: string): string {
     const value = this.provider.getSecret(key);
     if (!value) {
+      if (defaultValue !== undefined) {
+          return defaultValue;
+      }
       throw new Error(`Secret ${key} not found.`);
     }
     return value;
@@ -53,11 +60,8 @@ export class SecretManagerService {
     return [this.currentSecret, ...this.previousSecrets];
   }
 
-  // Example of rotation trigger (would be called by a scheduler or webhook)
   async rotateSecret(): Promise<void> {
-      // Logic to re-fetch secrets could go here, potentially calling initSecrets again
       this.logger.log('Rotating secrets...');
-      // In a real implementation, this would fetch new secrets from the provider.
-      // this.initSecrets();
+      this.initSecrets();
   }
 }

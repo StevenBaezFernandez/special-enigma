@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import { PacProvider, FiscalStamp } from '@virteex/payroll-domain';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { SecretManagerService } from '@virteex/auth';
 
 @Injectable()
 export class FinkokPacProvider implements PacProvider {
@@ -24,18 +25,21 @@ export class FinkokPacProvider implements PacProvider {
     suppressEmptyNode: true
   });
 
-  constructor(private readonly configService: ConfigService) {
-    this.username = this.configService.get<string>('FINKOK_USERNAME')!;
-    this.password = this.configService.get<string>('FINKOK_PASSWORD')!;
-    this.url = this.configService.get<string>('FINKOK_URL')!;
-    this.cancelUrl = this.configService.get<string>('FINKOK_CANCEL_URL') || this.url?.replace('/stamp', '/cancel');
-    this.stampNamespace = this.configService.get<string>('FINKOK_STAMP_NAMESPACE') || 'http://facturacion.finkok.com/stamp';
-    this.cancelNamespace = this.configService.get<string>('FINKOK_CANCEL_NAMESPACE') || 'http://facturacion.finkok.com/cancel';
+  constructor(
+      private readonly configService: ConfigService,
+      @Optional() private readonly secretManager?: SecretManagerService
+  ) {
+    this.username = this.secretManager?.getSecret('FINKOK_USERNAME', '') || this.configService.get<string>('FINKOK_USERNAME') || '';
+    this.password = this.secretManager?.getSecret('FINKOK_PASSWORD', '') || this.configService.get<string>('FINKOK_PASSWORD') || '';
+    this.url = this.secretManager?.getSecret('FINKOK_URL', '') || this.configService.get<string>('FINKOK_URL') || '';
+    this.cancelUrl = this.secretManager?.getSecret('FINKOK_CANCEL_URL', '') || this.configService.get<string>('FINKOK_CANCEL_URL') || this.url?.replace('/stamp', '/cancel');
+    this.stampNamespace = this.secretManager?.getSecret('FINKOK_STAMP_NAMESPACE', 'http://facturacion.finkok.com/stamp') || this.configService.get<string>('FINKOK_STAMP_NAMESPACE') || 'http://facturacion.finkok.com/stamp';
+    this.cancelNamespace = this.secretManager?.getSecret('FINKOK_CANCEL_NAMESPACE', 'http://facturacion.finkok.com/cancel') || this.configService.get<string>('FINKOK_CANCEL_NAMESPACE') || 'http://facturacion.finkok.com/cancel';
 
     if ((!this.username || !this.password || !this.url) && process.env['NODE_ENV'] === 'production') {
-      this.logger.error('Finkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing from environment.');
+      this.logger.error('Finkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing.');
       throw new Error(
-        'Finkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing from environment.'
+        'Finkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing.'
       );
     } else if (!this.username || !this.password || !this.url) {
         this.logger.warn('Finkok credentials missing in Payroll. PAC functionality will be disabled or mock/fail in dev mode.');
@@ -177,14 +181,8 @@ export class FinkokPacProvider implements PacProvider {
             throw new Error('Invalid cancel response from Finkok: missing cancelResult');
         }
 
-        // Validate cancelResult content
-        // Finkok returns a list of Folios with status.
-        // Example structure: { Folios: { Folio: { UUID: '...', Status: '201', ... } } }
-        // Or if single: { Folios: { Folio: { UUID: '...', Status: '201' } } }
-
         let folios = cancelResult.Folios?.Folio;
         if (!folios) {
-             // Sometimes it might be nested differently or empty if failed
              throw new Error(`Cancellation failed or structure unknown: ${JSON.stringify(cancelResult)}`);
         }
 
@@ -197,9 +195,6 @@ export class FinkokPacProvider implements PacProvider {
             throw new Error(`Cancellation response does not contain UUID ${uuid}`);
         }
 
-        // Status 201 = Cancelled successfully (or request accepted)
-        // Status 202 = Cancelled previously
-        // Check Finkok docs for exact codes. Usually 201/202 are success.
         const status = folio.EstatusUUID || folio.Status;
 
         if (['201', '202'].includes(String(status))) {

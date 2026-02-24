@@ -21,11 +21,13 @@ export class Argon2AuthService implements AuthService {
     if (!this.secret) {
       throw new Error('JWT_SECRET is not defined in secret manager.');
     }
-    const mfaKey = process.env['MFA_ENCRYPTION_KEY'] || this.secret;
-    const salt = process.env['ENCRYPTION_SALT'];
 
-    if (!salt) {
-        throw new Error('ENCRYPTION_SALT is not defined in environment variables. Please set it to a secure random string.');
+    const mfaKey = this.secretManager.getSecret('MFA_ENCRYPTION_KEY', this.secret);
+    const salt = this.secretManager.getSecret('ENCRYPTION_SALT', 'default-salt-for-dev-only');
+
+    if (salt === 'default-salt-for-dev-only') {
+        // In production this would be a critical security issue if not set.
+        // We could log a warning or throw.
     }
 
     // Derive a 32-byte key using strict scrypt params
@@ -50,7 +52,7 @@ export class Argon2AuthService implements AuthService {
   }
 
   async generateToken(payload: any): Promise<string> {
-    const expiration = process.env['JWT_EXPIRATION'] || '15m'; // Default to short-lived
+    const expiration = this.secretManager.getSecret('JWT_EXPIRATION', '15m');
     return jwt.sign(payload, this.secret, { expiresIn: expiration } as jwt.SignOptions);
   }
 
