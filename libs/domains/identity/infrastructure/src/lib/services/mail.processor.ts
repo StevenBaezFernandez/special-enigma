@@ -10,11 +10,16 @@ export class MailProcessor implements OnModuleInit {
   private transporter: nodemailer.Transporter;
 
   constructor(private readonly configService: ConfigService) {
-    const host = this.configService.getOrThrow<string>('SMTP_HOST');
-    const port = this.configService.getOrThrow<number>('SMTP_PORT');
-    const user = this.configService.getOrThrow<string>('SMTP_USER');
-    const pass = this.configService.getOrThrow<string>('SMTP_PASSWORD');
+    const host = this.configService.get<string>('SMTP_HOST');
+    const port = this.configService.get<number>('SMTP_PORT');
+    const user = this.configService.get<string>('SMTP_USER');
+    const pass = this.configService.get<string>('SMTP_PASSWORD');
     const secure = this.configService.get<boolean>('SMTP_SECURE') ?? false;
+
+    if (!host || !port || !user || !pass) {
+        this.logger.error('SMTP configuration missing. MailProcessor will not start correctly.');
+        // We initialize transporter to null or throw, but better to just log error to not crash app startup if optional
+    }
 
     this.transporter = nodemailer.createTransport({
       host,
@@ -33,12 +38,22 @@ export class MailProcessor implements OnModuleInit {
 
     this.worker = new Worker('mail-queue', async (job: Job) => {
       this.logger.log(`Processing email job ${job.id} for ${job.data.to}`);
-      await this.sendEmail(job.data);
+      try {
+          await this.sendEmail(job.data);
+      } catch (error) {
+          this.logger.error(`Failed to send email to ${job.data.to}: ${error}`);
+          throw error; // Re-throw to trigger BullMQ retry
+      }
     }, {
       connection: {
         host: redisHost,
         port: redisPort,
       },
+      concurrency: 5,
+      limiter: {
+        max: 10,
+        duration: 1000
+      }
     });
 
     this.worker.on('completed', (job) => {

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { TenantService, Company } from './tenant.service';
 import { Observable } from 'rxjs';
 
@@ -125,9 +125,9 @@ import { Observable } from 'rxjs';
 export class TenantsComponent {
   tenantService = inject(TenantService);
   tenants$: Observable<Company[]> = this.tenantService.getTenants();
+  private router = inject(Router);
 
   onNewTenant() {
-    // Navigate to create form
-    // TODO: Implement navigation
+    this.router.navigate(['/tenants/create']);
   }
 }

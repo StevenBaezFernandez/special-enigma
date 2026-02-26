@@ -71,15 +71,51 @@ export class DianFiscalAdapter implements FiscalProvider {
   }
 
   async transmitInvoice(invoice: any): Promise<void> {
-    this.logger.log(`Transmitting invoice to DIAN...`);
+    this.logger.log(`Transmitting invoice to DIAN (SOAP)...`);
 
     try {
-        // Fix TS4111 by using index access
         const dianUrl = process.env['DIAN_API_URL'] || 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc';
-        this.logger.log(`Invoice transmitted to DIAN at ${dianUrl}`);
-    } catch (error) {
-        this.logger.error(`Transmission failed`, error);
-        throw error;
+
+        let signedXml = '';
+        if (typeof invoice === 'string') {
+            signedXml = invoice;
+        } else {
+             // If invoice is object, assume it needs signing first (though usually done before transmit)
+             signedXml = await this.signInvoice(invoice);
+        }
+
+        // Wrap in SOAP Envelope
+        const soapEnvelope = `
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wcf="http://wcf.dian.colombia">
+           <soapenv:Header/>
+           <soapenv:Body>
+              <wcf:SendBillAsync>
+                 <wcf:fileName>${invoice?.id || 'invoice'}.xml</wcf:fileName>
+                 <wcf:contentFile>${Buffer.from(signedXml).toString('base64')}</wcf:contentFile>
+              </wcf:SendBillAsync>
+           </soapenv:Body>
+        </soapenv:Envelope>`;
+
+        this.logger.log(`Sending to DIAN endpoint: ${dianUrl}`);
+
+        const response = await firstValueFrom(
+            this.httpService.post(dianUrl, soapEnvelope, {
+                headers: {
+                    'Content-Type': 'text/xml;charset=UTF-8',
+                    'SOAPAction': 'http://wcf.dian.colombia/iwcfDianCustomerServices/SendBillAsync'
+                }
+            })
+        );
+
+        if (response.status === 200 && response.data.includes('UploadSuccess')) {
+             this.logger.log('DIAN Transmission Successful');
+        } else {
+             this.logger.warn(`DIAN response status: ${response.status}. Body: ${response.data}`);
+             // Depending on response, throw or log
+        }
+    } catch (error: any) {
+        this.logger.error(`Transmission failed: ${error.message}`, error.response?.data);
+        throw new Error(`DIAN Transmission Error: ${error.message}`);
     }
   }
 }

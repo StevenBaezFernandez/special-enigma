@@ -10,7 +10,12 @@ export class NodemailerNotificationService implements NotificationService {
   constructor(
     private readonly configService: ConfigService,
     private readonly mailQueueProducer: MailQueueProducer
-  ) {}
+  ) {
+    const smtpHost = this.configService.get<string>('SMTP_HOST');
+    if (!smtpHost) {
+      this.logger.error('SMTP_HOST is not defined. Email notifications will fail.');
+    }
+  }
 
   async sendWelcomeEmail(user: User, tempPassword?: string): Promise<void> {
     this.logger.log(`Queueing welcome email for ${user.email}`);

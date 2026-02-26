@@ -98,12 +98,14 @@ export class CreateInvoiceUseCase {
     invoice.status = 'PENDING';
 
     // 1. Save Pending (before external call)
+    invoice.status = 'PENDING_STAMP';
     await this.invoiceRepository.save(invoice);
 
     try {
       this.logger.log(`Stamping invoice for customer ${dto.customerId}`);
 
       // 2. External Call (Stamping)
+      // Note: This operation is idempotent in PAC provider (ideally)
       const stamp = await this.fiscalStampingService.stampInvoice(invoice);
 
       invoice.fiscalUuid = stamp.uuid;

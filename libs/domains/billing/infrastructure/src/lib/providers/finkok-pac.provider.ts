@@ -122,7 +122,10 @@ export class FinkokPacProvider implements PacProvider {
         this.logger.warn(`Finkok stamp attempt ${attempt} failed: ${errorMessage}`);
         lastError = error instanceof Error ? error : new Error(errorMessage);
         if (attempt < 3) {
-            await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+            // Exponential backoff: 1s, 2s, 4s
+            const delay = Math.pow(2, attempt - 1) * 1000;
+            this.logger.log(`Retrying Finkok in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
         }
       }
     }

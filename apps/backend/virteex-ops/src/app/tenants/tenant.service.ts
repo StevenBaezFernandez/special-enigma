@@ -25,4 +25,8 @@ export class TenantService {
   getTenant(id: string): Observable<Company> {
     return this.http.get<Company>(`${this.apiUrl}/${id}`);
   }
+
+  createTenant(data: any): Observable<Company> {
+    return this.http.post<Company>(this.apiUrl, data);
+  }
 }

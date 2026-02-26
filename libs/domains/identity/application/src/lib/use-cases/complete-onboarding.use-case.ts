@@ -47,8 +47,14 @@ export class CompleteOnboardingUseCase {
 
     const { passwordHash } = JSON.parse(storedData);
 
-    // Validate Tax ID
+    // Validate Tax ID format
     this.validateTaxId(dto.country, dto.taxId);
+
+    // Validate Duplicate Tax ID
+    const existingCompany = await this.companyRepository.findByTaxId(dto.taxId);
+    if (existingCompany) {
+        throw new BadRequestException('Company with this Tax ID already exists.');
+    }
 
     const result = await this.em.transactional(async (em) => {
         const company = new Company(dto.companyName, dto.taxId, dto.country);
@@ -110,7 +116,13 @@ export class CompleteOnboardingUseCase {
 
     await this.auditLogRepository.save(new AuditLog('REGISTER_SUCCESS', user.id, { ip: context.ip }));
 
-    console.log(`[MOCK EMAIL] Welcome ${user.email}`);
+    // Send Welcome Email
+    try {
+        await this.notificationService.sendWelcomeEmail(user);
+    } catch (e) {
+        // Non-blocking error
+        console.error('Failed to queue welcome email', e);
+    }
 
     return {
         accessToken,
