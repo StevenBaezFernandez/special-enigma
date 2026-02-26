@@ -29,6 +29,12 @@ const config: Options = {
       : undefined,
   entities: ['./libs/domains/**/domain/src/lib/entities/*.entity.ts'],
   entitiesTs: ['./libs/domains/**/domain/src/lib/entities/*.entity.ts'],
+  filters: {
+    tenant: {
+      cond: args => ({ tenantId: args.tenantId }),
+      default: true,
+    },
+  },
   migrations: {
     path: './apps/gateways/virteex-api-gateway/src/migrations',
     pathTs: './apps/gateways/virteex-api-gateway/src/migrations',

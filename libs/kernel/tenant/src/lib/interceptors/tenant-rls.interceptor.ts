@@ -23,6 +23,10 @@ export class TenantRlsInterceptor implements NestInterceptor {
       return from(
         this.em.transactional(async (txEm) => {
           await txEm.getConnection().execute('SET LOCAL app.current_tenant = ?', [tenantContext.tenantId]);
+
+          // Also set the MikroORM global filter for non-RLS scenarios or additional safety
+          txEm.setFilterParams('tenant', { tenantId: tenantContext.tenantId });
+
           // Propagate the transactional EM to the request context
           return await RequestContext.create(txEm, async () => {
              return await lastValueFrom(next.handle(), { defaultValue: undefined });

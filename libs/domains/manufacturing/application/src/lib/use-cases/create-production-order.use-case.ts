@@ -1,6 +1,7 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import {
   ProductionOrder,
+  ProductionOrderComponent,
   ProductionOrderRepository,
   PRODUCTION_ORDER_REPOSITORY,
   InventoryService,
@@ -48,7 +49,23 @@ export class CreateProductionOrderUseCase {
     // 3. Create Order
     const order = new ProductionOrder(dto.tenantId, dto.warehouseId, dto.productSku, dto.quantity, new Date(dto.dueDate));
 
-    // Future: We could explode the BOM here and create ProductionOrderComponents based on bom.components
+    // 4. BOM Explosion: Create ProductionOrderComponents based on bom.components
+    for (const bomComponent of bom.components) {
+        const requiredQty = Number(bomComponent.quantity) * dto.quantity;
+        const orderComponent = new ProductionOrderComponent(order, bomComponent.componentProductSku, requiredQty);
+
+        // Optional: Check stock for components too (Recursive validation)
+        try {
+            await this.inventoryService.checkAndReserveStock(dto.tenantId, dto.warehouseId, bomComponent.componentProductSku, requiredQty);
+            orderComponent.reservedQuantity = requiredQty;
+        } catch (e) {
+            // Log but continue? Or fail the whole order?
+            // In a strict ERP, we might fail or mark as 'PENDING_STOCK'
+            console.warn(`Insufficient stock for component ${bomComponent.componentProductSku}`);
+        }
+
+        order.components.add(orderComponent);
+    }
 
     await this.repository.save(order);
     return order;

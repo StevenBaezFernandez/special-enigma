@@ -1,4 +1,5 @@
 import { Injectable, Inject, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AuthService, NotificationService, UserRepository, CompanyRepository,
   AuditLogRepository, AuditLog, RiskEngineService,
@@ -22,7 +23,8 @@ export class CompleteOnboardingUseCase {
     @Inject(RiskEngineService) private readonly riskEngineService: RiskEngineService,
     @Inject(CachePort) private readonly cachePort: CachePort,
     private readonly em: EntityManager,
-    @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService
+    @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(dto: CompleteOnboardingDto, context: { ip: string, userAgent: string }) {
@@ -100,6 +102,9 @@ export class CompleteOnboardingUseCase {
     const { user } = result;
 
     await this.cachePort.del(key);
+
+    // Emit event to notify other domains to initialize tenant data (e.g. Accounting)
+    this.eventEmitter.emit('tenant.created', { tenantId: user.company.id });
 
     const { accessToken, refreshToken, expiresIn } = await this.tokenGenerationService.createSessionAndTokens(user, context, 0);
 

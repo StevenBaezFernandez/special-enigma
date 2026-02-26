@@ -1,9 +1,9 @@
 import { Controller, Post, Body, Get, UseGuards, UnauthorizedException } from '@nestjs/common';
-import { JwtAuthGuard, getTenantContext } from '@virteex/kernel-auth';
+import { JwtAuthGuard, TenantGuard, getTenantContext } from '@virteex/kernel-auth';
 import { UpdateSubscriptionUseCase, UpdateSubscriptionDto, GetSubscriptionStatusUseCase } from '@virteex/application-identity-application';
 
 @Controller('subscription')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, TenantGuard)
 export class SubscriptionController {
   constructor(
     private readonly updateSubscriptionUseCase: UpdateSubscriptionUseCase,

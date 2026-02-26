@@ -98,12 +98,18 @@ export class SatFiscalAdapter implements FiscalProvider {
   }
 
   private buildCfdiPayload(invoice: any): string {
+      const issuerName = invoice.issuerName || 'EMISOR DESCONOCIDO';
+      const receiverName = invoice.receiverName || 'RECEPTOR DESCONOCIDO';
+      const postalCode = invoice.postalCode || '00000';
+      const currency = invoice.currency || 'MXN';
+      const subtotal = invoice.subtotal || invoice.subTotal || '0.00';
+
       return `<?xml version="1.0" encoding="UTF-8"?>
-<cfdi:Comprobante Version="4.0" Fecha="${new Date().toISOString()}" Sello="" NoCertificado="00001000000500000000" Certificado="" SubTotal="${invoice.subtotal}" Moneda="MXN" Total="${invoice.total}" TipoDeComprobante="I" Exportacion="01" MetodoPago="PUE" LugarExpedicion="00000" xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd">
-  <cfdi:Emisor Rfc="${invoice.issuerRfc}" Nombre="EMISOR DE PRUEBA" RegimenFiscal="601"/>
-  <cfdi:Receptor Rfc="${invoice.receiverRfc}" Nombre="RECEPTOR DE PRUEBA" DomicilioFiscalReceptor="00000" RegimenFiscalReceptor="616" UsoCFDI="G03"/>
+<cfdi:Comprobante Version="4.0" Fecha="${new Date().toISOString()}" Sello="" NoCertificado="00001000000500000000" Certificado="" SubTotal="${subtotal}" Moneda="${currency}" Total="${invoice.total}" TipoDeComprobante="I" Exportacion="01" MetodoPago="${invoice.paymentMethod || 'PUE'}" LugarExpedicion="${postalCode}" xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd">
+  <cfdi:Emisor Rfc="${invoice.issuerRfc}" Nombre="${issuerName}" RegimenFiscal="${invoice.issuerRegime || '601'}"/>
+  <cfdi:Receptor Rfc="${invoice.receiverRfc}" Nombre="${receiverName}" DomicilioFiscalReceptor="${invoice.receiverPostalCode || postalCode}" RegimenFiscalReceptor="${invoice.receiverRegime || '616'}" UsoCFDI="${invoice.usage || 'G03'}"/>
   <cfdi:Conceptos>
-    ${invoice.items?.map((i: any) => `<cfdi:Concepto ClaveProdServ="01010101" Cantidad="1" ClaveUnidad="H87" Description="Producto" ValorUnitario="${i.amount}" Importe="${i.amount}" ObjetoImp="01"/>`).join('')}
+    ${invoice.items?.map((i: any) => `<cfdi:Concepto ClaveProdServ="${i.claveProdServ || '01010101'}" Cantidad="${i.quantity || 1}" ClaveUnidad="${i.claveUnidad || 'H87'}" Description="${i.description || 'Producto'}" ValorUnitario="${i.unitPrice || i.amount}" Importe="${i.amount}" ObjetoImp="02"/>`).join('')}
   </cfdi:Conceptos>
 </cfdi:Comprobante>`;
   }

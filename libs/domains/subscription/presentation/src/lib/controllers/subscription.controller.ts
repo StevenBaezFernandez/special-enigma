@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, UseGuards, Query, Put } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentTenant } from '@virteex/shared-util-server-config';
-import { JwtAuthGuard } from '@virteex/kernel-auth';
+import { JwtAuthGuard, TenantGuard } from '@virteex/kernel-auth';
 import {
   SubscribeToPlanUseCase,
   SubscribeToPlanDto,
@@ -17,7 +17,7 @@ import {
 @ApiTags('Subscription')
 @Controller('subscription')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, TenantGuard)
 export class SubscriptionController {
   constructor(
     private readonly subscribeToPlanUseCase: SubscribeToPlanUseCase,

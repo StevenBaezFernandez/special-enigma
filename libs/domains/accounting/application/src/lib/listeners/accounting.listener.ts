@@ -1,6 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { RecordJournalEntryUseCase } from '../use-cases/record-journal-entry.use-case';
+import { SetupChartOfAccountsUseCase } from '../use-cases/setup-chart-of-accounts.use-case';
 import { AccountRepository, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
 // Remove imports to avoid build cycles/rootDir issues
 // import { InvoiceStampedEvent } from '@virteex/domain-billing-domain';
@@ -30,8 +31,20 @@ export class AccountingListener {
 
   constructor(
     private readonly recordJournalEntryUseCase: RecordJournalEntryUseCase,
+    private readonly setupChartOfAccountsUseCase: SetupChartOfAccountsUseCase,
     @Inject(ACCOUNT_REPOSITORY) private readonly accountRepo: AccountRepository
   ) {}
+
+  @OnEvent('tenant.created')
+  async handleTenantCreated(event: { tenantId: string }) {
+    this.logger.log(`Initializing Accounting Domain for new tenant: ${event.tenantId}`);
+    try {
+        await this.setupChartOfAccountsUseCase.execute(event.tenantId);
+        this.logger.log(`Chart of Accounts initialized for tenant: ${event.tenantId}`);
+    } catch (e: any) {
+        this.logger.error(`Failed to initialize Chart of Accounts: ${e.message}`);
+    }
+  }
 
   @OnEvent('invoice.stamped')
   async handleInvoiceStamped(event: InvoiceStampedEvent) {
