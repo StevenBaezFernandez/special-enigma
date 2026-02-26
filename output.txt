@@ -1,6 +1,0 @@
-apps/virteex-accounting-service/project.json
-Traceback (most recent call last):
-  File "/app/fix_project_json.py", line 44, in <module>
-    "optimization": true,
-                    ^^^^
-NameError: name 'true' is not defined. Did you mean: 'True'?
