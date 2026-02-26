@@ -1,0 +1,87 @@
+INFORME DE MADUREZ Y READINESS COMERCIAL - VIRTEEX ERP
+=====================================================
+
+1. INTRODUCCIÓN
+---------------
+Virteex es un ecosistema ERP SaaS de clase empresarial diseñado para operar de forma escalable, segura y localizada en Latinoamérica y Estados Unidos. Su arquitectura se basa en microservicios, GraphQL Federation y un sistema de plugins extensible (V8 Isolates/Wasm). Este informe evalúa el estado actual del producto para determinar qué falta para alcanzar una solución 100% funcional y comercialmente viable.
+
+2. RESUMEN EJECUTIVO
+--------------------
+El proyecto Virteex muestra una base arquitectónica sólida y ambiciosa (Microservicios, Multi-tenencia, Seguridad por capas). Sin embargo, existe una brecha significativa entre la infraestructura diseñada y la funcionalidad real implementada.
+
+- completitud Funcional: 65%
+  - Justificación: Los flujos básicos (onboarding, login, dashboards generales) están operativos. Sin embargo, los módulos core del ERP (Contabilidad, Nómina, Manufactura) contienen múltiples placeholders, datos hardcoded y lógicas de negocio simuladas que impiden su uso real.
+
+- completitud Comercial: 50%
+  - Justificación: Aunque se han implementado conectores fiscales y sistemas de seguridad (Vault, KMS, SBOM), existen riesgos críticos de aislamiento de datos (fuga entre tenants en consultas SELECT) y dependencias de claves efímeras en adaptadores fiscales que bloquean su salida a producción.
+
+3. ANÁLISIS DETALLADO POR ÁREAS
+-------------------------------
+
+3.1. Arquitectura y Backend
+- Estado: La estructura de microservicios y la separación de dominios (DDD/Clean Architecture) son excelentes.
+- Carencias:
+  - Multi-tenencia Incompleta: Se ha implementado un subscriber de MikroORM (`beforeCreate`) que inyecta el `tenantId` al guardar, pero no se han configurado filtros globales para consultas `SELECT`. Esto permite, potencialmente, que un usuario vea datos de otros tenants si el desarrollador omite un filtro explícito.
+  - Comunicación entre Dominios: Persisten lógicas que deberían ser asíncronas o a través de APIs internas que siguen usando mocks o dependencias directas.
+  - Persistencia: Muchos repositorios son "cascarones" con métodos que devuelven arreglos vacíos o lógicas de "todo bien" sin validar restricciones de integridad de negocio.
+
+3.2. Frontend y Experiencia de Usuario (Web, Móvil, Escritorio)
+- Estado: Existen aplicaciones para las tres plataformas, lo cual es un gran avance en términos de reach.
+- Carencias:
+  - Datos Hardcoded: Módulos críticos como Contabilidad (`ListComponent`) muestran listas estáticas ("Journalentry 1", "Journalentry 2") en lugar de consumir APIs reales.
+  - Inconsistencia de Datos: No hay una sincronización robusta (offline-first) verificada en Móvil/Escritorio; el manejo de conflictos es incipiente.
+  - UX de Negocio: Faltan validaciones complejas en formularios (ej. validación cruzada de impuestos, gestión de errores de red en procesos críticos de timbrado).
+
+3.3. Localización Fiscal y Cumplimiento Normativo
+- Estado: Adaptadores para SAT (MX), SEFAZ (BR) y DIAN (CO) presentes.
+- Carencias:
+  - Lógica de Simulación: Los adaptadores de SEFAZ y DIAN generan claves RSA efímeras si no se proporciona una real, y su validación siempre devuelve `true`.
+  - Hardcoding en SAT: El generador de XML del SAT tiene valores quemados como "EMISOR DE PRUEBA", lo cual limita su funcionalidad a un entorno de PoC.
+  - Reportes Oficiales: No se identificaron generadores de reportes legales (e.g., Balanza de Comprobación para México o Libros Oficiales para Colombia) integrados con datos reales.
+
+3.4. Seguridad y Privacidad
+- Estado: Uso de Vault, KMS y generación de SBOM implementado.
+- Carencias:
+  - Rotación de Secretos: El `VaultSecretProvider` carga secretos al inicio pero no se observa una política de rotación dinámica en caliente.
+  - mTLS: No se confirmó la implementación de mTLS para la comunicación service-to-service, confiando únicamente en la seguridad perimetral de la VPC.
+  - Vulnerabilidades de Autorización: Algunos controladores (ej. `SubscriptionController`) carecen de `Guards` a nivel de clase, permitiendo acceso no autorizado.
+
+3.5. Marketplace y Extensibilidad
+- Estado: El `PluginHost` con `isolated-vm` y `worker_threads` para WASM es técnicamente avanzado.
+- Carencias:
+  - Pipeline de Admisión: Aunque el `ci-cd.yml` menciona revisiones, no hay un portal de admisión de plugins funcional donde los terceros puedan subir y validar sus extensiones automáticamente.
+
+3.6. Funcionalidades Core del ERP (Módulos)
+- Estado: Crítico.
+- Hallazgos:
+  - Contabilidad: Solo listados básicos hardcoded. Falta el catálogo de cuentas real, asientos de diario y estados financieros.
+  - Manufactura: El cálculo de BOM (Bill of Materials) es plano y no maneja explosión de materiales recursiva ni tiempos de máquina.
+  - Nómina (Payroll): Sin integración real con tablas de impuestos locales vigentes.
+
+3.7. Preparación Comercial
+- Estado: Pasarela de Stripe integrada.
+- Carencias:
+  - Onboarding de Negocio: El registro crea la empresa y el usuario, pero no guía al cliente en la configuración de sus parámetros fiscales iniciales de forma coherente.
+  - Documentación de Soporte: No existe un Help Center o documentación técnica para el usuario final integrada en la plataforma.
+  - SLAs y Runbooks: Aunque `AGENTS.md` los menciona, no están automatizados ni probados en simulacros de caos.
+
+4. CONCLUSIONES Y RECOMENDACIONES
+---------------------------------
+
+Para alcanzar el 100% de madurez y readiness comercial, se deben priorizar las siguientes acciones:
+
+Prioridad 1 (Bloqueantes de Producción):
+1. Implementar Filtros Globales de Tenant: Configurar MikroORM para que todas las consultas `SELECT` incluyan automáticamente el `tenantId` del contexto.
+2. Eliminar Hardcoding Fiscal: Reemplazar los valores de prueba en los adaptadores del SAT por datos dinámicos obtenidos del perfil del tenant.
+3. Asegurar Controladores Críticos: Aplicar `Guards` de autorización a todos los servicios de Billing e Identity.
+
+Prioridad 2 (Maturidad Funcional):
+4. Conectar la UI con APIs Reales: Reemplazar todas las listas de items hardcoded en el frontend por llamadas a los microservicios correspondientes.
+5. Implementar Lógica de Negocio ERP: Desarrollar la explosión de BOM en Manufactura y el Plan de Cuentas en Contabilidad.
+
+Prioridad 3 (Excelencia Comercial):
+6. Activar Pipeline de SBOM y SCA en Producción: Asegurar que cada despliegue verifique la cadena de suministro de software sin excepciones.
+7. Portal de Configuración Fiscal: Crear un wizard de configuración post-onboarding para que el cliente cargue sus certificados y configure sus impuestos por país.
+
+FIRMA:
+Análisis realizado por Jules, Experto en Análisis de Productos de Software.
