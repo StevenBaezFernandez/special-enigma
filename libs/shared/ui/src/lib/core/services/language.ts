@@ -2,7 +2,7 @@ import { Injectable, signal, effect, Inject, PLATFORM_ID, inject, untracked } fr
 import { isPlatformBrowser } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { UsersService } from '../api/users.service';
+import { UsersService } from '@virteex/identity-ui';
 import { AuthService } from './auth';
 
 // Clave estandarizada para guardar el idioma en el almacenamiento local del navegador.

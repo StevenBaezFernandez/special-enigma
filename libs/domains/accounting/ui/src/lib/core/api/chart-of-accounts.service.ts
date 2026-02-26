@@ -1,41 +1,61 @@
-import { Injectable, Inject, inject } from '@angular/core';
+import { APP_CONFIG } from '@virteex/shared-config';
+// app/core/api/chart-of-accounts.service.ts
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_URL } from '@virteex/shared-config';
-import { Account } from '../models/account.model';
 
-export type CreateAccountDto = Omit<Account, 'id'>;
+import { Account, CashFlowCategory, RequiredDimension } from '../models/account.model';
+
+export interface CreateAccountDto extends Omit<Account, 'id' | 'organizationId' | 'createdAt' | 'updatedAt' | 'balance' | 'children' | 'isSystemAccount' | 'level' | 'isExpanded' | 'hasChildren'> {
+  statementMapping?: {
+    balanceSheetCategory: string;
+    incomeStatementCategory: string;
+    cashFlowCategory: CashFlowCategory;
+  };
+  rules?: {
+    requiresReconciliation: boolean;
+    isCashOrBank: boolean;
+    allowsIntercompany: boolean;
+    isFxRevaluation: boolean;
+    requiredDimensions: RequiredDimension[];
+  };
+  advanced?: {
+    version: number;
+    hierarchyType: string;
+    effectiveFrom: Date;
+    effectiveTo?: Date;
+  };
+}
+
 export type UpdateAccountDto = Partial<CreateAccountDto>;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ChartOfAccountsApiService {
+  private config = inject(APP_CONFIG);
   private http = inject(HttpClient);
-  constructor(@Inject(API_URL) private apiUrl: string) {}
+  private apiUrl = `${this.config.apiUrl}/chart-of-accounts`;
 
-  getAccounts(tenantId: string = 'default'): Observable<Account[]> {
-    return this.http.get<Account[]>(
-      `${this.apiUrl}/accounting/accounts?tenantId=${tenantId}`,
-    );
+  getAccounts(): Observable<Account[]> {
+    return this.http.get<Account[]>(this.apiUrl);
+  }
+
+  getAccountTree(): Observable<Account[]> {
+    return this.http.get<Account[]>(`${this.apiUrl}/tree`);
   }
 
   getAccountById(id: string): Observable<Account> {
-    return this.http.get<Account>(`${this.apiUrl}/accounting/accounts/${id}`);
+    return this.http.get<Account>(`${this.apiUrl}/${id}`);
   }
 
-  createAccount(dto: CreateAccountDto): Observable<Account> {
-    return this.http.post<Account>(`${this.apiUrl}/accounting/accounts`, dto);
+  createAccount(account: CreateAccountDto): Observable<Account> {
+    return this.http.post<Account>(this.apiUrl, account);
   }
 
-  updateAccount(id: string, dto: UpdateAccountDto): Observable<Account> {
-    return this.http.put<Account>(
-      `${this.apiUrl}/accounting/accounts/${id}`,
-      dto,
-    );
+  updateAccount(id: string, account: UpdateAccountDto): Observable<Account> {
+    return this.http.patch<Account>(`${this.apiUrl}/${id}`, account);
   }
 
   deleteAccount(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/accounting/accounts/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

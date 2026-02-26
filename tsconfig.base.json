@@ -498,6 +498,12 @@
       "@virteex/infra-treasury-infrastructure/*": [
         "libs/domains/treasury/infrastructure/src/*"
       ],
+      "@virteex/fiscal-ui": [
+        "libs/domains/fiscal/ui/src/index.ts"
+      ],
+      "@virteex/fiscal-ui/*": [
+        "libs/domains/fiscal/ui/src/*"
+      ],
       "@virteex/inventory-ui-wms": [
         "libs/domains/inventory/ui-wms/src/index.ts"
       ],
@@ -540,6 +546,12 @@
       "@virteex/manufacturing-ui-shopfloor/*": [
         "libs/domains/manufacturing/ui-shopfloor/src/*"
       ],
+      "@virteex/notification-ui": [
+        "libs/domains/notification/ui/src/index.ts"
+      ],
+      "@virteex/notification-ui/*": [
+        "libs/domains/notification/ui/src/*"
+      ],
       "@virteex/shared-contracts": [
         "libs/shared/contracts/src/index.ts"
       ],
@@ -576,23 +588,35 @@
       "@virteex/shared-ui/*": [
         "libs/shared/ui/src/*"
       ],
+      "@virteex/shared-config": [
+        "libs/shared/util/client/config/src/index.ts"
+      ],
+      "@virteex/shared-config/*": [
+        "libs/shared/util/client/config/src/*"
+      ],
       "@virteex/shared-util-auth": [
-        "libs/shared/util/auth/src/index.ts"
+        "libs/shared/util/client/auth/src/index.ts"
       ],
       "@virteex/shared-util-auth/*": [
-        "libs/shared/util/auth/src/*"
+        "libs/shared/util/client/auth/src/*"
       ],
       "@virteex/shared-util-config": [
-        "libs/shared/util/config/src/index.ts"
+        "libs/shared/util/client/config/src/index.ts"
       ],
       "@virteex/shared-util-config/*": [
-        "libs/shared/util/config/src/*"
+        "libs/shared/util/client/config/src/*"
+      ],
+      "@virteex/shared-util-http": [
+        "libs/shared/util/client/http/src/index.ts"
+      ],
+      "@virteex/shared-util-http/*": [
+        "libs/shared/util/client/http/src/*"
       ],
       "@virteex/shared-util-server-config": [
-        "libs/shared/util/server-config/src/index.ts"
+        "libs/shared/util/server/server-config/src/index.ts"
       ],
       "@virteex/shared-util-server-config/*": [
-        "libs/shared/util/server-config/src/*"
+        "libs/shared/util/server/server-config/src/*"
       ],
       "@virteex/shared-validators": [
         "libs/shared/validators/src/index.ts"

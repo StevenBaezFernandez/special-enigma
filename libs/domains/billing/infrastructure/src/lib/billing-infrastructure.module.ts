@@ -1,12 +1,12 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from '@virteex/kernel-auth';
+import { FiscalInfrastructureModule } from '@virteex/infra-fiscal-infrastructure';
 import {
   Invoice,
   InvoiceItem,
   TaxLine,
   TaxRule,
-  PAC_PROVIDER,
   PAC_STRATEGY_FACTORY,
   TENANT_CONFIG_REPOSITORY,
   PaymentMethod,
@@ -16,8 +16,8 @@ import {
   CUSTOMER_REPOSITORY,
   BillingDomainModule
 } from '@virteex/domain-billing-domain';
-import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '../../../domain/src/lib/ports/fiscal-document-builder.port';
-import { BILLING_TAX_STRATEGY_FACTORY } from '../../../domain/src/lib/strategies/tax-strategy.factory';
+import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '@virteex/domain-fiscal-domain';
+import { BILLING_TAX_STRATEGY_FACTORY } from '@virteex/domain-billing-domain';
 
 import { FinkokPacProvider } from './providers/finkok-pac.provider';
 import { NullPacProvider } from './providers/null-pac.provider';
@@ -25,8 +25,13 @@ import { PacStrategyFactoryImpl } from './factories/pac-strategy.factory';
 import { FiscalDocumentBuilderFactoryImpl } from './factories/fiscal-document-builder.factory';
 import { TaxStrategyFactoryImpl } from './factories/tax-strategy.factory';
 
-import { MxFiscalDocumentBuilder } from './strategies/mx-fiscal-document.builder';
-import { UsFiscalDocumentBuilder } from './strategies/us-fiscal-document.builder';
+import {
+    MxFiscalDocumentBuilder,
+    UsFiscalDocumentBuilder,
+    BrFiscalDocumentBuilder,
+    CoFiscalDocumentBuilder
+} from '@virteex/infra-fiscal-infrastructure';
+
 import { MxTaxStrategy } from './strategies/mx-tax.strategy';
 import { BrTaxStrategy } from './strategies/br-tax.strategy';
 import { UsTaxStrategy } from './strategies/us-tax.strategy';
@@ -47,6 +52,7 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
 @Module({
   imports: [
     AuthModule,
+    FiscalInfrastructureModule,
     BillingDomainModule,
     MikroOrmModule.forFeature([
       Invoice,
@@ -91,9 +97,7 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
     },
     // Xslt Service
     XsltService,
-    // Builders
-    MxFiscalDocumentBuilder,
-    UsFiscalDocumentBuilder,
+    // Note: Builders are now provided by FiscalInfrastructureModule
     {
         provide: FISCAL_DOCUMENT_BUILDER_FACTORY,
         useClass: FiscalDocumentBuilderFactoryImpl

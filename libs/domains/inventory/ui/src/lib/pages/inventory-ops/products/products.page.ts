@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule, PlusCircle, MoreHorizontal, AlertCircle, Search } from 'lucide-angular';
 import { Product } from '../../../core/models/product.model';
-import { InventoryService } from '../../../core/api/inventory.service';
+import { InventoryApiService } from '../../../core/api/inventory-api.service';
 import { NotificationService } from '../../../core/services/notification';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
-import { Product } from '../../../core/models/product.model';
 
 @Component({
   selector: 'virteex-products-page',
@@ -17,7 +16,7 @@ import { Product } from '../../../core/models/product.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsPage implements OnInit {
-  private inventoryService = inject(InventoryService);
+  private inventoryService = inject(InventoryApiService);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
 

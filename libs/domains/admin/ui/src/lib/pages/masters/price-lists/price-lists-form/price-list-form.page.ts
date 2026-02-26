@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideAngularModule, Save, Plus, Trash2 } from 'lucide-angular';
 import { PriceListsService, CreatePriceListDto, UpdatePriceListDto } from '../../../../core/api/price-lists.service';
-import { InventoryService } from '../../../../core/api/inventory.service';
+import { InventoryApiService as InventoryService } from '@virteex/inventory-ui';
 import { NotificationService } from '../../../../core/services/notification';
 import { Product } from '../../../../core/models/product.model';
 import { PriceListItem, PriceListStatus } from '../../../../core/models/price-list.model';

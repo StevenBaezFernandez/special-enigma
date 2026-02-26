@@ -6,7 +6,7 @@ import { LucideAngularModule, Save, Plus, Trash2 } from 'lucide-angular';
 import { LanguageService } from '../../../core/services/language';
 import { JournalEntries } from '../../../core/services/journal-entries';
 import { NotificationService } from '../../../core/services/notification';
-import { AccountingService } from '../../../core/api/accounting.service';
+import { AccountingApiService } from '../../../core/api/accounting-api.service';
 import { Account } from '../../../core/models/account.model';
 import { LedgersService } from '../../../core/api/ledgers.service';
 import { JournalsService } from '../../../core/api/journals.service';
@@ -115,7 +115,7 @@ export class JournalEntryFormPage implements OnInit {
   private languageService = inject(LanguageService);
   private journalEntriesService = inject(JournalEntries);
   private notificationService = inject(NotificationService);
-  private accountingService = inject(AccountingService);
+  private accountingService = inject(AccountingApiService);
   private ledgersService = inject(LedgersService);
   private journalsService = inject(JournalsService);
 

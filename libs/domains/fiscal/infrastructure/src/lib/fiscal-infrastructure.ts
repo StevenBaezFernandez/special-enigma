@@ -15,6 +15,10 @@ import { MikroOrmTaxRuleRepository } from './repositories/mikro-orm-tax-rule.rep
 import { FiscalDataAdapter } from './adapters/fiscal-data.adapter';
 import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
 import { SatFiscalAdapter } from './adapters/sat-fiscal-provider.adapter';
+import { MxFiscalDocumentBuilder } from './builders/mx-fiscal-document.builder';
+import { UsFiscalDocumentBuilder } from './builders/us-fiscal-document.builder';
+import { CoFiscalDocumentBuilder } from './builders/co-fiscal-document.builder';
+import { BrFiscalDocumentBuilder } from './builders/br-fiscal-document.builder';
 
 @Global()
 @Module({
@@ -42,8 +46,12 @@ import { SatFiscalAdapter } from './adapters/sat-fiscal-provider.adapter';
     },
     {
       provide: 'FISCAL_PROVIDER',
-      useClass: SatFiscalAdapter // Upgraded from Dian to SAT (Mexico) as primary for this release based on analysis
-    }
+      useClass: SatFiscalAdapter
+    },
+    MxFiscalDocumentBuilder,
+    UsFiscalDocumentBuilder,
+    CoFiscalDocumentBuilder,
+    BrFiscalDocumentBuilder
   ],
   exports: [
     MikroOrmModule,
@@ -51,7 +59,11 @@ import { SatFiscalAdapter } from './adapters/sat-fiscal-provider.adapter';
     FISCAL_DATA_PROVIDER,
     TAX_RULE_REPOSITORY,
     TENANT_CONFIG_REPOSITORY,
-    'FISCAL_PROVIDER'
+    'FISCAL_PROVIDER',
+    MxFiscalDocumentBuilder,
+    UsFiscalDocumentBuilder,
+    CoFiscalDocumentBuilder,
+    BrFiscalDocumentBuilder
   ]
 })
 export class FiscalInfrastructureModule {}

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideAngularModule, Save, Image } from 'lucide-angular';
-import { InventoryService, CreateProductDto, UpdateProductDto } from '../../../core/api/inventory.service';
+import { InventoryApiService, CreateProductDto, UpdateProductDto } from '../../../core/api/inventory-api.service';
 import { NotificationService } from '../../../core/services/notification';
 import { Product } from '../../../core/models/product.model';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
@@ -21,7 +21,7 @@ export class ProductFormPage implements OnInit {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private inventoryService = inject(InventoryService);
+  private inventoryService = inject(InventoryApiService);
   private notificationService = inject(NotificationService);
 
   protected readonly SaveIcon = Save;

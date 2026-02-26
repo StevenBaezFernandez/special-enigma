@@ -9,7 +9,7 @@
     "scope:payroll"
   ],
   "implicitDependencies": [
-    "payroll-contracts"
+    "contracts-payroll-contracts"
   ],
   "targets": {
     "build": {

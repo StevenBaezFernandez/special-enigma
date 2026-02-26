@@ -5,7 +5,7 @@ import { FiscalStamp } from '../ports/pac-provider.port';
 import { TenantConfigRepository, TENANT_CONFIG_REPOSITORY, TenantFiscalConfig } from '../ports/tenant-config.port';
 import { CustomerRepository, CUSTOMER_REPOSITORY, CustomerBillingInfo } from '../ports/customer.repository';
 import { PacStrategyFactory, PAC_STRATEGY_FACTORY } from '../ports/pac-strategy.factory';
-import { FiscalDocumentBuilderFactory, FISCAL_DOCUMENT_BUILDER_FACTORY } from '../ports/fiscal-document-builder.port';
+import { FiscalDocumentBuilderFactory, FISCAL_DOCUMENT_BUILDER_FACTORY } from '@virteex/domain-fiscal-domain';
 
 @Injectable()
 export class FiscalStampingService {

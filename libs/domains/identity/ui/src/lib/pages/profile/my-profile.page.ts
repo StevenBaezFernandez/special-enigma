@@ -28,7 +28,8 @@ import {
   Shield,
   Check,
 } from 'lucide-angular';
-import { AuthService, UsersService, FileUtil } from '@virteex/shared-ui';
+import { UsersService } from '@virteex/identity-ui';
+import { AuthService, FileUtil } from '@virteex/shared-ui';
 import { NotificationService } from '@virteex/domain-identity-domain';
 import { SecuritySettingsComponent } from '../components/security-settings/security-settings.component';
 import { PhoneVerificationModalComponent } from '../components/phone-verification-modal/phone-verification-modal.component';
