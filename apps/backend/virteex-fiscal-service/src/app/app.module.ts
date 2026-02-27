@@ -10,6 +10,13 @@ import { FiscalPresentationModule } from '@virteex/api-fiscal-presentation';
 import { FiscalInfrastructureModule, DianFiscalAdapter, SatFiscalAdapter } from '@virteex/infra-fiscal-infrastructure';
 import { HttpModule, HttpService } from '@nestjs/axios';
 
+const FISCAL_COMMERCIAL_ELIGIBILITY: Record<string, { status: 'GA' | 'Beta' | 'No listo'; provider: string }> = {
+  MX: { status: 'GA', provider: 'SAT' },
+  BR: { status: 'Beta', provider: 'SEFAZ' },
+  CO: { status: 'Beta', provider: 'DIAN' },
+  US: { status: 'Beta', provider: 'TAX_PARTNER' }
+};
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -41,7 +48,24 @@ import { HttpModule, HttpService } from '@nestjs/axios';
       provide: 'FiscalProvider',
       inject: [ConfigService, HttpService],
       useFactory: (config: ConfigService, http: HttpService) => {
-        const provider = config.get('FISCAL_PROVIDER');
+        const provider = (config.get('FISCAL_PROVIDER') || '').toUpperCase();
+        const country = (config.get('FISCAL_COUNTRY') || '').toUpperCase();
+
+        const eligibility = FISCAL_COMMERCIAL_ELIGIBILITY[country];
+        if (!eligibility) {
+          throw new Error(`Fiscal country '${country || 'undefined'}' is not commercially eligible for activation.`);
+        }
+
+        if (eligibility.status === 'No listo') {
+          throw new Error(`Fiscal module is '${eligibility.status}' for ${country}; activation is blocked.`);
+        }
+
+        if (provider !== eligibility.provider && eligibility.status === 'GA') {
+          throw new Error(
+            `Country ${country} is ${eligibility.status}; provider '${provider || 'undefined'}' does not match required provider '${eligibility.provider}'.`
+          );
+        }
+
         if (provider === 'DIAN') {
           return new DianFiscalAdapter(http);
         }

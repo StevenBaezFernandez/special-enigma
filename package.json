@@ -20,7 +20,8 @@
     "dep-graph:check": "depcruise --validate .dependency-cruiser.js libs apps",
     "prepare": "husky",
     "readiness:check": "./tools/enforce-production-readiness.sh",
-    "validate:nx-tags": "node tools/validate-project-tags.mjs"
+    "validate:nx-tags": "node tools/validate-project-tags.mjs",
+    "readiness:commercial": "node tools/readiness/validate-commercial-readiness.mjs"
   },
   "private": true,
   "devDependencies": {

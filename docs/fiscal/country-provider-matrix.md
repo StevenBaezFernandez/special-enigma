@@ -17,3 +17,6 @@
 - **GA**: vendible enterprise con SLA y soporte 24x7.
 - **Beta**: solo con anexo contractual de limitaciones.
 - **No listo**: no ofertar cumplimiento fiscal completo.
+
+
+> Fuente sincronizada de elegibilidad comercial/técnica: `config/readiness/commercial-eligibility.matrix.json`.

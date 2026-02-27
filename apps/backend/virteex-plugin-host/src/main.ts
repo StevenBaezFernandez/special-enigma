@@ -7,6 +7,8 @@ import { PluginAdmissionService } from './services/plugin-admission.service';
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 const authToken = process.env.PLUGIN_HOST_API_TOKEN;
 const registryPath = process.env.PLUGIN_REGISTRY_FILE ?? path.join(__dirname, 'plugins.json');
+const sandboxMode = process.env.PLUGIN_SANDBOX_MODE ?? 'standard';
+const admissionMode = process.env.PLUGIN_ADMISSION_MODE ?? 'warn';
 
 if (nodeEnv === 'production' && !authToken) {
   throw new Error('PLUGIN_HOST_API_TOKEN is required in production.');
@@ -14,6 +16,14 @@ if (nodeEnv === 'production' && !authToken) {
 
 if (nodeEnv === 'production' && registryPath.endsWith('plugins.json')) {
   throw new Error('Default plugins.json registry storage is blocked in production. Configure PLUGIN_REGISTRY_FILE to durable storage.');
+}
+
+if (nodeEnv === 'production' && sandboxMode !== 'hardened') {
+  throw new Error('PLUGIN_SANDBOX_MODE=hardened is mandatory in production. Plugin deployment is denied otherwise.');
+}
+
+if (nodeEnv === 'production' && admissionMode !== 'enforced') {
+  throw new Error('PLUGIN_ADMISSION_MODE=enforced is mandatory in production. Plugin deployment is denied otherwise.');
 }
 
 const server = Fastify({ logger: true });
@@ -149,7 +159,7 @@ server.post('/execute', async (request, reply) => {
 });
 
 server.get('/health', async () => {
-  return { status: 'ok', version: '1.1.0', registryPath };
+  return { status: 'ok', version: '1.2.0', registryPath, sandboxMode, admissionMode };
 });
 
 const start = async () => {

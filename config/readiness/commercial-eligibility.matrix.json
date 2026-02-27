@@ -1,0 +1,30 @@
+{
+  "version": "2026.02",
+  "countries": ["MX", "BR", "CO", "US"],
+  "modules": {
+    "fiscal": {
+      "MX": { "status": "GA", "provider": "SAT", "allowSimulation": false },
+      "BR": { "status": "Beta", "provider": "SEFAZ", "allowSimulation": false },
+      "CO": { "status": "Beta", "provider": "DIAN", "allowSimulation": false },
+      "US": { "status": "Beta", "provider": "TAX_PARTNER", "allowSimulation": false }
+    },
+    "billing": {
+      "MX": { "status": "GA", "allowSimulation": false },
+      "BR": { "status": "Beta", "allowSimulation": false },
+      "CO": { "status": "Beta", "allowSimulation": false },
+      "US": { "status": "GA", "allowSimulation": false }
+    },
+    "inventory": {
+      "MX": { "status": "GA", "allowSimulation": false },
+      "BR": { "status": "GA", "allowSimulation": false },
+      "CO": { "status": "GA", "allowSimulation": false },
+      "US": { "status": "GA", "allowSimulation": false }
+    },
+    "marketplace": {
+      "MX": { "status": "Beta", "requiresHardenedSandbox": true },
+      "BR": { "status": "Beta", "requiresHardenedSandbox": true },
+      "CO": { "status": "No listo", "requiresHardenedSandbox": true },
+      "US": { "status": "Beta", "requiresHardenedSandbox": true }
+    }
+  }
+}
