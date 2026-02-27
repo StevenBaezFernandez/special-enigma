@@ -3,8 +3,6 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from '@virteex/kernel-auth';
 import { FiscalInfrastructureModule } from '@virteex/infra-fiscal-infrastructure';
 import {
-  Invoice,
-  InvoiceItem,
   TaxLine,
   TaxRule,
   PAC_STRATEGY_FACTORY,
@@ -42,11 +40,15 @@ import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-
 import { LocalProductRepository } from './repositories/local-product.repository';
 import { HttpCustomerRepository } from './repositories/http-customer.repository';
 import { StripePaymentProvider } from './adapters/stripe-payment-provider.adapter';
+import { InvoiceIntegrationPublisher } from './publishers/invoice-integration.publisher';
 
 import { BillingProductEntity } from './entities/billing-product.entity';
+import { InvoiceRecord } from './entities/invoice.record';
+import { InvoiceItemRecord } from './entities/invoice-item.record';
 import { ProductEventsController } from './listeners/product-events.controller';
 
 import { XsltService } from '@virteex/shared-infrastructure-xslt';
+import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/application-billing-application';
 
 @Global()
 @Module({
@@ -55,8 +57,8 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
     FiscalInfrastructureModule,
     BillingDomainModule,
     MikroOrmModule.forFeature([
-      Invoice,
-      InvoiceItem,
+      InvoiceRecord,
+      InvoiceItemRecord,
       PaymentMethod,
       TaxLine,
       TaxRule,
@@ -95,6 +97,10 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
       provide: 'PaymentProvider',
       useClass: StripePaymentProvider
     },
+    {
+      provide: INVOICE_INTEGRATION_PUBLISHER,
+      useClass: InvoiceIntegrationPublisher
+    },
     // Xslt Service
     XsltService,
     // Note: Builders are now provided by FiscalInfrastructureModule
@@ -123,7 +129,8 @@ import { XsltService } from '@virteex/shared-infrastructure-xslt';
     MikroOrmModule,
     FinkokPacProvider,
     NullPacProvider,
-    'PaymentProvider'
+    'PaymentProvider',
+    INVOICE_INTEGRATION_PUBLISHER
   ]
 })
 export class BillingInfrastructureModule {}

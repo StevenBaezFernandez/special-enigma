@@ -18,7 +18,7 @@ export class MxFiscalDocumentBuilder implements FiscalDocumentBuilder {
         suppressEmptyNode: true
     });
 
-    const items = invoice.items.getItems();
+    const items = invoice.items;
     const taxGroups: Record<string, { base: number, amount: number }> = {};
 
     const conceptos = items.map(item => {

@@ -7,3 +7,5 @@ export * from './lib/use-cases/add-payment-method.use-case';
 export * from './lib/use-cases/get-payment-method.use-case';
 export * from './lib/use-cases/process-payment.use-case';
 export * from './lib/dtos/create-invoice.dto';
+export * from './lib/ports/invoice-integration-publisher.port';
+export * from './lib/mappers/create-invoice-input.mapper';

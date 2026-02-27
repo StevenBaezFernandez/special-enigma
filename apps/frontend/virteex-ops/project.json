@@ -5,8 +5,9 @@
   "prefix": "virteex",
   "sourceRoot": "apps/frontend/virteex-ops/src",
   "tags": [
-    "scope:shared",
-    "type:application",
+    "scope:admin",
+    "scope:identity",
+    "type:app",
     "platform:web",
     "criticality:high"
   ],

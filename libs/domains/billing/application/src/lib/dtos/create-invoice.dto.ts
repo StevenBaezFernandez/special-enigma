@@ -28,7 +28,7 @@ export class CreateInvoiceItemDto {
 export class CreateInvoiceDto {
   @IsString()
   @IsOptional()
-  tenantId!: string;
+  tenantId?: string;
 
   @IsString()
   @IsNotEmpty()

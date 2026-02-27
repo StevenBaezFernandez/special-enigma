@@ -18,7 +18,7 @@ export class CoFiscalDocumentBuilder implements FiscalDocumentBuilder {
         suppressEmptyNode: true
     });
 
-    const items = invoice.items.getItems();
+    const items = invoice.items;
     const taxTotalAmount = items.reduce((acc, item) => acc + Number(item.taxAmount), 0);
     const subTotalAmount = items.reduce((acc, item) => acc + Number(item.amount), 0);
     const totalAmount = subTotalAmount + taxTotalAmount;

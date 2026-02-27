@@ -1,13 +1,9 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ClientKafka } from '@nestjs/microservices';
+import { Injectable, Inject } from '@nestjs/common';
 import {
   Invoice,
   InvoiceItem,
   InvoiceRepository,
   INVOICE_REPOSITORY,
-  FiscalStampingService,
-  InvoiceStampedEvent,
   ProductRepository,
   PRODUCT_REPOSITORY,
   TaxCalculatorService,
@@ -17,27 +13,30 @@ import {
 import { DomainException } from '@virteex/shared-util-server-config';
 import { CreateInvoiceDto } from '../dtos/create-invoice.dto';
 import { Decimal } from 'decimal.js';
+import {
+  INVOICE_INTEGRATION_PUBLISHER,
+  InvoiceIntegrationPublisherPort
+} from '../ports/invoice-integration-publisher.port';
+import { PriceValidationPolicy } from '../services/price-validation.policy';
+import { InvoiceStampingOrchestrator } from '../services/invoice-stamping.orchestrator';
 
 @Injectable()
 export class CreateInvoiceUseCase {
-  private readonly logger = new Logger(CreateInvoiceUseCase.name);
-
   constructor(
     @Inject(INVOICE_REPOSITORY) private readonly invoiceRepository: InvoiceRepository,
     @Inject(PRODUCT_REPOSITORY) private readonly productRepository: ProductRepository,
     @Inject(TENANT_CONFIG_REPOSITORY) private readonly tenantConfigRepository: TenantConfigRepository,
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
-    private readonly fiscalStampingService: FiscalStampingService,
     private readonly taxCalculatorService: TaxCalculatorService,
-    private readonly eventEmitter: EventEmitter2
+    private readonly priceValidationPolicy: PriceValidationPolicy,
+    private readonly stampingOrchestrator: InvoiceStampingOrchestrator,
+    @Inject(INVOICE_INTEGRATION_PUBLISHER)
+    private readonly integrationPublisher: InvoiceIntegrationPublisherPort
   ) {}
 
   async execute(dto: CreateInvoiceDto): Promise<Invoice> {
     if (!dto.tenantId) {
-        throw new DomainException('Tenant ID is required', 'TENANT_REQUIRED');
+      throw new DomainException('Tenant ID is required', 'TENANT_REQUIRED');
     }
-    let subtotal = new Decimal(0);
-    let totalTax = new Decimal(0);
 
     const tenantConfig = await this.tenantConfigRepository.getFiscalConfig(dto.tenantId);
     const jurisdiction = tenantConfig.country || 'MX';
@@ -48,101 +47,39 @@ export class CreateInvoiceUseCase {
     invoice.paymentMethod = dto.paymentMethod;
     invoice.usage = dto.usage;
 
-    // Backend Calculation
     for (const itemDto of dto.items) {
-        let price = new Decimal(itemDto.unitPrice);
-        const qty = new Decimal(itemDto.quantity);
+      const price = await this.priceValidationPolicy.resolvePrice(
+        this.productRepository,
+        itemDto.productId,
+        itemDto.unitPrice
+      );
+      const qty = new Decimal(itemDto.quantity);
+      const amount = qty.times(price);
+      const taxResult = await this.taxCalculatorService.calculateTax(amount.toNumber(), jurisdiction);
+      const tax = new Decimal(taxResult.totalTax);
 
-        // Security: Validate price against Catalog if productId is present
-        if (itemDto.productId) {
-            const product = await this.productRepository.findById(itemDto.productId);
-            if (product) {
-                const catalogPrice = new Decimal(product.price);
-                // Compare with small tolerance or strict equality
-                if (!price.equals(catalogPrice)) {
-                    this.logger.warn(`Price mismatch for product ${itemDto.productId}. Provided: ${price}, Catalog: ${catalogPrice}. Using catalog price.`);
-                    price = catalogPrice;
-                }
-            } else {
-                 throw new DomainException(`Product with ID ${itemDto.productId} not found`, 'PRODUCT_NOT_FOUND');
-            }
-        }
+      const item = new InvoiceItem(
+        itemDto.description,
+        itemDto.quantity,
+        price.toFixed(2),
+        amount.toFixed(2),
+        tax.toFixed(2)
+      );
+      item.productId = itemDto.productId;
 
-        const amount = qty.times(price);
-
-        // Dynamic Tax Calculation using Strategy
-        const taxResult = await this.taxCalculatorService.calculateTax(amount.toNumber(), jurisdiction);
-        const tax = new Decimal(taxResult.totalTax);
-
-        subtotal = subtotal.plus(amount);
-        totalTax = totalTax.plus(tax);
-
-        const item = new InvoiceItem(
-            invoice,
-            itemDto.description,
-            itemDto.quantity,
-            price.toFixed(2),
-            amount.toFixed(2),
-            tax.toFixed(2)
-        );
-        if (itemDto.productId) {
-            item.productId = itemDto.productId;
-        }
-        invoice.items.add(item);
+      invoice.addItem(item);
     }
 
-    const totalAmount = subtotal.plus(totalTax);
-
-    invoice.totalAmount = totalAmount.toFixed(2);
-    invoice.taxAmount = totalTax.toFixed(2);
-    invoice.status = 'PENDING';
-
-    // 1. Save Pending (before external call)
-    invoice.status = 'PENDING_STAMP';
+    invoice.markPendingStamp();
     await this.invoiceRepository.save(invoice);
 
-    try {
-      this.logger.log(`Stamping invoice for customer ${dto.customerId}`);
+    await this.stampingOrchestrator.stamp(invoice);
 
-      // 2. External Call (Stamping)
-      // Note: This operation is idempotent in PAC provider (ideally)
-      const stamp = await this.fiscalStampingService.stampInvoice(invoice);
+    await this.integrationPublisher.publishInvoiceStamped(invoice);
 
-      invoice.fiscalUuid = stamp.uuid;
-      invoice.xmlContent = stamp.xml;
-      invoice.stampedAt = new Date(stamp.fechaTimbrado);
-      invoice.status = 'STAMPED';
-
-      this.logger.log(`Invoice stamped. UUID: ${stamp.uuid}`);
-
-      this.eventEmitter.emit(
-        'invoice.stamped',
-        new InvoiceStampedEvent(
-            invoice.id,
-            invoice.tenantId,
-            Number(invoice.totalAmount),
-            Number(invoice.taxAmount),
-            new Date()
-        )
-      );
-
-      this.kafkaClient.emit('billing.invoice.validated', {
-          id: invoice.id,
-          tenantId: invoice.tenantId,
-          totalAmount: invoice.totalAmount,
-          taxAmount: invoice.taxAmount,
-          stampedAt: invoice.stampedAt
-      });
-
-      // 3. Save Stamped (Update)
-      await this.invoiceRepository.save(invoice);
-
-    } catch (error: any) {
-      this.logger.error(`Failed to stamp invoice: ${error}`);
-      // Record remains PENDING
-      throw error;
-    }
+    await this.invoiceRepository.save(invoice);
 
     return invoice;
   }
+
 }

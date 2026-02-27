@@ -1,67 +1,60 @@
-import { Entity, PrimaryKey, Property, OneToMany, Collection, Cascade } from '@mikro-orm/core';
 import { v4 } from 'uuid';
-import type { InvoiceItem } from './invoice-item.entity';
+import { Decimal } from 'decimal.js';
+import { InvoiceItem } from './invoice-item.entity';
 
-@Entity()
+export type InvoiceStatus = 'DRAFT' | 'PENDING_STAMP' | 'STAMPED' | 'PAID';
+
 export class Invoice {
-  @PrimaryKey({ type: 'uuid' })
-  id: string = v4();
-
-  @Property()
-  tenantId!: string;
-
-  @Property()
-  customerId!: string;
-
-  @Property()
-  issueDate!: Date;
-
-  @Property()
+  id: string;
+  tenantId: string;
+  customerId: string;
+  issueDate: Date;
   dueDate!: Date;
-
-  @Property()
-  paymentForm!: string; // FormaPago (e.g., 01, 03)
-
-  @Property()
-  paymentMethod!: string; // MetodoPago (e.g., PUE, PPD)
-
-  @Property()
-  usage!: string; // UsoCFDI (e.g., G03)
-
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  totalAmount!: string;
-
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  taxAmount!: string;
-
-  @Property({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  paymentForm!: string;
+  paymentMethod!: string;
+  usage!: string;
+  totalAmount: string;
+  taxAmount: string;
   subTotal?: string;
-
-  @Property({ nullable: true })
   notes?: string;
-
-  @Property()
-  status!: string;
-
-  // Fiscal Stamping Fields
-  @Property({ nullable: true })
+  status: InvoiceStatus;
   fiscalUuid?: string;
-
-  @Property({ nullable: true, type: 'text' })
   xmlContent?: string;
-
-  @Property({ nullable: true })
   stampedAt?: Date;
+  items: InvoiceItem[] = [];
 
-  @OneToMany('InvoiceItem', 'invoice', { cascade: [Cascade.ALL] })
-  items = new Collection<InvoiceItem>(this);
-
-  constructor(tenantId: string, customerId: string, totalAmount: string, taxAmount: string) {
+  constructor(tenantId: string, customerId: string, totalAmount: string, taxAmount: string, id: string = v4()) {
+    this.id = id;
     this.tenantId = tenantId;
     this.customerId = customerId;
     this.issueDate = new Date();
     this.totalAmount = totalAmount;
     this.taxAmount = taxAmount;
     this.status = 'DRAFT';
+  }
+
+  addItem(item: InvoiceItem): void {
+    this.items.push(item);
+    this.recalculateTotals();
+  }
+
+  recalculateTotals(): void {
+    const subtotal = this.items.reduce((acc, item) => acc.plus(new Decimal(item.amount)), new Decimal(0));
+    const totalTax = this.items.reduce((acc, item) => acc.plus(new Decimal(item.taxAmount)), new Decimal(0));
+
+    this.subTotal = subtotal.toFixed(2);
+    this.taxAmount = totalTax.toFixed(2);
+    this.totalAmount = subtotal.plus(totalTax).toFixed(2);
+  }
+
+  markPendingStamp(): void {
+    this.status = 'PENDING_STAMP';
+  }
+
+  markStamped(stamp: { uuid: string; xml: string; stampedAt: Date }): void {
+    this.fiscalUuid = stamp.uuid;
+    this.xmlContent = stamp.xml;
+    this.stampedAt = stamp.stampedAt;
+    this.status = 'STAMPED';
   }
 }

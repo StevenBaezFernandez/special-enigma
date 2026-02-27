@@ -22,7 +22,7 @@ export class UsFiscalDocumentBuilder implements FiscalDocumentBuilder {
               address: customer.address || 'N/A',
               taxId: customer.rfc // Using RFC field for TaxID mapping
           },
-          items: invoice.items.getItems().map(item => ({
+          items: invoice.items.map(item => ({
               description: item.description,
               quantity: item.quantity,
               unitPrice: item.unitPrice,

@@ -46,6 +46,19 @@ export default [
                 'type:util',
               ],
             },
+
+            {
+              sourceTag: 'type:app',
+              onlyDependOnLibsWithTags: [
+                'type:presentation',
+                'type:application',
+                'type:domain',
+                'type:infrastructure',
+                'type:contract',
+                'type:util',
+                'type:ui',
+              ],
+            },
             {
               sourceTag: 'type:presentation',
               onlyDependOnLibsWithTags: [
@@ -141,6 +154,18 @@ export default [
         },
       ],
     },
+  },
+
+  {
+    files: ['libs/domains/**/domain/src/lib/entities/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: ['@nestjs/*', '@mikro-orm/*', '@nestjs', '@mikro-orm']
+        }
+      ]
+    }
   },
   {
     files: [

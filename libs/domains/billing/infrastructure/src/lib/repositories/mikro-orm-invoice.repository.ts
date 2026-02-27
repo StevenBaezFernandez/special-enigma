@@ -1,30 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InvoiceRepository } from '@virteex/domain-billing-domain';
-import { Invoice } from '@virteex/domain-billing-domain';
+import { InvoiceRepository, Invoice } from '@virteex/domain-billing-domain';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
+import { InvoiceRecord } from '../entities/invoice.record';
+import { InvoiceMapper } from './invoice.mapper';
 
 @Injectable()
 export class MikroOrmInvoiceRepository implements InvoiceRepository {
   constructor(
-    @InjectRepository(Invoice)
-    private readonly repository: EntityRepository<Invoice>
+    @InjectRepository(InvoiceRecord)
+    private readonly repository: EntityRepository<InvoiceRecord>
   ) {}
 
   async save(invoice: Invoice): Promise<void> {
-    await this.repository.getEntityManager().persistAndFlush(invoice);
+    const existing = await this.repository.findOne({ id: invoice.id }, { populate: ['items'] });
+    const record = InvoiceMapper.toRecord(invoice, existing ?? undefined);
+    await this.repository.getEntityManager().persistAndFlush(record);
   }
 
   async findById(id: string): Promise<Invoice | null> {
-    return this.repository.findOne({ id });
+    const record = await this.repository.findOne({ id }, { populate: ['items'] });
+    return record ? InvoiceMapper.toDomain(record) : null;
   }
 
   async findAll(): Promise<Invoice[]> {
-      return this.repository.findAll();
+    const records = await this.repository.findAll({ populate: ['items'] });
+    return records.map((record) => InvoiceMapper.toDomain(record));
   }
 
   async findByTenantId(tenantId: string): Promise<Invoice[]> {
-    return this.repository.find({ tenantId });
+    const records = await this.repository.find({ tenantId }, { populate: ['items'] });
+    return records.map((record) => InvoiceMapper.toDomain(record));
   }
 
   async countByTenantId(tenantId: string): Promise<number> {

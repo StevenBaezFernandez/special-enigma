@@ -18,7 +18,7 @@ export class BrFiscalDocumentBuilder implements FiscalDocumentBuilder {
         suppressEmptyNode: true
     });
 
-    const items = invoice.items.getItems();
+    const items = invoice.items;
     const totalAmount = invoice.totalAmount;
 
     // NFe Structure (Simplified for robustness in demo)

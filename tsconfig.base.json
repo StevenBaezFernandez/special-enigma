@@ -707,6 +707,12 @@
       ],
       "@virteex/billing-ui/*": [
         "libs/domains/billing/ui/src/*"
+      ],
+      "@virteex/billing-presentation": [
+        "libs/domains/billing/presentation/src/index.ts"
+      ],
+      "@virteex/billing-presentation/*": [
+        "libs/domains/billing/presentation/src/*"
       ]
     }
   },

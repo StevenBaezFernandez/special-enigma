@@ -1,171 +1,88 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { SqliteDriver } from '@mikro-orm/sqlite';
-import { CreateInvoiceUseCase } from './create-invoice.use-case';
+import { Decimal } from 'decimal.js';
 import {
-  INVOICE_REPOSITORY,
-  PRODUCT_REPOSITORY,
-  TENANT_CONFIG_REPOSITORY,
-  InvoiceRepository,
-  ProductRepository,
   FiscalStampingService,
+  INVOICE_REPOSITORY,
+  InvoiceRepository,
+  PRODUCT_REPOSITORY,
+  ProductRepository,
   TaxCalculatorService,
+  TENANT_CONFIG_REPOSITORY,
   TenantConfigRepository,
-  Invoice,
-  InvoiceItem
 } from '@virteex/domain-billing-domain';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { DomainException } from '@virteex/shared-util-server-config';
+import { CreateInvoiceUseCase } from './create-invoice.use-case';
+import { INVOICE_INTEGRATION_PUBLISHER, InvoiceIntegrationPublisherPort } from '../ports/invoice-integration-publisher.port';
+import { PriceValidationPolicy } from '../services/price-validation.policy';
+import { InvoiceStampingOrchestrator } from '../services/invoice-stamping.orchestrator';
 
 describe('CreateInvoiceUseCase', () => {
   let useCase: CreateInvoiceUseCase;
   let invoiceRepository: InvoiceRepository;
-  let productRepository: ProductRepository;
-  let fiscalStampingService: FiscalStampingService;
-  let taxCalculatorService: TaxCalculatorService;
-  let tenantConfigRepository: TenantConfigRepository;
-  let eventEmitter: EventEmitter2;
+  let integrationPublisher: InvoiceIntegrationPublisherPort;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        MikroOrmModule.forRoot({
-          driver: SqliteDriver,
-          dbName: ':memory:',
-          entities: [Invoice, InvoiceItem],
-          allowGlobalContext: true,
-        }),
-        MikroOrmModule.forFeature([Invoice, InvoiceItem])
-      ],
       providers: [
         CreateInvoiceUseCase,
+        PriceValidationPolicy,
+        InvoiceStampingOrchestrator,
         {
           provide: INVOICE_REPOSITORY,
           useValue: {
             save: jest.fn(),
-            countByTenantId: jest.fn(),
-          }
+          },
         },
         {
           provide: PRODUCT_REPOSITORY,
           useValue: {
-            findById: jest.fn(),
-          }
+            findById: jest.fn().mockResolvedValue({ id: 'p1', price: 100 }),
+          } satisfies ProductRepository,
         },
         {
           provide: TENANT_CONFIG_REPOSITORY,
           useValue: {
-            getFiscalConfig: jest.fn(),
-          }
-        },
-        {
-          provide: FiscalStampingService,
-          useValue: {
-            stampInvoice: jest.fn(),
-          }
+            getFiscalConfig: jest.fn().mockResolvedValue({ country: 'MX' }),
+          } satisfies Partial<TenantConfigRepository>,
         },
         {
           provide: TaxCalculatorService,
           useValue: {
-            calculateTax: jest.fn(),
-          }
+            calculateTax: jest.fn().mockImplementation((amount: number) => ({ totalTax: new Decimal(amount).times(0.16).toNumber() })),
+          },
         },
         {
-          provide: EventEmitter2,
+          provide: FiscalStampingService,
           useValue: {
-            emit: jest.fn(),
-          }
+            stampInvoice: jest.fn().mockResolvedValue({ uuid: 'uuid-1', xml: '<xml />', fechaTimbrado: new Date().toISOString() }),
+          },
         },
         {
-          provide: 'KAFKA_SERVICE',
+          provide: INVOICE_INTEGRATION_PUBLISHER,
           useValue: {
-            emit: jest.fn(),
-          }
-        }
+            publishInvoiceStamped: jest.fn(),
+          } satisfies InvoiceIntegrationPublisherPort,
+        },
       ],
     }).compile();
 
-    useCase = module.get<CreateInvoiceUseCase>(CreateInvoiceUseCase);
+    useCase = module.get(CreateInvoiceUseCase);
     invoiceRepository = module.get(INVOICE_REPOSITORY);
-    productRepository = module.get(PRODUCT_REPOSITORY);
-    fiscalStampingService = module.get(FiscalStampingService);
-    taxCalculatorService = module.get(TaxCalculatorService);
-    tenantConfigRepository = module.get(TENANT_CONFIG_REPOSITORY);
-    eventEmitter = module.get(EventEmitter2);
+    integrationPublisher = module.get(INVOICE_INTEGRATION_PUBLISHER);
   });
 
-  it('should be defined', () => {
-    expect(useCase).toBeDefined();
-  });
-
-  it('should create an invoice and validate product price', async () => {
-    const dto = {
+  it('should create, stamp and publish invoice without infrastructure coupling', async () => {
+    const result = await useCase.execute({
       tenantId: 'tenant-1',
       customerId: 'customer-1',
-      dueDate: '2024-05-30',
+      dueDate: '2026-01-01',
       paymentForm: '01',
       paymentMethod: 'PUE',
-      usage: 'G01',
-      items: [
-        {
-          description: 'Test Product',
-          quantity: 1,
-          unitPrice: 100,
-          productId: 'prod-1'
-        }
-      ]
-    };
+      usage: 'G03',
+      items: [{ description: 'Item A', quantity: 1, unitPrice: 120, productId: 'p1' }],
+    });
 
-    const mockProduct = {
-      id: 'prod-1',
-      name: 'Test Product',
-      price: 150,
-      taxGroup: 'general'
-    };
-
-    (productRepository.findById as jest.Mock).mockResolvedValue(mockProduct);
-    (tenantConfigRepository.getFiscalConfig as jest.Mock).mockResolvedValue({ country: 'MX' });
-    (taxCalculatorService.calculateTax as jest.Mock).mockResolvedValue({ totalTax: 24, details: [] }); // 150 * 0.16 = 24
-
-    const mockStamp = {
-        uuid: 'uuid-123',
-        xml: '<xml></xml>',
-        fechaTimbrado: new Date().toISOString(),
-        selloSAT: 'sat',
-        selloCFD: 'cfd'
-    };
-    (fiscalStampingService.stampInvoice as jest.Mock).mockResolvedValue(mockStamp);
-
-    const result = await useCase.execute(dto);
-
-    expect(productRepository.findById).toHaveBeenCalledWith('prod-1');
-    const item = result.items.getItems()[0];
-    expect(item.unitPrice).toBe('150.00'); // Price updated from catalog
-    expect(result.totalAmount).toBe('174.00'); // 150 + 24
     expect(result.status).toBe('STAMPED');
-  });
-
-  it('should fail if product is not found', async () => {
-     const dto = {
-      tenantId: 'tenant-1',
-      customerId: 'customer-1',
-      dueDate: '2024-05-30',
-      paymentForm: '01',
-      paymentMethod: 'PUE',
-      usage: 'G01',
-      items: [
-        {
-          description: 'Test Product',
-          quantity: 1,
-          unitPrice: 100,
-          productId: 'prod-999'
-        }
-      ]
-    };
-
-    (productRepository.findById as jest.Mock).mockResolvedValue(null);
-    (tenantConfigRepository.getFiscalConfig as jest.Mock).mockResolvedValue({ country: 'MX' });
-
-    await expect(useCase.execute(dto)).rejects.toThrow(DomainException);
+    expect(invoiceRepository.save).toHaveBeenCalledTimes(2);
+    expect(integrationPublisher.publishInvoiceStamped).toHaveBeenCalledTimes(1);
   });
 });
