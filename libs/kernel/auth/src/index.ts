@@ -8,3 +8,4 @@ export * from './lib/guards/jwt-auth.guard';
 export * from './lib/decorators/public.decorator';
 export * from './lib/middleware/csrf.middleware';
 export * from './lib/services/secret-manager.service';
+export * from './lib/decorators/current-user.decorator';

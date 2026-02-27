@@ -22,7 +22,7 @@
         "assets": [
           "libs/domains/inventory/presentation/*.md"
         ],
-        "rootDir": "libs/domains/inventory/presentation"
+        "rootDir": "libs/domains/inventory"
       }
     }
   },

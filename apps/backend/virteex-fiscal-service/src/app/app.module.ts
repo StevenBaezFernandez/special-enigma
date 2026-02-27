@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 import { InvoiceConsumer } from './invoice.consumer';
 import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
 import { FiscalPresentationModule } from '@virteex/api-fiscal-presentation';
-import { FiscalInfrastructureModule, MockFiscalProvider, DianFiscalAdapter, SatFiscalAdapter } from '@virteex/infra-fiscal-infrastructure';
+import { FiscalInfrastructureModule, DianFiscalAdapter, SatFiscalAdapter } from '@virteex/infra-fiscal-infrastructure';
 import { HttpModule, HttpService } from '@nestjs/axios';
 
 @Module({
@@ -48,7 +48,7 @@ import { HttpModule, HttpService } from '@nestjs/axios';
         if (provider === 'SAT') {
           return new SatFiscalAdapter(http);
         }
-        return new MockFiscalProvider();
+        throw new Error(`Invalid FISCAL_PROVIDER value: ${provider || 'undefined'}. Configure DIAN or SAT.`);
       },
     },
   ],

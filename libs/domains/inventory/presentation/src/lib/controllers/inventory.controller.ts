@@ -12,7 +12,7 @@ import {
   RegisterMovementUseCase,
   CreateWarehouseDto,
   RegisterMovementDto
-} from '@virteex/application-inventory-application';
+} from '../../../../application/src';
 import { IsString, IsNumber, Min, IsArray, ValidateNested, IsOptional, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { JwtAuthGuard, CurrentUser, UserPayload } from '@virteex/kernel-auth';

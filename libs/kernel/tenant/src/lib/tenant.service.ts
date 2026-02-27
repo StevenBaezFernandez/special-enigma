@@ -1,6 +1,6 @@
 import { Injectable, OnModuleDestroy, OnModuleInit, NotFoundException, Logger, ConflictException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { TenantConfig } from './interfaces/tenant-config.interface';
+import { TenantConfig, TenantMode } from './interfaces/tenant-config.interface';
 import { Tenant } from './entities/tenant.entity';
 import Redis from 'ioredis';
 
@@ -38,7 +38,12 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
         throw new ConflictException(`Tenant ${tenantData.id} already exists`);
     }
 
-    const tenant = this.em.create(Tenant, tenantData);
+    const tenant = this.em.create(Tenant, {
+      mode: tenantData.mode ?? TenantMode.SHARED,
+      createdAt: tenantData.createdAt ?? new Date(),
+      updatedAt: tenantData.updatedAt ?? new Date(),
+      ...tenantData,
+    });
     await this.em.persistAndFlush(tenant);
 
     // Invalidate cache immediately just in case

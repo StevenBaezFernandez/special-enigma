@@ -1,4 +1,10 @@
-import { Role } from '../core/api/roles.service';
+export interface Role {
+  id: string;
+  name: string;
+  description?: string;
+  permissions?: string[];
+}
+
 import { UserStatus } from '../enums/user-status.enum';
 
 export interface Organization {
