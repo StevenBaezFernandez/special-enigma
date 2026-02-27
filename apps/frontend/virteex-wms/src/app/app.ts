@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
-import { ScanComponent } from '@virteex/inventory-ui-wms';
 
 @Component({
-  imports: [NxWelcome, RouterModule, ScanComponent],
-  selector: 'app-root',
+  imports: [RouterModule],
+  selector: 'virteex-wms-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'virteex-wms';
+  protected readonly appName = 'Wms';
 }

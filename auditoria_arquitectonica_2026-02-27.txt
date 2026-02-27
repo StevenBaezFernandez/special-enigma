@@ -1,0 +1,126 @@
+📊 SCORECARD EJECUTIVO
+Robustez: 6/10
+Arquitectura: 4/10
+Buenas Prácticas: 5/10
+Promedio Global: 5/10
+
+🧠 DIAGNÓSTICO CRÍTICO
+La base tiene intención arquitectónica explícita (Nx + reglas de boundaries), pero la implementación real no sostiene Clean Architecture de forma consistente.
+Hay contaminación fuerte de Domain/Application con NestJS, excepciones HTTP y MikroORM.
+La gobernanza Nx está parcialmente aplicada y deja dominios fuera del enforcement real.
+Existen discrepancias de naming/estructura en librerías que rompen el estándar declarado.
+Con la evidencia disponible, el estado es “Mejorable” con deuda estructural relevante.
+
+📌 ALCANCE DE LA AUDITORÍA
+Insumos auditados (evidencia directa):
+- eslint.config.mjs (reglas de boundaries y restricciones de imports).
+- tools/validate-architecture-boundaries.mjs (ejecución de control arquitectónico).
+- libs/domains/billing/domain/src/lib/billing-domain.module.ts.
+- libs/domains/billing/domain/src/lib/services/fiscal-stamping.service.ts.
+- libs/domains/accounting/domain/src/lib/entities/account.entity.ts.
+- libs/domains/subscription/domain/src/lib/services/customer-identity.service.ts.
+- libs/domains/identity/application/src/lib/use-cases/complete-onboarding.use-case.ts.
+- libs/domains/subscription/application/src/lib/use-cases/subscribe-to-plan.use-case.ts.
+- libs/domains/finops/project.json y libs/domains/finops/src/*.
+
+Limitaciones:
+- No se ejecutó auditoría completa de todos los dominios ni análisis exhaustivo de Angular en todas las apps.
+- Dependencias circulares globales: No verificable con la evidencia disponible.
+
+🔎 HALLAZGOS Y EVIDENCIAS
+
+Hallazgo 1:
+- Tipo: Infrastructure Bleed + Layer Leak
+- Ubicación/Evidencia: libs/domains/accounting/domain/src/lib/entities/account.entity.ts (entidad de dominio con decoradores de MikroORM: @Entity, @PrimaryKey, @Property, @ManyToOne).
+- Severidad: Crítica
+- Impacto: El dominio queda acoplado al ORM; se dificulta portabilidad, pruebas puras y evolución del modelo sin impacto en persistencia.
+- Refactor Recomendado: Extraer modelos de persistencia a infrastructure (p.ej. AccountOrmEntity) y mantener entidades de dominio puras (sin decorators framework).
+
+Hallazgo 2:
+- Tipo: Layer Leak (Domain contaminado por framework)
+- Ubicación/Evidencia: libs/domains/subscription/domain/src/lib/services/customer-identity.service.ts (uso de @Injectable/@Inject de NestJS dentro de domain).
+- Severidad: Alta
+- Impacto: Rompe independencia del dominio; el core de negocio depende de DI framework-specific.
+- Refactor Recomendado: Convertir servicios de dominio a clases puras; mover wiring de DI a módulos de application/presentation.
+
+Hallazgo 3:
+- Tipo: Layer Leak + Framework Coupling
+- Ubicación/Evidencia: libs/domains/subscription/application/src/lib/use-cases/subscribe-to-plan.use-case.ts (usa NotFoundException/BadRequestException de @nestjs/common); patrón repetido en múltiples use-cases.
+- Severidad: Alta
+- Impacto: La capa de aplicación filtra semántica HTTP, reduciendo reuso para otros canales (colas, CLI, workers) y mezclando responsabilidades.
+- Refactor Recomendado: Introducir errores de aplicación/dominio propios (p.ej. DomainError/ApplicationError) y mapear a HTTP exclusivamente en presentation.
+
+Hallazgo 4:
+- Tipo: Boundary Violation (cross-domain indebido)
+- Ubicación/Evidencia: libs/domains/billing/domain/src/lib/services/fiscal-stamping.service.ts importa FISCAL_DOCUMENT_BUILDER_FACTORY desde @virteex/domain-fiscal-domain.
+- Severidad: Alta
+- Impacto: Acopla dos bounded contexts a nivel de domain; eleva riesgo de cascada de cambios y reduce autonomía de dominio.
+- Refactor Recomendado: Definir puerto en billing domain/application (FiscalDocumentBuilderPort) e implementar adaptador en infrastructure/presentation fiscal.
+
+Hallazgo 5:
+- Tipo: Domain Module contaminado por framework/infra
+- Ubicación/Evidencia: libs/domains/billing/domain/src/lib/billing-domain.module.ts define @Module de Nest e importa MikroOrmModule.forFeature(...).
+- Severidad: Crítica
+- Impacto: El “domain” actúa como módulo de infraestructura/composición, no como núcleo de negocio; incumple Clean Architecture.
+- Refactor Recomendado: Mover módulo Nest a capa presentation/infrastructure (p.ej. billing-composition.module.ts) y dejar domain sin módulos framework.
+
+Hallazgo 6:
+- Tipo: Governance Gap (Nx enforcement parcial)
+- Ubicación/Evidencia: ejecución de node tools/validate-architecture-boundaries.mjs reporta que solo valida inventory, identity y fixed-assets, omitiendo billing, subscription, finops, etc.
+- Severidad: Alta
+- Impacto: La política de boundaries existe, pero no cubre todo el monorepo; se pueden introducir violaciones sin gate efectivo.
+- Refactor Recomendado: Expandir ARCH_BOUNDARY_DOMAINS por defecto a todos los dominios productivos y hacer fail en CI ante dominios no gobernados.
+
+Hallazgo 7:
+- Tipo: Coherencia Semántica / Naming Drift
+- Ubicación/Evidencia: libs/domains/finops/project.json define name "finops" (sin prefijo domain-*) y estructura en libs/domains/finops/src sin separación domain/application/infrastructure/presentation.
+- Severidad: Media
+- Impacto: Inconsistencia con convención declarada; dificulta automatización de governance y comprensión transversal.
+- Refactor Recomendado: Renombrar proyecto a convención estándar (p.ej. domain-finops-domain + capas complementarias) y reestructurar por capas explícitas.
+
+🧱 EVALUACIÓN POR DIMENSIÓN
+
+1. Coherencia Semántica: 5/10
+- Observaciones: Hay convenciones bien definidas, pero con excepciones relevantes (finops sin prefijo/capas estándar; módulos “domain” que realmente hacen composición de framework).
+- Riesgos: Semantic drift creciente y pérdida de trazabilidad arquitectónica por naming inconsistente.
+- Veredicto: Mejorable con acciones de normalización.
+
+2. Responsabilidad y Cohesión: 4/10
+- Observaciones: Se mezclan responsabilidades de dominio, transporte HTTP, composición de framework e infraestructura.
+- Riesgos: Aumento de acoplamiento, baja testabilidad y refactors costosos.
+- Veredicto: Deficiente en separación real de responsabilidades.
+
+3. Arquitectura Frontend (Angular): 6/10
+- Observaciones: No se encontró en la muestra auditada evidencia crítica de lógica de dominio incrustada en componentes; evaluación parcial.
+- Riesgos: No verificable con la evidencia disponible para todo el frontend.
+- Veredicto: Parcialmente aceptable, pendiente auditoría profunda.
+
+4. Arquitectura Backend (NestJS): 4/10
+- Observaciones: Controllers/resolvers no fueron el problema principal; la deuda está en domain/application contaminados por Nest y ORM.
+- Riesgos: Backend difícil de evolucionar a canales no-HTTP y con boundaries frágiles.
+- Veredicto: Mejorable con refactor de capas prioritario.
+
+5. Estructura Nx y Governance: 5/10
+- Observaciones: Existen reglas de boundaries, pero el enforcement efectivo es incompleto y con cobertura limitada por script.
+- Riesgos: Falsa sensación de cumplimiento y degradación silenciosa de arquitectura.
+- Veredicto: Governance incompleto.
+
+6. Modelado de Dominio y DDD: 4/10
+- Observaciones: Predomina dominio anclado a persistencia/framework; DDD táctico parcial con entidades no puras.
+- Riesgos: Modelo de dominio débil, alto acoplamiento técnico, menor expresividad ubicua.
+- Veredicto: Debe reforzarse para alcanzar estándar 10/10.
+
+🏗 PROPUESTA DE ESTRUCTURA IDEAL
+Propuesta mínima de corrección estructural:
+- libs/domains/<context>/domain: entidades y value objects puros, servicios de dominio sin Nest/ORM.
+- libs/domains/<context>/application: use-cases + puertos + errores de aplicación agnósticos.
+- libs/domains/<context>/infrastructure: repositorios ORM, adapters externos, mapping ORM<->domain.
+- libs/domains/<context>/presentation: controllers/resolvers + traducción ApplicationError -> HTTP.
+- libs/domains/<context>/contracts: DTOs/contratos versionados.
+- Módulos Nest de composición en presentation/infrastructure, nunca en domain.
+
+✅ CONCLUSIÓN FINAL
+- Veredicto general: Mejorable
+- Principal deuda arquitectónica: Contaminación de capas (domain/application acoplados a NestJS, HTTP y MikroORM).
+- Riesgo de evolución: Alto, por acoplamiento transversal y governance incompleto.
+- Prioridad de refactor sugerida: Alta

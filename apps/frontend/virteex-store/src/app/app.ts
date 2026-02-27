@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
-import { ProductListComponent } from '@virteex/catalog-ui-store';
 
 @Component({
-  imports: [NxWelcome, RouterModule, ProductListComponent],
-  selector: 'app-root',
+  imports: [RouterModule],
+  selector: 'virteex-store-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'virteex-store';
+  protected readonly appName = 'Store';
 }

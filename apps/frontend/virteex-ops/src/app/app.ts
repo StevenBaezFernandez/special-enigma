@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
-  selector: 'virteex-root',
+  imports: [RouterModule],
+  selector: 'virteex-ops-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'virteex-ops';
+  protected readonly appName = 'Ops';
 }

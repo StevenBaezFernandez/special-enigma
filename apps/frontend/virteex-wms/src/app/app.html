@@ -1,2 +1,9 @@
-<virteex-scan></virteex-scan>
-<router-outlet></router-outlet>
+<div class="shell">
+  <header class="shell__header" data-testid="shell-header">{{ appName }}</header>
+  <div class="shell__body">
+    <aside class="shell__sidebar" data-testid="shell-sidebar">Navegación</aside>
+    <main class="shell__content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

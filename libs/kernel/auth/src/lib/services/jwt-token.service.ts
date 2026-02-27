@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { SecretManagerService } from './secret-manager.service';
 import Redis from 'ioredis';
 
@@ -18,11 +19,11 @@ interface JwkOct {
   kid: string;
   kty: 'oct' | 'RSA' | 'EC';
   alg: jwt.Algorithm;
-  k?: string; // for oct
-  n?: string; // for RSA
-  e?: string; // for RSA
-  x?: string; // for EC
-  y?: string; // for EC
+  k?: string;
+  n?: string;
+  e?: string;
+  x?: string;
+  y?: string;
   use?: string;
 }
 
@@ -34,8 +35,11 @@ export class JwtTokenService {
   private readonly audienceByType: Record<SupportedTokenType, string>;
   private readonly redis: Redis | null = null;
   private readonly logger = new Logger(JwtTokenService.name);
+  private readonly isProduction: boolean;
 
   constructor(private readonly secretManager: SecretManagerService) {
+    this.isProduction = process.env['NODE_ENV'] === 'production';
+
     const algs = this.secretManager
       .getSecret('JWT_ALLOWED_ALGORITHMS', 'HS256')
       .split(',')
@@ -43,14 +47,7 @@ export class JwtTokenService {
       .filter(Boolean) as jwt.Algorithm[];
 
     this.allowedAlgorithms = algs.length ? algs : ['HS256'];
-
-    // SECURITY: Enforce asymmetric algorithms in production
-    if (process.env['NODE_ENV'] === 'production') {
-      const insecureAlgs = this.allowedAlgorithms.filter(a => a.startsWith('HS'));
-      if (insecureAlgs.length > 0) {
-        this.logger.warn(`Insecure algorithms (${insecureAlgs.join(',')}) allowed in production. Recommend RS256/ES256.`);
-      }
-    }
+    this.enforceProductionAlgorithmPolicy();
 
     this.defaultClockSkewSeconds = Number(this.secretManager.getSecret('JWT_CLOCK_SKEW_SECONDS', '30'));
 
@@ -72,11 +69,13 @@ export class JwtTokenService {
 
     const redisUrl = process.env['REDIS_URL'];
     if (redisUrl) {
-        this.redis = new Redis(redisUrl, {
-            maxRetriesPerRequest: 1,
-            connectTimeout: 2000,
-        });
+      this.redis = new Redis(redisUrl, {
+        maxRetriesPerRequest: 1,
+        connectTimeout: 2000,
+      });
     }
+
+    this.readJwks();
   }
 
   issueToken(payload: Record<string, unknown>, options: TokenIssueOptions): string {
@@ -110,7 +109,6 @@ export class JwtTokenService {
     } as jwt.SignOptions);
   }
 
-
   getVerificationSecretForToken(token: string): string {
     const decoded = jwt.decode(token, { complete: true });
     if (!decoded || typeof decoded === 'string') {
@@ -135,7 +133,6 @@ export class JwtTokenService {
     }
 
     const header = decoded.header as jwt.JwtHeader;
-    const payload = decoded.payload as jwt.JwtPayload;
 
     if (!header.alg || header.alg.toLowerCase() === 'none') {
       throw new UnauthorizedException('Rejected JWT algorithm');
@@ -190,9 +187,9 @@ export class JwtTokenService {
     if (ttlSeconds <= 0) return;
 
     if (this.redis) {
-        await this.redis.set(`revoked:${jti}`, '1', 'EX', ttlSeconds);
+      await this.redis.set(`revoked:${jti}`, '1', 'EX', ttlSeconds);
     } else {
-        this.logger.error('Redis not configured: Cannot revoke token.');
+      this.logger.error('Redis not configured: Cannot revoke token.');
     }
   }
 
@@ -246,7 +243,14 @@ export class JwtTokenService {
     const raw = this.secretManager.getSecret('JWT_JWKS', '');
     if (raw) {
       const parsed = JSON.parse(raw) as JwkOct[];
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        throw new Error('JWT_JWKS must contain at least one key');
+      }
       return parsed;
+    }
+
+    if (this.isProduction) {
+      throw new Error('JWT_JWKS is mandatory in production. Symmetric secret fallback is disabled.');
     }
 
     const secret = this.secretManager.getJwtSecret();
@@ -263,37 +267,37 @@ export class JwtTokenService {
   private async isRevoked(jti?: string): Promise<boolean> {
     if (!jti) return false;
     if (!this.redis) {
-        if (process.env['NODE_ENV'] === 'production') {
-            this.logger.error('FAIL-CLOSED: Redis not configured for revocation check.');
-            return true;
-        }
-        return false;
+      if (this.isProduction) {
+        this.logger.error('FAIL-CLOSED: Redis not configured for revocation check.');
+        return true;
+      }
+      return false;
     }
     try {
-        const res = await this.redis.get(`revoked:${jti}`);
-        return res === '1';
+      const res = await this.redis.get(`revoked:${jti}`);
+      return res === '1';
     } catch (e) {
-        this.logger.error(`Redis error during revocation check: ${e}`);
-        if (process.env['NODE_ENV'] === 'production') return true;
-        return false;
+      this.logger.error(`Redis error during revocation check: ${e}`);
+      if (this.isProduction) return true;
+      return false;
     }
   }
 
   private async isUsed(jti: string): Promise<boolean> {
     if (!this.redis) {
-        if (process.env['NODE_ENV'] === 'production') {
-            this.logger.error('FAIL-CLOSED: Redis not configured for replay check.');
-            return true;
-        }
-        return false;
+      if (this.isProduction) {
+        this.logger.error('FAIL-CLOSED: Redis not configured for replay check.');
+        return true;
+      }
+      return false;
     }
     try {
-        const res = await this.redis.get(`used:${jti}`);
-        return res === '1';
+      const res = await this.redis.get(`used:${jti}`);
+      return res === '1';
     } catch (e) {
-        this.logger.error(`Redis error during replay check: ${e}`);
-        if (process.env['NODE_ENV'] === 'production') return true;
-        return false;
+      this.logger.error(`Redis error during replay check: ${e}`);
+      if (this.isProduction) return true;
+      return false;
     }
   }
 
@@ -301,13 +305,42 @@ export class JwtTokenService {
     if (!this.redis) return;
     const ttlSeconds = exp - Math.floor(Date.now() / 1000);
     if (ttlSeconds > 0) {
-        await this.redis.set(`used:${jti}`, '1', 'EX', ttlSeconds).catch(e => {
-            this.logger.error(`Failed to mark jti as used in Redis: ${e}`);
-        });
+      await this.redis.set(`used:${jti}`, '1', 'EX', ttlSeconds).catch((e) => {
+        this.logger.error(`Failed to mark jti as used in Redis: ${e}`);
+      });
     }
+  }
+
+  private enforceProductionAlgorithmPolicy(): void {
+    if (!this.isProduction) {
+      return;
+    }
+
+    const insecureAlgs = this.allowedAlgorithms.filter((algorithm) => algorithm.startsWith('HS'));
+    if (insecureAlgs.length === 0) {
+      return;
+    }
+
+    const allowOverride = this.secretManager.getSecret('JWT_ALLOW_HS_IN_PRODUCTION', 'false') === 'true';
+    const overrideAuditRef = this.secretManager.getSecret('JWT_HS_OVERRIDE_AUDIT_REF', '').trim();
+
+    if (!allowOverride || !overrideAuditRef) {
+      throw new Error(
+        `Insecure JWT algorithms in production (${insecureAlgs.join(',')}) are blocked. ` +
+          'Set JWT_ALLOW_HS_IN_PRODUCTION=true and JWT_HS_OVERRIDE_AUDIT_REF=<ticket> for audited override.',
+      );
+    }
+
+    this.logger.warn(
+      `Audited override enabled for HMAC JWT algorithms in production (${insecureAlgs.join(',')}). ` +
+        `audit_ref=${overrideAuditRef}`,
+    );
   }
 }
 
 function cryptoRandomId(): string {
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+  if (typeof randomUUID === 'function') {
+    return randomUUID();
+  }
+  return randomBytes(16).toString('hex');
 }

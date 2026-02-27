@@ -74,6 +74,15 @@
           "buildTarget": "virteex-crm-service:build:production"
         }
       }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/virteex-crm-service"
+      }
     }
   },
   "tags": [

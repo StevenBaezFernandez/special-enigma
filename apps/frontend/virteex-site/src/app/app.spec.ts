@@ -1,20 +1,22 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { App } from './app';
-import { NxWelcome } from './nx-welcome';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App, NxWelcome],
+      imports: [App],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
-  it('should render title', async () => {
+  it('should render the application shell', () => {
     const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
+    fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Welcome virteex-site',
-    );
+
+    expect(compiled.querySelector('[data-testid="shell-header"]')).not.toBeNull();
+    expect(compiled.querySelector('[data-testid="shell-sidebar"]')).not.toBeNull();
+    expect(compiled.querySelector('router-outlet')).not.toBeNull();
   });
 });

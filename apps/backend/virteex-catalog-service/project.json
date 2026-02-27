@@ -74,6 +74,15 @@
           "buildTarget": "virteex-catalog-service:build:production"
         }
       }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/virteex-catalog-service"
+      }
     }
   },
   "tags": [

@@ -1,12 +1,18 @@
 # Nx Governance Baseline (Progressive Hardening)
 
 ## Taxonomía de tags (obligatoria)
-Todos los `project.json` dentro de `apps/` y `libs/` deben declarar **exactamente** las 4 familias base:
+Todos los `project.json` dentro de `apps/` y `libs/` deben declarar las 4 familias base:
 
 - `scope:*`
 - `type:*`
 - `platform:*`
 - `criticality:*`
+
+Además, para proyectos `criticality:high` se requieren estas familias extendidas:
+
+- `compliance:*`
+- `tenant-mode:*`
+- `region:*`
 
 No se permiten familias legacy como `domain:*`.
 
@@ -22,10 +28,12 @@ Se endureció el guard de taxonomía para **todo el monorepo**:
 npm run validate:nx-tags
 ```
 
-El comando falla si:
-- falta una familia obligatoria;
-- existen tags mal formados;
-- se detectan familias no soportadas.
+El comando valida:
+- familias obligatorias base;
+- reglas condicionales por criticidad (`criticality:high` exige `compliance:*`, `tenant-mode:*`, `region:*`);
+- formato `familia:valor` en minúsculas + kebab-case;
+- catálogo de valores permitidos para `type`, `platform`, `criticality`, `compliance`, `tenant-mode`, `region`;
+- migración gradual con `TAG_POLICY_MODE=warn|error` (por defecto `warn`, estricto en `error`).
 
 ### 3) CI gates
 El pipeline ejecuta `npm run validate:nx-tags` antes de `nx affected --target=lint`.

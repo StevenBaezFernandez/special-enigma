@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { InvoiceConsumer } from './invoice.consumer';
 
@@ -5,9 +6,9 @@ describe('InvoiceConsumer', () => {
   let consumer: InvoiceConsumer;
 
   const mockFiscalProvider = {
-    validateInvoice: jest.fn().mockResolvedValue(true),
-    signInvoice: jest.fn().mockResolvedValue('mock-signature'),
-    transmitInvoice: jest.fn().mockResolvedValue(undefined),
+    validateInvoice: vi.fn().mockResolvedValue(true),
+    signInvoice: vi.fn().mockResolvedValue('mock-signature'),
+    transmitInvoice: vi.fn().mockResolvedValue(undefined),
   };
 
   beforeEach(async () => {

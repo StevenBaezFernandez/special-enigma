@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
-import { KioskComponent } from '@virteex/manufacturing-ui-shopfloor';
 
 @Component({
-  imports: [NxWelcome, RouterModule, KioskComponent],
-  selector: 'app-root',
+  imports: [RouterModule],
+  selector: 'virteex-shopfloor-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'virteex-shopfloor';
+  protected readonly appName = 'Shopfloor';
 }
