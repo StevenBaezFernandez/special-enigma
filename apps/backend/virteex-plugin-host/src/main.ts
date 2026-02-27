@@ -1,55 +1,79 @@
-import Fastify from 'fastify';
+import Fastify, { FastifyRequest } from 'fastify';
 import * as fs from 'fs';
 import * as path from 'path';
 import { SandboxService } from './sandbox.service';
 import { PluginAdmissionService } from './services/plugin-admission.service';
 
+const nodeEnv = process.env.NODE_ENV ?? 'development';
+const authToken = process.env.PLUGIN_HOST_API_TOKEN;
+const registryPath = process.env.PLUGIN_REGISTRY_FILE ?? path.join(__dirname, 'plugins.json');
+
+if (nodeEnv === 'production' && !authToken) {
+  throw new Error('PLUGIN_HOST_API_TOKEN is required in production.');
+}
+
+if (nodeEnv === 'production' && registryPath.endsWith('plugins.json')) {
+  throw new Error('Default plugins.json registry storage is blocked in production. Configure PLUGIN_REGISTRY_FILE to durable storage.');
+}
+
 const server = Fastify({ logger: true });
 const sandbox = new SandboxService();
 const admissionService = new PluginAdmissionService();
 
-const PLUGINS_FILE = path.join(__dirname, 'plugins.json');
 let plugins = new Map<string, any>();
 
-// Load plugins on startup
-if (fs.existsSync(PLUGINS_FILE)) {
+if (fs.existsSync(registryPath)) {
   try {
-    const data = JSON.parse(fs.readFileSync(PLUGINS_FILE, 'utf-8'));
+    const data = JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
     plugins = new Map(Object.entries(data));
-    console.log(`Loaded ${plugins.size} plugins from storage.`);
   } catch (e) {
-    console.error('Failed to load plugins from storage', e);
+    server.log.error(e, 'Failed to load plugins from storage');
   }
 }
 
 function savePlugins() {
   try {
-    fs.writeFileSync(PLUGINS_FILE, JSON.stringify(Object.fromEntries(plugins), null, 2));
+    fs.mkdirSync(path.dirname(registryPath), { recursive: true });
+    fs.writeFileSync(registryPath, JSON.stringify(Object.fromEntries(plugins), null, 2));
   } catch (e) {
-    console.error('Failed to save plugins', e);
+    server.log.error(e, 'Failed to save plugins');
+    throw e;
   }
 }
 
-// Plugin Registry Endpoints
+function authorize(request: FastifyRequest) {
+  if (!authToken) {
+    return;
+  }
+
+  const incomingToken = request.headers['x-plugin-host-token'];
+  if (incomingToken !== authToken) {
+    const error = new Error('Unauthorized plugin host request. Missing or invalid x-plugin-host-token.');
+    (error as any).statusCode = 401;
+    throw error;
+  }
+}
+
 server.get('/plugins', async () => {
-  return Array.from(plugins.values()).map(p => ({
-    name: p.name,
-    version: p.version,
-    description: p.description,
-    author: p.author
+  return Array.from(plugins.values()).map((plugin) => ({
+    name: plugin.name,
+    version: plugin.version,
+    description: plugin.description,
+    author: plugin.author
   }));
 });
 
 server.post('/plugins', async (request, reply) => {
+  try {
+    authorize(request);
+  } catch (error: any) {
+    return reply.status(error.statusCode || 401).send({ error: error.message });
+  }
+
   const body = request.body as { name: string; version: string; code: string; description?: string; author?: string };
 
   if (!body.name || !body.code || !body.version) {
     return reply.status(400).send({ error: 'Name, version, and code are required' });
-  }
-
-  if (plugins.has(body.name)) {
-     // Version check logic could go here
-     // For now, overwrite (update)
   }
 
   plugins.set(body.name, body);
@@ -67,34 +91,35 @@ server.get('/plugins/:name', async (request, reply) => {
   return plugin;
 });
 
-// Execute Plugin (Direct or by Name)
 server.post('/execute', async (request, reply) => {
+  try {
+    authorize(request);
+  } catch (error: any) {
+    return reply.status(error.statusCode || 401).send({ error: error.message });
+  }
+
   const body = request.body as { code?: string; pluginName?: string; name?: string; dependencies?: Record<string, string> };
   let codeToRun = body.code;
   let pluginName = body.name || 'anonymous-plugin';
 
-  // If code is not provided, try to load by pluginName
   if (!codeToRun && body.pluginName) {
-      const plugin = plugins.get(body.pluginName);
-      if (!plugin) {
-          return reply.status(404).send({ error: `Plugin ${body.pluginName} not found` });
-      }
-      codeToRun = plugin.code;
-      pluginName = plugin.name;
+    const plugin = plugins.get(body.pluginName);
+    if (!plugin) {
+      return reply.status(404).send({ error: `Plugin ${body.pluginName} not found` });
+    }
+    codeToRun = plugin.code;
+    pluginName = plugin.name;
   }
 
   if (!codeToRun) {
     return reply.status(400).send({ error: 'Code or valid pluginName is required' });
   }
 
-  // 1. Admission Control
-  const pluginPackage = {
+  const admission = await admissionService.validatePlugin({
     name: pluginName,
     code: codeToRun,
     dependencies: body.dependencies
-  };
-
-  const admission = await admissionService.validatePlugin(pluginPackage);
+  });
 
   if (admission.status === 'rejected') {
     return reply.status(403).send({
@@ -105,7 +130,6 @@ server.post('/execute', async (request, reply) => {
     });
   }
 
-  // 2. Execution in Sandbox
   const result = await sandbox.run(codeToRun, admission.signature);
 
   if (!result.success) {
@@ -124,16 +148,14 @@ server.post('/execute', async (request, reply) => {
   });
 });
 
-// Health Check
 server.get('/health', async () => {
-  return { status: 'ok', version: '1.0.0' };
+  return { status: 'ok', version: '1.1.0', registryPath };
 });
 
 const start = async () => {
   try {
-    const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+    const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
     await server.listen({ port, host: '0.0.0.0' });
-    console.log(`Plugin Host Service listening on port ${port}`);
   } catch (err) {
     server.log.error(err);
     process.exit(1);

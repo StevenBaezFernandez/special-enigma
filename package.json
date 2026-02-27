@@ -18,7 +18,8 @@
     "sbom:generate": "cyclonedx-npm --output-file sbom.json",
     "sign:artifact": "cosign sign --key cosign.key",
     "dep-graph:check": "depcruise --validate .dependency-cruiser.js libs apps",
-    "prepare": "husky"
+    "prepare": "husky",
+    "readiness:check": "./tools/enforce-production-readiness.sh"
   },
   "private": true,
   "devDependencies": {

@@ -1,92 +1,85 @@
 name: CI/CD Pipeline
+
 on:
+  push:
+    branches: [main, 'release/*']
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
   workflow_dispatch:
-  # CI/CD Triggers temporarily disabled due to GitHub Billing Account Lock. Uncomment to restore production pipeline.
-  # push:
-  #   branches: [main, release/*]
-  #   paths-ignore:
-  #     - '**.md'
-  #     - '**.txt'
-  # pull_request:
-  #   branches: [main]
-  #   paths-ignore:
-  #     - '**.md'
-  #     - '**.txt'
 
 jobs:
-  validate:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-      - name: Lint
-        run: npm run lint
-      - name: Unit tests
-        run: npm run test
-      - name: Build affected
-        run: npx nx affected --target=build --parallel=3
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npx nx affected --target=lint --base=origin/main --head=HEAD
 
-  governance:
+  typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-      # - name: Validate Policies (OPA)
-      #   run: ./tools/validate-policies.sh
-      # - name: Dependency Check
-      #   run: npm run dep-graph:check
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npx tsc -p tsconfig.base.json --noEmit
 
-  performance:
+  unit:
     runs-on: ubuntu-latest
-    needs: validate
     steps:
-      - uses: actions/checkout@v3
-      - name: Run k6 Load Test
-        uses: grafana/k6-action@v0.3.0
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          filename: tools/k6/suite/rls-load-test.js
-          flags: --vus 10 --duration 10s
-        continue-on-error: true # Allow pass if API not reachable in CI demo
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npx nx affected --target=test --base=origin/main --head=HEAD --exclude='*-e2e'
 
-  security-scan:
+  integration:
     runs-on: ubuntu-latest
-    needs: validate
+    needs: [lint, typecheck, unit]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npx nx affected --target=build --base=origin/main --head=HEAD
 
-      - name: SBOM generation
-        run: npm run sbom:generate
+  readiness-gates:
+    runs-on: ubuntu-latest
+    needs: [integration]
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./tools/enforce-production-readiness.sh
 
-      - name: Container scanning
-        uses: aquasecurity/trivy-action@master
+  security:
+    runs-on: ubuntu-latest
+    needs: [integration]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          scan-type: 'fs'
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npm run sbom:generate
+      - uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: fs
           ignore-unfixed: true
-          format: 'table'
-          exit-code: '0'
-
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.3.0
-
-      - name: Sign SBOM
-        env:
-          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        run: |
-          if [ -n "$COSIGN_PRIVATE_KEY" ]; then
-            echo "$COSIGN_PRIVATE_KEY" > cosign.key
-            cosign sign-blob --key cosign.key --yes sbom.json > sbom.json.sig
-            echo "SBOM Signed successfully."
-          else
-            echo "Skipping signing: COSIGN_PRIVATE_KEY not set."
-          fi
+          format: table
+          exit-code: '1'

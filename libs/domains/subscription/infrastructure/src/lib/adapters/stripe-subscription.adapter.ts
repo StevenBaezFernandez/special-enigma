@@ -6,6 +6,7 @@ import {
   SubscriptionProviderResult,
   PaymentSessionProvider
 } from '@virteex/domain-subscription-domain';
+import { resolveStripeSecretKey } from '@virteex/domain-subscription-domain';
 import Stripe from 'stripe';
 import { StripeMapper } from './stripe.mapper';
 
@@ -15,7 +16,10 @@ export class StripeSubscriptionAdapter implements CustomerRegistryGateway, Subsc
   private stripe: Stripe;
 
   constructor(private readonly configService: ConfigService) {
-    const secretKey = this.configService.get<string>('STRIPE_SECRET_KEY') || 'sk_test_placeholder';
+    const secretKey = resolveStripeSecretKey(
+      this.configService.get<string>('NODE_ENV'),
+      this.configService.get<string>('STRIPE_SECRET_KEY')
+    );
     this.stripe = new Stripe(secretKey, {
       apiVersion: '2025-01-27.acacia',
     } as any);

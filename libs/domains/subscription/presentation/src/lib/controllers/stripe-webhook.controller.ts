@@ -2,6 +2,7 @@ import { Controller, Post, Headers, Req, BadRequestException, Logger } from '@ne
 import { ConfigService } from '@nestjs/config';
 import { ProcessStripeWebhookUseCase } from '@virteex/application-subscription-application';
 import Stripe from 'stripe';
+import { resolveStripeSecretKey } from '@virteex/domain-subscription-domain';
 
 @Controller('stripe/webhook')
 export class StripeWebhookController {
@@ -13,7 +14,10 @@ export class StripeWebhookController {
     private readonly configService: ConfigService,
     private readonly processStripeWebhookUseCase: ProcessStripeWebhookUseCase
   ) {
-    const secretKey = this.configService.get<string>('STRIPE_SECRET_KEY') || 'sk_test_placeholder';
+    const secretKey = resolveStripeSecretKey(
+      this.configService.get<string>('NODE_ENV'),
+      this.configService.get<string>('STRIPE_SECRET_KEY')
+    );
     this.endpointSecret = this.configService.get<string>('STRIPE_WEBHOOK_SECRET') || '';
     this.stripe = new Stripe(secretKey, {
       apiVersion: '2025-01-27.acacia',
