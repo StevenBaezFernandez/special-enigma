@@ -9,11 +9,21 @@ export interface AdmissionResult {
   signature?: string;
 }
 
+type DastResult = {
+  verdict: 'clean' | 'quarantine' | 'malicious';
+  riskScore: number;
+  scanId?: string;
+  details?: string;
+};
+
 export class PluginAdmissionService {
   private readonly nodeEnv = process.env.NODE_ENV ?? 'development';
   private readonly sonarUrl = process.env.SONAR_HOST_URL || 'http://localhost:9000';
   private readonly sonarToken = process.env.SONAR_TOKEN || '';
-  private readonly requireDast = (process.env.PLUGIN_DAST_MODE ?? (this.nodeEnv === 'production' ? 'required' : 'best-effort')) === 'required';
+  private readonly dastUrl = process.env.PLUGIN_DAST_URL || '';
+  private readonly dastToken = process.env.PLUGIN_DAST_TOKEN || '';
+  private readonly requireDast =
+    (process.env.PLUGIN_DAST_MODE ?? (this.nodeEnv === 'production' ? 'required' : 'best-effort')) === 'required';
 
   private readonly signKey: string;
   private readonly verifyKey: string;
@@ -69,8 +79,12 @@ export class PluginAdmissionService {
       }
 
       const dastResult = await this.performDastScan(pluginPackage);
-      if (!dastResult.valid) {
-        return { status: 'rejected', riskScore: 95, reason: 'DAST Violation', details: dastResult.details };
+      if (dastResult.verdict === 'malicious') {
+        return { status: 'rejected', riskScore: dastResult.riskScore, reason: 'DAST Violation', details: dastResult };
+      }
+
+      if (dastResult.verdict === 'quarantine') {
+        return { status: 'pending', riskScore: dastResult.riskScore, reason: 'DAST Quarantine', details: dastResult };
       }
 
       const signature = this.signPackage(pluginPackage.code);
@@ -139,23 +153,54 @@ export class PluginAdmissionService {
     return { valid: true };
   }
 
-  private async performDastScan(pluginPackage: { code: string; name: string }): Promise<{ valid: boolean; details?: string }> {
+  private async performDastScan(pluginPackage: { code: string; name: string }): Promise<DastResult> {
     if (!this.requireDast) {
-      return { valid: true, details: 'DAST disabled for this environment.' };
+      return { verdict: 'clean', riskScore: 0, details: 'DAST disabled for this environment.' };
     }
 
-    if (pluginPackage.code.includes('malicious_dast_trigger')) {
-      return { valid: false, details: 'Runtime anomaly detected: unauthorized behavior.' };
-    }
-
-    if (this.nodeEnv === 'production') {
+    if (!this.dastUrl || !this.dastToken) {
       return {
-        valid: false,
-        details: 'PLUGIN_DAST_MODE=required requires real DAST integration before approving plugins in production.'
+        verdict: 'malicious',
+        riskScore: 100,
+        details: 'DAST integration is required: configure PLUGIN_DAST_URL and PLUGIN_DAST_TOKEN.'
       };
     }
 
-    return { valid: true };
+    try {
+      const response = await axios.post(
+        `${this.dastUrl.replace(/\/$/, '')}/scan`,
+        {
+          pluginName: pluginPackage.name,
+          codeHash: crypto.createHash('sha256').update(pluginPackage.code).digest('hex'),
+          source: pluginPackage.code
+        },
+        {
+          headers: { Authorization: `Bearer ${this.dastToken}` },
+          timeout: 10_000
+        }
+      );
+
+      const verdict = response.data?.verdict as DastResult['verdict'] | undefined;
+      const riskScore = Number(response.data?.riskScore ?? 100);
+      const scanId = response.data?.scanId as string | undefined;
+      const details = response.data?.details as string | undefined;
+
+      if (verdict === 'clean') {
+        return { verdict, riskScore: Math.max(0, riskScore), scanId, details };
+      }
+
+      if (verdict === 'quarantine') {
+        return { verdict, riskScore: Math.max(1, riskScore), scanId, details };
+      }
+
+      return { verdict: 'malicious', riskScore: Math.max(70, riskScore), scanId, details: details ?? 'DAST rejected plugin.' };
+    } catch (error) {
+      return {
+        verdict: 'malicious',
+        riskScore: 100,
+        details: `DAST request failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      };
+    }
   }
 
   private signPackage(code: string): string {
