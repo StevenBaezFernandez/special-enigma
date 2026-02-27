@@ -18,6 +18,11 @@ export class MikroOrmCompanyRepository implements CompanyRepository {
     return this.em.findOne(Company, { taxId });
   }
 
+  async existsByTaxId(taxId: string): Promise<boolean> {
+    const count = await this.em.count(Company, { taxId });
+    return count > 0;
+  }
+
   async findAll(options: any = {}): Promise<Company[]> {
     return this.em.find(Company, options);
   }

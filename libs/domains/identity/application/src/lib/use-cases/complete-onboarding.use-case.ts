@@ -53,9 +53,9 @@ export class CompleteOnboardingUseCase {
     this.validateTaxId(dto.country, dto.taxId);
 
     // Validate Duplicate Tax ID
-    const existingCompany = await this.companyRepository.findByTaxId(dto.taxId);
-    if (existingCompany) {
-        throw new ConflictException('Company with this Tax ID already exists.');
+    // CRITICAL FIX: Ensure no duplicate Tax ID exists before creating tenant
+    if (await this.companyRepository.existsByTaxId(dto.taxId)) {
+        throw new ConflictException(`Company with Tax ID ${dto.taxId} already exists.`);
     }
 
     const result = await this.em.transactional(async (em) => {
