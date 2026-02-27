@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CatalogResolver } from './catalog.resolver';
 import { GetSatCatalogsUseCase, GetProductsUseCase } from '@virteex/application-catalog-application';
@@ -13,21 +14,21 @@ describe('CatalogResolver', () => {
         {
           provide: GetSatCatalogsUseCase,
           useValue: {
-            getPaymentMethods: jest.fn().mockResolvedValue([]),
-            getPaymentForms: jest.fn().mockResolvedValue([]),
-            getCfdiUsages: jest.fn().mockResolvedValue([]),
+            getPaymentMethods: vi.fn().mockResolvedValue([]),
+            getPaymentForms: vi.fn().mockResolvedValue([]),
+            getCfdiUsages: vi.fn().mockResolvedValue([]),
           },
         },
         {
           provide: GetProductsUseCase,
           useValue: {
-            execute: jest.fn().mockResolvedValue([]),
+            execute: vi.fn().mockResolvedValue([]),
           },
         },
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn(),
+            get: vi.fn(),
           },
         },
       ],
