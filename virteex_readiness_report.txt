@@ -1,120 +1,61 @@
-# Informe de Disponibilidad Operativa - Virteex ERP (Versión 13 / 100% Funcional)
+# Informe de Disponibilidad Operativa y Comercial - Virteex ERP
 
-Este informe detalla exhaustivamente los vacíos funcionales, mocks, y puntos críticos de mejora identificados en el código fuente actual de Virteex ERP para alcanzar un estado 100% funcional y comercial (Ready for Production). El análisis cubre desde la capa de identidad hasta los módulos fiscales y de facturación.
+## 1. Introducción
+Virteex es un ecosistema ERP SaaS de clase empresarial diseñado para Latinoamérica y EE.UU., con arquitectura multi-tenant, multi-región y localización fiscal. Este informe evalúa su estado actual frente a los requisitos para ser un producto 100% funcional y comercializable.
 
----
+## 2. Resumen Ejecutivo
+*   **Estado General:** El producto se encuentra en una fase avanzada de desarrollo técnico (Alpha/Beta técnico), pero inmaduro comercialmente.
+*   **Estimación de Avance:**
+    *   **Funcional:** ~75% (Core sólido, pero con integraciones críticas simuladas o frágiles).
+    *   **Comercial:** ~40% (Faltan procesos de onboarding robustos, facturación recurrente automatizada, soporte y documentación).
+*   **Hallazgo Crítico:** La dependencia de "mocks" y configuraciones manuales (variables de entorno) en flujos críticos como la facturación electrónica y el registro de usuarios impide un lanzamiento comercial inmediato.
 
-## 1. Identidad y Onboarding (Critical Path)
+## 3. Análisis Detallado por Áreas
 
-### 1.1. Servicio de Notificaciones (Mocks vs. Realidad)
-- **Estado Actual:** El `NodemailerNotificationService` en `libs/domains/identity/infrastructure` está implementado correctamente para usar `MailQueueProducer` y `MailProcessor`. Sin embargo, la configuración de `SMTP` y `REDIS` depende totalmente de variables de entorno que a menudo faltan en los entornos de desarrollo, lo que lleva a fallos silenciosos o logs de error sin reintentos robustos.
-- **Acción Requerida:**
-    - **Eliminar Dependencia Implícita:** Validar estrictamente la presencia de `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` al iniciar el servicio. Fallar el arranque si faltan credenciales críticas en producción.
-    - **Implementar Dead Letter Queue (DLQ):** Configurar `bullmq` para mover trabajos fallidos a una cola de `failed-emails` después de 3 intentos fallidos (backoff exponencial). Actualmente, solo se loguea el error.
-    - **Soporte Multi-Proveedor:** Abstraer `nodemailer` para permitir el uso de APIs transaccionales como SendGrid o AWS SES directamente para mayor entregabilidad, no solo SMTP.
+### 3.1. Arquitectura y Backend
+*   **Fortalezas:** Arquitectura limpia (Hexagonal/DDD), stack moderno (NestJS, MikroORM, GraphQL), y separación clara de dominios.
+*   **Debilidades:**
+    *   **Manejo de Errores y Logging:** Falta una estrategia de observabilidad unificada (logs estructurados JSON, trazas distribuidas). Los errores a menudo se pierden o no son accionables.
+    *   **Resiliencia:** Ausencia de mecanismos de "Circuit Breaker" o reintentos robustos en integraciones externas (e.g., correos, PACs), lo que puede causar fallos en cascada.
+    *   **Secretos:** Manejo inseguro de llaves privadas y secretos (variables de entorno o base de datos sin cifrar en reposo).
 
-### 1.2. Flujo de Registro y Verificación (Onboarding)
-- **Estado Actual:** `InitiateSignupUseCase` genera un OTP y lo guarda en caché (Redis). `VerifySignupUseCase` valida el OTP. `CompleteOnboardingUseCase` crea el usuario y la empresa.
-- **Problema Crítico (Hardcoded/Mock):**
-    - En `CompleteOnboardingUseCase`, se imprime `console.log('[MOCK EMAIL] Welcome ${user.email}')`. Esto debe ser reemplazado por una llamada real al `NotificationService.sendWelcomeEmail`.
-    - La creación del `Tenant` en infraestructura (`TenantMode.SHARED`) es correcta, pero no se valida si el `taxId` ya existe en otro tenant *antes* de intentar la inserción, lo que podría causar errores de restricción única en la base de datos (500 Internal Server Error) en lugar de un mensaje amigable (409 Conflict).
-- **Acción Requerida:**
-    - Reemplazar el `console.log` con `await this.notificationService.sendWelcomeEmail(user);`.
-    - Agregar validación de duplicados para `taxId` en `CompanyRepository` antes de persistir.
+### 3.2. Frontend y Experiencia de Usuario
+*   **Estado:** Las aplicaciones `virteex-ops` y otros frontends parecen estar en etapas iniciales o incompletas en el repositorio analizado (rutas no encontradas o componentes vacíos).
+*   **Impacto Comercial:** Sin un panel de operaciones (`ops`) funcional, el equipo de soporte no puede gestionar tenants, ver errores ni asistir a clientes, bloqueando la operación comercial.
 
-### 1.3. Seguridad y Sesiones
-- **Estado Actual:** `AuthService` en el frontend (`libs/domains/identity/ui`) maneja tokens JWT.
-- **Mejora Necesaria:**
-    - **Refresh Token Rotation:** El backend genera `refreshToken`, pero el frontend no parece tener un interceptor robusto para renovar el token automáticamente (silent refresh) antes de que expire el `accessToken`. Esto causará desconexiones abruptas al usuario.
-    - **MFA Enforcement:** Aunque el backend soporta MFA (`user.mfaEnabled`), el frontend (`LoginComponent`) solo maneja el caso feliz. Falta un flujo forzado de configuración de MFA (QR Code scan) en el primer login para usuarios con roles privilegiados (Admin).
+### 3.3. Localización Fiscal (Punto Crítico)
+*   **México (SAT):** `SatFiscalAdapter` y `MxFiscalDocumentBuilder` tienen lógica implementada, pero la validación y manejo de errores es básica. Dependencia de archivos locales (certificados) dificulta la escalabilidad en contenedores/serverless.
+*   **Colombia (DIAN):** `DianFiscalAdapter` existe pero es frágil. La firma XML y la transmisión SOAP requieren pruebas exhaustivas y manejo de errores SOAP robusto.
+*   **General:** Uso extensivo de `MockFiscalProvider` y `NullPacProvider`. Estos deben ser eliminados o estrictamente aislados para producción. La falta de validación XSD estricta antes de enviar a la autoridad aumenta el riesgo de rechazos.
 
----
+### 3.4. Identidad y Onboarding
+*   **Registro:** El flujo de `CompleteOnboardingUseCase` es funcional pero carece de validaciones de negocio críticas (duplicidad de Tax ID) y manejo de errores amigable.
+*   **Notificaciones:** `NodemailerNotificationService` falla silenciosamente si falta configuración. No hay fallback ni colas de reintento para correos transaccionales (bienvenida, OTP), lo cual es fatal para el onboarding.
+*   **Seguridad:** Falta rotación de refresh tokens y MFA forzado para roles sensibles, requisitos estándar en software empresarial.
 
+### 3.5. Preparación Comercial (Readiness)
+*   **Gestión de Tenants:** El módulo `virteex-ops` para administración interna está incompleto. No hay forma de crear o suspender tenants sin acceso directo a BD/API.
+*   **Facturación del Servicio:** No se evidencia una integración robusta para el cobro de la suscripción del propio ERP (Stripe, pasarelas locales) conectada al ciclo de vida del tenant.
 
-## 2. Motor Fiscal y Facturación (Revenue Core)
+## 4. Conclusiones y Recomendaciones Prioritarias
 
-Este es el módulo más crítico. Actualmente contiene múltiples stubs y adaptadores "Null" o "Mock" que simulan éxito en lugar de realizar transacciones reales.
+Para alcanzar el 100% de madurez comercial, se deben ejecutar las siguientes acciones (en orden de prioridad):
 
-### 2.1. Proveedores de Certificación (PAC / DIAN)
-- **FinkokPacProvider (MX):**
-    - **Estado:** Implementado con lógica real de consumo SOAP (`axios` + `fast-xml-parser`).
-    - **Problema:** El manejo de errores es básico. Si Finkok retorna un error 500 o timeout, el sistema simplemente reintenta 3 veces y falla. No hay un mecanismo de "Circuit Breaker" para evitar saturar el servicio externo.
-    - **Mejora:** Implementar `opossum` o similar para circuit breaking. Persistir el XML firmado y el UUID *antes* de confirmar la transacción al usuario para evitar pérdida de datos en caso de fallo de red post-timbrado.
-- **NullPacProvider (Fallback):**
-    - **Estado:** Usado por defecto si no se configura el país o credenciales.
-    - **Riesgo:** En producción, esto podría causar que facturas "timbradas" sean inválidas legalmente.
-    - **Acción:** Deshabilitar `NullPacProvider` en entornos `production`. Forzar configuración de PAC válida al arrancar el servicio.
-- **DianFiscalAdapter (CO):**
-    - **Estado:** El código base (`libs/domains/fiscal/infrastructure/src/lib/adapters/dian-fiscal-provider.adapter.ts`) muestra un esqueleto vacío o básico. Falta la implementación completa del firmado XAdES-EPES con la llave privada del contribuyente y el envío SOAP al WS de la DIAN.
-    - **Acción:** Desarrollar la lógica de firmado XML-DSig (Enveloped) y consumo del WSDL de la DIAN (Habilitación / Operación).
+1.  **Estabilización del Núcleo Fiscal:**
+    *   Implementar validación XSD estricta local para MX y CO.
+    *   Robustecer los adaptadores fiscales (SAT/DIAN) con manejo de errores, reintentos y almacenamiento seguro de certificados (Vault/KMS).
+    *   Eliminar o aislar `MockFiscalProvider` de los builds de producción.
 
-### 2.2. Cálculo de Impuestos (Tax Engine)
-- **TaxRuleEngine:**
-    - **Estado:** Funcional básico. Recupera reglas de BD (`TaxRule`).
-    - **Problema:** La estrategia de impuestos de EE.UU. (`UsTaxStrategy`) usa una tasa fija (`DEFAULT_STATE_RATE = 0.0825`). Esto es incorrecto para un SaaS real en USA, donde las tasas varían por condado/ciudad (Zip Code).
-    - **Mejora:** Integrar una API de cálculo de impuestos en tiempo real (Avalara, TaxJar, Vertex) para direcciones de EE.UU., o implementar una tabla de tasas por Zip Code mantenida internamente.
-- **Race Conditions en Facturación:**
-    - **Estado:** `CreateInvoiceUseCase` guarda la factura en estado `PENDING`, llama al PAC, y luego actualiza a `STAMPED`.
-    - **Riesgo:** Si el servidor se reinicia o falla *durante* la llamada al PAC, la factura queda en `PENDING` (o el usuario reintenta y crea duplicados fiscales).
-    - **Solución:** Implementar **Idempotencia** estricta usando `Locking Optimista` (versión en BD) o un `Distributed Lock` (Redis) por `invoiceId` durante el proceso de timbrado. Usar un `Background Job` (BullMQ) para reintentar transacciones en estado "desconocido" (consultar status en PAC antes de re-timbrar).
+2.  **Operaciones y Soporte (Ops Dashboard):**
+    *   Completar la aplicación `virteex-ops` para permitir la gestión integral de tenants (alta, baja, configuración) y visualización de logs/errores por parte del equipo de soporte.
 
-### 2.3. Generación de Documentos (XML / PDF)
-- **Builders:** `MxFiscalDocumentBuilder` y `CoFiscalDocumentBuilder` existen pero parecen generar XMLs simplificados.
-- **Validación:** No hay validación contra esquemas XSD oficiales (SAT v4.0, DIAN UBL 2.1) antes del envío. Esto delega la validación al PAC, lo que es costoso y lento.
-- **Acción:** Integrar validación XSD local (`libxmljs` o similar) para rechazar payloads inválidos rápidamente y reducir costos de llamadas a API fallidas.
+3.  **Fiabilidad del Onboarding:**
+    *   Implementar colas de mensajes (Dead Letter Queues) para correos electrónicos.
+    *   Mejorar validaciones en el registro (Tax ID duplicado, formato).
 
----
+4.  **Seguridad y Observabilidad:**
+    *   Implementar logging estructurado centralizado.
+    *   Cifrar secretos en base de datos.
+    *   Habilitar rotación de tokens y políticas de MFA.
 
-
-## 3. Ops Dashboard & Gestión de Tenants (Soporte Interno)
-
-La aplicación `virteex-ops` es crucial para que el equipo de soporte resuelva problemas de clientes sin acceder a la base de datos directamente, pero está incompleta.
-
-### 3.1. Gestión de Tenants (Incompleto)
-- **TenantsComponent:**
-    - **Estado:** Muestra una tabla básica de tenants. El botón "New Tenant" tiene un `// TODO: Implement navigation`.
-    - **Impacto:** Soporte no puede crear cuentas manualmente para clientes Enterprise o corregir datos erróneos de onboarding.
-    - **Acción:** Implementar `CreateTenantComponent` (formulario reactivo completo) y conectarlo al endpoint `POST /admin/tenants` del `virteex-admin-service`.
-- **TenantService (Mock):**
-    - **Estado:** `TenantService` en Ops usa `Observable` de datos mockeados o una llamada HTTP simple sin manejo de errores robusto.
-    - **Mejora:** Implementar `Search` y `Filter` (por país, estado, plan) en el backend (`AdminService`) para que el frontend pueda paginar eficientemente miles de tenants.
-
-### 3.2. Autenticación de Operadores
-- **AuthService (Ops):**
-    - **Estado:** Tiene un mock hardcodeado: `const mockUser = { id: 1, email: credentials.email, role: 'admin', token: 'mock-jwt-token' };`.
-    - **Riesgo:** CUALQUIERA puede loguearse al panel de operaciones con cualquier credencial en este momento.
-    - **Acción URGENTE:**
-        - Conectar `AuthService` de Ops al `IdentityService` real (usando un cliente `ClientCredentials` o flujo `Resource Owner Password` restringido a IPs internas/VPN).
-        - Implementar Roles RBAC estrictos (`SUPER_ADMIN`, `SUPPORT_L1`, `SUPPORT_L2`) en el token JWT para limitar acciones destructivas (borrar tenant, ver facturas sensibles).
-
----
-
-
-## 4. Conclusiones Generales & Fiabilidad Transversal
-
-Para finalizar este análisis, se identifican las prioridades técnicas transversales para asegurar que Virteex ERP opere con fiabilidad en el mundo real.
-
-### 4.1. Manejo de Errores y Logging
-- **Observabilidad:** Aunque se usa `Logger` de NestJS, falta una implementación estructurada (JSON) para integrarse con ELK/Datadog. Los errores actuales son `console.error` planos.
-- **Acción:** Integrar `winston` o `pino` con formato JSON. Asegurar que cada log incluya `tenantId`, `userId`, `requestId` y `traceId` (OpenTelemetry) para trazabilidad en microservicios distribuidos.
-
-### 4.2. Estrategia de Reintentos (Resiliency)
-- **Estado Actual:** Dependencias críticas como `HttpCustomerRepository` (CRM), `PacProvider` (Fiscal), y `Smtp` (Notificaciones) carecen de lógica de reintento inteligente.
-- **Acción:**
-    - Usar interceptores de Axios con `axios-retry` para reintentos exponenciales en fallos de red (502/503/timeout).
-    - Implementar colas de mensajes persistentes (Kafka/RabbitMQ) para eventos asíncronos críticos (`invoice.created` -> `accounting.entry`, `inventory.update`), garantizando entrega "at-least-once".
-
-### 4.3. Seguridad y Secretos
-- **Secretos:** `MikroOrmTenantConfigRepository` recupera `csdKey` y `csdCertificate` (Llaves de Sellado Digital) directamente de la base de datos `Company.settings`.
-- **Riesgo:** Si la base de datos es comprometida, las llaves privadas de los clientes están expuestas.
-- **Acción:** Cifrar estos campos en reposo usando `AES-256-GCM` con una clave maestra en `Vault` o KMS. Desencriptar solo en memoria dentro del servicio de timbrado (`FiscalStampingService`).
-
-### Resumen Ejecutivo
-Virteex ERP tiene una arquitectura sólida (Clean Architecture + DDD) pero su implementación actual contiene **mocks críticos** en los flujos de ingreso (Onboarding) y egreso de valor (Facturación Fiscal). La transición a producción requiere aproximadamente **3-4 semanas de desarrollo enfocado** en:
-1.  Reemplazar mocks de Email y Auth en Ops.
-2.  Implementar integración real con PACs (Finkok/DIAN) con manejo de errores robusto.
-3.  Asegurar la consistencia de datos en escenarios de fallo (Idempotencia en Facturación).
-4.  Completar el panel de soporte Ops para gestión de clientes.
-
----
-**Fin del Informe.**
+Virteex tiene una base técnica sólida, pero requiere un esfuerzo enfocado en "endurecer" las integraciones y herramientas operativas para soportar clientes reales con garantías de nivel empresarial.
