@@ -5,7 +5,7 @@
   "projectType": "application",
   "tags": [
     "scope:gateway",
-    "type:application",
+    "type:app",
     "platform:api",
     "criticality:medium"
   ],

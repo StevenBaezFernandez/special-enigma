@@ -4,7 +4,6 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HttpModule } from '@nestjs/axios';
 import { ServerConfigModule } from '@virteex/shared-util-server-config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
@@ -17,12 +16,10 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CatalogProductReadGateway } from './repositories/catalog-product-read.gateway';
-import { PRODUCT_GATEWAY } from '@virteex/domain-inventory-domain';
-import { InventoryResolver } from './inventory.resolver';
 
 // Domain Modules
 import { InventoryApplicationModule } from '@virteex/application-inventory-application';
+import { InventoryInfrastructureModule } from '@virteex/infra-inventory-infrastructure';
 import { InventoryPresentationModule } from '@virteex/api-inventory-presentation';
 
 @Module({
@@ -37,7 +34,6 @@ import { InventoryPresentationModule } from '@virteex/api-inventory-presentation
     }),
     TerminusModule,
     EventEmitterModule.forRoot(),
-    HttpModule,
     ServerConfigModule,
     ThrottlerModule.forRoot([
       {
@@ -83,17 +79,14 @@ import { InventoryPresentationModule } from '@virteex/api-inventory-presentation
       groupId: 'inventory-consumer',
     }),
 
-    // Core Modules
     TenantModule,
-
-    // Domain Modules
     InventoryApplicationModule,
+    InventoryInfrastructureModule,
     InventoryPresentationModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    InventoryResolver,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
@@ -105,10 +98,6 @@ import { InventoryPresentationModule } from '@virteex/api-inventory-presentation
     {
       provide: APP_INTERCEPTOR,
       useClass: TenantRlsInterceptor,
-    },
-    {
-      provide: PRODUCT_GATEWAY,
-      useClass: CatalogProductReadGateway,
     },
   ],
 })

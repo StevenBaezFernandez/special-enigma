@@ -5,9 +5,11 @@ import { WarehousesController } from './controllers/warehouses.controller';
 import { MovementsController } from './controllers/movements.controller';
 import { StockController } from './controllers/stock.controller';
 import { ReservationsController } from './controllers/reservations.controller';
+import { InventoryResolver } from './graphql/inventory.resolver';
 
 @Module({
   imports: [InventoryApplicationModule, InventoryInfrastructureModule],
   controllers: [WarehousesController, MovementsController, StockController, ReservationsController],
+  providers: [InventoryResolver],
 })
 export class InventoryPresentationModule {}

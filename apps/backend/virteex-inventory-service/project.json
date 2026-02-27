@@ -5,7 +5,7 @@
   "projectType": "application",
   "tags": [
     "scope:inventory",
-    "type:application",
+    "type:app",
     "platform:backend",
     "criticality:high"
   ],
@@ -81,10 +81,6 @@
         }
       }
     },
-    "test": {
-      "options": {
-        "passWithNoTests": true
-      }
-    }
+    "test": {}
   }
 }

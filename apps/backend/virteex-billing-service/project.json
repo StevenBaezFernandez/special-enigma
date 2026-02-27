@@ -78,7 +78,7 @@
   },
   "tags": [
     "scope:billing",
-    "type:application",
+    "type:app",
     "platform:agnostic",
     "criticality:medium"
   ]

@@ -1,5 +1,4 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
 import {
     LoginUserUseCase,
     InitiateSignupUseCase,
@@ -32,9 +31,7 @@ export class IdentityResolver {
 
   @Mutation(() => InitiateSignupResponse)
   async initiateSignup(@Args('input') input: InitiateSignupInput): Promise<InitiateSignupResponse> {
-      // Note: UseCase currently only uses email/password for OTP generation.
-      // Other fields like companyName are collected but used later or stored in cache if modified UseCase.
-      await this.initiateSignupUseCase.execute({ email: input.email, password: input.password });
+      await this.initiateSignupUseCase.execute(input);
       return { success: true, message: 'Verification code sent' };
   }
 
@@ -49,7 +46,6 @@ export class IdentityResolver {
       @Args('input') input: CompleteOnboardingInput,
       @Context() context: any
   ): Promise<LoginResponse> {
-      // Extract IP and UA from context (assumes Express/Fastify request object structure)
       const req = context.req || context.request;
       const ip = req?.ip || req?.connection?.remoteAddress || '127.0.0.1';
       const userAgent = req?.headers?.['user-agent'] || 'unknown';

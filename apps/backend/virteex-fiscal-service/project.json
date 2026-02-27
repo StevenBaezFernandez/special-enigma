@@ -5,7 +5,7 @@
   "projectType": "application",
   "tags": [
     "scope:fiscal",
-    "type:application",
+    "type:app",
     "platform:fiscal",
     "criticality:medium"
   ],
@@ -81,10 +81,6 @@
         }
       }
     },
-    "test": {
-      "options": {
-        "passWithNoTests": true
-      }
-    }
+    "test": {}
   }
 }

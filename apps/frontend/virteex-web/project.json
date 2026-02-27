@@ -6,7 +6,7 @@
   "sourceRoot": "apps/frontend/virteex-web/src",
   "tags": [
     "scope:shared",
-    "type:application",
+    "type:app",
     "platform:web",
     "criticality:high"
   ],
