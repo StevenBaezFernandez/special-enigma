@@ -15,7 +15,7 @@ export class CreateFixedAssetUseCase {
   ) {}
 
   async execute(dto: CreateFixedAssetDto): Promise<FixedAsset> {
-    const asset = new FixedAsset(dto.tenantId, dto.name, dto.acquisitionCost, dto.depreciationRate);
+    const asset = new FixedAsset({ tenantId: dto.tenantId, name: dto.name, acquisitionCost: dto.acquisitionCost, depreciationRate: dto.depreciationRate });
     await this.repository.save(asset);
     return asset;
   }

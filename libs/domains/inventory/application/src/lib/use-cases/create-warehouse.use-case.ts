@@ -3,7 +3,8 @@ import { IsString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 import {
   WAREHOUSE_REPOSITORY,
   WarehouseRepository,
-  Warehouse
+  Warehouse,
+  DomainValidationError,
 } from '@virteex/domain-inventory-domain';
 
 export class CreateWarehouseDto {
@@ -33,12 +34,12 @@ export class CreateWarehouseUseCase {
   async execute(dto: CreateWarehouseDto): Promise<Warehouse> {
     const existing = await this.warehouseRepo.findByCode(dto.code, dto.tenantId);
     if (existing) {
-      throw new Error('Warehouse code already exists');
+      throw new DomainValidationError('Warehouse code already exists');
     }
 
     const warehouse = new Warehouse(dto.tenantId, dto.code, dto.name);
     if (dto.description) {
-      warehouse.description = dto.description;
+      warehouse.changeDescription(dto.description);
     }
 
     await this.warehouseRepo.save(warehouse);

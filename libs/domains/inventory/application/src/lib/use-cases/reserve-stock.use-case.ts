@@ -1,5 +1,5 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { INVENTORY_REPOSITORY, InventoryRepository } from '@virteex/domain-inventory-domain';
+import { Injectable, Inject } from '@nestjs/common';
+import { INVENTORY_REPOSITORY, InventoryRepository, StockNotFoundError } from '@virteex/domain-inventory-domain';
 
 @Injectable()
 export class ReserveStockUseCase {
@@ -11,10 +11,9 @@ export class ReserveStockUseCase {
     const stock = await this.repository.findStockWithBatches(warehouseId, productSku);
 
     if (!stock) {
-      throw new NotFoundException(`Stock not found for product ${productSku} in warehouse ${warehouseId}`);
+      throw new StockNotFoundError(productSku, warehouseId);
     }
 
-    // Deduct using FIFO logic
     stock.deductFromBatches(quantity.toString());
 
     await this.repository.saveStock(stock);

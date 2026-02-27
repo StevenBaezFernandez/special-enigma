@@ -1,6 +1,1 @@
-export class WarehouseNotFoundException extends Error {
-  constructor(warehouseId: string) {
-    super(`Warehouse with ID ${warehouseId} not found`);
-    this.name = 'WarehouseNotFoundException';
-  }
-}
+export { WarehouseNotFoundError as WarehouseNotFoundException } from '../errors/warehouse-not-found.error';

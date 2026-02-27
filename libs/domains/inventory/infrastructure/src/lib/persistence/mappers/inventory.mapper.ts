@@ -7,11 +7,14 @@ import { InventoryMovementOrmEntity } from '../entities/inventory-movement.orm-e
 export class InventoryMapper {
   static toWarehouseDomain(orm: WarehouseOrmEntity): Warehouse {
     const domain = new Warehouse(orm.tenantId, orm.code, orm.name, orm.id);
-    domain.address = orm.address;
-    domain.description = orm.description;
-    domain.isActive = orm.isActive;
-    domain.createdAt = orm.createdAt;
-    domain.updatedAt = orm.updatedAt;
+    domain.changeAddress(orm.address);
+    domain.changeDescription(orm.description);
+    if (orm.isActive) {
+      domain.activate();
+    } else {
+      domain.deactivate();
+    }
+    domain.hydrateTimestamps(orm.createdAt, orm.updatedAt);
     return domain;
   }
 

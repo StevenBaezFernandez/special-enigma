@@ -1,26 +1,13 @@
 import { Module } from '@nestjs/common';
-import {
-  InventoryApplicationModule,
-  CreateWarehouseUseCase,
-  RegisterMovementUseCase,
-  GetWarehousesUseCase,
-  UpdateWarehouseUseCase,
-  DeleteWarehouseUseCase,
-  ReserveStockUseCase
-} from '@virteex/application-inventory-application';
+import { InventoryApplicationModule } from '@virteex/application-inventory-application';
 import { InventoryInfrastructureModule } from '@virteex/infra-inventory-infrastructure';
-import { InventoryController } from './controllers/inventory.controller';
+import { WarehousesController } from './controllers/warehouses.controller';
+import { MovementsController } from './controllers/movements.controller';
+import { StockController } from './controllers/stock.controller';
+import { ReservationsController } from './controllers/reservations.controller';
 
 @Module({
   imports: [InventoryApplicationModule, InventoryInfrastructureModule],
-  controllers: [InventoryController],
-  providers: [
-    CreateWarehouseUseCase,
-    RegisterMovementUseCase,
-    GetWarehousesUseCase,
-    UpdateWarehouseUseCase,
-    DeleteWarehouseUseCase,
-    ReserveStockUseCase
-  ]
+  controllers: [WarehousesController, MovementsController, StockController, ReservationsController],
 })
 export class InventoryPresentationModule {}

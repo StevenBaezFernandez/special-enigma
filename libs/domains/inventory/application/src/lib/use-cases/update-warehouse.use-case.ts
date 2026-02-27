@@ -1,5 +1,5 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { WarehouseRepository, WAREHOUSE_REPOSITORY, Warehouse } from '@virteex/domain-inventory-domain';
+import { Injectable, Inject } from '@nestjs/common';
+import { WarehouseRepository, WAREHOUSE_REPOSITORY, Warehouse, WarehouseNotFoundError } from '@virteex/domain-inventory-domain';
 
 export interface UpdateWarehouseDto {
   id: string;
@@ -20,14 +20,20 @@ export class UpdateWarehouseUseCase {
   async execute(dto: UpdateWarehouseDto): Promise<Warehouse> {
     const warehouse = await this.warehouseRepository.findById(dto.id);
     if (!warehouse) {
-      throw new NotFoundException(`Warehouse with ID ${dto.id} not found`);
+      throw new WarehouseNotFoundError(dto.id);
     }
 
-    if (dto.name) warehouse.name = dto.name;
-    if (dto.code) warehouse.code = dto.code;
-    if (dto.address !== undefined) warehouse.address = dto.address;
-    if (dto.description !== undefined) warehouse.description = dto.description;
-    if (dto.isActive !== undefined) warehouse.isActive = dto.isActive;
+    if (dto.name) warehouse.rename(dto.name);
+    if (dto.code) warehouse.recode(dto.code);
+    if (dto.address !== undefined) warehouse.changeAddress(dto.address);
+    if (dto.description !== undefined) warehouse.changeDescription(dto.description);
+    if (dto.isActive !== undefined) {
+      if (dto.isActive) {
+        warehouse.activate();
+      } else {
+        warehouse.deactivate();
+      }
+    }
 
     await this.warehouseRepository.save(warehouse);
     return warehouse;

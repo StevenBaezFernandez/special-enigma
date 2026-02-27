@@ -166,6 +166,26 @@ export default [
       ]
     }
   },
+
+  {
+    files: ['libs/domains/**/application/src/lib/use-cases/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@nestjs/common',
+              importNames: ['NotFoundException', 'BadRequestException', 'ForbiddenException', 'UnauthorizedException', 'ConflictException'],
+              message: 'Translate application/domain errors to HTTP only in presentation layer.'
+            }
+          ],
+          patterns: ['@mikro-orm/*']
+        }
+      ]
+    }
+  },
+
   {
     files: [
       '**/*.ts',
