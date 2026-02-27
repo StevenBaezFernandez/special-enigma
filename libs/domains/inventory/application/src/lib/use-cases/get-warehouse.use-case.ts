@@ -1,7 +1,8 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   WAREHOUSE_REPOSITORY,
   WarehouseRepository,
+  WarehouseNotFoundError,
 } from '@virteex/domain-inventory-domain';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class GetWarehouseUseCase {
   async execute(id: string) {
     const warehouse = await this.warehouseRepository.findById(id);
     if (!warehouse) {
-      throw new NotFoundException(`Warehouse with ID ${id} not found`);
+      throw new WarehouseNotFoundError(id);
     }
     return {
       id: warehouse.id,

@@ -10,10 +10,8 @@ import { CheckStockUseCase } from './use-cases/check-stock.use-case';
 import { ReserveBatchStockUseCase } from './use-cases/reserve-batch-stock.use-case';
 import { GenerateWarehouseCodeUseCase } from './use-cases/generate-warehouse-code.use-case';
 import { RegisterInventoryMovementBatchUseCase } from './use-cases/register-inventory-movement-batch.use-case';
-import { InventoryInfrastructureModule } from '@virteex/infra-inventory-infrastructure';
 
 @Module({
-  imports: [InventoryInfrastructureModule],
   providers: [
     CreateWarehouseUseCase,
     RegisterMovementUseCase,

@@ -8,6 +8,12 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
-    "@virteex/application-inventory-application": "*"
+    "@virteex/application-inventory-application": "*",
+    "class-validator": "^0.14.3",
+    "class-transformer": "^0.5.1",
+    "@nestjs/swagger": "^11.2.0",
+    "@virteex/kernel-auth": "*",
+    "@virteex/domain-inventory-domain": "*",
+    "@virteex/infra-inventory-infrastructure": "*"
   }
 }

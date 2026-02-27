@@ -1,34 +1,29 @@
-import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
-import type { Asset } from './asset.entity';
+import { v4 } from 'uuid';
 
-@Entity()
 export class Depreciation {
-  @PrimaryKey({ type: 'uuid' })
-  id!: string;
+  readonly id: string;
+  readonly tenantId: string;
+  readonly assetId: string;
+  readonly date: Date;
+  readonly amount: number;
+  readonly accumulatedDepreciation: number;
+  readonly createdAt: Date;
 
-  @Property()
-  tenantId!: string;
-
-  @Property()
-  date!: Date;
-
-  @Property({ type: 'decimal', precision: 12, scale: 2 })
-  amount!: number;
-
-  @Property({ type: 'decimal', precision: 12, scale: 2 })
-  accumulatedDepreciation!: number;
-
-  @ManyToOne('Asset')
-  asset!: Asset;
-
-  @Property({ onCreate: () => new Date() })
-  createdAt: Date = new Date();
-
-  constructor(tenantId: string, asset: Asset, date: Date, amount: number, accumulatedDepreciation: number) {
-    this.tenantId = tenantId;
-    this.asset = asset;
-    this.date = date;
-    this.amount = amount;
-    this.accumulatedDepreciation = accumulatedDepreciation;
+  constructor(params: {
+    tenantId: string;
+    assetId: string;
+    date: Date;
+    amount: number;
+    accumulatedDepreciation: number;
+    id?: string;
+    createdAt?: Date;
+  }) {
+    this.id = params.id ?? v4();
+    this.tenantId = params.tenantId;
+    this.assetId = params.assetId;
+    this.date = params.date;
+    this.amount = params.amount;
+    this.accumulatedDepreciation = params.accumulatedDepreciation;
+    this.createdAt = params.createdAt ?? new Date();
   }
 }

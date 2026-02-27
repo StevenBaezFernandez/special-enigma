@@ -1,5 +1,7 @@
 import { v4 } from 'uuid';
 import Decimal from 'decimal.js';
+import { InsufficientStockException } from '../exceptions/insufficient-stock.exception';
+import { StockDataInconsistencyError } from '../errors/stock-data-inconsistency.error';
 
 export class Stock {
   id: string;
@@ -45,7 +47,7 @@ export class Stock {
     const totalStock = new Decimal(this.quantity);
 
     if (totalStock.lessThan(remainingToDeduct)) {
-      throw new Error(`Insufficient stock. Available: ${totalStock}, Requested: ${qty}`);
+      throw new InsufficientStockException(this.productId, this.warehouseId, totalStock.toString(), qty);
     }
 
     const sortedBatches = [...this.batches].sort((a, b) =>
@@ -69,25 +71,25 @@ export class Stock {
     this.batches = this.batches.filter(b => new Decimal(b.quantity).greaterThan(0));
 
     if (!remainingToDeduct.isZero()) {
-       throw new Error('Data Inconsistency: Stock quantity exists but batches are missing or insufficient.');
+      throw new StockDataInconsistencyError(this.id);
     }
 
     this.quantity = totalStock.minus(new Decimal(qty)).toString();
   }
 
   removeQuantity(qty: string): void {
-      if (this.batches.length > 0) {
-          this.deductFromBatches(qty);
-      } else {
-        const current = new Decimal(this.quantity);
-        const subtraction = new Decimal(qty);
-        const result = current.minus(subtraction);
+    if (this.batches.length > 0) {
+      this.deductFromBatches(qty);
+    } else {
+      const current = new Decimal(this.quantity);
+      const subtraction = new Decimal(qty);
+      const result = current.minus(subtraction);
 
-        if (result.isNegative()) {
-            throw new Error('Insufficient stock');
-        }
-        this.quantity = result.toString();
+      if (result.isNegative()) {
+        throw new InsufficientStockException(this.productId, this.warehouseId, current.toString(), qty);
       }
+      this.quantity = result.toString();
+    }
   }
 }
 
