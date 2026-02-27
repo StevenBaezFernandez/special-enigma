@@ -1,18 +1,20 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetUsageUseCase } from './get-usage.use-case';
 import { ConfigService } from '@nestjs/config';
-import { INVOICE_REPOSITORY, SUBSCRIPTION_REPOSITORY } from '@virteex/domain-billing-domain';
+import { INVOICE_REPOSITORY } from '@virteex/domain-billing-domain';
+import { SUBSCRIPTION_REPOSITORY } from '@virteex/domain-subscription-domain';
 
 const mockInvoiceRepository = {
-  countByTenantId: jest.fn(),
+  countByTenantId: vi.fn(),
 };
 
 const mockSubscriptionRepository = {
-  findByTenantId: jest.fn(),
+  findByTenantId: vi.fn(),
 };
 
 const mockConfigService = {
-  get: jest.fn((key: string, defaultValue: unknown) => defaultValue),
+  get: vi.fn((key: string, defaultValue: unknown) => defaultValue),
 };
 
 describe('GetUsageUseCase', () => {
@@ -29,7 +31,7 @@ describe('GetUsageUseCase', () => {
     }).compile();
 
     useCase = module.get<GetUsageUseCase>(GetUsageUseCase);
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should return usage based on countByTenantId and default limits', async () => {
@@ -42,7 +44,7 @@ describe('GetUsageUseCase', () => {
     expect(mockInvoiceRepository.countByTenantId).toHaveBeenCalledWith(tenantId);
     expect(result).toHaveLength(1);
     expect(result[0].used).toBe(5);
-    expect(result[0].limit).toBe(10); // Default limit
+    expect(result[0].limit).toBe(10);
   });
 
   it('should return usage based on subscription limits', async () => {

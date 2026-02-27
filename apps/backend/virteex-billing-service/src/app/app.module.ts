@@ -14,6 +14,8 @@ import { BillingInfrastructureModule } from '@virteex/infra-billing-infrastructu
 import { BillingApplicationModule } from '@virteex/application-billing-application';
 import { InitialSeederService } from './seeds/initial-seeder.service';
 import { BillingResolver } from './billing.resolver';
+import { OpsController } from './ops.controller';
+import { OpsReadinessService } from './ops-readiness.service';
 
 @Module({
   imports: [
@@ -71,6 +73,7 @@ import { BillingResolver } from './billing.resolver';
     BillingPresentationModule,
     BillingApplicationModule,
   ],
-  providers: [InitialSeederService, BillingResolver],
+  controllers: [OpsController],
+  providers: [InitialSeederService, BillingResolver, OpsReadinessService],
 })
 export class AppModule {}
