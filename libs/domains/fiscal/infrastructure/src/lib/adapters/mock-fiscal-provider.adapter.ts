@@ -5,8 +5,14 @@ import { FiscalProvider } from '@virteex/domain-fiscal-domain';
 export class MockFiscalProvider implements FiscalProvider {
   private readonly logger = new Logger(MockFiscalProvider.name);
 
+  constructor() {
+    if (process.env['NODE_ENV'] === 'production') {
+      throw new Error('MockFiscalProvider is NOT allowed in PRODUCTION environment. Please configure a real PAC provider.');
+    }
+  }
+
   async validateInvoice(invoice: any): Promise<boolean> {
-    this.logger.log(`Validating invoice ${invoice?.id} with Mock PAC...`);
+    this.logger.warn(`Validating invoice ${invoice?.id} with Mock PAC. THIS IS NOT LEGAL FOR PRODUCTION.`);
     // Simulate latency
     await new Promise(resolve => setTimeout(resolve, 500));
     this.logger.log(`Invoice ${invoice?.id} is valid.`);

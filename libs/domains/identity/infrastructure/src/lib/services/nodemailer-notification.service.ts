@@ -1,19 +1,25 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NotificationService, User } from '@virteex/domain-identity-domain';
 import { MailQueueProducer } from './mail-queue.producer';
 
 @Injectable()
-export class NodemailerNotificationService implements NotificationService {
+export class NodemailerNotificationService implements NotificationService, OnModuleInit {
   private readonly logger = new Logger(NodemailerNotificationService.name);
 
   constructor(
     private readonly configService: ConfigService,
     private readonly mailQueueProducer: MailQueueProducer
-  ) {
+  ) {}
+
+  onModuleInit() {
     const smtpHost = this.configService.get<string>('SMTP_HOST');
-    if (!smtpHost) {
-      this.logger.warn('SMTP_HOST is not defined. Email notifications might fail. Please configure SMTP settings.');
+    const smtpUser = this.configService.get<string>('SMTP_USER');
+    const smtpPass = this.configService.get<string>('SMTP_PASSWORD');
+
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      this.logger.error('CRITICAL: SMTP configuration is missing (SMTP_HOST, SMTP_USER, SMTP_PASSWORD). Email notifications will fail.');
+      throw new Error('Missing SMTP configuration. Cannot start Notification Service.');
     }
   }
 
