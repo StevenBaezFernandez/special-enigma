@@ -9,6 +9,28 @@ const authToken = process.env.PLUGIN_HOST_API_TOKEN;
 const registryPath = process.env.PLUGIN_REGISTRY_FILE ?? path.join(__dirname, 'plugins.json');
 const sandboxMode = process.env.PLUGIN_SANDBOX_MODE ?? 'standard';
 const admissionMode = process.env.PLUGIN_ADMISSION_MODE ?? 'warn';
+const marketplaceRegion = (process.env.MARKETPLACE_REGION ?? 'MX').toUpperCase();
+const revokedPlugins = new Map<string, { reason: string; revokedAt: string }>();
+
+const marketplaceRegionPolicy: Record<string, { enabled: boolean; requiresHardenedSandbox: boolean }> = {
+  MX: { enabled: true, requiresHardenedSandbox: true },
+  BR: { enabled: true, requiresHardenedSandbox: true },
+  CO: { enabled: false, requiresHardenedSandbox: true },
+  US: { enabled: true, requiresHardenedSandbox: true },
+};
+
+const regionPolicy = marketplaceRegionPolicy[marketplaceRegion];
+if (!regionPolicy) {
+  throw new Error(`Unsupported MARKETPLACE_REGION '${marketplaceRegion}'.`);
+}
+
+if (!regionPolicy.enabled) {
+  throw new Error(`Marketplace is blocked for region ${marketplaceRegion} until hardened sandbox readiness is certified.`);
+}
+
+if (nodeEnv === 'production' && regionPolicy.requiresHardenedSandbox && sandboxMode !== 'hardened') {
+  throw new Error(`MARKETPLACE_REGION=${marketplaceRegion} requires PLUGIN_SANDBOX_MODE=hardened.`);
+}
 
 if (nodeEnv === 'production' && !authToken) {
   throw new Error('PLUGIN_HOST_API_TOKEN is required in production.');
@@ -101,6 +123,28 @@ server.get('/plugins/:name', async (request, reply) => {
   return plugin;
 });
 
+server.post('/plugins/:name/revoke', async (request, reply) => {
+  try {
+    authorize(request);
+  } catch (error: any) {
+    return reply.status(error.statusCode || 401).send({ error: error.message });
+  }
+
+  const { name } = request.params as { name: string };
+  const body = (request.body ?? {}) as { reason?: string };
+
+  if (!plugins.has(name)) {
+    return reply.status(404).send({ error: 'Plugin not found' });
+  }
+
+  revokedPlugins.set(name, {
+    reason: body.reason?.trim() || 'manual-revocation',
+    revokedAt: new Date().toISOString(),
+  });
+
+  return { status: 'revoked', plugin: name, ...revokedPlugins.get(name) };
+});
+
 server.post('/execute', async (request, reply) => {
   try {
     authorize(request);
@@ -123,6 +167,14 @@ server.post('/execute', async (request, reply) => {
 
   if (!codeToRun) {
     return reply.status(400).send({ error: 'Code or valid pluginName is required' });
+  }
+
+  if (body.pluginName && revokedPlugins.has(body.pluginName)) {
+    return reply.status(403).send({
+      error: 'Plugin execution denied by revocation policy',
+      pluginName: body.pluginName,
+      revocation: revokedPlugins.get(body.pluginName),
+    });
   }
 
   const admission = await admissionService.validatePlugin({
@@ -159,7 +211,15 @@ server.post('/execute', async (request, reply) => {
 });
 
 server.get('/health', async () => {
-  return { status: 'ok', version: '1.2.0', registryPath, sandboxMode, admissionMode };
+  return {
+    status: 'ok',
+    version: '1.3.0',
+    registryPath,
+    sandboxMode,
+    admissionMode,
+    marketplaceRegion,
+    revokedPluginCount: revokedPlugins.size,
+  };
 });
 
 const start = async () => {

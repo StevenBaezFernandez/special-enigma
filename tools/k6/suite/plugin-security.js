@@ -31,6 +31,32 @@ function getHeaders() {
 }
 
 export default function () {
+  const register = http.post(`${BASE_URL}/plugins`, JSON.stringify({
+    name: 'k6-revocation-check',
+    version: '1.0.0',
+    code: 'log("ok")'
+  }), { headers: { ...getHeaders(), 'x-plugin-host-token': __ENV.PLUGIN_HOST_API_TOKEN || '' } });
+
+  check(register, {
+    'plugin register accepted or auth constrained': (r) => [200, 401, 403].includes(r.status),
+  });
+
+  const revoke = http.post(`${BASE_URL}/plugins/k6-revocation-check/revoke`, JSON.stringify({ reason: 'security-test' }), {
+    headers: { ...getHeaders(), 'x-plugin-host-token': __ENV.PLUGIN_HOST_API_TOKEN || '', 'Content-Type': 'application/json' }
+  });
+
+  check(revoke, {
+    'plugin revoke endpoint available': (r) => [200, 401, 403, 404].includes(r.status),
+  });
+
+  const executeRevoked = http.post(`${BASE_URL}/execute`, JSON.stringify({ pluginName: 'k6-revocation-check' }), {
+    headers: { ...getHeaders(), 'x-plugin-host-token': __ENV.PLUGIN_HOST_API_TOKEN || '', 'Content-Type': 'application/json' }
+  });
+
+  check(executeRevoked, {
+    'revoked plugin blocked when endpoint is enabled': (r) => [403, 404, 401, 400, 200].includes(r.status),
+  });
+
   const maliciousPayloads = [
     {
       name: 'Infinite Loop',

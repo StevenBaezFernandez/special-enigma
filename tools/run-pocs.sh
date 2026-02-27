@@ -1,41 +1,63 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Check if k6 is installed
-if ! command -v k6 &> /dev/null; then
-    echo "k6 could not be found. Please install k6 to run performance tests."
-    # If in CI/CD, you might download it here, but for now we warn.
-    # We can use docker if available.
-    if command -v docker &> /dev/null; then
-        K6_CMD="docker run --rm -i -v $(pwd):/src grafana/k6"
-    else
-        echo "Skipping k6 execution (k6 not installed)."
-        exit 0
-    fi
-else
-    K6_CMD="k6"
+K6_CMD="k6"
+if ! command -v k6 >/dev/null 2>&1; then
+  if command -v docker >/dev/null 2>&1; then
+    K6_CMD="docker run --rm -i -v $(pwd):/src -w /src grafana/k6"
+  else
+    echo "[WARN] k6 is not installed and docker is unavailable."
+    echo "[WARN] POC suite cannot be executed in this environment."
+    exit 0
+  fi
 fi
 
-echo "Running POC A: RLS Load Test..."
-# Using dry-run locally to validate script syntax if server not up
-# In real CI, remove --dry-run and ensure service is up
-# For this task, we want to verify the script is runnable.
-# But "Formalize POCs" implies running them against something.
-# Since I don't have the API running, I'll run a dry-run or just syntax check.
-# The prompt says "Formalize... integrated with tools like k6".
-# I'll try to run it. If it fails due to connection refused, that's expected but script is valid.
-# But I don't want to fail the build.
+BASE_URL="${BASE_URL:-http://localhost:3000}"
+RESULT_DIR="${1:-artifacts/poc-results}"
+mkdir -p "$RESULT_DIR"
 
-echo "Verifying script syntax..."
-# Just check syntax if possible, or run with 1 iteration and expect failure but capture exit code.
-# k6 doesn't have a 'check syntax' only mode easily without running.
-# I'll assume valid if file exists.
+run_poc() {
+  local key="$1"
+  local script="$2"
+  local acceptance="$3"
 
-# Running in dry-run mode simulates execution without network calls? No.
-# Running with --vus 1 --iterations 1 to test
-# $K6_CMD run tools/k6/suite/rls-load-test.js --vus 1 --iterations 1 || echo "k6 run failed (expected if API not running)"
+  local out_file="$RESULT_DIR/${key}.json"
+  echo "== Running ${key}: ${script}"
 
-echo "POCs formalized in tools/k6/suite/"
-ls -l tools/k6/suite/
+  set +e
+  BASE_URL="$BASE_URL" VIRTEEX_HMAC_SECRET="${VIRTEEX_HMAC_SECRET:-dev-secret}" \
+    ${K6_CMD} run "$script" --summary-export "$out_file"
+  local status=$?
+  set -e
 
-echo "Done."
+  if [[ $status -ne 0 ]]; then
+    echo "[FAIL] ${key} failed (exit code $status)."
+  else
+    echo "[PASS] ${key} completed."
+  fi
+
+  cat > "$RESULT_DIR/${key}.md" <<POC
+# ${key} evidence
+
+- Script: \
+  - \
+	https://github.com/virteex/special-enigma/blob/main/${script}
+- Acceptance criteria: ${acceptance}
+- Exit code: ${status}
+- Summary export: ${out_file}
+POC
+
+  return $status
+}
+
+failures=0
+run_poc "poc-a-rls-scale" "tools/k6/suite/rls-load-test.js" "p95 < 200ms, error rate < 0.1%" || failures=$((failures + 1))
+run_poc "poc-b-offline-sync-network-chaos" "tools/k6/suite/offline-sync-chaos.js" "queue drain succeeds after unstable network and retries" || failures=$((failures + 1))
+run_poc "poc-c-plugin-isolation-revocation" "tools/k6/suite/plugin-security.js" "malicious payload blocked + revoked plugins denied" || failures=$((failures + 1))
+
+if [[ $failures -gt 0 ]]; then
+  echo "POC suite completed with ${failures} failure(s)."
+  exit 1
+fi
+
+echo "POC suite completed successfully. Results in ${RESULT_DIR}."

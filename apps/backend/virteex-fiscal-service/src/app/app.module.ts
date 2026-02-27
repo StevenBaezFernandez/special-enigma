@@ -2,20 +2,34 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { InvoiceConsumer } from './invoice.consumer';
 import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
 import { FiscalPresentationModule } from '@virteex/api-fiscal-presentation';
-import { FiscalInfrastructureModule, DianFiscalAdapter, SatFiscalAdapter } from '@virteex/infra-fiscal-infrastructure';
+import {
+  FiscalInfrastructureModule,
+  DianFiscalAdapter,
+  SatFiscalAdapter,
+  SefazFiscalAdapter,
+  UsTaxPartnerFiscalAdapter,
+} from '@virteex/infra-fiscal-infrastructure';
 import { HttpModule, HttpService } from '@nestjs/axios';
 
-const FISCAL_COMMERCIAL_ELIGIBILITY: Record<string, { status: 'GA' | 'Beta' | 'No listo'; provider: string }> = {
-  MX: { status: 'GA', provider: 'SAT' },
-  BR: { status: 'Beta', provider: 'SEFAZ' },
-  CO: { status: 'Beta', provider: 'DIAN' },
-  US: { status: 'Beta', provider: 'TAX_PARTNER' }
+type FiscalCountryStatus = {
+  status: 'GA' | 'Beta' | 'No listo';
+  provider: string;
+  allowSimulation: boolean;
 };
+
+function loadFiscalCommercialEligibility(): Record<string, FiscalCountryStatus> {
+  const matrixPath = path.resolve(process.cwd(), 'config/readiness/commercial-eligibility.matrix.json');
+  const raw = fs.readFileSync(matrixPath, 'utf8');
+  const matrix = JSON.parse(raw);
+  return matrix.modules.fiscal;
+}
 
 @Module({
   imports: [
@@ -48,10 +62,12 @@ const FISCAL_COMMERCIAL_ELIGIBILITY: Record<string, { status: 'GA' | 'Beta' | 'N
       provide: 'FiscalProvider',
       inject: [ConfigService, HttpService],
       useFactory: (config: ConfigService, http: HttpService) => {
+        const fiscalEligibility = loadFiscalCommercialEligibility();
         const provider = (config.get('FISCAL_PROVIDER') || '').toUpperCase();
         const country = (config.get('FISCAL_COUNTRY') || '').toUpperCase();
+        const nodeEnv = (config.get('NODE_ENV') || 'development').toLowerCase();
 
-        const eligibility = FISCAL_COMMERCIAL_ELIGIBILITY[country];
+        const eligibility = fiscalEligibility[country];
         if (!eligibility) {
           throw new Error(`Fiscal country '${country || 'undefined'}' is not commercially eligible for activation.`);
         }
@@ -60,19 +76,29 @@ const FISCAL_COMMERCIAL_ELIGIBILITY: Record<string, { status: 'GA' | 'Beta' | 'N
           throw new Error(`Fiscal module is '${eligibility.status}' for ${country}; activation is blocked.`);
         }
 
-        if (provider !== eligibility.provider && eligibility.status === 'GA') {
+        if (provider !== eligibility.provider) {
           throw new Error(
-            `Country ${country} is ${eligibility.status}; provider '${provider || 'undefined'}' does not match required provider '${eligibility.provider}'.`
+            `Country ${country} requires provider '${eligibility.provider}', but got '${provider || 'undefined'}'.`
           );
+        }
+
+        if (nodeEnv === 'production' && eligibility.allowSimulation) {
+          throw new Error(`Country ${country} has allowSimulation=true and cannot be activated in production.`);
         }
 
         if (provider === 'DIAN') {
           return new DianFiscalAdapter(http);
         }
-        if (provider === 'SAT') {
-          return new SatFiscalAdapter(http);
+        if (provider === 'SEFAZ') {
+          return new SefazFiscalAdapter(http);
         }
-        throw new Error(`Invalid FISCAL_PROVIDER value: ${provider || 'undefined'}. Configure DIAN or SAT.`);
+        if (provider === 'SAT') {
+          return new SatFiscalAdapter(http, config);
+        }
+        if (provider === 'TAX_PARTNER') {
+          return new UsTaxPartnerFiscalAdapter(http, config);
+        }
+        throw new Error(`Invalid FISCAL_PROVIDER value: ${provider || 'undefined'}. Configure SAT, SEFAZ, DIAN or TAX_PARTNER.`);
       },
     },
   ],

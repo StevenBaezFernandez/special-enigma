@@ -22,7 +22,7 @@ export class PushNotificationService {
         this.logger.warn(`Failed to initialize Firebase Admin: ${error.message}`);
       }
     } else {
-      this.logger.warn('FIREBASE_SERVICE_ACCOUNT_PATH not set. Push Notification service will run in simulation mode.');
+      this.logger.warn('FIREBASE_SERVICE_ACCOUNT_PATH not set. Push Notification service will run in restricted fallback mode.');
     }
   }
 
