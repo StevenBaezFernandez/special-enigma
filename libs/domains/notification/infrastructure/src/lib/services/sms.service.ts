@@ -16,7 +16,7 @@ export class SmsService {
     if (accountSid && authToken && this.fromNumber) {
       this.client = new Twilio(accountSid, authToken);
     } else {
-      this.logger.warn('Twilio credentials not found. SMS service will run in simulation mode.');
+      this.logger.warn('Twilio credentials not found. SMS service will run in restricted fallback mode.');
     }
   }
 

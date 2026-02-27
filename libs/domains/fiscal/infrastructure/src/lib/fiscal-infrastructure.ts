@@ -15,6 +15,9 @@ import { MikroOrmTaxRuleRepository } from './repositories/mikro-orm-tax-rule.rep
 import { FiscalDataAdapter } from './adapters/fiscal-data.adapter';
 import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-config.repository';
 import { SatFiscalAdapter } from './adapters/sat-fiscal-provider.adapter';
+import { SefazFiscalAdapter } from './adapters/sefaz-fiscal-provider.adapter';
+import { DianFiscalAdapter } from './adapters/dian-fiscal-provider.adapter';
+import { UsTaxPartnerFiscalAdapter } from './adapters/us-tax-partner-fiscal-provider.adapter';
 import { MxFiscalDocumentBuilder } from './builders/mx-fiscal-document.builder';
 import { UsFiscalDocumentBuilder } from './builders/us-fiscal-document.builder';
 import { CoFiscalDocumentBuilder } from './builders/co-fiscal-document.builder';
@@ -48,6 +51,9 @@ import { BrFiscalDocumentBuilder } from './builders/br-fiscal-document.builder';
       provide: 'FISCAL_PROVIDER',
       useClass: SatFiscalAdapter
     },
+    SefazFiscalAdapter,
+    DianFiscalAdapter,
+    UsTaxPartnerFiscalAdapter,
     MxFiscalDocumentBuilder,
     UsFiscalDocumentBuilder,
     CoFiscalDocumentBuilder,
@@ -60,6 +66,9 @@ import { BrFiscalDocumentBuilder } from './builders/br-fiscal-document.builder';
     TAX_RULE_REPOSITORY,
     TENANT_CONFIG_REPOSITORY,
     'FISCAL_PROVIDER',
+    SefazFiscalAdapter,
+    DianFiscalAdapter,
+    UsTaxPartnerFiscalAdapter,
     MxFiscalDocumentBuilder,
     UsFiscalDocumentBuilder,
     CoFiscalDocumentBuilder,

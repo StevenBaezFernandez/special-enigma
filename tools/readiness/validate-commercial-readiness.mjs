@@ -8,11 +8,15 @@ const matrix = JSON.parse(raw);
 
 const allowedStatus = new Set(['GA', 'Beta', 'No listo']);
 const violations = [];
+const requiredFiscalProviders = new Set(['SAT', 'SEFAZ', 'DIAN', 'TAX_PARTNER']);
 
 for (const [moduleName, countries] of Object.entries(matrix.modules ?? {})) {
   for (const [country, cfg] of Object.entries(countries)) {
     if (!allowedStatus.has(cfg.status)) {
       violations.push(`${moduleName}/${country} has invalid status '${cfg.status}'.`);
+    }
+    if (moduleName === 'fiscal' && !requiredFiscalProviders.has(cfg.provider)) {
+      violations.push(`${moduleName}/${country} provider '${cfg.provider}' is invalid.`);
     }
     if (cfg.status === 'GA' && cfg.allowSimulation === true) {
       violations.push(`${moduleName}/${country} is GA but allowSimulation=true.`);
@@ -31,6 +35,14 @@ const patterns = [
   { regex: /mock-jwt-token/g, reason: 'Mock auth token in runtime source' },
   { regex: /THIS IS NOT LEGAL FOR PRODUCTION/g, reason: 'Mock/legal warning string must remain test/dev-only' }
 ];
+
+if (matrix.modules?.fiscal?.US?.status === 'GA' && matrix.modules.fiscal.US.provider === 'TAX_PARTNER') {
+  violations.push('US fiscal cannot be marked GA with TAX_PARTNER placeholder provider. Keep status Beta until real partner is certified.');
+}
+
+if (matrix.modules?.marketplace?.CO?.status === 'GA') {
+  violations.push('Marketplace CO cannot be GA before hardened sandbox evidence is available.');
+}
 
 for (const file of sourceFiles) {
   const content = fs.readFileSync(path.resolve(file), 'utf8');

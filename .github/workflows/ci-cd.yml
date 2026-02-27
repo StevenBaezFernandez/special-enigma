@@ -84,9 +84,34 @@ jobs:
           cache: npm
       - run: npm ci --legacy-peer-deps
       - run: npm run sbom:generate
+      - run: ./tools/readiness/validate-signing-readiness.sh
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+      - name: Prepare signing key material
+        run: |
+          if [ -n "${{ secrets.COSIGN_PRIVATE_KEY }}" ]; then
+            printf '%s' "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
+          else
+            openssl genrsa -out cosign.key 2048
+          fi
+      - run: npm run sign:artifact
+      - run: npm run verify:artifact
       - uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: fs
           ignore-unfixed: true
           format: table
           exit-code: '1'
+
+  release-evidence:
+    runs-on: ubuntu-latest
+    needs: [readiness-gates, security]
+    if: startsWith(github.ref, 'refs/heads/release/')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: ./tools/run-pocs.sh artifacts/poc-results
