@@ -1,4 +1,5 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
+import { randomBytes } from 'node:crypto';
 import { SecretProvider } from '../interfaces/secret-provider.interface';
 
 export const SECRET_PROVIDER = 'SECRET_PROVIDER';
@@ -24,8 +25,8 @@ export class SecretManagerService {
             if (isProd) {
                 throw new Error('JWT_SECRET not found in production environment!');
             }
-            this.currentSecret = 'dev-secret-change-me-in-production';
-            this.logger.warn('JWT_SECRET not found, using insecure development secret!');
+            this.currentSecret = randomBytes(32).toString('hex');
+            this.logger.warn('JWT_SECRET not found in non-production. Generated ephemeral runtime secret.');
         } else {
             this.currentSecret = secret;
         }
