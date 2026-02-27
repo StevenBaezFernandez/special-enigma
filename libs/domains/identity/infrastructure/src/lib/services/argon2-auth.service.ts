@@ -1,10 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '@virteex/domain-identity-domain';
-import * as jwt from 'jsonwebtoken';
 import { authenticator } from '@otplib/preset-default';
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2';
-import { SecretManagerService } from '@virteex/kernel-auth';
+import { JwtTokenService, SecretManagerService } from '@virteex/kernel-auth';
 
 interface JwtPayload {
   [key: string]: unknown;
@@ -16,7 +15,7 @@ export class Argon2AuthService implements AuthService {
   private readonly encryptionKey: Buffer;
   private readonly algorithm = 'aes-256-gcm';
 
-  constructor(private secretManager: SecretManagerService) {
+  constructor(private secretManager: SecretManagerService, private readonly jwtTokenService: JwtTokenService) {
     this.secret = this.secretManager.getJwtSecret();
     if (!this.secret) {
       throw new Error('JWT_SECRET is not defined in secret manager.');
@@ -51,23 +50,25 @@ export class Argon2AuthService implements AuthService {
     }
   }
 
-  async generateToken(payload: any): Promise<string> {
-    const expiration = this.secretManager.getSecret('JWT_EXPIRATION', '15m');
-    return jwt.sign(payload, this.secret, { expiresIn: expiration } as jwt.SignOptions);
+  async generateToken(payload: any, options?: { tokenType?: "access" | "refresh" | "service" | "plugin" | "stepup"; expiresIn?: string | number; audience?: string; issuer?: string; subject?: string }): Promise<string> {
+    return this.jwtTokenService.issueToken(payload, {
+      tokenType: options?.tokenType ?? "access",
+      expiresIn: options?.expiresIn,
+      audience: options?.audience,
+      issuer: options?.issuer,
+      subject: options?.subject,
+    });
   }
 
   async verifyToken(token: string): Promise<any> {
-    const secrets = this.secretManager.getJwtVerificationSecrets();
-    for (const secret of secrets) {
-      try {
-        return jwt.verify(token, secret);
-      } catch (error: any) {
-        if (error.name === 'TokenExpiredError') {
-             throw new UnauthorizedException('Token expired');
-        }
+    try {
+      return this.jwtTokenService.verifyToken(token, "access");
+    } catch (error: any) {
+      if (error?.name === "TokenExpiredError") {
+        throw new UnauthorizedException("Token expired");
       }
+      throw new UnauthorizedException("Invalid or expired token");
     }
-    throw new UnauthorizedException('Invalid or expired token');
   }
 
   generateMfaSecret(): string {

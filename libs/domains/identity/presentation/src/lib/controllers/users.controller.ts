@@ -1,20 +1,19 @@
 import {
-  Controller, Get, Patch, Post, Body, UseGuards, UseInterceptors, UploadedFile,
-  Req
+  Controller, Get, Patch, Post, Body, UseGuards, UseInterceptors, UploadedFile
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
   GetJobTitlesUseCase, GetAuditLogsUseCase
 } from '@virteex/application-identity-application';
-import { UpdateUserDto, InviteUserDto, UserResponseDto } from '@virteex/contracts-identity-contracts';
-import { JwtAuthGuard, CurrentUser } from '@virteex/kernel-auth';
+import { UpdateUserDto, InviteUserDto } from '@virteex/contracts-identity-contracts';
+import { JwtAuthGuard, CurrentUser, StepUp, StepUpGuard } from '@virteex/kernel-auth';
 import { UserMapper } from '../mappers/user.mapper';
 import { AuditLogMapper } from '../mappers/audit-log.mapper';
 import { UserResponseDto, AuditLogDto } from '@virteex/contracts-identity-contracts';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, StepUpGuard)
 export class UsersController {
   constructor(
     private readonly getProfile: GetUserProfileUseCase,
@@ -53,6 +52,7 @@ export class UsersController {
   }
 
   @Post('invite')
+  @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
   async invite(@CurrentUser() user: any, @Body() dto: InviteUserDto): Promise<UserResponseDto> {
     const currentUserId = user?.sub;
     const userEntity = await this.inviteUser.execute(dto, currentUserId);

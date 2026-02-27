@@ -1,9 +1,9 @@
 import { Controller, Post, Body, Get, UseGuards, UnauthorizedException } from '@nestjs/common';
-import { JwtAuthGuard, TenantGuard, getTenantContext } from '@virteex/kernel-auth';
+import { JwtAuthGuard, TenantGuard, StepUpGuard, StepUp, getTenantContext } from '@virteex/kernel-auth';
 import { UpdateSubscriptionUseCase, UpdateSubscriptionDto, GetSubscriptionStatusUseCase } from '@virteex/application-identity-application';
 
 @Controller('subscription')
-@UseGuards(JwtAuthGuard, TenantGuard)
+@UseGuards(JwtAuthGuard, TenantGuard, StepUpGuard)
 export class SubscriptionController {
   constructor(
     private readonly updateSubscriptionUseCase: UpdateSubscriptionUseCase,
@@ -11,6 +11,7 @@ export class SubscriptionController {
   ) {}
 
   @Post('upgrade')
+  @StepUp({ action: 'billing', maxAgeSeconds: 300 })
   async upgrade(@Body() dto: UpdateSubscriptionDto) {
     const context = getTenantContext();
     if (!context?.tenantId) throw new UnauthorizedException();

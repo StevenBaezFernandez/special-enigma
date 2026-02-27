@@ -16,6 +16,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { GeoIpPort, GEO_IP_PORT } from '@virteex/domain-identity-domain';
 import { SessionGuard } from '../guards/session.guard';
+import { buildAccessCookieOptions, buildRefreshCookieOptions } from '@virteex/kernel-auth';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -141,8 +142,9 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-      res.clearCookie('access_token');
-      res.clearCookie('refresh_token');
+      const cookieContext = this.getCookieContext();
+      res.clearCookie('access_token', { path: '/', domain: cookieContext.domain });
+      res.clearCookie('refresh_token', { path: '/auth/refresh', domain: cookieContext.domain });
 
       const user = (req as any).user;
       if (user && user.sessionId) {
@@ -178,29 +180,17 @@ export class AuthController {
   }
 
   private setCookies(res: Response, accessToken: string, refreshToken: string, rememberMe = true) {
+      const cookieContext = this.getCookieContext();
+      res.cookie('access_token', accessToken, buildAccessCookieOptions(cookieContext));
+      res.cookie('refresh_token', refreshToken, buildRefreshCookieOptions(cookieContext, rememberMe));
+  }
+
+  private getCookieContext() {
       const isProd = this.secretManager?.getSecret('NODE_ENV', 'development') === 'production' || process.env['NODE_ENV'] === 'production';
       const secure = this.secretManager?.getSecret('COOKIE_SECURE', String(isProd)) === 'true';
       const sameSite = (this.secretManager?.getSecret('COOKIE_SAME_SITE', 'lax') as 'lax' | 'strict' | 'none') || 'lax';
-
-      res.cookie('access_token', accessToken, {
-          httpOnly: true,
-          secure: secure,
-          sameSite: sameSite,
-          maxAge: 15 * 60 * 1000
-      });
-
-      const refreshOptions: any = {
-          httpOnly: true,
-          secure: secure,
-          sameSite: sameSite,
-          path: '/auth/refresh'
-      };
-
-      if (rememberMe) {
-          refreshOptions.maxAge = 7 * 24 * 3600 * 1000;
-      }
-
-      res.cookie('refresh_token', refreshToken, refreshOptions);
+      const domain = this.secretManager?.getSecret('COOKIE_DOMAIN', '');
+      return { secure, sameSite, domain: domain || undefined };
   }
 
   @Public()

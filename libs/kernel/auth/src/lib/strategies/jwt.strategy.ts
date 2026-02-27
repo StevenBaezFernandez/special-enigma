@@ -1,43 +1,44 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { SecretManagerService } from '../services/secret-manager.service';
 import { Request } from 'express';
+import { JwtTokenService } from '../services/jwt-token.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly secretManager: SecretManagerService
-  ) {
+  constructor(private readonly jwtTokenService: JwtTokenService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           let token = null;
-          if (request && request.cookies && request.cookies['access_token']) {
-            token = request.cookies['access_token'];
-          }
-          if (!token && request.headers.authorization) {
-              const authHeader = request.headers.authorization;
-              if (authHeader.startsWith('Bearer ')) {
-                  token = authHeader.substring(7);
-              }
+          if (request?.cookies?.['access_token']) token = request.cookies['access_token'];
+          if (!token && request.headers.authorization?.startsWith('Bearer ')) {
+            token = request.headers.authorization.substring(7);
           }
           return token;
         },
       ]),
       ignoreExpiration: false,
-      secretOrKey: secretManager.getJwtSecret(),
-      audience: configService.get<string>('JWT_AUDIENCE'),
-      issuer: configService.get<string>('JWT_ISSUER'),
+      passReqToCallback: true,
+      secretOrKeyProvider: (_request: Request, rawJwtToken: string, done: (err: Error | null, secret?: string | Buffer) => void) => {
+        try {
+          done(null, this.jwtTokenService.getVerificationSecretForToken(rawJwtToken));
+        } catch (error: any) {
+          done(error);
+        }
+      },
+      algorithms: ['HS256', 'HS384', 'HS512'],
     });
   }
 
-  async validate(payload: any) {
-    if (!payload) {
-      throw new UnauthorizedException();
+  async validate(request: Request, _payload: any) {
+    const token = request?.cookies?.['access_token']
+      || (request.headers.authorization?.startsWith('Bearer ') ? request.headers.authorization.substring(7) : undefined);
+
+    if (!token) {
+      throw new UnauthorizedException('Missing access token');
     }
-    return payload;
+
+    return this.jwtTokenService.verifyToken(token, 'access');
   }
 }

@@ -11,6 +11,9 @@ import { DefaultSecretProvider } from './services/providers/default-secret.provi
 import { VaultSecretProvider } from './services/providers/vault-secret.provider';
 import { KmsSecretProvider } from './services/providers/kms-secret.provider';
 import { CompositeSecretProvider } from './services/providers/composite-secret.provider';
+import { CsrfMiddleware } from './middleware/csrf.middleware';
+import { JwtTokenService } from './services/jwt-token.service';
+import { StepUpGuard } from './guards/step-up.guard';
 
 @Module({
   imports: [ConfigModule, TelemetryModule, PassportModule.register({ defaultStrategy: 'jwt' }), JwtModule.register({})],
@@ -22,6 +25,9 @@ import { CompositeSecretProvider } from './services/providers/composite-secret.p
     DefaultSecretProvider,
     VaultSecretProvider,
     KmsSecretProvider,
+    JwtTokenService,
+    StepUpGuard,
+    CsrfMiddleware,
     {
         provide: SECRET_PROVIDER,
         useFactory: async (defaultP: DefaultSecretProvider, vaultP: VaultSecretProvider, kmsP: KmsSecretProvider) => {
@@ -32,12 +38,12 @@ import { CompositeSecretProvider } from './services/providers/composite-secret.p
         inject: [DefaultSecretProvider, VaultSecretProvider, KmsSecretProvider]
     }
   ],
-  exports: [TenantContextMiddleware, TenantGuard, SecretManagerService, PassportModule, JwtModule],
+  exports: [TenantContextMiddleware, TenantGuard, SecretManagerService, JwtTokenService, StepUpGuard, PassportModule, JwtModule],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(TenantContextMiddleware)
+      .apply(TenantContextMiddleware, CsrfMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

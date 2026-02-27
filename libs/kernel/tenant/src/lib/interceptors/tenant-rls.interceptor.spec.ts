@@ -111,4 +111,14 @@ describe('TenantRlsInterceptor', () => {
     expect(em.transactional).not.toHaveBeenCalled();
     expect(em.getConnection).not.toHaveBeenCalled();
   });
+
+  it('should fail closed for write operations without tenant context', async () => {
+    (AuthModule.getTenantContext as jest.Mock).mockReturnValue(null);
+    const next = { handle: jest.fn().mockReturnValue(of('test')) };
+    const context = {
+      switchToHttp: () => ({ getRequest: () => ({ method: 'POST' }) })
+    } as unknown as ExecutionContext;
+
+    await expect(interceptor.intercept(context, next as unknown as CallHandler)).rejects.toThrow('Tenant context is required for write operations');
+  });
 });

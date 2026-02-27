@@ -84,6 +84,8 @@ jobs:
           cache: npm
       - run: npm ci --legacy-peer-deps
       - run: npm run sbom:generate
+      - name: Verify SBOM artifact exists
+        run: test -s sbom.json
       - run: ./tools/readiness/validate-signing-readiness.sh
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.7.0
@@ -96,6 +98,10 @@ jobs:
           fi
       - run: npm run sign:artifact
       - run: npm run verify:artifact
+      - name: Generate provenance attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: sbom.json
       - uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: fs

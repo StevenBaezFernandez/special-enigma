@@ -1,4 +1,4 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, ForbiddenException, Injectable, NestInterceptor } from '@nestjs/common';
 import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { Observable, from, lastValueFrom } from 'rxjs';
 import { getTenantContext } from '@virteex/kernel-auth';
@@ -14,6 +14,11 @@ export class TenantRlsInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const tenantContext = getTenantContext();
     if (!tenantContext) {
+      const request = context.switchToHttp().getRequest();
+      const method = request?.method ?? 'GET';
+      if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+        throw new ForbiddenException('Tenant context is required for write operations');
+      }
       return next.handle();
     }
 
@@ -23,6 +28,7 @@ export class TenantRlsInterceptor implements NestInterceptor {
       return from(
         this.em.transactional(async (txEm) => {
           await txEm.getConnection().execute('SET LOCAL app.current_tenant = ?', [tenantContext.tenantId]);
+          await txEm.getConnection().execute('SET LOCAL app.tenant_enforced = ?', ['true']);
 
           // Also set the MikroORM global filter for non-RLS scenarios or additional safety
           txEm.setFilterParams('tenant', { tenantId: tenantContext.tenantId });

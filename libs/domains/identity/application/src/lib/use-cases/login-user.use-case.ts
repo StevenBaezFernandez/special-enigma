@@ -63,8 +63,9 @@ export class LoginUserUseCase {
     });
 
     let mfaRequired = false;
+    const privilegedRoles = new Set(['admin', 'operator', 'security', 'superadmin']);
 
-    if (user.mfaEnabled || riskScore > 60) {
+    if (user.mfaEnabled || riskScore > 60 || privilegedRoles.has((user.role || '').toLowerCase())) {
       if (riskScore > 90) {
           await this.auditLogRepository.save(new AuditLog('LOGIN_BLOCKED_HIGH_RISK', user.id, { score: riskScore }));
           throw new ForbiddenException('Login blocked due to suspicious activity. Contact support.');
@@ -85,8 +86,9 @@ export class LoginUserUseCase {
             sub: user.id,
             email: user.email,
             partial: true,
-            riskScore
-        });
+            riskScore,
+            amr: ['pwd']
+        }, { tokenType: 'stepup', expiresIn: '5m', subject: user.id });
 
         return {
             mfaRequired: true,

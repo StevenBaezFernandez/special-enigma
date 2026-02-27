@@ -26,7 +26,8 @@ export class TokenGenerationService {
   async createSessionAndTokens(
     user: User,
     context: { ip: string; userAgent: string },
-    riskScore: number = 0
+    riskScore: number = 0,
+    mfaVerified = false
   ): Promise<TokenGenerationResult> {
     const refreshTokenSecret = crypto.randomBytes(32).toString('hex');
     const refreshTokenHash = crypto.createHash('sha256').update(refreshTokenSecret).digest('hex');
@@ -46,8 +47,10 @@ export class TokenGenerationService {
       role: user.role,
       companyId: user.company.id,
       country: user.country,
-      sessionId: session.id
-    });
+      sessionId: session.id,
+      amr: mfaVerified ? ['pwd', 'mfa'] : ['pwd'],
+      mfa_verified_at: mfaVerified ? Math.floor(Date.now() / 1000) : undefined
+    }, { tokenType: 'access', subject: user.id });
 
     const refreshToken = Buffer.from(`${session.id}:${refreshTokenSecret}`).toString('base64');
 
@@ -59,7 +62,7 @@ export class TokenGenerationService {
     };
   }
 
-  async rotateSessionToken(session: Session, user: User): Promise<TokenGenerationResult> {
+  async rotateSessionToken(session: Session, user: User, mfaVerified = false): Promise<TokenGenerationResult> {
     const refreshTokenSecret = crypto.randomBytes(32).toString('hex');
     const refreshTokenHash = crypto.createHash('sha256').update(refreshTokenSecret).digest('hex');
 
@@ -76,8 +79,10 @@ export class TokenGenerationService {
       role: user.role,
       companyId: user.company.id,
       country: user.country,
-      sessionId: session.id
-    });
+      sessionId: session.id,
+      amr: mfaVerified ? ['pwd', 'mfa'] : ['pwd'],
+      mfa_verified_at: mfaVerified ? Math.floor(Date.now() / 1000) : undefined
+    }, { tokenType: 'access', subject: user.id });
 
     const refreshToken = Buffer.from(`${session.id}:${refreshTokenSecret}`).toString('base64');
 

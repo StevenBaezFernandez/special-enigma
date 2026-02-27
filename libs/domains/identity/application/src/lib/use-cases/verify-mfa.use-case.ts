@@ -29,7 +29,7 @@ export class VerifyMfaUseCase {
         throw new UnauthorizedException('Invalid or expired token');
     }
 
-    if (!payload.partial || !payload.sub) {
+    if (!payload.partial || !payload.sub || payload.typ !== 'virteex+stepup') {
         throw new UnauthorizedException('Invalid token type');
     }
 
@@ -56,7 +56,7 @@ export class VerifyMfaUseCase {
     // 3. Create Session and Generate Tokens
     const riskScore = payload.riskScore || 0;
 
-    const { accessToken, refreshToken, expiresIn, session } = await this.tokenGenerationService.createSessionAndTokens(user, context, riskScore);
+    const { accessToken, refreshToken, expiresIn, session } = await this.tokenGenerationService.createSessionAndTokens(user, context, riskScore, true);
 
     await this.auditLogRepository.save(new AuditLog('MFA_SUCCESS', user.id, { ip: context.ip, sessionId: session.id }));
 
