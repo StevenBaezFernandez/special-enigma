@@ -17,6 +17,10 @@ export class PacStrategyFactoryImpl implements PacStrategyFactory {
     const nodeEnv = this.configService.get<string>('NODE_ENV') ?? 'development';
     const allowSimulatedProviders = this.configService.get<string>('ALLOW_SIMULATED_PROVIDERS') === 'true';
 
+    if (nodeEnv === 'production' && allowSimulatedProviders) {
+      throw new Error('ALLOW_SIMULATED_PROVIDERS cannot be true in production.');
+    }
+
     if (!normalizedCountry) {
       if (nodeEnv === 'production') {
         throw new Error('Country is required to select a fiscal PAC provider in production.');

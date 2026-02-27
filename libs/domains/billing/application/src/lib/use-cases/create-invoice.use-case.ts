@@ -13,6 +13,7 @@ import {
 import { DomainException } from '@virteex/shared-util-server-config';
 import { CreateInvoiceDto } from '../dtos/create-invoice.dto';
 import { Decimal } from 'decimal.js';
+import { SUBSCRIPTION_REPOSITORY, SubscriptionRepository } from '@virteex/domain-subscription-domain';
 import {
   INVOICE_INTEGRATION_PUBLISHER,
   InvoiceIntegrationPublisherPort
@@ -29,6 +30,7 @@ export class CreateInvoiceUseCase {
     private readonly taxCalculatorService: TaxCalculatorService,
     private readonly priceValidationPolicy: PriceValidationPolicy,
     private readonly stampingOrchestrator: InvoiceStampingOrchestrator,
+    @Inject(SUBSCRIPTION_REPOSITORY) private readonly subscriptionRepository: SubscriptionRepository,
     @Inject(INVOICE_INTEGRATION_PUBLISHER)
     private readonly integrationPublisher: InvoiceIntegrationPublisherPort
   ) {}
@@ -36,6 +38,16 @@ export class CreateInvoiceUseCase {
   async execute(dto: CreateInvoiceDto): Promise<Invoice> {
     if (!dto.tenantId) {
       throw new DomainException('Tenant ID is required', 'TENANT_REQUIRED');
+    }
+
+
+    const subscription = await this.subscriptionRepository.findByTenantId(dto.tenantId);
+    const limit = subscription?.plan?.limits?.invoices ?? 10;
+    if (limit !== -1) {
+      const currentCount = await this.invoiceRepository.countByTenantId(dto.tenantId);
+      if (currentCount >= limit) {
+        throw new DomainException(`Invoice limit reached for tenant ${dto.tenantId}. Upgrade plan to continue.`, 'PLAN_LIMIT_REACHED');
+      }
     }
 
     const tenantConfig = await this.tenantConfigRepository.getFiscalConfig(dto.tenantId);

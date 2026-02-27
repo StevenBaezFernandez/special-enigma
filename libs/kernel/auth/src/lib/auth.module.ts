@@ -26,6 +26,7 @@ import { CompositeSecretProvider } from './services/providers/composite-secret.p
         provide: SECRET_PROVIDER,
         useFactory: async (defaultP: DefaultSecretProvider, vaultP: VaultSecretProvider, kmsP: KmsSecretProvider) => {
             await vaultP.initialize();
+            await kmsP.initialize();
             return new CompositeSecretProvider([vaultP, kmsP, defaultP]);
         },
         inject: [DefaultSecretProvider, VaultSecretProvider, KmsSecretProvider]
