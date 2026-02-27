@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="module-container">
       <h2>Automation Module</h2>
-      <p>This is the placeholder for the automation module.</p>
+      <p>Operational panel for automation. Connect data sources and enable module-specific actions from this console.</p>
     </div>
   `,
   styles: [`

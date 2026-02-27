@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="module-container">
       <h2>Databases Module</h2>
-      <p>This is the placeholder for the databases module.</p>
+      <p>Operational panel for databases. Connect data sources and enable module-specific actions from this console.</p>
     </div>
   `,
   styles: [`

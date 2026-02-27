@@ -1,8 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
+export interface ServiceStatusDto {
+  service: string;
+  status: 'ok';
+  timestamp: string;
+}
+
 @Injectable()
 export class AppService {
-  getData(): { message: string } {
-    return ({ message: 'Hello API' });
+  getData(): ServiceStatusDto {
+    return {
+      service: 'virteex-subscription-service',
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+    };
   }
 }

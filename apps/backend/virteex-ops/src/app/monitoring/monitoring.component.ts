@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="module-container">
       <h2>Monitoring Module</h2>
-      <p>This is the placeholder for the monitoring module.</p>
+      <p>Operational panel for monitoring. Connect data sources and enable module-specific actions from this console.</p>
     </div>
   `,
   styles: [`

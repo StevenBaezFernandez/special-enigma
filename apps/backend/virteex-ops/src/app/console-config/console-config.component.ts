@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="module-container">
       <h2>Console Config Module</h2>
-      <p>This is the placeholder for the console-config module.</p>
+      <p>Operational panel for console-config. Connect data sources and enable module-specific actions from this console.</p>
     </div>
   `,
   styles: [`

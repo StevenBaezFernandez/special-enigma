@@ -13,8 +13,12 @@ describe('AppService', () => {
   });
 
   describe('getData', () => {
-    it('should return "Hello API"', () => {
-      expect(service.getData()).toEqual({ message: 'Hello API' });
+    it('should return an operational status payload', () => {
+      expect(service.getData()).toEqual(
+        expect.objectContaining({
+          status: 'ok',
+        }),
+      );
     });
   });
 });

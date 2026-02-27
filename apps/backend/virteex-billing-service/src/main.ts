@@ -1,7 +1,3 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
 import { otelSDK } from './tracing';
 // Start SDK before importing other modules
 otelSDK.start();

@@ -6,5 +6,5 @@ export const environment: AppConfig = {
   recaptcha: {
     siteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' // Public Site Key
   },
-  vapidPublicKey: 'BK_gXy_yq_placeholder_key' // Placeholder
+  vapidPublicKey: (window as any)['env']?.['vapidPublicKey'] || ''
 };
