@@ -26,7 +26,6 @@ export default [
               onlyDependOnLibsWithTags: [
                 'type:contract',
                 'type:util',
-                'type:ui',
               ],
             },
             {
@@ -157,12 +156,12 @@ export default [
   },
 
   {
-    files: ['libs/domains/**/domain/src/lib/entities/**/*.ts'],
+    files: ['libs/domains/**/domain/**/*.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
         {
-          patterns: ['@nestjs/*', '@mikro-orm/*', '@nestjs', '@mikro-orm']
+          patterns: ['@nestjs/*', '@mikro-orm/*', '@nestjs', '@mikro-orm', 'class-validator', 'rxjs']
         }
       ]
     }

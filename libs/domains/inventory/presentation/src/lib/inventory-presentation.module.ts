@@ -7,8 +7,8 @@ import {
   UpdateWarehouseUseCase,
   DeleteWarehouseUseCase,
   ReserveStockUseCase
-} from '../../../application/src/index';
-import { InventoryInfrastructureModule } from '../../../infrastructure/src/index';
+} from '@virteex/application-inventory-application';
+import { InventoryInfrastructureModule } from '@virteex/infra-inventory-infrastructure';
 import { InventoryController } from './controllers/inventory.controller';
 
 @Module({

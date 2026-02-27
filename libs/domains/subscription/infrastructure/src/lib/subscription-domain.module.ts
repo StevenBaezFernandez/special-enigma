@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Subscription } from './entities/subscription.entity';
-import { SubscriptionPlan } from './entities/subscription-plan.entity';
-import { CustomerIdentityService } from './services/customer-identity.service';
+import { Subscription, SubscriptionPlan, CustomerIdentityService } from '@virteex/domain-subscription-domain';
 
 @Module({
   imports: [

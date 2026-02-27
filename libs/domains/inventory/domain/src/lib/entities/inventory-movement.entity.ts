@@ -1,7 +1,4 @@
-import { Entity, PrimaryKey, Property, ManyToOne, Enum } from '@mikro-orm/core';
 import { v4 } from 'uuid';
-import { Warehouse } from './warehouse.entity';
-import { Location } from './location.entity';
 
 export enum InventoryMovementType {
   IN = 'IN',
@@ -10,65 +7,43 @@ export enum InventoryMovementType {
   ADJUSTMENT = 'ADJUSTMENT'
 }
 
-@Entity()
 export class InventoryMovement {
-  @PrimaryKey({ type: 'uuid' })
-  id: string = v4();
-
-  @Property()
-  tenantId!: string;
-
-  @Property()
-  productId!: string; // Reference to Catalog Product ID
-
-  @ManyToOne(() => Warehouse)
-  warehouse!: Warehouse;
-
-  @ManyToOne(() => Location, { nullable: true })
-  location?: Location;
-
-  @Enum(() => InventoryMovementType)
-  type!: InventoryMovementType;
-
-  @Property({ type: 'decimal', precision: 14, scale: 4 })
-  quantity!: string;
-
-  @Property()
-  reference!: string; // e.g., PO-123, INV-456
-
-  @Property()
-  date: Date = new Date();
-
-  @Property()
-  createdAt: Date = new Date();
-
-  @Property({ nullable: true })
+  id: string;
+  tenantId: string;
+  productId: string;
+  warehouseId: string;
+  locationId?: string;
+  type: InventoryMovementType;
+  quantity: string;
+  reference: string;
+  date: Date;
+  createdAt: Date;
   lotId?: string;
-
-  @Property({ nullable: true })
   serialNumber?: string;
 
   constructor(
     tenantId: string,
     productId: string,
-    warehouse: Warehouse,
+    warehouseId: string,
     type: InventoryMovementType,
     quantity: string,
     reference: string,
-    location?: Location,
+    locationId?: string,
     lotId?: string,
-    serialNumber?: string
+    serialNumber?: string,
+    id?: string
   ) {
+    this.id = id || v4();
     this.tenantId = tenantId;
     this.productId = productId;
-    this.warehouse = warehouse;
+    this.warehouseId = warehouseId;
     this.type = type;
     this.quantity = quantity;
     this.reference = reference;
-    if (location) {
-      this.location = location;
-    }
+    this.locationId = locationId;
     this.lotId = lotId;
     this.serialNumber = serialNumber;
+    this.date = new Date();
+    this.createdAt = new Date();
   }
 }

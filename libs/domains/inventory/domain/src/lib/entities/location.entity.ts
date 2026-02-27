@@ -1,35 +1,22 @@
-import { Entity, PrimaryKey, Property, ManyToOne, Unique } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 import type { Warehouse } from './warehouse.entity';
 
-@Entity()
-@Unique({ properties: ['warehouse', 'code'] })
 export class Location {
-  @PrimaryKey({ type: 'uuid' })
-  id: string = v4();
+  id: string;
+  tenantId: string;
+  warehouseId: string;
+  code: string;
+  type: string;
+  createdAt: Date;
+  updatedAt: Date;
 
-  @Property()
-  tenantId!: string;
-
-  @ManyToOne('Warehouse')
-  warehouse!: Warehouse;
-
-  @Property()
-  code!: string;
-
-  @Property()
-  type!: string; // e.g., 'RACK', 'BIN', 'FLOOR'
-
-  @Property()
-  createdAt: Date = new Date();
-
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
-
-  constructor(tenantId: string, warehouse: Warehouse, code: string, type: string) {
+  constructor(tenantId: string, warehouseId: string, code: string, type: string, id?: string) {
+    this.id = id || v4();
     this.tenantId = tenantId;
-    this.warehouse = warehouse;
+    this.warehouseId = warehouseId;
     this.code = code;
     this.type = type;
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
   }
 }

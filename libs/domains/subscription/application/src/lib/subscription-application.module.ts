@@ -10,7 +10,7 @@ import { ProcessCheckoutSuccessUseCase } from './use-cases/process-checkout-succ
 import { HandleInvoicePaidUseCase } from './use-cases/handle-invoice-paid.use-case';
 import { HandleSubscriptionUpdatedUseCase } from './use-cases/handle-subscription-updated.use-case';
 import { HandleSubscriptionDeletedUseCase } from './use-cases/handle-subscription-deleted.use-case';
-import { SubscriptionDomainModule } from '@virteex/domain-subscription-domain';
+import { SubscriptionDomainModule } from '@virteex/infra-subscription-infrastructure';
 
 @Module({
   imports: [SubscriptionDomainModule],

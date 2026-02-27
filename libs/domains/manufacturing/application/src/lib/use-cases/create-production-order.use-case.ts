@@ -9,23 +9,13 @@ import {
   BillOfMaterialsRepository,
   BILL_OF_MATERIALS_REPOSITORY
 } from '@virteex/domain-manufacturing-domain';
-import { IsString, IsNumber, IsDateString, IsUUID } from 'class-validator';
 
-export class CreateProductionOrderDto {
-  @IsString()
-  tenantId!: string;
-
-  @IsString()
-  warehouseId!: string;
-
-  @IsString()
-  productSku!: string;
-
-  @IsNumber()
-  quantity!: number;
-
-  @IsDateString()
-  dueDate!: Date;
+export interface CreateProductionOrderInput {
+  tenantId: string;
+  warehouseId: string;
+  productSku: string;
+  quantity: number;
+  dueDate: Date;
 }
 
 @Injectable()
@@ -36,7 +26,7 @@ export class CreateProductionOrderUseCase {
     @Inject(BILL_OF_MATERIALS_REPOSITORY) private readonly bomRepository: BillOfMaterialsRepository
   ) {}
 
-  async execute(dto: CreateProductionOrderDto): Promise<ProductionOrder> {
+  async execute(dto: CreateProductionOrderInput): Promise<ProductionOrder> {
     // 1. Validate BOM Existence (Robustness)
     const bom = await this.bomRepository.findByProductSku(dto.productSku);
     if (!bom) {

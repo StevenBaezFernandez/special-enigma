@@ -23,15 +23,4 @@ export class InventoryApiService {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
-  createProduct(product: CreateProductDto): Observable<Product> {
-    return this.http.post<Product>(this.apiUrl, product);
-  }
-
-  updateProduct(id: string, product: UpdateProductDto): Observable<Product> {
-    return this.http.patch<Product>(`${this.apiUrl}/${id}`, product);
-  }
-
-  deleteProduct(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
 }

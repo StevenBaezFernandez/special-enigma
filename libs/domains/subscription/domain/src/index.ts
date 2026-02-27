@@ -6,6 +6,5 @@ export * from './lib/ports/customer-registry.port';
 export * from './lib/ports/subscription-provider.port';
 export * from './lib/ports/payment-session-provider.port';
 export * from './lib/services/customer-identity.service';
-export * from './lib/subscription-domain.module';
 
 export * from './lib/services/stripe-runtime-config.service';

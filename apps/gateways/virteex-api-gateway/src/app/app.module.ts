@@ -17,7 +17,7 @@ import { AccountingPresentationModule } from '@virteex/api-accounting-presentati
 import { AppController } from './app.controller';
 import { HealthController } from './health.controller';
 import { AppService } from './app.service';
-import { InitialSeederService } from './seeds/initial-seeder.service';
+import { InitialSeederService } from '@virteex/infra-payroll-infrastructure';
 
 // Cross Domain Infrastructure (Application Level)
 import { CrossDomainInfrastructureModule } from './infrastructure/cross-domain.module';

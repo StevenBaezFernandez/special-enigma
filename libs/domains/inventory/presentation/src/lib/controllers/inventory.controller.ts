@@ -10,9 +10,9 @@ import {
   UpdateWarehouseUseCase,
   DeleteWarehouseUseCase,
   RegisterMovementUseCase,
-  CreateWarehouseDto,
-  RegisterMovementDto
-} from '../../../../application/src';
+  CreateWarehouseDto
+} from '@virteex/application-inventory-application';
+import { RegisterMovementDto } from '../dto/register-movement.dto';
 import { IsString, IsNumber, Min, IsArray, ValidateNested, IsOptional, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { JwtAuthGuard, CurrentUser, UserPayload } from '@virteex/kernel-auth';

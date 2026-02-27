@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IsString, IsNotEmpty, IsOptional, IsUUID, IsEnum, IsNumberString } from 'class-validator';
 import {
   INVENTORY_REPOSITORY,
   InventoryRepository,
@@ -14,34 +13,14 @@ import {
   ProductGateway
 } from '@virteex/domain-inventory-domain';
 
-export class RegisterMovementDto {
-  @IsUUID()
-  @IsNotEmpty()
-  tenantId!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  productId!: string;
-
-  @IsUUID()
-  @IsNotEmpty()
-  warehouseId!: string;
-
-  @IsUUID()
-  @IsOptional()
+export interface RegisterMovementInput {
+  tenantId: string;
+  productId: string;
+  warehouseId: string;
   locationId?: string;
-
-  @IsEnum(InventoryMovementType)
-  @IsNotEmpty()
-  type!: InventoryMovementType;
-
-  @IsNumberString()
-  @IsNotEmpty()
-  quantity!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  reference!: string;
+  type: InventoryMovementType;
+  quantity: string;
+  reference: string;
 }
 
 @Injectable()
@@ -52,7 +31,7 @@ export class RegisterMovementUseCase {
     @Inject(PRODUCT_GATEWAY) private readonly productGateway: ProductGateway
   ) {}
 
-  async execute(dto: RegisterMovementDto): Promise<void> {
+  async execute(dto: RegisterMovementInput): Promise<void> {
     // 0. Validate Product existence and Tenant match (Cross-Domain Check)
     const productExists = await this.productGateway.exists(dto.productId);
     if (!productExists) {
@@ -99,7 +78,7 @@ export class RegisterMovementUseCase {
       if (dto.type === InventoryMovementType.OUT) {
          throw new InsufficientStockException(dto.productId, dto.warehouseId);
       }
-      stock = new Stock(dto.tenantId, dto.productId, warehouse, '0', location || undefined);
+      stock = new Stock(dto.tenantId, dto.productId, warehouse.id, '0', location?.id);
     } else {
         // Ensure stock belongs to tenant (sanity check)
         if (stock.tenantId !== dto.tenantId) {
@@ -122,11 +101,11 @@ export class RegisterMovementUseCase {
     const movement = new InventoryMovement(
       dto.tenantId,
       dto.productId,
-      warehouse,
+      warehouse.id,
       dto.type,
       dto.quantity,
       dto.reference,
-      location || undefined
+      location?.id
     );
 
     // 7. Save

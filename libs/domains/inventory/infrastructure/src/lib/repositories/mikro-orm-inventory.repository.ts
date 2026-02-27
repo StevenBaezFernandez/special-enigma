@@ -5,13 +5,17 @@ import {
   InventoryMovement,
   Stock
 } from '@virteex/domain-inventory-domain';
+import { StockOrmEntity } from '../persistence/entities/stock.orm-entity';
+import { InventoryMapper } from '../persistence/mappers/inventory.mapper';
+import { InventoryMovementOrmEntity } from '../persistence/entities/inventory-movement.orm-entity';
 
 @Injectable()
 export class MikroOrmInventoryRepository implements InventoryRepository {
   constructor(private readonly em: EntityManager) {}
 
   async saveMovement(movement: InventoryMovement): Promise<void> {
-    await this.em.persist(movement);
+    const orm = InventoryMapper.toMovementOrm(movement);
+    await this.em.persist(orm);
     await this.em.flush();
   }
 
@@ -22,7 +26,8 @@ export class MikroOrmInventoryRepository implements InventoryRepository {
     } else {
       where.location = null;
     }
-    return this.em.findOne(Stock, where);
+    const orm = await this.em.findOne(StockOrmEntity, where);
+    return orm ? InventoryMapper.toStockDomain(orm) : null;
   }
 
   async findStockWithBatches(warehouseId: string, productId: string, locationId?: string): Promise<Stock | null> {
@@ -32,22 +37,25 @@ export class MikroOrmInventoryRepository implements InventoryRepository {
     } else {
       where.location = null;
     }
-    return this.em.findOne(Stock, where, { populate: ['batches'] });
+    const orm = await this.em.findOne(StockOrmEntity, where, { populate: ['batches'] });
+    return orm ? InventoryMapper.toStockDomain(orm) : null;
   }
 
   async saveStock(stock: Stock): Promise<void> {
-    await this.em.persist(stock);
+    const orm = InventoryMapper.toStockOrm(stock);
+    // Use assign or wrap to merge if it already exists in identity map or database
+    // For simplicity in this refactor, let's use upsert or similar if needed.
+    // MikroORM persist on an entity with an ID will try to find it.
+    await this.em.persist(orm);
     await this.em.flush();
   }
 
   async saveBatch(stocks: Stock[], movements: InventoryMovement[]): Promise<void> {
-    // If stocks are already persisted (managed), just movements need persist.
-    // But persisting managed entities is fine.
-    // We flush once at the end.
+    const stockOrms = stocks.map(s => InventoryMapper.toStockOrm(s));
+    const movementOrms = movements.map(m => InventoryMapper.toMovementOrm(m));
 
-    // MikroORM persist handles arrays.
-    if (stocks.length > 0) await this.em.persist(stocks);
-    if (movements.length > 0) await this.em.persist(movements);
+    if (stockOrms.length > 0) await this.em.persist(stockOrms);
+    if (movementOrms.length > 0) await this.em.persist(movementOrms);
 
     await this.em.flush();
   }

@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule, PlusCircle, MoreHorizontal, AlertCircle, Search } from 'lucide-angular';
 import { Product } from '../../../core/models/product.model';
 import { InventoryApiService } from '../../../core/api/inventory-api.service';
+import { CatalogService } from '@virteex/catalog-ui';
 import { NotificationService } from '../../../core/services/notification';
 import { HasPermissionDirective } from '../../../shared/directives/has-permission.directive';
 
@@ -17,6 +18,7 @@ import { HasPermissionDirective } from '../../../shared/directives/has-permissio
 })
 export class ProductsPage implements OnInit {
   private inventoryService = inject(InventoryApiService);
+  private catalogService = inject(CatalogService);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
 
@@ -78,15 +80,7 @@ export class ProductsPage implements OnInit {
   }
 
   deleteProduct(product: Product): void {
-    if (confirm(`¿Estás seguro de que quieres eliminar el producto "${product.name}"?`)) {
-      this.inventoryService.deleteProduct(product.id).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Producto eliminado exitosamente.');
-          this.loadProducts(); // Recargar la lista
-        },
-        error: () => this.notificationService.showError('Error al eliminar el producto.')
-      });
-    }
+      this.notificationService.showError('La eliminación de productos debe gestionarse desde el Catálogo.');
   }
 
   navigateToEdit(productId: string): void {
