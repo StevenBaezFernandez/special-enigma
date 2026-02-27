@@ -78,7 +78,7 @@
   },
   "tags": [
     "scope:crm",
-    "type:application",
+    "type:app",
     "platform:agnostic",
     "criticality:medium"
   ]

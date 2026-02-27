@@ -78,7 +78,7 @@
   },
   "tags": [
     "scope:catalog",
-    "type:application",
+    "type:app",
     "platform:agnostic",
     "criticality:medium"
   ]

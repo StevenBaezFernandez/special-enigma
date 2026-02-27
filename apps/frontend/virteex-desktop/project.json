@@ -63,7 +63,7 @@
   "prefix": "virteex",
   "tags": [
     "scope:shared",
-    "type:application",
+    "type:app",
     "platform:agnostic",
     "criticality:medium"
   ]

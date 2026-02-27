@@ -6,7 +6,7 @@
   "sourceRoot": "apps/virteex-store/src",
   "tags": [
     "scope:store",
-    "type:application",
+    "type:app",
     "platform:agnostic",
     "criticality:medium"
   ],

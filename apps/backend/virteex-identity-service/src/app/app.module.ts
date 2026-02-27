@@ -14,7 +14,6 @@ import { IdentityPresentationModule } from '@virteex/api-identity-presentation';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { IdentityResolver } from './identity.resolver';
 
 @Module({
   imports: [
@@ -65,7 +64,6 @@ import { IdentityResolver } from './identity.resolver';
   controllers: [AppController],
   providers: [
     AppService,
-    IdentityResolver,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

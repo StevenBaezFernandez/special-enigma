@@ -5,7 +5,7 @@
   "projectType": "application",
   "tags": [
     "scope:identity",
-    "type:application",
+    "type:app",
     "platform:identity",
     "criticality:medium"
   ],
@@ -81,10 +81,6 @@
         }
       }
     },
-    "test": {
-      "options": {
-        "passWithNoTests": true
-      }
-    }
+    "test": {}
   }
 }

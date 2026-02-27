@@ -5,7 +5,7 @@
   "projectType": "application",
   "tags": [
     "scope:purchasing",
-    "type:application",
+    "type:app",
     "platform:agnostic",
     "criticality:medium"
   ],
@@ -91,10 +91,6 @@
         }
       }
     },
-    "test": {
-      "options": {
-        "passWithNoTests": true
-      }
-    }
+    "test": {}
   }
 }

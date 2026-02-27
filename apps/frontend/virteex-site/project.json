@@ -6,7 +6,7 @@
   "sourceRoot": "apps/virteex-site/src",
   "tags": [
     "scope:shared",
-    "type:application",
+    "type:app",
     "platform:web",
     "criticality:medium"
   ],

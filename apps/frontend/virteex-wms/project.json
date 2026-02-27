@@ -6,7 +6,7 @@
   "sourceRoot": "apps/virteex-wms/src",
   "tags": [
     "scope:wms",
-    "type:application",
+    "type:app",
     "platform:agnostic",
     "criticality:medium"
   ],

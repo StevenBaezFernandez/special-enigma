@@ -6,7 +6,7 @@
   "sourceRoot": "apps/virteex-shopfloor/src",
   "tags": [
     "scope:shopfloor",
-    "type:application",
+    "type:app",
     "platform:agnostic",
     "criticality:medium"
   ],

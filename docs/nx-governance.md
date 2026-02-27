@@ -41,3 +41,9 @@ Para cambios de arquitectura en tags o boundaries:
 2. actualizar `tools/validate-project-tags.mjs`;
 3. ejecutar normalización de `project.json`;
 4. validar con `npm run validate:nx-tags` y lint affected.
+
+## Convención apps backend como composition root
+- `apps/backend/*` debe permanecer como **app shell**: bootstrap, wiring de módulos y configuración de borde.
+- Resolvers, DTOs de transporte y validaciones de entrada se centralizan en `libs/domains/*/presentation`.
+- Adaptadores concretos (gateways/repositorios HTTP/DB) se centralizan en `libs/domains/*/infrastructure`.
+- Para proyectos desplegables (`projectType: application`) se exige `type:app` (excepto apps e2e que usan `type:e2e`).

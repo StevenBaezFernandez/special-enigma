@@ -6,7 +6,7 @@
   "prefix": "virteex",
   "tags": [
     "scope:shared",
-    "type:application",
+    "type:app",
     "platform:plugin-host",
     "criticality:medium"
   ],

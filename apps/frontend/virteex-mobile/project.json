@@ -6,7 +6,7 @@
   "sourceRoot": "apps/frontend/virteex-mobile/src",
   "tags": [
     "scope:shared",
-    "type:application",
+    "type:app",
     "platform:mobile",
     "criticality:high"
   ],
