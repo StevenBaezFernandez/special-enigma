@@ -1,0 +1,120 @@
+{
+  "name": "api-plugin-host-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api/plugin-host/app/src",
+  "projectType": "application",
+  "prefix": "virteex",
+  "tags": [
+    "scope:shared",
+    "type:app",
+    "platform:plugin-host",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/api-plugin-host-app",
+        "format": [
+          "cjs"
+        ],
+        "bundle": false,
+        "main": "apps/api/plugin-host/app/src/main.ts",
+        "tsConfig": "apps/api/plugin-host/app/tsconfig.app.json",
+        "assets": [
+          {
+            "input": "apps/api/plugin-host/app/src/assets",
+            "glob": "**/*",
+            "output": "apps/api/plugin-host/app/src/assets"
+          }
+        ],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/api-plugin-host-app/package.json",
+        "{workspaceRoot}/dist/apps/api-plugin-host-app/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/dist/apps/api-plugin-host-app/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "prune": {
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ],
+      "executor": "nx:noop"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "buildTarget": "api-plugin-host-app:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-plugin-host-app:build:development"
+        },
+        "production": {
+          "buildTarget": "api-plugin-host-app:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/api-plugin-host-app"
+      }
+    }
+  }
+}

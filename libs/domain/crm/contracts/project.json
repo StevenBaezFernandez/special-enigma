@@ -1,0 +1,39 @@
+{
+  "name": "domain-crm-contracts",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/crm/contracts/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:crm",
+    "type:contract",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/crm/contracts",
+        "main": "libs/domain/crm/contracts/src/index.ts",
+        "tsConfig": "libs/domain/crm/contracts/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/crm/contracts/*.md"
+        ],
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/crm/contracts"
+      }
+    }
+  }
+}

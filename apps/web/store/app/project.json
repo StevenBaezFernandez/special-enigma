@@ -1,0 +1,98 @@
+{
+  "name": "web-store-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/web-store-app/src",
+  "tags": [
+    "scope:store",
+    "type:app",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/web-store-app",
+        "browser": "apps/web-store-app/src/main.ts",
+        "tsConfig": "apps/web-store-app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/web-store-app/public"
+          }
+        ],
+        "styles": [
+          "apps/web-store-app/src/styles.scss"
+        ],
+        "server": "apps/web-store-app/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/web-store-app/src/server.ts"
+        },
+        "outputMode": "server"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "web-store-app:build:production"
+        },
+        "development": {
+          "buildTarget": "web-store-app:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "web-store-app:build",
+        "staticFilePath": "dist/apps/web-store-app/browser",
+        "spa": true
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/web-store-app"
+      }
+    }
+  }
+}

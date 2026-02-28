@@ -1,0 +1,39 @@
+{
+  "name": "domain-fiscal-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/fiscal/infrastructure/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:fiscal",
+    "type:infrastructure",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/fiscal/infrastructure",
+        "main": "libs/domain/fiscal/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/fiscal/infrastructure/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/fiscal/infrastructure/*.md"
+        ],
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/fiscal/infrastructure"
+      }
+    }
+  }
+}

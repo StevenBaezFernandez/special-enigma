@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "api-app",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Domain name",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    }
+  },
+  "required": ["name"]
+}

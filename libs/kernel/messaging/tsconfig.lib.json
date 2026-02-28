@@ -1,5 +1,5 @@
 {
-  "extends": "../../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
@@ -12,7 +12,7 @@
     "outDir": "../../../../dist/libs/kernel/messaging",
     "baseUrl": ".",
     "paths": {
-      "@virteex/shared/infrastructure/cache": ["../../../../libs/shared/infrastructure/cache/src/index.ts"]
+      "@virteex/shared/infrastructure/cache": ["../../../../libs/platform/cache/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],

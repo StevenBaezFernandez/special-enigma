@@ -25,9 +25,9 @@ for (const [moduleName, countries] of Object.entries(matrix.modules ?? {})) {
 }
 
 const sourceFiles = [
-  'apps/backend/virteex-fiscal-service/src/app/app.module.ts',
-  'libs/domains/fiscal/infrastructure/src/index.ts',
-  'apps/backend/virteex-plugin-host/src/main.ts'
+  'apps/api/fiscal/app/src/app/app.module.ts',
+  'libs/domain/fiscal/infrastructure/src/index.ts',
+  'apps/api/plugin-host/app/src/main.ts'
 ];
 
 const patterns = [

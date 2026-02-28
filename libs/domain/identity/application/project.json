@@ -1,0 +1,42 @@
+{
+  "name": "domain-identity-application",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/identity/application/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:identity",
+    "type:application",
+    "platform:agnostic",
+    "criticality:high",
+    "tenant-mode:schema"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/identity/application",
+        "main": "libs/domain/identity/application/src/index.ts",
+        "tsConfig": "libs/domain/identity/application/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/identity/application/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/identity/application"
+      }
+    }
+  }
+}

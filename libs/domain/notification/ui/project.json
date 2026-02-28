@@ -1,0 +1,24 @@
+{
+  "name": "domain-notification-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/notification/ui/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:notification",
+    "type:ui",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/notification/ui"
+      }
+    }
+  }
+}

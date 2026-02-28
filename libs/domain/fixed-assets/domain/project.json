@@ -1,0 +1,39 @@
+{
+  "name": "domain-fixed-assets-domain",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/fixed-assets/domain/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:fixed-assets",
+    "type:domain",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/fixed-assets/domain",
+        "main": "libs/domain/fixed-assets/domain/src/index.ts",
+        "tsConfig": "libs/domain/fixed-assets/domain/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/fixed-assets/domain/*.md"
+        ],
+        "rootDir": "libs/domain/fixed-assets/domain/src"
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/fixed-assets/domain"
+      }
+    }
+  }
+}

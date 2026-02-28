@@ -1,0 +1,39 @@
+{
+  "name": "domain-billing-application",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/billing/application/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:billing",
+    "type:application",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/billing/application",
+        "main": "libs/domain/billing/application/src/index.ts",
+        "tsConfig": "libs/domain/billing/application/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/billing/application/*.md"
+        ],
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/billing/application"
+      }
+    }
+  }
+}

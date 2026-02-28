@@ -1,0 +1,16 @@
+{
+  "name": "domain-catalog-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/catalog/infrastructure/src",
+  "projectType": "library",
+  "tags": [
+    "scope:catalog",
+    "type:infrastructure",
+    "platform:nest",
+    "criticality:high",
+    "tenant-mode:schema"
+  ],
+  "// targets": "to see all targets run: nx show project catalog-infrastructure --web",
+  "targets": {},
+  "prefix": "virteex"
+}

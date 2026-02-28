@@ -1,0 +1,108 @@
+{
+  "name": "web-portal-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "virteex",
+  "sourceRoot": "apps/web/portal/app/src",
+  "tags": [
+    "scope:shared",
+    "type:app",
+    "platform:web",
+    "criticality:high"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/web/portal/app",
+        "browser": "apps/web/portal/app/src/main.ts",
+        "tsConfig": "apps/web/portal/app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/web/portal/app/public"
+          }
+        ],
+        "styles": [
+          "apps/web/portal/app/src/styles.scss"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": [
+            "libs/shared/ui/src/lib/styles"
+          ]
+        }
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/web/portal/app/src/environments/environment.ts",
+              "with": "apps/web/portal/app/src/environments/environment.prod.ts"
+            }
+          ],
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "10kb",
+              "maximumError": "20kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "web-portal-app:build:production"
+        },
+        "development": {
+          "buildTarget": "web-portal-app:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "apps/web/portal/app/proxy.conf.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "web-portal-app:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/web/portal/app/browser",
+        "spa": true
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/web/portal/app"
+      }
+    }
+  }
+}

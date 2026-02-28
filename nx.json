@@ -41,23 +41,23 @@
         "targetName": "test"
       },
       "exclude": [
-        "apps/virteex-api-gateway-e2e/**/*",
-        "apps/virteex-identity-service-e2e/**/*",
-        "apps/virteex-scheduler-service-e2e/**/*",
-        "apps/virteex-fiscal-service-e2e/**/*",
-        "apps/virteex-catalog-service-e2e/**/*",
-        "apps/virteex-gateway-e2e/**/*",
-        "apps/virteex-notification-service-e2e/**/*",
-        "apps/virteex-billing-service-e2e/**/*",
-        "apps/virteex-accounting-service-e2e/**/*",
-        "apps/virteex-payroll-service-e2e/**/*",
-        "apps/virteex-projects-service-e2e/**/*",
-        "apps/virteex-manufacturing-service-e2e/**/*",
-        "apps/virteex-treasury-service-e2e/**/*",
-        "apps/virteex-purchasing-service-e2e/**/*",
-        "apps/virteex-bi-service-e2e/**/*",
-        "apps/virteex-admin-service-e2e/**/*",
-        "apps/virteex-fixed-assets-service-e2e/**/*"
+        "apps/api-gateway-e2e/**/*",
+        "apps/api-identity-e2e/**/*",
+        "apps/worker-scheduler-e2e/**/*",
+        "apps/api-fiscal-e2e/**/*",
+        "apps/api-catalog-e2e/**/*",
+        "apps/api-gateway-legacy-e2e/**/*",
+        "apps/worker-notification-e2e/**/*",
+        "apps/api-billing-e2e/**/*",
+        "apps/api-accounting-e2e/**/*",
+        "apps/api-payroll-e2e/**/*",
+        "apps/api-projects-e2e/**/*",
+        "apps/api-manufacturing-e2e/**/*",
+        "apps/api-treasury-e2e/**/*",
+        "apps/api-purchasing-e2e/**/*",
+        "apps/api-bi-e2e/**/*",
+        "apps/api-admin-e2e/**/*",
+        "apps/api-fixed-assets-e2e/**/*"
       ]
     },
     {
@@ -129,5 +129,5 @@
       "style": "css"
     }
   },
-  "defaultProject": "apps-virteex-desktop-virteex-desktop"
+  "defaultProject": "apps-desktop-app-desktop-app"
 }

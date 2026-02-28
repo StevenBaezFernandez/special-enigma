@@ -1,5 +1,5 @@
 {
-  "name": "shared-util-server-config",
+  "name": "shared-util-server-server-config",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/util/server/server-config/src",
   "prefix": "virteex",

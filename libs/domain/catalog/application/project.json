@@ -1,0 +1,30 @@
+{
+  "name": "domain-catalog-application",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/catalog/application/src",
+  "projectType": "library",
+  "tags": [
+    "scope:catalog",
+    "type:application",
+    "platform:agnostic",
+    "criticality:high",
+    "tenant-mode:schema"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/catalog/application",
+        "main": "libs/domain/catalog/application/src/index.ts",
+        "tsConfig": "libs/domain/catalog/application/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/catalog/application/*.md"
+        ]
+      }
+    }
+  },
+  "prefix": "virteex"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "platform-xslt",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/platform/xslt/src",
+  "projectType": "library",
+  "tags": [
+    "scope:shared",
+    "type:util",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/platform/xslt",
+        "main": "libs/platform/xslt/src/index.ts",
+        "tsConfig": "libs/platform/xslt/tsconfig.lib.json",
+        "assets": [
+          "libs/platform/xslt/*.md"
+        ]
+      }
+    }
+  }
+}

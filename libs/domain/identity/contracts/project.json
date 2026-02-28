@@ -1,0 +1,40 @@
+{
+  "name": "domain-identity-contracts",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/identity/contracts/src",
+  "projectType": "library",
+  "tags": [
+    "scope:identity",
+    "type:contract",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/identity/contracts",
+        "main": "libs/domain/identity/contracts/src/index.ts",
+        "tsConfig": "libs/domain/identity/contracts/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/identity/contracts/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/identity/contracts"
+      }
+    }
+  }
+}

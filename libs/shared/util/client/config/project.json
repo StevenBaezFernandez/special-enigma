@@ -1,5 +1,5 @@
 {
-  "name": "shared-util-config",
+  "name": "shared-util-client-config",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/util/client/config/src",
   "projectType": "library",

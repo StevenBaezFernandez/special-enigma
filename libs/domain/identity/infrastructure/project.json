@@ -1,0 +1,43 @@
+{
+  "name": "domain-identity-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/identity/infrastructure/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:identity",
+    "type:infrastructure",
+    "platform:nest",
+    "criticality:high",
+    "tenant-mode:schema"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/identity/infrastructure",
+        "main": "libs/domain/identity/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/identity/infrastructure/tsconfig.lib.json",
+        "rootDir": ".",
+        "assets": [
+          "libs/domain/identity/infrastructure/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/identity/infrastructure"
+      }
+    }
+  }
+}

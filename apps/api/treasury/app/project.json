@@ -1,0 +1,104 @@
+{
+  "name": "api-treasury-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api/treasury/app/src",
+  "projectType": "application",
+  "tags": [
+    "scope:treasury",
+    "type:app",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/api-treasury-app",
+        "main": "apps/api/treasury/app/src/main.ts",
+        "tsConfig": "apps/api/treasury/app/tsconfig.app.json",
+        "assets": [
+          "apps/api/treasury/app/src/assets"
+        ],
+        "webpackConfig": "apps/api/treasury/app/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/api/treasury/app/src/environments/environment.ts",
+              "with": "apps/api/treasury/app/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/api-treasury-app/package.json",
+        "{workspaceRoot}/dist/apps/api-treasury-app/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true,
+      "outputs": [
+        "{workspaceRoot}/dist/apps/api-treasury-app/workspace_modules"
+      ],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "prune": {
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ],
+      "executor": "nx:noop"
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "api-treasury-app:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-treasury-app:build:development"
+        },
+        "production": {
+          "buildTarget": "api-treasury-app:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/api-treasury-app"
+      }
+    }
+  }
+}

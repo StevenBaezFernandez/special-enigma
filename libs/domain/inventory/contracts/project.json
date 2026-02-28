@@ -1,0 +1,29 @@
+{
+  "name": "domain-inventory-contracts",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/inventory/contracts/src",
+  "projectType": "library",
+  "tags": [
+    "scope:inventory",
+    "type:contract",
+    "platform:agnostic",
+    "criticality:high"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/inventory/contracts",
+        "main": "libs/domain/inventory/contracts/src/index.ts",
+        "tsConfig": "libs/domain/inventory/contracts/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/inventory/contracts/*.md"
+        ]
+      }
+    }
+  },
+  "prefix": "virteex"
+}

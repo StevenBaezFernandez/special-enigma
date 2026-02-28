@@ -24,491 +24,491 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@virteex/api-accounting-presentation": [
-        "libs/domains/accounting/presentation/src/index.ts"
+      "@virteex/domain-accounting-presentation": [
+        "libs/domain/accounting/presentation/src/index.ts"
       ],
-      "@virteex/api-accounting-presentation/*": [
-        "libs/domains/accounting/presentation/src/*"
+      "@virteex/domain-accounting-presentation/*": [
+        "libs/domain/accounting/presentation/src/*"
       ],
-      "@virteex/api-admin-presentation": [
-        "libs/domains/admin/presentation/src/index.ts"
+      "@virteex/domain-admin-presentation": [
+        "libs/domain/admin/presentation/src/index.ts"
       ],
-      "@virteex/api-admin-presentation/*": [
-        "libs/domains/admin/presentation/src/*"
+      "@virteex/domain-admin-presentation/*": [
+        "libs/domain/admin/presentation/src/*"
       ],
-      "@virteex/api-bi-presentation": [
-        "libs/domains/bi/presentation/src/index.ts"
+      "@virteex/domain-bi-presentation": [
+        "libs/domain/bi/presentation/src/index.ts"
       ],
-      "@virteex/api-bi-presentation/*": [
-        "libs/domains/bi/presentation/src/*"
+      "@virteex/domain-bi-presentation/*": [
+        "libs/domain/bi/presentation/src/*"
       ],
-      "@virteex/api-catalog-presentation": [
-        "libs/domains/catalog/presentation/src/index.ts"
+      "@virteex/domain-catalog-presentation": [
+        "libs/domain/catalog/presentation/src/index.ts"
       ],
-      "@virteex/api-catalog-presentation/*": [
-        "libs/domains/catalog/presentation/src/*"
+      "@virteex/domain-catalog-presentation/*": [
+        "libs/domain/catalog/presentation/src/*"
       ],
-      "@virteex/api-crm-presentation": [
-        "libs/domains/crm/presentation/src/index.ts"
+      "@virteex/domain-crm-presentation": [
+        "libs/domain/crm/presentation/src/index.ts"
       ],
-      "@virteex/api-crm-presentation/*": [
-        "libs/domains/crm/presentation/src/*"
+      "@virteex/domain-crm-presentation/*": [
+        "libs/domain/crm/presentation/src/*"
       ],
-      "@virteex/api-fiscal-presentation": [
-        "libs/domains/fiscal/presentation/src/index.ts"
+      "@virteex/domain-fiscal-presentation": [
+        "libs/domain/fiscal/presentation/src/index.ts"
       ],
-      "@virteex/api-fiscal-presentation/*": [
-        "libs/domains/fiscal/presentation/src/*"
+      "@virteex/domain-fiscal-presentation/*": [
+        "libs/domain/fiscal/presentation/src/*"
       ],
-      "@virteex/api-fixed-assets-presentation": [
-        "libs/domains/fixed-assets/presentation/src/index.ts"
+      "@virteex/domain-fixed-assets-presentation": [
+        "libs/domain/fixed-assets/presentation/src/index.ts"
       ],
-      "@virteex/api-fixed-assets-presentation/*": [
-        "libs/domains/fixed-assets/presentation/src/*"
+      "@virteex/domain-fixed-assets-presentation/*": [
+        "libs/domain/fixed-assets/presentation/src/*"
       ],
-      "@virteex/api-identity-presentation": [
-        "libs/domains/identity/presentation/src/index.ts"
+      "@virteex/domain-identity-presentation": [
+        "libs/domain/identity/presentation/src/index.ts"
       ],
-      "@virteex/api-identity-presentation/*": [
-        "libs/domains/identity/presentation/src/*"
+      "@virteex/domain-identity-presentation/*": [
+        "libs/domain/identity/presentation/src/*"
       ],
-      "@virteex/api-inventory-presentation": [
-        "libs/domains/inventory/presentation/src/index.ts"
+      "@virteex/domain-inventory-presentation": [
+        "libs/domain/inventory/presentation/src/index.ts"
       ],
-      "@virteex/api-inventory-presentation/*": [
-        "libs/domains/inventory/presentation/src/*"
+      "@virteex/domain-inventory-presentation/*": [
+        "libs/domain/inventory/presentation/src/*"
       ],
-      "@virteex/api-manufacturing-presentation": [
-        "libs/domains/manufacturing/presentation/src/index.ts"
+      "@virteex/domain-manufacturing-presentation": [
+        "libs/domain/manufacturing/presentation/src/index.ts"
       ],
-      "@virteex/api-manufacturing-presentation/*": [
-        "libs/domains/manufacturing/presentation/src/*"
+      "@virteex/domain-manufacturing-presentation/*": [
+        "libs/domain/manufacturing/presentation/src/*"
       ],
-      "@virteex/api-payroll-presentation": [
-        "libs/domains/payroll/presentation/src/index.ts"
+      "@virteex/domain-payroll-presentation": [
+        "libs/domain/payroll/presentation/src/index.ts"
       ],
-      "@virteex/api-payroll-presentation/*": [
-        "libs/domains/payroll/presentation/src/*"
+      "@virteex/domain-payroll-presentation/*": [
+        "libs/domain/payroll/presentation/src/*"
       ],
-      "@virteex/api-projects-presentation": [
-        "libs/domains/projects/presentation/src/index.ts"
+      "@virteex/domain-projects-presentation": [
+        "libs/domain/projects/presentation/src/index.ts"
       ],
-      "@virteex/api-projects-presentation/*": [
-        "libs/domains/projects/presentation/src/*"
+      "@virteex/domain-projects-presentation/*": [
+        "libs/domain/projects/presentation/src/*"
       ],
-      "@virteex/api-purchasing-presentation": [
-        "libs/domains/purchasing/presentation/src/index.ts"
+      "@virteex/domain-purchasing-presentation": [
+        "libs/domain/purchasing/presentation/src/index.ts"
       ],
-      "@virteex/api-purchasing-presentation/*": [
-        "libs/domains/purchasing/presentation/src/*"
+      "@virteex/domain-purchasing-presentation/*": [
+        "libs/domain/purchasing/presentation/src/*"
       ],
-      "@virteex/api-subscription-presentation": [
-        "libs/domains/subscription/presentation/src/index.ts"
+      "@virteex/domain-subscription-presentation": [
+        "libs/domain/subscription/presentation/src/index.ts"
       ],
-      "@virteex/api-subscription-presentation/*": [
-        "libs/domains/subscription/presentation/src/*"
+      "@virteex/domain-subscription-presentation/*": [
+        "libs/domain/subscription/presentation/src/*"
       ],
-      "@virteex/api-treasury-presentation": [
-        "libs/domains/treasury/presentation/src/index.ts"
+      "@virteex/domain-treasury-presentation": [
+        "libs/domain/treasury/presentation/src/index.ts"
       ],
-      "@virteex/api-treasury-presentation/*": [
-        "libs/domains/treasury/presentation/src/*"
+      "@virteex/domain-treasury-presentation/*": [
+        "libs/domain/treasury/presentation/src/*"
       ],
-      "@virteex/application-accounting-application": [
-        "libs/domains/accounting/application/src/index.ts"
+      "@virteex/domain-accounting-application": [
+        "libs/domain/accounting/application/src/index.ts"
       ],
-      "@virteex/application-accounting-application/*": [
-        "libs/domains/accounting/application/src/*"
+      "@virteex/domain-accounting-application/*": [
+        "libs/domain/accounting/application/src/*"
       ],
-      "@virteex/application-admin-application": [
-        "libs/domains/admin/application/src/index.ts"
+      "@virteex/domain-admin-application": [
+        "libs/domain/admin/application/src/index.ts"
       ],
-      "@virteex/application-admin-application/*": [
-        "libs/domains/admin/application/src/*"
+      "@virteex/domain-admin-application/*": [
+        "libs/domain/admin/application/src/*"
       ],
-      "@virteex/application-bi-application": [
-        "libs/domains/bi/application/src/index.ts"
+      "@virteex/domain-bi-application": [
+        "libs/domain/bi/application/src/index.ts"
       ],
-      "@virteex/application-bi-application/*": [
-        "libs/domains/bi/application/src/*"
+      "@virteex/domain-bi-application/*": [
+        "libs/domain/bi/application/src/*"
       ],
-      "@virteex/application-billing-application": [
-        "libs/domains/billing/application/src/index.ts"
+      "@virteex/domain-billing-application": [
+        "libs/domain/billing/application/src/index.ts"
       ],
-      "@virteex/application-billing-application/*": [
-        "libs/domains/billing/application/src/*"
+      "@virteex/domain-billing-application/*": [
+        "libs/domain/billing/application/src/*"
       ],
-      "@virteex/application-catalog-application": [
-        "libs/domains/catalog/application/src/index.ts"
+      "@virteex/domain-catalog-application": [
+        "libs/domain/catalog/application/src/index.ts"
       ],
-      "@virteex/application-catalog-application/*": [
-        "libs/domains/catalog/application/src/*"
+      "@virteex/domain-catalog-application/*": [
+        "libs/domain/catalog/application/src/*"
       ],
-      "@virteex/application-crm-application": [
-        "libs/domains/crm/application/src/index.ts"
+      "@virteex/domain-crm-application": [
+        "libs/domain/crm/application/src/index.ts"
       ],
-      "@virteex/application-crm-application/*": [
-        "libs/domains/crm/application/src/*"
+      "@virteex/domain-crm-application/*": [
+        "libs/domain/crm/application/src/*"
       ],
-      "@virteex/application-fiscal-application": [
-        "libs/domains/fiscal/application/src/index.ts"
+      "@virteex/domain-fiscal-application": [
+        "libs/domain/fiscal/application/src/index.ts"
       ],
-      "@virteex/application-fiscal-application/*": [
-        "libs/domains/fiscal/application/src/*"
+      "@virteex/domain-fiscal-application/*": [
+        "libs/domain/fiscal/application/src/*"
       ],
-      "@virteex/application-fixed-assets-application": [
-        "libs/domains/fixed-assets/application/src/index.ts"
+      "@virteex/domain-fixed-assets-application": [
+        "libs/domain/fixed-assets/application/src/index.ts"
       ],
-      "@virteex/application-fixed-assets-application/*": [
-        "libs/domains/fixed-assets/application/src/*"
+      "@virteex/domain-fixed-assets-application/*": [
+        "libs/domain/fixed-assets/application/src/*"
       ],
-      "@virteex/application-identity-application": [
-        "libs/domains/identity/application/src/index.ts"
+      "@virteex/domain-identity-application": [
+        "libs/domain/identity/application/src/index.ts"
       ],
-      "@virteex/application-identity-application/*": [
-        "libs/domains/identity/application/src/*"
+      "@virteex/domain-identity-application/*": [
+        "libs/domain/identity/application/src/*"
       ],
-      "@virteex/application-inventory-application": [
-        "libs/domains/inventory/application/src/index.ts"
+      "@virteex/domain-inventory-application": [
+        "libs/domain/inventory/application/src/index.ts"
       ],
-      "@virteex/application-inventory-application/*": [
-        "libs/domains/inventory/application/src/*"
+      "@virteex/domain-inventory-application/*": [
+        "libs/domain/inventory/application/src/*"
       ],
-      "@virteex/application-manufacturing-application": [
-        "libs/domains/manufacturing/application/src/index.ts"
+      "@virteex/domain-manufacturing-application": [
+        "libs/domain/manufacturing/application/src/index.ts"
       ],
-      "@virteex/application-manufacturing-application/*": [
-        "libs/domains/manufacturing/application/src/*"
+      "@virteex/domain-manufacturing-application/*": [
+        "libs/domain/manufacturing/application/src/*"
       ],
-      "@virteex/application-payroll-application": [
-        "libs/domains/payroll/application/src/index.ts"
+      "@virteex/domain-payroll-application": [
+        "libs/domain/payroll/application/src/index.ts"
       ],
-      "@virteex/application-payroll-application/*": [
-        "libs/domains/payroll/application/src/*"
+      "@virteex/domain-payroll-application/*": [
+        "libs/domain/payroll/application/src/*"
       ],
-      "@virteex/application-projects-application": [
-        "libs/domains/projects/application/src/index.ts"
+      "@virteex/domain-projects-application": [
+        "libs/domain/projects/application/src/index.ts"
       ],
-      "@virteex/application-projects-application/*": [
-        "libs/domains/projects/application/src/*"
+      "@virteex/domain-projects-application/*": [
+        "libs/domain/projects/application/src/*"
       ],
-      "@virteex/application-purchasing-application": [
-        "libs/domains/purchasing/application/src/index.ts"
+      "@virteex/domain-purchasing-application": [
+        "libs/domain/purchasing/application/src/index.ts"
       ],
-      "@virteex/application-purchasing-application/*": [
-        "libs/domains/purchasing/application/src/*"
+      "@virteex/domain-purchasing-application/*": [
+        "libs/domain/purchasing/application/src/*"
       ],
-      "@virteex/application-subscription-application": [
-        "libs/domains/subscription/application/src/index.ts"
+      "@virteex/domain-subscription-application": [
+        "libs/domain/subscription/application/src/index.ts"
       ],
-      "@virteex/application-subscription-application/*": [
-        "libs/domains/subscription/application/src/*"
+      "@virteex/domain-subscription-application/*": [
+        "libs/domain/subscription/application/src/*"
       ],
-      "@virteex/application-treasury-application": [
-        "libs/domains/treasury/application/src/index.ts"
+      "@virteex/domain-treasury-application": [
+        "libs/domain/treasury/application/src/index.ts"
       ],
-      "@virteex/application-treasury-application/*": [
-        "libs/domains/treasury/application/src/*"
+      "@virteex/domain-treasury-application/*": [
+        "libs/domain/treasury/application/src/*"
       ],
-      "@virteex/catalog-ui-store": [
-        "libs/domains/catalog/ui-store/src/index.ts"
+      "@virteex/domain-catalog-ui-store": [
+        "libs/domain/catalog/ui-store/src/index.ts"
       ],
-      "@virteex/catalog-ui-store/*": [
-        "libs/domains/catalog/ui-store/src/*"
+      "@virteex/domain-catalog-ui-store/*": [
+        "libs/domain/catalog/ui-store/src/*"
       ],
-      "@virteex/contracts-accounting-contracts": [
-        "libs/domains/accounting/contracts/src/index.ts"
+      "@virteex/domain-accounting-contracts": [
+        "libs/domain/accounting/contracts/src/index.ts"
       ],
-      "@virteex/contracts-accounting-contracts/*": [
-        "libs/domains/accounting/contracts/src/*"
+      "@virteex/domain-accounting-contracts/*": [
+        "libs/domain/accounting/contracts/src/*"
       ],
-      "@virteex/contracts-admin-contracts": [
-        "libs/domains/admin/contracts/src/index.ts"
+      "@virteex/domain-admin-contracts": [
+        "libs/domain/admin/contracts/src/index.ts"
       ],
-      "@virteex/contracts-admin-contracts/*": [
-        "libs/domains/admin/contracts/src/*"
+      "@virteex/domain-admin-contracts/*": [
+        "libs/domain/admin/contracts/src/*"
       ],
-      "@virteex/contracts-bi-contracts": [
-        "libs/domains/bi/contracts/src/index.ts"
+      "@virteex/domain-bi-contracts": [
+        "libs/domain/bi/contracts/src/index.ts"
       ],
-      "@virteex/contracts-bi-contracts/*": [
-        "libs/domains/bi/contracts/src/*"
+      "@virteex/domain-bi-contracts/*": [
+        "libs/domain/bi/contracts/src/*"
       ],
-      "@virteex/contracts-crm-contracts": [
-        "libs/domains/crm/contracts/src/index.ts"
+      "@virteex/domain-crm-contracts": [
+        "libs/domain/crm/contracts/src/index.ts"
       ],
-      "@virteex/contracts-crm-contracts/*": [
-        "libs/domains/crm/contracts/src/*"
+      "@virteex/domain-crm-contracts/*": [
+        "libs/domain/crm/contracts/src/*"
       ],
-      "@virteex/contracts-fiscal-contracts": [
-        "libs/domains/fiscal/contracts/src/index.ts"
+      "@virteex/domain-fiscal-contracts": [
+        "libs/domain/fiscal/contracts/src/index.ts"
       ],
-      "@virteex/contracts-fiscal-contracts/*": [
-        "libs/domains/fiscal/contracts/src/*"
+      "@virteex/domain-fiscal-contracts/*": [
+        "libs/domain/fiscal/contracts/src/*"
       ],
-      "@virteex/contracts-fixed-assets-contracts": [
-        "libs/domains/fixed-assets/contracts/src/index.ts"
+      "@virteex/domain-fixed-assets-contracts": [
+        "libs/domain/fixed-assets/contracts/src/index.ts"
       ],
-      "@virteex/contracts-fixed-assets-contracts/*": [
-        "libs/domains/fixed-assets/contracts/src/*"
+      "@virteex/domain-fixed-assets-contracts/*": [
+        "libs/domain/fixed-assets/contracts/src/*"
       ],
-      "@virteex/contracts-identity-contracts": [
-        "libs/domains/identity/contracts/src/index.ts"
+      "@virteex/domain-identity-contracts": [
+        "libs/domain/identity/contracts/src/index.ts"
       ],
-      "@virteex/contracts-identity-contracts/*": [
-        "libs/domains/identity/contracts/src/*"
+      "@virteex/domain-identity-contracts/*": [
+        "libs/domain/identity/contracts/src/*"
       ],
-      "@virteex/contracts-inventory-contracts": [
-        "libs/domains/inventory/contracts/src/index.ts"
+      "@virteex/domain-inventory-contracts": [
+        "libs/domain/inventory/contracts/src/index.ts"
       ],
-      "@virteex/contracts-inventory-contracts/*": [
-        "libs/domains/inventory/contracts/src/*"
+      "@virteex/domain-inventory-contracts/*": [
+        "libs/domain/inventory/contracts/src/*"
       ],
-      "@virteex/contracts-manufacturing-contracts": [
-        "libs/domains/manufacturing/contracts/src/index.ts"
+      "@virteex/domain-manufacturing-contracts": [
+        "libs/domain/manufacturing/contracts/src/index.ts"
       ],
-      "@virteex/contracts-manufacturing-contracts/*": [
-        "libs/domains/manufacturing/contracts/src/*"
+      "@virteex/domain-manufacturing-contracts/*": [
+        "libs/domain/manufacturing/contracts/src/*"
       ],
-      "@virteex/contracts-payroll-contracts": [
-        "libs/domains/payroll/contracts/src/index.ts"
+      "@virteex/domain-payroll-contracts": [
+        "libs/domain/payroll/contracts/src/index.ts"
       ],
-      "@virteex/contracts-payroll-contracts/*": [
-        "libs/domains/payroll/contracts/src/*"
+      "@virteex/domain-payroll-contracts/*": [
+        "libs/domain/payroll/contracts/src/*"
       ],
-      "@virteex/contracts-projects-contracts": [
-        "libs/domains/projects/contracts/src/index.ts"
+      "@virteex/domain-projects-contracts": [
+        "libs/domain/projects/contracts/src/index.ts"
       ],
-      "@virteex/contracts-projects-contracts/*": [
-        "libs/domains/projects/contracts/src/*"
+      "@virteex/domain-projects-contracts/*": [
+        "libs/domain/projects/contracts/src/*"
       ],
-      "@virteex/contracts-purchasing-contracts": [
-        "libs/domains/purchasing/contracts/src/index.ts"
+      "@virteex/domain-purchasing-contracts": [
+        "libs/domain/purchasing/contracts/src/index.ts"
       ],
-      "@virteex/contracts-purchasing-contracts/*": [
-        "libs/domains/purchasing/contracts/src/*"
+      "@virteex/domain-purchasing-contracts/*": [
+        "libs/domain/purchasing/contracts/src/*"
       ],
-      "@virteex/contracts-treasury-contracts": [
-        "libs/domains/treasury/contracts/src/index.ts"
+      "@virteex/domain-treasury-contracts": [
+        "libs/domain/treasury/contracts/src/index.ts"
       ],
-      "@virteex/contracts-treasury-contracts/*": [
-        "libs/domains/treasury/contracts/src/*"
+      "@virteex/domain-treasury-contracts/*": [
+        "libs/domain/treasury/contracts/src/*"
       ],
       "@virteex/domain-accounting-domain": [
-        "libs/domains/accounting/domain/src/index.ts"
+        "libs/domain/accounting/domain/src/index.ts"
       ],
       "@virteex/domain-accounting-domain/*": [
-        "libs/domains/accounting/domain/src/*"
+        "libs/domain/accounting/domain/src/*"
       ],
       "@virteex/domain-admin-domain": [
-        "libs/domains/admin/domain/src/index.ts"
+        "libs/domain/admin/domain/src/index.ts"
       ],
       "@virteex/domain-admin-domain/*": [
-        "libs/domains/admin/domain/src/*"
+        "libs/domain/admin/domain/src/*"
       ],
       "@virteex/domain-bi-domain": [
-        "libs/domains/bi/domain/src/index.ts"
+        "libs/domain/bi/domain/src/index.ts"
       ],
       "@virteex/domain-bi-domain/*": [
-        "libs/domains/bi/domain/src/*"
+        "libs/domain/bi/domain/src/*"
       ],
       "@virteex/domain-billing-domain": [
-        "libs/domains/billing/domain/src/index.ts"
+        "libs/domain/billing/domain/src/index.ts"
       ],
       "@virteex/domain-billing-domain/*": [
-        "libs/domains/billing/domain/src/*"
+        "libs/domain/billing/domain/src/*"
       ],
       "@virteex/domain-catalog-domain": [
-        "libs/domains/catalog/domain/src/index.ts"
+        "libs/domain/catalog/domain/src/index.ts"
       ],
       "@virteex/domain-catalog-domain/*": [
-        "libs/domains/catalog/domain/src/*"
+        "libs/domain/catalog/domain/src/*"
       ],
       "@virteex/domain-crm-domain": [
-        "libs/domains/crm/domain/src/index.ts"
+        "libs/domain/crm/domain/src/index.ts"
       ],
       "@virteex/domain-crm-domain/*": [
-        "libs/domains/crm/domain/src/*"
+        "libs/domain/crm/domain/src/*"
       ],
       "@virteex/domain-fiscal-domain": [
-        "libs/domains/fiscal/domain/src/index.ts"
+        "libs/domain/fiscal/domain/src/index.ts"
       ],
       "@virteex/domain-fiscal-domain/*": [
-        "libs/domains/fiscal/domain/src/*"
+        "libs/domain/fiscal/domain/src/*"
       ],
       "@virteex/domain-fixed-assets-domain": [
-        "libs/domains/fixed-assets/domain/src/index.ts"
+        "libs/domain/fixed-assets/domain/src/index.ts"
       ],
       "@virteex/domain-fixed-assets-domain/*": [
-        "libs/domains/fixed-assets/domain/src/*"
+        "libs/domain/fixed-assets/domain/src/*"
       ],
       "@virteex/domain-identity-domain": [
-        "libs/domains/identity/domain/src/index.ts"
+        "libs/domain/identity/domain/src/index.ts"
       ],
       "@virteex/domain-identity-domain/*": [
-        "libs/domains/identity/domain/src/*"
+        "libs/domain/identity/domain/src/*"
       ],
       "@virteex/domain-inventory-domain": [
-        "libs/domains/inventory/domain/src/index.ts"
+        "libs/domain/inventory/domain/src/index.ts"
       ],
       "@virteex/domain-inventory-domain/*": [
-        "libs/domains/inventory/domain/src/*"
+        "libs/domain/inventory/domain/src/*"
       ],
       "@virteex/domain-manufacturing-domain": [
-        "libs/domains/manufacturing/domain/src/index.ts"
+        "libs/domain/manufacturing/domain/src/index.ts"
       ],
       "@virteex/domain-manufacturing-domain/*": [
-        "libs/domains/manufacturing/domain/src/*"
+        "libs/domain/manufacturing/domain/src/*"
       ],
       "@virteex/domain-payroll-domain": [
-        "libs/domains/payroll/domain/src/index.ts"
+        "libs/domain/payroll/domain/src/index.ts"
       ],
       "@virteex/domain-payroll-domain/*": [
-        "libs/domains/payroll/domain/src/*"
+        "libs/domain/payroll/domain/src/*"
       ],
       "@virteex/domain-projects-domain": [
-        "libs/domains/projects/domain/src/index.ts"
+        "libs/domain/projects/domain/src/index.ts"
       ],
       "@virteex/domain-projects-domain/*": [
-        "libs/domains/projects/domain/src/*"
+        "libs/domain/projects/domain/src/*"
       ],
       "@virteex/domain-purchasing-domain": [
-        "libs/domains/purchasing/domain/src/index.ts"
+        "libs/domain/purchasing/domain/src/index.ts"
       ],
       "@virteex/domain-purchasing-domain/*": [
-        "libs/domains/purchasing/domain/src/*"
+        "libs/domain/purchasing/domain/src/*"
       ],
       "@virteex/domain-subscription-domain": [
-        "libs/domains/subscription/domain/src/index.ts"
+        "libs/domain/subscription/domain/src/index.ts"
       ],
       "@virteex/domain-subscription-domain/*": [
-        "libs/domains/subscription/domain/src/*"
+        "libs/domain/subscription/domain/src/*"
       ],
       "@virteex/domain-treasury-domain": [
-        "libs/domains/treasury/domain/src/index.ts"
+        "libs/domain/treasury/domain/src/index.ts"
       ],
       "@virteex/domain-treasury-domain/*": [
-        "libs/domains/treasury/domain/src/*"
+        "libs/domain/treasury/domain/src/*"
       ],
-      "@virteex/finops": [
-        "libs/domains/finops/src/index.ts"
+      "@virteex/domain-finops-domain": [
+        "libs/domain/domain-finops-domain/domain/src/index.ts"
       ],
-      "@virteex/finops/*": [
-        "libs/domains/finops/src/*"
+      "@virteex/domain-finops-domain/*": [
+        "libs/domain/domain-finops-domain/domain/src/*"
       ],
-      "@virteex/identity-ui": [
-        "libs/domains/identity/ui/src/index.ts"
+      "@virteex/domain-identity-ui": [
+        "libs/domain/identity/ui/src/index.ts"
       ],
-      "@virteex/identity-ui/*": [
-        "libs/domains/identity/ui/src/*"
+      "@virteex/domain-identity-ui/*": [
+        "libs/domain/identity/ui/src/*"
       ],
-      "@virteex/infra-accounting-infrastructure": [
-        "libs/domains/accounting/infrastructure/src/index.ts"
+      "@virteex/domain-accounting-infrastructure": [
+        "libs/domain/accounting/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-accounting-infrastructure/*": [
-        "libs/domains/accounting/infrastructure/src/*"
+      "@virteex/domain-accounting-infrastructure/*": [
+        "libs/domain/accounting/infrastructure/src/*"
       ],
-      "@virteex/infra-admin-infrastructure": [
-        "libs/domains/admin/infrastructure/src/index.ts"
+      "@virteex/domain-admin-infrastructure": [
+        "libs/domain/admin/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-admin-infrastructure/*": [
-        "libs/domains/admin/infrastructure/src/*"
+      "@virteex/domain-admin-infrastructure/*": [
+        "libs/domain/admin/infrastructure/src/*"
       ],
-      "@virteex/infra-bi-infrastructure": [
-        "libs/domains/bi/infrastructure/src/index.ts"
+      "@virteex/domain-bi-infrastructure": [
+        "libs/domain/bi/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-bi-infrastructure/*": [
-        "libs/domains/bi/infrastructure/src/*"
+      "@virteex/domain-bi-infrastructure/*": [
+        "libs/domain/bi/infrastructure/src/*"
       ],
-      "@virteex/infra-billing-infrastructure": [
-        "libs/domains/billing/infrastructure/src/index.ts"
+      "@virteex/domain-billing-infrastructure": [
+        "libs/domain/billing/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-billing-infrastructure/*": [
-        "libs/domains/billing/infrastructure/src/*"
+      "@virteex/domain-billing-infrastructure/*": [
+        "libs/domain/billing/infrastructure/src/*"
       ],
-      "@virteex/infra-catalog-infrastructure": [
-        "libs/domains/catalog/infrastructure/src/index.ts"
+      "@virteex/domain-catalog-infrastructure": [
+        "libs/domain/catalog/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-catalog-infrastructure/*": [
-        "libs/domains/catalog/infrastructure/src/*"
+      "@virteex/domain-catalog-infrastructure/*": [
+        "libs/domain/catalog/infrastructure/src/*"
       ],
-      "@virteex/infra-crm-infrastructure": [
-        "libs/domains/crm/infrastructure/src/index.ts"
+      "@virteex/domain-crm-infrastructure": [
+        "libs/domain/crm/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-crm-infrastructure/*": [
-        "libs/domains/crm/infrastructure/src/*"
+      "@virteex/domain-crm-infrastructure/*": [
+        "libs/domain/crm/infrastructure/src/*"
       ],
-      "@virteex/infra-fiscal-infrastructure": [
-        "libs/domains/fiscal/infrastructure/src/index.ts"
+      "@virteex/domain-fiscal-infrastructure": [
+        "libs/domain/fiscal/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-fiscal-infrastructure/*": [
-        "libs/domains/fiscal/infrastructure/src/*"
+      "@virteex/domain-fiscal-infrastructure/*": [
+        "libs/domain/fiscal/infrastructure/src/*"
       ],
-      "@virteex/infra-fixed-assets-infrastructure": [
-        "libs/domains/fixed-assets/infrastructure/src/index.ts"
+      "@virteex/domain-fixed-assets-infrastructure": [
+        "libs/domain/fixed-assets/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-fixed-assets-infrastructure/*": [
-        "libs/domains/fixed-assets/infrastructure/src/*"
+      "@virteex/domain-fixed-assets-infrastructure/*": [
+        "libs/domain/fixed-assets/infrastructure/src/*"
       ],
-      "@virteex/infra-identity-infrastructure": [
-        "libs/domains/identity/infrastructure/src/index.ts"
+      "@virteex/domain-identity-infrastructure": [
+        "libs/domain/identity/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-identity-infrastructure/*": [
-        "libs/domains/identity/infrastructure/src/*"
+      "@virteex/domain-identity-infrastructure/*": [
+        "libs/domain/identity/infrastructure/src/*"
       ],
-      "@virteex/infra-inventory-infrastructure": [
-        "libs/domains/inventory/infrastructure/src/index.ts"
+      "@virteex/domain-inventory-infrastructure": [
+        "libs/domain/inventory/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-inventory-infrastructure/*": [
-        "libs/domains/inventory/infrastructure/src/*"
+      "@virteex/domain-inventory-infrastructure/*": [
+        "libs/domain/inventory/infrastructure/src/*"
       ],
-      "@virteex/infra-manufacturing-infrastructure": [
-        "libs/domains/manufacturing/infrastructure/src/index.ts"
+      "@virteex/domain-manufacturing-infrastructure": [
+        "libs/domain/manufacturing/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-manufacturing-infrastructure/*": [
-        "libs/domains/manufacturing/infrastructure/src/*"
+      "@virteex/domain-manufacturing-infrastructure/*": [
+        "libs/domain/manufacturing/infrastructure/src/*"
       ],
-      "@virteex/infra-payroll-infrastructure": [
-        "libs/domains/payroll/infrastructure/src/index.ts"
+      "@virteex/domain-payroll-infrastructure": [
+        "libs/domain/payroll/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-payroll-infrastructure/*": [
-        "libs/domains/payroll/infrastructure/src/*"
+      "@virteex/domain-payroll-infrastructure/*": [
+        "libs/domain/payroll/infrastructure/src/*"
       ],
-      "@virteex/infra-projects-infrastructure": [
-        "libs/domains/projects/infrastructure/src/index.ts"
+      "@virteex/domain-projects-infrastructure": [
+        "libs/domain/projects/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-projects-infrastructure/*": [
-        "libs/domains/projects/infrastructure/src/*"
+      "@virteex/domain-projects-infrastructure/*": [
+        "libs/domain/projects/infrastructure/src/*"
       ],
-      "@virteex/infra-purchasing-infrastructure": [
-        "libs/domains/purchasing/infrastructure/src/index.ts"
+      "@virteex/domain-purchasing-infrastructure": [
+        "libs/domain/purchasing/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-purchasing-infrastructure/*": [
-        "libs/domains/purchasing/infrastructure/src/*"
+      "@virteex/domain-purchasing-infrastructure/*": [
+        "libs/domain/purchasing/infrastructure/src/*"
       ],
-      "@virteex/infra-subscription-infrastructure": [
-        "libs/domains/subscription/infrastructure/src/index.ts"
+      "@virteex/domain-subscription-infrastructure": [
+        "libs/domain/subscription/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-subscription-infrastructure/*": [
-        "libs/domains/subscription/infrastructure/src/*"
+      "@virteex/domain-subscription-infrastructure/*": [
+        "libs/domain/subscription/infrastructure/src/*"
       ],
-      "@virteex/infra-treasury-infrastructure": [
-        "libs/domains/treasury/infrastructure/src/index.ts"
+      "@virteex/domain-treasury-infrastructure": [
+        "libs/domain/treasury/infrastructure/src/index.ts"
       ],
-      "@virteex/infra-treasury-infrastructure/*": [
-        "libs/domains/treasury/infrastructure/src/*"
+      "@virteex/domain-treasury-infrastructure/*": [
+        "libs/domain/treasury/infrastructure/src/*"
       ],
-      "@virteex/fiscal-ui": [
-        "libs/domains/fiscal/ui/src/index.ts"
+      "@virteex/domain-fiscal-ui": [
+        "libs/domain/fiscal/ui/src/index.ts"
       ],
-      "@virteex/fiscal-ui/*": [
-        "libs/domains/fiscal/ui/src/*"
+      "@virteex/domain-fiscal-ui/*": [
+        "libs/domain/fiscal/ui/src/*"
       ],
-      "@virteex/inventory-ui-wms": [
-        "libs/domains/inventory/ui-wms/src/index.ts"
+      "@virteex/domain-inventory-ui-wms": [
+        "libs/domain/inventory/ui-wms/src/index.ts"
       ],
-      "@virteex/inventory-ui-wms/*": [
-        "libs/domains/inventory/ui-wms/src/*"
+      "@virteex/domain-inventory-ui-wms/*": [
+        "libs/domain/inventory/ui-wms/src/*"
       ],
       "@virteex/kernel-audit": [
         "libs/kernel/audit/src/index.ts"
@@ -540,17 +540,17 @@
       "@virteex/kernel-tenant/*": [
         "libs/kernel/tenant/src/*"
       ],
-      "@virteex/manufacturing-ui-shopfloor": [
-        "libs/domains/manufacturing/ui-shopfloor/src/index.ts"
+      "@virteex/domain-manufacturing-ui-shopfloor": [
+        "libs/domain/manufacturing/ui-shopfloor/src/index.ts"
       ],
-      "@virteex/manufacturing-ui-shopfloor/*": [
-        "libs/domains/manufacturing/ui-shopfloor/src/*"
+      "@virteex/domain-manufacturing-ui-shopfloor/*": [
+        "libs/domain/manufacturing/ui-shopfloor/src/*"
       ],
-      "@virteex/notification-ui": [
-        "libs/domains/notification/ui/src/index.ts"
+      "@virteex/domain-notification-ui": [
+        "libs/domain/notification/ui/src/index.ts"
       ],
-      "@virteex/notification-ui/*": [
-        "libs/domains/notification/ui/src/*"
+      "@virteex/domain-notification-ui/*": [
+        "libs/domain/notification/ui/src/*"
       ],
       "@virteex/shared-contracts": [
         "libs/shared/contracts/src/index.ts"
@@ -558,29 +558,29 @@
       "@virteex/shared-contracts/*": [
         "libs/shared/contracts/src/*"
       ],
-      "@virteex/shared-infrastructure-cache": [
-        "libs/shared/infrastructure/cache/src/index.ts"
+      "@virteex/platform-cache": [
+        "libs/platform/cache/src/index.ts"
       ],
-      "@virteex/shared-infrastructure-cache/*": [
-        "libs/shared/infrastructure/cache/src/*"
+      "@virteex/platform-cache/*": [
+        "libs/platform/cache/src/*"
       ],
-      "@virteex/shared-infrastructure-kafka": [
-        "libs/shared/infrastructure/kafka/src/index.ts"
+      "@virteex/platform-kafka": [
+        "libs/platform/kafka/src/index.ts"
       ],
-      "@virteex/shared-infrastructure-kafka/*": [
-        "libs/shared/infrastructure/kafka/src/*"
+      "@virteex/platform-kafka/*": [
+        "libs/platform/kafka/src/*"
       ],
-      "@virteex/shared-infrastructure-storage": [
-        "libs/shared/infrastructure/storage/src/index.ts"
+      "@virteex/platform-storage": [
+        "libs/platform/storage/src/index.ts"
       ],
-      "@virteex/shared-infrastructure-storage/*": [
-        "libs/shared/infrastructure/storage/src/*"
+      "@virteex/platform-storage/*": [
+        "libs/platform/storage/src/*"
       ],
-      "@virteex/shared-infrastructure-xslt": [
-        "libs/shared/infrastructure/xslt/src/index.ts"
+      "@virteex/platform-xslt": [
+        "libs/platform/xslt/src/index.ts"
       ],
-      "@virteex/shared-infrastructure-xslt/*": [
-        "libs/shared/infrastructure/xslt/src/*"
+      "@virteex/platform-xslt/*": [
+        "libs/platform/xslt/src/*"
       ],
       "@virteex/shared-ui": [
         "libs/shared/ui/src/index.ts"
@@ -594,28 +594,28 @@
       "@virteex/shared-config/*": [
         "libs/shared/util/client/config/src/*"
       ],
-      "@virteex/shared-util-auth": [
+      "@virteex/shared-util-client-auth": [
         "libs/shared/util/client/auth/src/index.ts"
       ],
-      "@virteex/shared-util-auth/*": [
+      "@virteex/shared-util-client-auth/*": [
         "libs/shared/util/client/auth/src/*"
       ],
-      "@virteex/shared-util-config": [
+      "@virteex/shared-util-client-config": [
         "libs/shared/util/client/config/src/index.ts"
       ],
-      "@virteex/shared-util-config/*": [
+      "@virteex/shared-util-client-config/*": [
         "libs/shared/util/client/config/src/*"
       ],
-      "@virteex/shared-util-http": [
+      "@virteex/shared-util-client-http": [
         "libs/shared/util/client/http/src/index.ts"
       ],
-      "@virteex/shared-util-http/*": [
+      "@virteex/shared-util-client-http/*": [
         "libs/shared/util/client/http/src/*"
       ],
-      "@virteex/shared-util-server-config": [
+      "@virteex/shared-util-server-server-config": [
         "libs/shared/util/server/server-config/src/index.ts"
       ],
-      "@virteex/shared-util-server-config/*": [
+      "@virteex/shared-util-server-server-config/*": [
         "libs/shared/util/server/server-config/src/*"
       ],
       "@virteex/shared-validators": [
@@ -708,11 +708,11 @@
       "@virteex/billing-ui/*": [
         "libs/domains/billing/ui/src/*"
       ],
-      "@virteex/billing-presentation": [
-        "libs/domains/billing/presentation/src/index.ts"
+      "@virteex/domain-billing-presentation": [
+        "libs/domain/billing/presentation/src/index.ts"
       ],
-      "@virteex/billing-presentation/*": [
-        "libs/domains/billing/presentation/src/*"
+      "@virteex/domain-billing-presentation/*": [
+        "libs/domain/billing/presentation/src/*"
       ]
     }
   },

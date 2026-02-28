@@ -1,0 +1,70 @@
+{
+  "name": "desktop-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/desktop/app/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx-electron:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/desktop/app",
+        "main": "apps/desktop/app/src/main.ts",
+        "tsConfig": "apps/desktop/app/tsconfig.app.json",
+        "assets": [
+          "apps/desktop/app/src/assets"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/desktop/app/src/environments/environment.ts",
+              "with": "apps/desktop/app/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "nx-electron:execute",
+      "options": {
+        "buildTarget": "desktop-app:build"
+      }
+    },
+    "package": {
+      "executor": "nx-electron:package",
+      "options": {
+        "name": "desktop-app",
+        "frontendProject": "web-portal-app",
+        "sourcePath": "dist/apps",
+        "outputPath": "dist/packages",
+        "prepackageOnly": true
+      }
+    },
+    "make": {
+      "executor": "nx-electron:make",
+      "options": {
+        "name": "desktop-app",
+        "frontendProject": "web-portal-app",
+        "sourcePath": "dist/apps",
+        "outputPath": "dist/executables"
+      }
+    },
+    "lint": {
+      "command": "eslint apps/desktop/app/**/*.ts"
+    }
+  },
+  "prefix": "virteex",
+  "tags": [
+    "scope:shared",
+    "type:app",
+    "platform:agnostic",
+    "criticality:medium"
+  ]
+}

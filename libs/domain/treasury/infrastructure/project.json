@@ -1,0 +1,39 @@
+{
+  "name": "domain-treasury-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/treasury/infrastructure/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:treasury",
+    "type:infrastructure",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/treasury/infrastructure",
+        "main": "libs/domain/treasury/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/treasury/infrastructure/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/treasury/infrastructure/*.md"
+        ],
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/treasury/infrastructure"
+      }
+    }
+  }
+}

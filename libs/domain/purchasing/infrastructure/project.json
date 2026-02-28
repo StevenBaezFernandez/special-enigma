@@ -1,0 +1,50 @@
+{
+  "name": "domain-purchasing-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/purchasing/infrastructure/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:purchasing",
+    "type:infrastructure",
+    "platform:agnostic",
+    "criticality:high"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "rootDir": ".",
+        "outputPath": "dist/libs/domain/purchasing/infrastructure",
+        "main": "libs/domain/purchasing/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/purchasing/infrastructure/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/purchasing/infrastructure/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "libs/domain/purchasing/infrastructure/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/purchasing/infrastructure"
+      }
+    }
+  }
+}

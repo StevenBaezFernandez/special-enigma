@@ -1,0 +1,27 @@
+{
+  "name": "domain-inventory-ui-wms",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/inventory/ui-wms/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": [
+    "scope:inventory",
+    "type:ui",
+    "platform:web",
+    "criticality:high"
+  ],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/inventory/ui-wms"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

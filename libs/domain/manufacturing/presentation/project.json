@@ -1,0 +1,39 @@
+{
+  "name": "domain-manufacturing-presentation",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/manufacturing/presentation/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:manufacturing",
+    "type:presentation",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/manufacturing/presentation",
+        "main": "libs/domain/manufacturing/presentation/src/index.ts",
+        "tsConfig": "libs/domain/manufacturing/presentation/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/manufacturing/presentation/*.md"
+        ],
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/manufacturing/presentation"
+      }
+    }
+  }
+}

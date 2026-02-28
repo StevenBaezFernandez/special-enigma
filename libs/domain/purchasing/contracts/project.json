@@ -1,0 +1,41 @@
+{
+  "name": "domain-purchasing-contracts",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/purchasing/contracts/src",
+  "projectType": "library",
+  "tags": [
+    "scope:purchasing",
+    "type:contract",
+    "platform:agnostic",
+    "criticality:high"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "rootDir": ".",
+        "outputPath": "dist/libs/domain/purchasing/contracts",
+        "main": "libs/domain/purchasing/contracts/src/index.ts",
+        "tsConfig": "libs/domain/purchasing/contracts/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/purchasing/contracts/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "libs/domain/purchasing/contracts/**/*.ts"
+        ]
+      }
+    }
+  },
+  "prefix": "virteex"
+}

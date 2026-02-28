@@ -1,0 +1,25 @@
+{
+  "name": "domain-billing-presentation",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/billing/presentation/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:billing",
+    "type:presentation",
+    "platform:server",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/domain/billing/presentation",
+        "main": "libs/domain/billing/presentation/src/index.ts",
+        "tsConfig": "libs/domain/billing/presentation/tsconfig.lib.json",
+        "rootDir": "."
+      }
+    }
+  }
+}

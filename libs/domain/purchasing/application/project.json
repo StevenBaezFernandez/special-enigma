@@ -1,0 +1,50 @@
+{
+  "name": "domain-purchasing-application",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/purchasing/application/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:purchasing",
+    "type:application",
+    "platform:agnostic",
+    "criticality:high"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "rootDir": ".",
+        "outputPath": "dist/libs/domain/purchasing/application",
+        "main": "libs/domain/purchasing/application/src/index.ts",
+        "tsConfig": "libs/domain/purchasing/application/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/purchasing/application/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "libs/domain/purchasing/application/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/purchasing/application"
+      }
+    }
+  }
+}

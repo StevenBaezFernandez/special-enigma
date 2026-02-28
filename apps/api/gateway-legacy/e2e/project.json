@@ -1,0 +1,30 @@
+{
+  "name": "api-gateway-legacy-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "implicitDependencies": [
+    "api-gateway-legacy-app"
+  ],
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/api-gateway-legacy-e2e/jest.config.cts",
+        "passWithNoTests": true
+      },
+      "dependsOn": [
+        "api-gateway-legacy-app:build",
+        "api-gateway-legacy-app:serve"
+      ]
+    }
+  },
+  "tags": [
+    "scope:gateway",
+    "type:e2e",
+    "platform:e2e",
+    "criticality:low"
+  ]
+}

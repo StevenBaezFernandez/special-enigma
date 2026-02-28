@@ -1,0 +1,14 @@
+{
+  "name": "@virteex/domain-catalog-application",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "dependencies": {
+    "tslib": "^2.3.0",
+    "@nestjs/common": "^11.0.0",
+    "@virteex/domain-catalog-domain": "*",
+    "@nestjs/event-emitter": "^3.0.1"
+  }
+}

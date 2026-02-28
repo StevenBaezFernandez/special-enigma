@@ -1,0 +1,41 @@
+{
+  "name": "domain-purchasing-presentation",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/purchasing/presentation/src",
+  "projectType": "library",
+  "tags": [
+    "scope:purchasing",
+    "type:presentation",
+    "platform:agnostic",
+    "criticality:high"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "rootDir": ".",
+        "outputPath": "dist/libs/domain/purchasing/presentation",
+        "main": "libs/domain/purchasing/presentation/src/index.ts",
+        "tsConfig": "libs/domain/purchasing/presentation/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/purchasing/presentation/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "libs/domain/purchasing/presentation/**/*.ts"
+        ]
+      }
+    }
+  },
+  "prefix": "virteex"
+}

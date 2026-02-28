@@ -1,0 +1,39 @@
+{
+  "name": "domain-fiscal-presentation",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/fiscal/presentation/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:fiscal",
+    "type:presentation",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/fiscal/presentation",
+        "main": "libs/domain/fiscal/presentation/src/index.ts",
+        "tsConfig": "libs/domain/fiscal/presentation/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/fiscal/presentation/*.md"
+        ],
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/fiscal/presentation"
+      }
+    }
+  }
+}

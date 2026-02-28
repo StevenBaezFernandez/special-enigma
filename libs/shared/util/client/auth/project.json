@@ -1,5 +1,5 @@
 {
-  "name": "shared-util-auth",
+  "name": "shared-util-client-auth",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/util/client/auth/src",
   "prefix": "virteex",

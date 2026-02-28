@@ -1,0 +1,31 @@
+{
+  "name": "domain-accounting-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/accounting/infrastructure/src",
+  "projectType": "library",
+  "tags": [
+    "scope:accounting",
+    "type:infrastructure",
+    "platform:nest",
+    "criticality:high",
+    "tenant-mode:schema"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/accounting/infrastructure",
+        "tsConfig": "libs/domain/accounting/infrastructure/tsconfig.lib.json",
+        "packageJson": "libs/domain/accounting/infrastructure/package.json",
+        "main": "libs/domain/accounting/infrastructure/src/index.ts",
+        "assets": [
+          "libs/domain/accounting/infrastructure/*.md"
+        ]
+      }
+    }
+  },
+  "prefix": "virteex"
+}

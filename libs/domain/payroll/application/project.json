@@ -1,0 +1,39 @@
+{
+  "name": "domain-payroll-application",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/payroll/application/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:payroll",
+    "type:application",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/payroll/application",
+        "main": "libs/domain/payroll/application/src/index.ts",
+        "tsConfig": "libs/domain/payroll/application/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/payroll/application/*.md"
+        ],
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/payroll/application"
+      }
+    }
+  }
+}

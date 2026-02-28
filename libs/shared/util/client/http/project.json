@@ -1,5 +1,5 @@
 {
-  "name": "shared-util-http",
+  "name": "shared-util-client-http",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/util/client/http/src",
   "projectType": "library",

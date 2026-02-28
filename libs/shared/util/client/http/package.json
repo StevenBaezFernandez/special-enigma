@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/shared-util-http",
+  "name": "@virteex/shared-util-client-http",
   "version": "0.0.1",
   "type": "commonjs"
 }

@@ -1,0 +1,39 @@
+{
+  "name": "domain-admin-application",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/admin/application/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:admin",
+    "type:application",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/admin/application",
+        "main": "libs/domain/admin/application/src/index.ts",
+        "tsConfig": "libs/domain/admin/application/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/admin/application/*.md"
+        ],
+        "rootDir": "libs/domain/admin/application/src"
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/admin/application"
+      }
+    }
+  }
+}

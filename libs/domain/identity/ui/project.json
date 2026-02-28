@@ -1,0 +1,27 @@
+{
+  "name": "domain-identity-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/identity/ui/src",
+  "prefix": "virteex",
+  "projectType": "library",
+  "tags": [
+    "scope:identity",
+    "type:ui",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/identity/ui"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "name": "web-ops-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "virteex",
+  "sourceRoot": "apps/web/ops/app/src",
+  "tags": [
+    "scope:admin",
+    "scope:identity",
+    "type:app",
+    "platform:web",
+    "criticality:high"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/web/ops/app",
+        "browser": "apps/web/ops/app/src/main.ts",
+        "tsConfig": "apps/web/ops/app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/web/ops/app/public"
+          }
+        ],
+        "styles": [
+          "apps/web/ops/app/src/styles.scss"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "web-ops-app:build:production"
+        },
+        "development": {
+          "buildTarget": "web-ops-app:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "web-ops-app:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/web/ops/app/browser",
+        "spa": true
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/web/ops/app"
+      }
+    }
+  }
+}

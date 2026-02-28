@@ -156,7 +156,7 @@ export default [
   },
 
   {
-    files: ['libs/domains/**/domain/**/*.ts'],
+    files: ['libs/domain/**/domain/**/*.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -168,7 +168,7 @@ export default [
   },
 
   {
-    files: ['libs/domains/**/application/src/lib/use-cases/**/*.ts'],
+    files: ['libs/domain/**/application/src/lib/use-cases/**/*.ts'],
     rules: {
       'no-restricted-imports': [
         'error',

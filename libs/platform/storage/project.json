@@ -1,0 +1,32 @@
+{
+  "name": "platform-storage",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/platform/storage/src",
+  "prefix": "virteex",
+  "projectType": "library",
+  "tags": [
+    "scope:shared",
+    "type:infrastructure",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/platform/storage",
+        "main": "libs/platform/storage/src/index.ts",
+        "tsConfig": "libs/platform/storage/tsconfig.lib.json",
+        "assets": [
+          "libs/platform/storage/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

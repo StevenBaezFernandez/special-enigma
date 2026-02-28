@@ -1,0 +1,24 @@
+{
+  "name": "domain-fiscal-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/fiscal/ui/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:fiscal",
+    "type:ui",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/fiscal/ui"
+      }
+    }
+  }
+}

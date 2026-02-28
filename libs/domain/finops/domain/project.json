@@ -1,0 +1,14 @@
+{
+  "name": "domain-finops-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/domain-finops-domain/domain/src",
+  "projectType": "library",
+  "tags": [
+    "scope:domain-finops-domain",
+    "type:domain",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {},
+  "prefix": "virteex"
+}

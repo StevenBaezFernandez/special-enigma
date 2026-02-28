@@ -1,0 +1,42 @@
+{
+  "name": "domain-identity-presentation",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/identity/presentation/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:identity",
+    "type:presentation",
+    "platform:nest",
+    "criticality:high",
+    "tenant-mode:schema"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/identity/presentation",
+        "main": "libs/domain/identity/presentation/src/index.ts",
+        "tsConfig": "libs/domain/identity/presentation/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/identity/presentation/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/identity/presentation"
+      }
+    }
+  }
+}

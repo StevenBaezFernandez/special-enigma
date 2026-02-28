@@ -1,0 +1,39 @@
+{
+  "name": "domain-crm-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/crm/infrastructure/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:crm",
+    "type:infrastructure",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/crm/infrastructure",
+        "main": "libs/domain/crm/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/crm/infrastructure/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/crm/infrastructure/*.md"
+        ],
+        "rootDir": "libs/domain/crm/infrastructure"
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/crm/infrastructure"
+      }
+    }
+  }
+}

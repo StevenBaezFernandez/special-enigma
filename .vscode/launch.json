@@ -4,12 +4,12 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-api-gateway with Nx",
+      "name": "Debug api-gateway-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-api-gateway"
+        "api-gateway-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9229"
@@ -21,19 +21,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-api-gateway/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-gateway-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-plugin-host with Nx",
+      "name": "Debug api-plugin-host-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-plugin-host"
+        "api-plugin-host-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9230"
@@ -45,19 +45,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-plugin-host/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-plugin-host-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-identity-service with Nx",
+      "name": "Debug api-identity-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-identity-service"
+        "api-identity-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9231"
@@ -69,19 +69,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-identity-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-identity-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-scheduler-service with Nx",
+      "name": "Debug worker-scheduler-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-scheduler-service"
+        "worker-scheduler-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9232"
@@ -93,19 +93,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-scheduler-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/worker-scheduler-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-fiscal-service with Nx",
+      "name": "Debug api-fiscal-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-fiscal-service"
+        "api-fiscal-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9233"
@@ -117,19 +117,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-fiscal-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-fiscal-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-catalog-service with Nx",
+      "name": "Debug api-catalog-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-catalog-service"
+        "api-catalog-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9234"
@@ -141,19 +141,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-catalog-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-catalog-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-gateway with Nx",
+      "name": "Debug api-gateway-legacy-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-gateway"
+        "api-gateway-legacy-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9235"
@@ -165,19 +165,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-gateway/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-gateway-legacy-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-notification-service with Nx",
+      "name": "Debug worker-notification-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-notification-service"
+        "worker-notification-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9236"
@@ -189,19 +189,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-notification-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/worker-notification-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-inventory-service with Nx",
+      "name": "Debug api-inventory-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-inventory-service"
+        "api-inventory-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9237"
@@ -213,19 +213,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-inventory-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-inventory-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-billing-service with Nx",
+      "name": "Debug api-billing-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-billing-service"
+        "api-billing-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9238"
@@ -237,19 +237,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-billing-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-billing-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-accounting-service with Nx",
+      "name": "Debug api-accounting-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-accounting-service"
+        "api-accounting-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9239"
@@ -261,19 +261,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-accounting-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-accounting-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-payroll-service with Nx",
+      "name": "Debug api-payroll-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-payroll-service"
+        "api-payroll-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9240"
@@ -285,19 +285,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-payroll-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-payroll-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-projects-service with Nx",
+      "name": "Debug api-projects-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-projects-service"
+        "api-projects-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9241"
@@ -309,19 +309,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-projects-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-projects-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-manufacturing-service with Nx",
+      "name": "Debug api-manufacturing-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-manufacturing-service"
+        "api-manufacturing-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9242"
@@ -333,19 +333,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-manufacturing-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-manufacturing-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-treasury-service with Nx",
+      "name": "Debug api-treasury-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-treasury-service"
+        "api-treasury-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9243"
@@ -357,19 +357,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-treasury-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-treasury-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-purchasing-service with Nx",
+      "name": "Debug api-purchasing-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-purchasing-service"
+        "api-purchasing-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9244"
@@ -381,19 +381,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-purchasing-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-purchasing-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-bi-service with Nx",
+      "name": "Debug api-bi-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-bi-service"
+        "api-bi-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9245"
@@ -405,19 +405,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-bi-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-bi-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-admin-service with Nx",
+      "name": "Debug api-admin-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-admin-service"
+        "api-admin-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9246"
@@ -429,19 +429,19 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-admin-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-admin-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug virteex-fixed-assets-service with Nx",
+      "name": "Debug api-fixed-assets-app with Nx",
       "runtimeExecutable": "npx",
       "runtimeArgs": [
         "nx",
         "serve",
-        "virteex-fixed-assets-service"
+        "api-fixed-assets-app"
       ],
       "env": {
         "NODE_OPTIONS": "--inspect=9247"
@@ -453,7 +453,7 @@
       ],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/virteex-fixed-assets-service/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/apps/api-fixed-assets-app/dist/**/*.(m|c|)js",
         "!**/node_modules/**"
       ]
     }

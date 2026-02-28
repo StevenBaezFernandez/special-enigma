@@ -1,0 +1,19 @@
+{
+  "name": "@virteex/domain-inventory-presentation",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "dependencies": {
+    "tslib": "^2.3.0",
+    "@nestjs/common": "^11.0.0",
+    "@virteex/domain-inventory-application": "*",
+    "class-validator": "^0.14.3",
+    "class-transformer": "^0.5.1",
+    "@nestjs/swagger": "^11.2.0",
+    "@virteex/kernel-auth": "*",
+    "@virteex/domain-inventory-domain": "*",
+    "@virteex/domain-inventory-infrastructure": "*"
+  }
+}
