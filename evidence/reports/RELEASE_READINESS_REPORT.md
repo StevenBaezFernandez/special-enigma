@@ -1,7 +1,7 @@
 # Virteex ERP Release Readiness Report
 
-**Date:** 2026-03-01T13:28:45.771Z
-**Version:** 2026.03-rc1
+**Date:** 2026-03-01T17:14:48.993Z
+**Version:** DEV-SNAPSHOT
 
 ## 1. Commercial Readiness
 
@@ -17,7 +17,8 @@
 
 ## 2. Security Evidence
 
-- **SBOM:** NOT FOUND. Run `npm run security:sbom` first.
+- **SBOM:** Generated (1.4)
+- **Dependencies Count:** 2
 - **Firma Digital:** Ausente
 
 ## 3. POC Evidence
@@ -30,7 +31,7 @@
 ## 4. Release Evidence Pack
 
 - **Readiness state:** ready-with-evidence
-- **Evidence path:** evidence/releases/2026.03-rc1
+- **Evidence path:** evidence/releases/DEV-SNAPSHOT
 
 | Gate | Status |
 | --- | --- |

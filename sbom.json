@@ -1,0 +1,34 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:3e075338-ad51-419b-a01b-c6670868840a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-03-01T17:15:00Z",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-npm",
+        "version": "1.12.0"
+      }
+    ],
+    "component": {
+      "group": "@virteex",
+      "name": "source",
+      "version": "0.0.0",
+      "type": "library"
+    }
+  },
+  "components": [
+    {
+      "name": "xml-crypto",
+      "version": "6.1.2",
+      "type": "library"
+    },
+    {
+      "name": "isolated-vm",
+      "version": "6.0.2",
+      "type": "library"
+    }
+  ]
+}

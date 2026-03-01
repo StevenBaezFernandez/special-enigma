@@ -8,12 +8,17 @@ import { InboxService } from './inbox.service';
 import { OutboxProcessor } from './outbox.processor';
 import { SagaOrchestrator } from './saga/saga-orchestrator';
 import { RedisCacheModule } from '@virteex/shared-infrastructure-cache';
+import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
+import { EgressProxyService } from './egress-proxy.service';
 
 @Global()
 @Module({
   imports: [
     MikroOrmModule.forFeature([OutboxEvent, InboxMessage]),
     ScheduleModule.forRoot(),
+    HttpModule,
+    ConfigModule,
     RedisCacheModule.forRootAsync({
       useFactory: () => {
         const url = process.env['REDIS_URL'];
@@ -33,7 +38,14 @@ import { RedisCacheModule } from '@virteex/shared-infrastructure-cache';
     InboxService,
     OutboxProcessor,
     SagaOrchestrator,
+    EgressProxyService,
   ],
-  exports: [OutboxService, InboxService, MikroOrmModule, SagaOrchestrator],
+  exports: [
+    OutboxService,
+    InboxService,
+    MikroOrmModule,
+    SagaOrchestrator,
+    EgressProxyService,
+  ],
 })
 export class MessagingModule {}

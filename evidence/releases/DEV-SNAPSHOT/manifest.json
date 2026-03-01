@@ -1,0 +1,18 @@
+{
+  "releaseVersion": "DEV-SNAPSHOT",
+  "generatedAt": "2026-03-01T17:14:02.628Z",
+  "artifacts": [
+    {
+      "path": "evidence/releases/DEV-SNAPSHOT/summary.json",
+      "sha256": "243aa0dc41d256103c26ad8d85dd39eb6b13d163220d034d654540bf95a85bd5"
+    },
+    {
+      "path": "evidence/releases/DEV-SNAPSHOT/manifest.json",
+      "sha256": "5700b15a361981add9a60a7cb1ddc940e55425ccf26245b6a0d75e0b25203f5d"
+    },
+    {
+      "path": "evidence/releases/DEV-SNAPSHOT/README.md",
+      "sha256": "95b0102f7584efb18405bce9673189f3d7e393208674e98666e912fc5f0d18a5"
+    }
+  ]
+}
