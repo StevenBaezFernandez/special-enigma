@@ -11,17 +11,21 @@ export class SefazFiscalAdapter implements FiscalProvider {
   private privateKey: string;
 
   constructor(private readonly httpService: HttpService) {
-      if (process.env['FISCAL_PRIVATE_KEY']) {
-          this.privateKey = process.env['FISCAL_PRIVATE_KEY'];
-      } else {
-          this.logger.warn('FISCAL_PRIVATE_KEY not provided. Generating ephemeral RSA key for simulation (SEFAZ).');
-          const { privateKey } = crypto.generateKeyPairSync('rsa', {
-              modulusLength: 2048,
-              publicKeyEncoding: { type: 'spki', format: 'pem' },
-              privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
-          });
-          this.privateKey = privateKey;
+    const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
+    if (process.env['FISCAL_PRIVATE_KEY']) {
+      this.privateKey = process.env['FISCAL_PRIVATE_KEY'];
+    } else {
+      if (isProd) {
+        throw new Error('FATAL: FISCAL_PRIVATE_KEY is mandatory for SEFAZ in production.');
       }
+      this.logger.warn('FISCAL_PRIVATE_KEY not provided. Generating ephemeral RSA key for simulation (SEFAZ).');
+      const { privateKey } = crypto.generateKeyPairSync('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: { type: 'spki', format: 'pem' },
+        privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+      });
+      this.privateKey = privateKey;
+    }
   }
 
   async validateInvoice(invoice: any): Promise<boolean> {

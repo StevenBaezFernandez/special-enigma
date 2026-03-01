@@ -6,6 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 export class NullPacProvider implements PacProvider {
   private readonly logger = new Logger(NullPacProvider.name);
 
+  constructor() {
+    const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
+    if (isProd) {
+      throw new Error('FATAL: NullPacProvider attempt in PRODUCTION. Simulated stamping is prohibited.');
+    }
+  }
+
   async stamp(xml: string): Promise<FiscalStamp> {
     this.logger.warn('Using NullPacProvider: Stamping is simulated.');
 

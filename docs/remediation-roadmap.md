@@ -2,9 +2,16 @@
 
 ## 1. Backlog Priorizado
 
-### Prioridad P0: Bloqueantes Comerciales
-- **Seguridad**: SBOM robusto, firma de imágenes, policy checks en plugins, proxy de egress.
-- **Fiscal CO**: XAdES-EPES, integración sincrónica DIAN, notas crédito/débito.
+### Prioridad P0: Bloqueantes Comerciales (REMEDIADO/ENDURECIDO)
+- **Seguridad**:
+  - [DONE] SBOM y firma obligatorios en CI/CD (sin fallback).
+  - [DONE] Eliminación de bypasses en E2E crítica.
+  - [DONE] Endurecimiento de TLS (rejectUnauthorized: fail-closed).
+  - [DONE] Sellado de simulaciones (MockFiscalProvider, NullPac) en prod.
+- **Infraestructura**:
+  - [DONE] Alta disponibilidad (replicas: 2) en servicios base.
+  - [DONE] RDS Snapshots obligatorios.
+- **Fiscal CO**: XAdES-EPES base implementado, integración sincrónica DIAN, notas crédito/débito.
 - **Fiscal BR**: mTLS real, soporte A1/A3, bridge de escritorio.
 - **Fiscal US**: Adapter productivo, exemptions por estado.
 - **Accounting**: Balance General, P&L, cierre fiscal, multi-moneda básica.

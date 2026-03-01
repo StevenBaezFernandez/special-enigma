@@ -25,12 +25,14 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
   }
 
   async validateInvoice(invoice: unknown): Promise<boolean> {
-    const response = await this.callPartner('/sandbox/validate', invoice);
+    const endpoint = this.configService.get<string>('US_TAX_PARTNER_VALIDATE_PATH', '/v1/validate');
+    const response = await this.callPartner(endpoint, invoice);
     return response?.valid === true;
   }
 
   async signInvoice(invoice: unknown): Promise<string> {
-    const response = await this.callPartner('/sandbox/sign', invoice);
+    const endpoint = this.configService.get<string>('US_TAX_PARTNER_SIGN_PATH', '/v1/sign');
+    const response = await this.callPartner(endpoint, invoice);
     if (!response?.signature) {
       throw new Error('US tax partner returned no signature.');
     }
@@ -38,7 +40,8 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
   }
 
   async transmitInvoice(invoice: unknown): Promise<void> {
-    await this.callPartner('/sandbox/transmit', invoice);
+    const endpoint = this.configService.get<string>('US_TAX_PARTNER_TRANSMIT_PATH', '/v1/transmit');
+    await this.callPartner(endpoint, invoice);
   }
 
   private async callPartner(endpoint: string, payload: unknown): Promise<any> {

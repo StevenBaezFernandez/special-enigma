@@ -7,10 +7,10 @@ applications:
     replicas: 2
   identity:
     image: virteex/identity:latest
-    replicas: 1
+    replicas: 2
   billing:
     image: virteex/billing:latest
-    replicas: 1
+    replicas: 2
   notification:
     image: virteex/notification:latest
     replicas: 1

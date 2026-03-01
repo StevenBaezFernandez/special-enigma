@@ -59,7 +59,7 @@ import { FederationSupportModule } from '@virteex/shared-util-server-config';
           autoLoadEntities: true,
           driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))
             ? {
-                connection: { ssl: { rejectUnauthorized: false } },
+                connection: { ssl: { rejectUnauthorized: configService.get("DB_SSL_REJECT_UNAUTHORIZED") !== "false" } },
               }
             : undefined,
         };

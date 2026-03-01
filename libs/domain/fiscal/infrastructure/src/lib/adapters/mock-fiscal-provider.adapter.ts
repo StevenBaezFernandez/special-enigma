@@ -6,8 +6,9 @@ export class MockFiscalProvider implements FiscalProvider {
   private readonly logger = new Logger(MockFiscalProvider.name);
 
   constructor() {
-    if (process.env['NODE_ENV'] === 'production') {
-      throw new Error('MockFiscalProvider is NOT allowed in PRODUCTION environment. Please configure a real PAC provider.');
+    const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
+    if (isProd) {
+      throw new Error('FATAL: MockFiscalProvider attempt in PRODUCTION. Security gate violation.');
     }
   }
 

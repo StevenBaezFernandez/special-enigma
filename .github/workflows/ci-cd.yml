@@ -101,7 +101,8 @@ jobs:
           if [ -n "${{ secrets.COSIGN_PRIVATE_KEY }}" ]; then
             printf '%s' "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
           else
-            openssl genrsa -out cosign.key 2048
+            echo "FATAL: COSIGN_PRIVATE_KEY secret is missing. Signing is mandatory for release."
+            exit 1
           fi
       - run: npm run security:sign
       - run: npm run security:verify

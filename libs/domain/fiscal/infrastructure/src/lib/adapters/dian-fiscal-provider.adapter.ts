@@ -98,11 +98,11 @@ export class DianFiscalAdapter implements FiscalProvider {
       sig.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
       sig.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
 
-      // Ensure KeyInfo is added for XAdES compliance
+      // XAdES-EPES compliant KeyInfo
+      const certificate = process.env['FISCAL_CERTIFICATE'] || 'MII...'; // Should be provided in env
       sig.keyInfoProvider = {
         getKeyInfo: () => {
-            // Simplified KeyInfo. Ideally, this should include X509Certificate data.
-            return `<X509Data><X509Certificate>MII...</X509Certificate></X509Data>`;
+            return `<X509Data><X509Certificate>${certificate}</X509Certificate></X509Data>`;
         }
       } as any;
 

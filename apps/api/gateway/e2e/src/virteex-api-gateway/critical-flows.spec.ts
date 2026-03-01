@@ -1,13 +1,17 @@
 import axios from 'axios';
 
-const runCriticalE2E = process.env.RUN_CRITICAL_E2E === 'true';
+const runCriticalE2E = process.env.RUN_CRITICAL_E2E !== 'false';
 const describeIf = runCriticalE2E ? describe : describe.skip;
+
+if (!runCriticalE2E) {
+  console.warn('CRITICAL WARNING: E2E tests are being skipped via RUN_CRITICAL_E2E=false');
+}
 
 function uniqueRef(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
 }
 
-describeIf('Critical ERP cross-domain flows', () => {
+describe('Critical ERP cross-domain flows', () => {
   it('Order-to-Cash: create invoice and verify usage increments', async () => {
     const tenantId = process.env.E2E_TENANT_ID ?? 'tenant-e2e';
     const invoicePayload = {

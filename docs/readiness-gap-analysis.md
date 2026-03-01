@@ -15,7 +15,13 @@ Este documento detalla el estado real del repositorio Virteex ERP frente a los r
 
 ### 2.2 Plataforma y Seguridad
 - **Multi-tenancy**: Existe soporte para Shared y Schema, pero el orquestador para `database-per-tenant` es incipiente o inexistente en `kernel-tenant`.
-- **Seguridad**: El pipeline de CI/CD tiene pasos de SBOM y firma, pero la política de admisión de plugins en `platform/policies` no está endurecida con SAST/DAST.
+- **Seguridad**:
+    - El pipeline de CI/CD tiene pasos de SBOM y firma, pero la política de admisión de plugins en `platform/policies` no está endurecida con SAST/DAST.
+    - **CRÍTICO**: Múltiples servicios (`billing`, `crm`, `subscription`, `inventory`, `identity`, `gateway`, `catalog`) tienen configurado `rejectUnauthorized: false` en sus conexiones de base de datos, lo que permite ataques MITM.
+    - El pipeline de CI/CD tiene un fallback peligroso que genera claves de firma efímeras si no se encuentran los secretos, invalidando la cadena de confianza.
+- **Infraestructura**:
+    - **CRÍTICO**: El manifiesto base de K8s y varios servicios en Helm (`identity`, `billing`, etc.) están configurados con `replicas: 1`, violando requisitos de alta disponibilidad.
+    - **CRÍTICO**: La configuración de RDS Terraform tiene `skip_final_snapshot = true`, arriesgando pérdida de datos en destrucciones accidentales.
 - **RLS**: Falta instrumentación específica para medir latencia de políticas RLS en tiempo real.
 
 ### 2.3 Contabilidad y Otros
