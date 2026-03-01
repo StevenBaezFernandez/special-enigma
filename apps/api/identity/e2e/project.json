@@ -2,29 +2,17 @@
   "name": "api-identity-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "implicitDependencies": [
-    "api-identity-app"
-  ],
+  "tags": ["scope:identity", "type:e2e", "platform:e2e", "criticality:low"],
+  "implicitDependencies": ["api-identity-app"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{e2eProjectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
         "jestConfig": "apps/api/identity/e2e/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": [
-        "api-identity-app:build",
-        "api-identity-app:serve"
-      ]
+      "dependsOn": ["api-identity-app:build", "api-identity-app:serve"]
     }
-  },
-  "tags": [
-    "scope:identity",
-    "type:e2e",
-    "platform:e2e",
-    "criticality:low"
-  ]
+  }
 }

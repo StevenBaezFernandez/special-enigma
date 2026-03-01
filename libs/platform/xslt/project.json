@@ -10,6 +10,9 @@
     "criticality:medium"
   ],
   "targets": {
+    "test": {
+      "outputs": ["{workspaceRoot}/coverage/libs/platform/xslt"]
+    },
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": [

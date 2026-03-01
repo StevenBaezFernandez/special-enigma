@@ -1,30 +1,18 @@
 {
   "name": "api-billing-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": [
-    "api-billing-app"
-  ],
   "projectType": "application",
+  "tags": ["scope:billing", "type:e2e", "platform:e2e", "criticality:low"],
+  "implicitDependencies": ["api-billing-app"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{e2eProjectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
         "jestConfig": "apps/api/billing/e2e/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": [
-        "api-billing-app:build",
-        "api-billing-app:serve"
-      ]
+      "dependsOn": ["api-billing-app:build", "api-billing-app:serve"]
     }
-  },
-  "tags": [
-    "scope:billing",
-    "type:e2e",
-    "platform:e2e",
-    "criticality:low"
-  ]
+  }
 }

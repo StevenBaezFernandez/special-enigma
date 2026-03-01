@@ -3,6 +3,7 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domain/accounting/presentation/src",
   "projectType": "library",
+  "prefix": "virteex",
   "tags": [
     "scope:accounting",
     "type:presentation",
@@ -13,19 +14,14 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/domain/accounting/presentation",
         "tsConfig": "libs/domain/accounting/presentation/tsconfig.lib.json",
         "packageJson": "libs/domain/accounting/presentation/package.json",
         "main": "libs/domain/accounting/presentation/src/index.ts",
-        "assets": [
-          "libs/domain/accounting/presentation/*.md"
-        ]
+        "assets": ["libs/domain/accounting/presentation/*.md"]
       }
     }
-  },
-  "prefix": "virteex"
+  }
 }

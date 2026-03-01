@@ -3,15 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/web-cms-e2e/src",
-  "implicitDependencies": [
-    "web-cms-app"
-  ],
+  "tags": ["scope:shared", "type:e2e", "platform:e2e", "criticality:low"],
+  "implicitDependencies": ["web-cms-app"],
   "// targets": "to see all targets run: nx show project web-cms-e2e --web",
-  "targets": {},
-  "tags": [
-    "scope:shared",
-    "type:e2e",
-    "platform:e2e",
-    "criticality:low"
-  ]
+  "targets": {}
 }

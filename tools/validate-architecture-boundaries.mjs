@@ -55,7 +55,7 @@ function addSearchCheck(name, command) {
 if (unknownExcluded.length > 0) {
   checks.push({
     name: 'Excluded domains must exist under libs/domain',
-    customError: \`Unknown excluded domains: \${unknownExcluded.join(', ')}\`,
+    customError: `Unknown excluded domains: ${unknownExcluded.join(', ')}`,
   });
 }
 
@@ -68,34 +68,34 @@ for (const domain of allDomains) {
 
   if (strictLayerDomains.has(domain) && existsSync(domainSrc)) {
     addSearchCheck(
-      \`[\${domain}] No framework imports in domain layer\`,
-      \`rg --line-number --glob '\${domainSrc}/**/*.ts' "@nestjs/|@mikro-orm/|class-validator|rxjs"\`
+      `[${domain}] No framework imports in domain layer`,
+      `rg --line-number --glob '${domainSrc}/**/*.ts' "@nestjs/|@mikro-orm/|class-validator|rxjs"`
     );
   }
 
   if (strictLayerDomains.has(domain) && existsSync(appUseCases)) {
     addSearchCheck(
-      \`[\${domain}] No HTTP exceptions in application use-cases\`,
-      \`rg --line-number --glob '\${appUseCases}/**/*.ts' "import\\\\s+\\\\{[^}]*\\\\b(NotFoundException|BadRequestException|ForbiddenException|UnauthorizedException|ConflictException)\\\\b[^}]*\\\\}\\\\s+from '@nestjs/common'"\`
+      `[${domain}] No HTTP exceptions in application use-cases`,
+      `rg --line-number --glob '${appUseCases}/**/*.ts' "import\\\\s+\\\\{[^}]*\\\\b(NotFoundException|BadRequestException|ForbiddenException|UnauthorizedException|ConflictException)\\\\b[^}]*\\\\}\\\\s+from '@nestjs/common'"`
     );
     addSearchCheck(
-      \`[\${domain}] No MikroORM imports in application use-cases\`,
-      \`rg --line-number --glob '\${appUseCases}/**/*.ts' "@mikro-orm/"\`
+      `[${domain}] No MikroORM imports in application use-cases`,
+      `rg --line-number --glob '${appUseCases}/**/*.ts' "@mikro-orm/"`
     );
   }
 
-  const appPath = \`apps/api/\${domain}/app/src/app\`;
+  const appPath = `apps/api/${domain}/app/src/app`;
   if (existsSync(appPath) && existsSync(join(base, 'presentation'))) {
     addSearchCheck(
-      \`[\${domain}] App shell must not define duplicate presentation artifacts\`,
-      \`rg --line-number --glob '\${appPath}/**/*.ts' "@Resolver\\\\(|@InputType\\\\(|@ObjectType\\\\("\`
+      `[${domain}] App shell must not define duplicate presentation artifacts`,
+      `rg --line-number --glob '${appPath}/**/*.ts' "@Resolver\\\\(|@InputType\\\\(|@ObjectType\\\\("`
     );
   }
 
   if (existsSync(appPath) && existsSync(join(base, 'infrastructure'))) {
     addSearchCheck(
-      \`[\${domain}] App shell must not contain infrastructure adapters\`,
-      \`rg --line-number --glob '\${appPath}/**/*.ts' "class\\\\s+.*(Gateway|Repository|Adapter)"\`
+      `[${domain}] App shell must not contain infrastructure adapters`,
+      `rg --line-number --glob '${appPath}/**/*.ts' "class\\\\s+.*(Gateway|Repository|Adapter)"`
     );
   }
 
@@ -104,10 +104,10 @@ for (const domain of allDomains) {
     if (!existsSync(projectJsonPath)) continue;
     const project = JSON.parse(readFileSync(projectJsonPath, 'utf8'));
     const tags = project.tags ?? [];
-    if (!tags.includes(\`scope:\${domain}\`)) {
+    if (!tags.includes(`scope:${domain}`)) {
       checks.push({
-        name: \`[\${domain}] \${layer} project must include scope:\${domain}\`,
-        customError: \`\${projectJsonPath}: missing required tag scope:\${domain}\`,
+        name: `[${domain}] ${layer} project must include scope:${domain}`,
+        customError: `${projectJsonPath}: missing required tag scope:${domain}`,
       });
     }
   }
@@ -117,7 +117,7 @@ if (unjustifiedDomains.length > 0) {
   checks.push({
     name: 'Uncovered domains must be explicitly justified',
     customError:
-      \`Missing ARCH_BOUNDARY_EXCLUDED_JUSTIFICATIONS for: \${unjustifiedDomains.join(', ')}. \` +
+      `Missing ARCH_BOUNDARY_EXCLUDED_JUSTIFICATIONS for: ${unjustifiedDomains.join(', ')}. ` +
       'Use format "domain=reason;other-domain=reason" for temporary exclusions.',
   });
 }
@@ -126,7 +126,7 @@ let hasViolations = false;
 for (const check of checks) {
   if (check.customError) {
     hasViolations = true;
-    console.error(\`✖ \${check.name}\`);
+    console.error(`✖ ${check.name}`);
     console.error(check.customError);
     console.error('');
     continue;
@@ -136,7 +136,7 @@ for (const check of checks) {
     const output = execSync(check.command, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
     if (output) {
       hasViolations = true;
-      console.error(\`✖ \${check.name}\`);
+      console.error(`✖ ${check.name}`);
       console.error(output);
       console.error('');
     }
@@ -144,19 +144,19 @@ for (const check of checks) {
     const output = error.stdout?.toString().trim();
     if (!output) continue;
     hasViolations = true;
-    console.error(\`✖ \${check.name}\`);
+    console.error(`✖ ${check.name}`);
     console.error(output);
     console.error('');
   }
 }
 
-console.log(\`ℹ Detected domains: \${allDomains.join(', ')}\`);
-console.log(\`ℹ Governed domains: \${governedDomains.join(', ') || '(none)'}\`);
+console.log(`ℹ Detected domains: ${allDomains.join(', ')}`);
+console.log(`ℹ Governed domains: ${governedDomains.join(', ') || '(none)'}`);
 if (uncoveredDomains.length > 0) {
   console.log(
-    \`ℹ Uncovered domains (temporary exclusions): \${uncoveredDomains
-      .map((domain) => \`\${domain}\${exclusionJustifications.get(domain) ? \` (\${exclusionJustifications.get(domain)})\` : ''}\`)
-      .join(', ')}\`
+    `ℹ Uncovered domains (temporary exclusions): ${uncoveredDomains
+      .map((domain) => `${domain}${exclusionJustifications.get(domain) ? ` (${exclusionJustifications.get(domain)})` : ''}`)
+      .join(', ')}`
   );
 }
 

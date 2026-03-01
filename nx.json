@@ -5,6 +5,7 @@
       "{projectRoot}/**/*",
       "sharedGlobals"
     ],
+    "jest.preset.js": ["{workspaceRoot}/jest.preset.js"],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",

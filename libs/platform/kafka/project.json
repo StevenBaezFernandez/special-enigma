@@ -9,6 +9,10 @@
     "platform:agnostic",
     "criticality:medium"
   ],
-  "// targets": "to see all targets run: nx show project kafka --web",
-  "targets": {}
+  "// targets": "to see all targets run: nx show project platform-kafka --web",
+  "targets": {
+    "test": {
+      "outputs": ["{workspaceRoot}/coverage/libs/platform/kafka"]
+    }
+  }
 }

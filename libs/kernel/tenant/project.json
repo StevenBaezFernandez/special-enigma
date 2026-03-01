@@ -3,6 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kernel/tenant/src",
   "projectType": "library",
+  "prefix": "virteex",
   "tags": [
     "scope:kernel",
     "type:util",
@@ -12,18 +13,13 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/kernel/tenant",
         "main": "libs/kernel/tenant/src/index.ts",
         "tsConfig": "libs/kernel/tenant/tsconfig.lib.json",
-        "assets": [
-          "libs/kernel/tenant/*.md"
-        ]
+        "assets": ["libs/kernel/tenant/*.md"]
       }
     }
-  },
-  "prefix": "virteex"
+  }
 }

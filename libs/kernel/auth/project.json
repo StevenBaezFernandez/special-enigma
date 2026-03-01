@@ -3,6 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kernel/auth/src",
   "projectType": "library",
+  "prefix": "virteex",
   "tags": [
     "scope:kernel",
     "type:util",
@@ -12,18 +13,13 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/kernel/auth",
         "main": "libs/kernel/auth/src/index.ts",
         "tsConfig": "libs/kernel/auth/tsconfig.lib.json",
-        "assets": [
-          "libs/kernel/auth/*.md"
-        ]
+        "assets": ["libs/kernel/auth/*.md"]
       }
     }
-  },
-  "prefix": "virteex"
+  }
 }

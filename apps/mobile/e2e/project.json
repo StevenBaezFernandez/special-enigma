@@ -3,16 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/mobile-e2e/src",
-  "implicitDependencies": [
-    "mobile-app"
-  ],
-  "// targets": "to see all targets run: nx show project mobile-e2e --web",
-  "targets": {},
   "prefix": "virteex",
-  "tags": [
-    "scope:shared",
-    "type:e2e",
-    "platform:e2e",
-    "criticality:low"
-  ]
+  "tags": ["scope:shared", "type:e2e", "platform:e2e", "criticality:low"],
+  "implicitDependencies": ["mobile-app"],
+  "// targets": "to see all targets run: nx show project mobile-e2e --web",
+  "targets": {}
 }

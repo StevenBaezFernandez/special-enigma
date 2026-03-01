@@ -3,6 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/validators/src",
   "projectType": "library",
+  "prefix": "virteex",
   "tags": [
     "scope:shared",
     "type:lib",
@@ -12,18 +13,13 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/shared/validators",
         "main": "libs/shared/validators/src/index.ts",
         "tsConfig": "libs/shared/validators/tsconfig.lib.json",
-        "assets": [
-          "libs/shared/validators/*.md"
-        ]
+        "assets": ["libs/shared/validators/*.md"]
       }
     }
-  },
-  "prefix": "virteex"
+  }
 }

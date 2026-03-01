@@ -18,7 +18,7 @@ function checkStructure(path, pattern) {
 function validateNaming(name, path) {
     if (path.includes('apps/api/')) {
         if (!name.startsWith('api-')) {
-             console.error(\`✖ API App \${name} at \${path} must start with api-\`);
+             console.error(`✖ API App ${name} at ${path} must start with api-`);
              hasViolations = true;
         }
     }

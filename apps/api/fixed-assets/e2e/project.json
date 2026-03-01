@@ -2,29 +2,17 @@
   "name": "api-fixed-assets-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "implicitDependencies": [
-    "api-fixed-assets-app"
-  ],
+  "tags": ["scope:fixed", "type:e2e", "platform:e2e", "criticality:low"],
+  "implicitDependencies": ["api-fixed-assets-app"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{e2eProjectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
         "jestConfig": "apps/api/fixed-assets/e2e/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": [
-        "api-fixed-assets-app:build",
-        "api-fixed-assets-app:serve"
-      ]
+      "dependsOn": ["api-fixed-assets-app:build", "api-fixed-assets-app:serve"]
     }
-  },
-  "tags": [
-    "scope:fixed",
-    "type:e2e",
-    "platform:e2e",
-    "criticality:low"
-  ]
+  }
 }

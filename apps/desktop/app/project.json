@@ -3,19 +3,22 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/desktop/app/src",
   "projectType": "application",
+  "prefix": "virteex",
+  "tags": [
+    "scope:shared",
+    "type:app",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
   "targets": {
     "build": {
       "executor": "nx-electron:build",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/desktop/app",
         "main": "apps/desktop/app/src/main.ts",
         "tsConfig": "apps/desktop/app/tsconfig.app.json",
-        "assets": [
-          "apps/desktop/app/src/assets"
-        ]
+        "assets": ["apps/desktop/app/src/assets"]
       },
       "configurations": {
         "production": {
@@ -59,12 +62,5 @@
     "lint": {
       "command": "eslint apps/desktop/app/**/*.ts"
     }
-  },
-  "prefix": "virteex",
-  "tags": [
-    "scope:shared",
-    "type:app",
-    "platform:agnostic",
-    "criticality:medium"
-  ]
+  }
 }

@@ -9,6 +9,6 @@
     "platform:agnostic",
     "criticality:high"
   ],
-  "// targets": "to see all targets run: nx show project audit --web",
+  "// targets": "to see all targets run: nx show project kernel-audit --web",
   "targets": {}
 }

@@ -13,10 +13,10 @@ function validateDir(dir) {
     const tags = project.tags || [];
 
     const hasScope = tags.some(t => t.startsWith('scope:'));
-    const hasLayer = tags.some(t => t.startsWith('layer:'));
+    const hasType = tags.some(t => t.startsWith('type:'));
 
-    if (!hasScope || !hasLayer) {
-      console.error(\`✖ \${project.name} (\${projectPath}) is missing required tags (scope:* and layer:*)\`);
+    if (!hasScope || !hasType) {
+      console.error(`✖ ${project.name} (${projectPath}) is missing required tags (scope:* and type:*)`);
       hasViolations = true;
     }
   }

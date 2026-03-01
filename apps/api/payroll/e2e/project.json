@@ -2,29 +2,17 @@
   "name": "api-payroll-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "implicitDependencies": [
-    "api-payroll-app"
-  ],
+  "tags": ["scope:payroll", "type:e2e", "platform:e2e", "criticality:low"],
+  "implicitDependencies": ["api-payroll-app"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{e2eProjectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
         "jestConfig": "apps/api/payroll/e2e/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": [
-        "api-payroll-app:build",
-        "api-payroll-app:serve"
-      ]
+      "dependsOn": ["api-payroll-app:build", "api-payroll-app:serve"]
     }
-  },
-  "tags": [
-    "scope:payroll",
-    "type:e2e",
-    "platform:e2e",
-    "criticality:low"
-  ]
+  }
 }

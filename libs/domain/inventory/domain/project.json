@@ -3,6 +3,7 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domain/inventory/domain/src",
   "projectType": "library",
+  "prefix": "virteex",
   "tags": [
     "scope:inventory",
     "type:domain",
@@ -12,18 +13,13 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/domain/inventory/domain",
         "main": "libs/domain/inventory/domain/src/index.ts",
         "tsConfig": "libs/domain/inventory/domain/tsconfig.lib.json",
-        "assets": [
-          "libs/domain/inventory/domain/*.md"
-        ]
+        "assets": ["libs/domain/inventory/domain/*.md"]
       }
     }
-  },
-  "prefix": "virteex"
+  }
 }

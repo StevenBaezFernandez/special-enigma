@@ -2,30 +2,18 @@
   "name": "api-gateway-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "implicitDependencies": [
-    "api-gateway-app"
-  ],
+  "prefix": "virteex",
+  "tags": ["scope:gateway", "type:e2e", "platform:e2e", "criticality:low"],
+  "implicitDependencies": ["api-gateway-app"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{e2eProjectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
         "jestConfig": "apps/api-gateway-e2e/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": [
-        "api-gateway-app:build",
-        "api-gateway-app:serve"
-      ]
+      "dependsOn": ["api-gateway-app:build", "api-gateway-app:serve"]
     }
-  },
-  "prefix": "virteex",
-  "tags": [
-    "scope:gateway",
-    "type:e2e",
-    "platform:e2e",
-    "criticality:low"
-  ]
+  }
 }
