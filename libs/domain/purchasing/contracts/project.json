@@ -6,7 +6,7 @@
   "prefix": "virteex",
   "tags": [
     "scope:purchasing",
-    "type:contract",
+    "type:contracts",
     "platform:agnostic",
     "criticality:high",
     "compliance:none",

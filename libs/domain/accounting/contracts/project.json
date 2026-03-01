@@ -6,7 +6,7 @@
   "prefix": "virteex",
   "tags": [
     "scope:accounting",
-    "type:contract",
+    "type:contracts",
     "platform:agnostic",
     "criticality:high",
     "tenant-mode:schema",

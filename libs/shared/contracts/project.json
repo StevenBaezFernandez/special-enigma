@@ -6,19 +6,23 @@
   "prefix": "virteex",
   "tags": [
     "scope:shared",
-    "type:contract",
+    "type:contracts",
     "platform:agnostic",
     "criticality:medium"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/shared/contracts",
         "main": "libs/shared/contracts/src/index.ts",
         "tsConfig": "libs/shared/contracts/tsconfig.lib.json",
-        "assets": ["libs/shared/contracts/*.md"]
+        "assets": [
+          "libs/shared/contracts/*.md"
+        ]
       }
     }
   }
