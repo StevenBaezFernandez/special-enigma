@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Transaction } from '../../../../domain/src/lib/entities/transaction.entity';
-import { TransactionRepository } from '../../../../domain/src/lib/repositories/transaction.repository';
+import { Transaction } from '@virteex/domain-treasury-domain/entities/transaction.entity';
+import { TransactionRepository } from '@virteex/domain-treasury-domain/repositories/transaction.repository';
 
 @Injectable()
 export class GetCashFlowUseCase {

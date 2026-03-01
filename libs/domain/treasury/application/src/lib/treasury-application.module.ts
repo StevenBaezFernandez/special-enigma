@@ -3,7 +3,7 @@ import { CreateBankAccountUseCase } from './use-cases/create-bank-account.use-ca
 import { GetBankAccountsUseCase } from './use-cases/get-bank-accounts.use-case';
 import { RegisterTransactionUseCase } from './use-cases/register-transaction.use-case';
 import { GetCashFlowUseCase } from './use-cases/get-cash-flow.use-case';
-import { TreasuryInfrastructureModule } from '../../../infrastructure/src/index';
+import { TreasuryInfrastructureModule } from '@virteex/infra-treasury-infrastructure';
 
 @Module({
   imports: [TreasuryInfrastructureModule],
@@ -11,13 +11,13 @@ import { TreasuryInfrastructureModule } from '../../../infrastructure/src/index'
     CreateBankAccountUseCase,
     GetBankAccountsUseCase,
     RegisterTransactionUseCase,
-    GetCashFlowUseCase
+    GetCashFlowUseCase,
   ],
   exports: [
     CreateBankAccountUseCase,
     GetBankAccountsUseCase,
     RegisterTransactionUseCase,
-    GetCashFlowUseCase
+    GetCashFlowUseCase,
   ],
 })
 export class TreasuryApplicationModule {}

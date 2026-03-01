@@ -1,4 +1,5 @@
-import { Injectable, Inject, ConflictException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { AuthService, NotificationService, UserRepository, CachePort } from '@virteex/domain-identity-domain';
 import { InitiateSignupDto } from '@virteex/contracts-identity-contracts';
 
@@ -14,7 +15,7 @@ export class InitiateSignupUseCase {
   async execute(dto: InitiateSignupDto): Promise<void> {
     const existingUser = await this.userRepository.findByEmail(dto.email);
     if (existingUser) {
-        throw new ConflictException('User already exists');
+        throw new DomainException('User already exists', 'CONFLICT');
     }
 
     const passwordHash = await this.authService.hashPassword(dto.password);

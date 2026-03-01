@@ -1,4 +1,5 @@
-import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { VerifyMfaDto, LoginResponseDto } from '@virteex/contracts-identity-contracts';
 import {
   UserRepository, AuditLogRepository, AuditLog,
@@ -26,23 +27,23 @@ export class VerifyMfaUseCase {
     try {
         payload = await this.authService.verifyToken(dto.tempToken);
     } catch (e) {
-        throw new UnauthorizedException('Invalid or expired token');
+        throw new DomainException('Invalid or expired token', 'UNAUTHORIZED');
     }
 
     if (!payload.partial || !payload.sub || payload.typ !== 'virteex+stepup') {
-        throw new UnauthorizedException('Invalid token type');
+        throw new DomainException('Invalid token type', 'UNAUTHORIZED');
     }
 
     const userId = payload.sub;
     const user = await this.userRepository.findById(userId); // Assuming findById exists in Repo port
 
     if (!user) {
-        throw new UnauthorizedException('User not found');
+        throw new DomainException('User not found', 'UNAUTHORIZED');
     }
 
     // 2. Validate Code
     if (!user.mfaSecret) {
-        throw new UnauthorizedException('MFA not configured for this account.');
+        throw new DomainException('MFA not configured for this account.', 'UNAUTHORIZED');
     }
 
     const decryptedSecret = await this.authService.decrypt(user.mfaSecret);
@@ -50,7 +51,7 @@ export class VerifyMfaUseCase {
 
     if (!isValid) {
         await this.auditLogRepository.save(new AuditLog('MFA_FAILED', user.id, { ip: context.ip }));
-        throw new UnauthorizedException('Invalid verification code');
+        throw new DomainException('Invalid verification code', 'UNAUTHORIZED');
     }
 
     // 3. Create Session and Generate Tokens

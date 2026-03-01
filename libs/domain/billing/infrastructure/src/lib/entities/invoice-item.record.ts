@@ -1,8 +1,6 @@
-import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 import { InvoiceRecord } from './invoice.record';
 
-@Entity({ tableName: 'billing_invoice_items' })
 export class InvoiceItemRecord {
   @PrimaryKey({ type: 'uuid' })
   id: string = v4();
@@ -10,21 +8,15 @@ export class InvoiceItemRecord {
   @ManyToOne(() => InvoiceRecord)
   invoice!: InvoiceRecord;
 
-  @Property()
-  description!: string;
+    description!: string;
 
-  @Property()
-  quantity!: number;
+    quantity!: number;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  unitPrice!: string;
+    unitPrice!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  amount!: string;
+    amount!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  taxAmount!: string;
+    taxAmount!: string;
 
-  @Property({ nullable: true })
-  productId?: string;
+    productId?: string;
 }

@@ -1,20 +1,14 @@
-import { Entity, PrimaryKey, Property, Enum, ManyToOne, Unique } from '@mikro-orm/core';
 import { AccountType } from '@virteex/contracts-accounting-contracts';
 
-@Entity()
-@Unique({ properties: ['tenantId', 'code'] })
 export class Account {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  code!: string;
+    code!: string;
 
-  @Property()
-  name!: string;
+    name!: string;
 
   @Enum(() => AccountType)
   type!: AccountType;
@@ -22,14 +16,11 @@ export class Account {
   @ManyToOne(() => Account, { nullable: true })
   parent?: Account;
 
-  @Property()
-  level!: number;
+    level!: number;
 
-  @Property()
-  isControl = false;
+    isControl = false;
 
-  @Property({ nullable: true })
-  currency?: string;
+    currency?: string;
 
   constructor(tenantId: string, code: string, name: string, type: AccountType) {
     this.tenantId = tenantId;

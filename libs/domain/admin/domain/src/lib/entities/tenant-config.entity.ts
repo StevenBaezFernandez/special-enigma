@@ -1,18 +1,13 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-@Entity()
 export class TenantConfig {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  key!: string;
+    key!: string;
 
-  @Property()
-  value!: string;
+    value!: string;
 
   constructor(tenantId: string, key: string, value: string) {
     this.tenantId = tenantId;

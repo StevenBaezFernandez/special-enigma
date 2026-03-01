@@ -1,9 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
 import { USAGE_REPOSITORY, UsageRecord, UsageRepository } from './ports/usage.repository';
 
-@Injectable()
 export class FinOpsService {
-  constructor(@Inject(USAGE_REPOSITORY) private readonly repository: UsageRepository) {}
+  constructor(private readonly repository: UsageRepository) {}
 
   async trackUsage(tenantId: string, metric: UsageRecord['metric'], value: number, idempotencyKey?: string): Promise<void> {
     await this.repository.recordUsage({

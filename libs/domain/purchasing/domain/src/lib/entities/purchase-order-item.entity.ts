@@ -1,7 +1,5 @@
-import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
 import type { PurchaseOrder } from './purchase-order.entity';
 
-@Entity()
 export class PurchaseOrderItem {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
@@ -9,17 +7,13 @@ export class PurchaseOrderItem {
   @ManyToOne('PurchaseOrder')
   purchaseOrder!: PurchaseOrder;
 
-  @Property()
-  productId!: string; // Reference to Catalog Product ID
+    productId!: string; // Reference to Catalog Product ID
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  quantity!: number;
+    quantity!: number;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  unitPrice!: number;
+    unitPrice!: number;
 
-  @Property({ persist: false })
-  get total(): number {
+    get total(): number {
     return Number(this.quantity) * Number(this.unitPrice);
   }
 

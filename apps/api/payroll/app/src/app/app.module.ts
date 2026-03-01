@@ -7,7 +7,6 @@ import { PayrollPresentationModule } from '@virteex/api-payroll-presentation';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { FederationSupportModule } from '@virteex/shared-util-server-config';
-import { PayrollResolver } from './payroll.resolver';
 
 @Module({
   imports: [
@@ -30,6 +29,6 @@ import { PayrollResolver } from './payroll.resolver';
     PayrollPresentationModule,
   ],
   controllers: [],
-  providers: [PayrollResolver],
+  providers: [],
 })
 export class AppModule {}

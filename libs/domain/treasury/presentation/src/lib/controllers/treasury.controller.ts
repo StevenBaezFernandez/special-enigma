@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { CreateBankAccountDto, BankAccountDto } from '../../../../contracts/src/index';
-import { CreateBankAccountUseCase, GetBankAccountsUseCase, RegisterTransactionUseCase, GetCashFlowUseCase } from '../../../../application/src/index';
-import { RegisterTransactionDto, TransactionDto } from '../../../../contracts/src/index';
-import { Transaction } from '../../../../domain/src/index';
+import { CreateBankAccountDto, BankAccountDto } from '@virteex/domain-treasury-contracts';
+import { CreateBankAccountUseCase, GetBankAccountsUseCase, RegisterTransactionUseCase, GetCashFlowUseCase } from '@virteex/application-treasury-application';
+import { RegisterTransactionDto, TransactionDto } from '@virteex/domain-treasury-contracts';
+import { Transaction } from '@virteex/domain-treasury-domain';
 
 @ApiTags('Treasury')
 @Controller('treasury')

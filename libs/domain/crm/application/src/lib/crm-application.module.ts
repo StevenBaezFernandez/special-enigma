@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CrmInfrastructureModule } from '../../../infrastructure/src/index';
+import { CrmInfrastructureModule } from '@virteex/infra-crm-infrastructure';
 import { CreateSaleUseCase } from './use-cases/create-sale.use-case';
 import { ListSalesUseCase } from './use-cases/list-sales.use-case';
 import { CreateCustomerUseCase } from './use-cases/create-customer.use-case';
@@ -19,7 +19,7 @@ import { CompleteSaleUseCase } from './use-cases/complete-sale.use-case';
     GetCustomerByIdUseCase,
     ApproveSaleUseCase,
     CancelSaleUseCase,
-    CompleteSaleUseCase
+    CompleteSaleUseCase,
   ],
   exports: [
     CreateSaleUseCase,
@@ -29,7 +29,7 @@ import { CompleteSaleUseCase } from './use-cases/complete-sale.use-case';
     GetCustomerByIdUseCase,
     ApproveSaleUseCase,
     CancelSaleUseCase,
-    CompleteSaleUseCase
+    CompleteSaleUseCase,
   ],
 })
 export class CrmApplicationModule {}

@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { InventoryService, Warehouse, StockReservationItem } from '../../../../domain/src/lib/ports/inventory.service';
+import { InventoryService, Warehouse, StockReservationItem } from '@virteex/domain-crm-domain/ports/inventory.service';
 
 @Injectable()
 export class HttpInventoryAdapter implements InventoryService {

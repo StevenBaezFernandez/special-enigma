@@ -1,6 +1,7 @@
-import { Injectable, Inject, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
-import { Sale, SaleItem, SaleRepository, SaleStatus, CustomerRepository, InventoryService, CatalogService } from '../../../../domain/src';
-import { StockReservationItem } from '../../../../domain/src/lib/ports/inventory.service';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Sale, SaleItem, SaleRepository, SaleStatus, CustomerRepository, InventoryService, CatalogService } from '@virteex/domain-crm-domain';
+import { StockReservationItem } from '@virteex/domain-crm-domain/ports/inventory.service';
 import { CreateSaleDto } from '../dtos/create-sale.dto';
 import Decimal from 'decimal.js';
 
@@ -22,22 +23,22 @@ export class CreateSaleUseCase {
   async execute(dto: CreateSaleDto): Promise<Sale> {
     const customer = await this.customerRepository.findById(dto.customerId);
     if (!customer) {
-      throw new NotFoundException(`Customer with ID ${dto.customerId} not found`);
+      throw new DomainException(`Customer with ID ${dto.customerId} not found`, 'ENTITY_NOT_FOUND');
     }
 
     let warehouse;
     if (dto.warehouseId) {
         warehouse = await this.inventoryService.getWarehouse(dto.warehouseId);
         if (!warehouse) {
-            throw new NotFoundException(`Warehouse with ID ${dto.warehouseId} not found`);
+            throw new DomainException(`Warehouse with ID ${dto.warehouseId} not found`, 'ENTITY_NOT_FOUND');
         }
         if (warehouse.tenantId !== dto.tenantId) {
-            throw new BadRequestException(`Warehouse ${dto.warehouseId} does not belong to tenant`);
+            throw new DomainException(`Warehouse ${dto.warehouseId} does not belong to tenant`, 'BAD_REQUEST');
         }
     } else {
         const warehouses = await this.inventoryService.getWarehouses(dto.tenantId);
         if (warehouses.length === 0) {
-           throw new BadRequestException('No warehouse found for this tenant to fulfill the sale.');
+           throw new DomainException('No warehouse found for this tenant to fulfill the sale.', 'BAD_REQUEST');
         }
         warehouse = warehouses[0];
     }
@@ -50,11 +51,11 @@ export class CreateSaleUseCase {
     for (const item of dto.items) {
       const prodId = parseInt(item.productId, 10);
       if (isNaN(prodId)) {
-           throw new BadRequestException(`Invalid product ID: ${item.productId}`);
+           throw new DomainException(`Invalid product ID: ${item.productId}`, 'BAD_REQUEST');
       }
       const product = await this.catalogService.getProductById(prodId);
       if (!product) {
-        throw new NotFoundException(`Product with ID ${item.productId} not found`);
+        throw new DomainException(`Product with ID ${item.productId} not found`, 'ENTITY_NOT_FOUND');
       }
 
       const price = new Decimal(product.price);
@@ -62,7 +63,7 @@ export class CreateSaleUseCase {
 
       const hasStock = await this.inventoryService.checkStock(warehouse.id, product.sku, item.quantity);
       if (!hasStock) {
-        throw new BadRequestException(`Insufficient stock for product ${product.name} (SKU: ${product.sku}) in warehouse ${warehouse.name}`);
+        throw new DomainException(`Insufficient stock for product ${product.name} (SKU: ${product.sku}) in warehouse ${warehouse.name}`, 'BAD_REQUEST');
       }
 
       reservationItems.push({

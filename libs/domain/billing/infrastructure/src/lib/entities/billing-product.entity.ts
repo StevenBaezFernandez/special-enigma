@@ -1,25 +1,17 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-@Entity({ tableName: 'billing_products' })
 export class BillingProductEntity {
   @PrimaryKey({ type: 'string' })
   id!: string;
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  name!: string;
+    name!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  price!: number;
+    price!: number;
 
-  @Property({ nullable: true })
-  taxGroup?: string;
+    taxGroup?: string;
 
-  @Property({ nullable: true })
-  fiscalCode?: string;
+    fiscalCode?: string;
 
-  @Property()
-  isActive: boolean = true;
+    isActive: boolean = true;
 }

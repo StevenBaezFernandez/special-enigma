@@ -1,7 +1,5 @@
-import { Injectable } from '@nestjs/common';
 import { UsageRecord, UsageRepository } from '../ports/usage.repository';
 
-@Injectable()
 export class InMemoryUsageRepository implements UsageRepository {
   private records: UsageRecord[] = [];
 

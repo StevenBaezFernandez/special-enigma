@@ -1,8 +1,6 @@
-import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
 import type { JournalEntry } from './journal-entry.entity';
 import { Account } from './account.entity';
 
-@Entity()
 export class JournalEntryLine {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
@@ -13,23 +11,17 @@ export class JournalEntryLine {
   @ManyToOne(() => Account)
   account!: Account;
 
-  @Property({ type: 'decimal', precision: 14, scale: 2 })
-  debit = '0';
+    debit = '0';
 
-  @Property({ type: 'decimal', precision: 14, scale: 2 })
-  credit = '0';
+    credit = '0';
 
-  @Property({ nullable: true })
-  description?: string;
+    description?: string;
 
-  @Property({ nullable: true })
-  currencyId?: string;
+    currencyId?: string;
 
-  @Property({ type: 'decimal', precision: 14, scale: 2, nullable: true })
-  amountCurrency?: string;
+    amountCurrency?: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 6, nullable: true })
-  exchangeRate?: string;
+    exchangeRate?: string;
 
   constructor(account: Account, debit: string, credit: string) {
     this.account = account;

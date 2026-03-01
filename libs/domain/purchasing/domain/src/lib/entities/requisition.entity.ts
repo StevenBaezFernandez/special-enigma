@@ -1,34 +1,23 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 
-@Entity()
 export class Requisition {
-  @PrimaryKey()
-  id: string = v4();
+    id: string = v4();
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  reqNumber!: string;
+    reqNumber!: string;
 
-  @Property()
-  requester!: string;
+    requester!: string;
 
-  @Property()
-  department!: string;
+    department!: string;
 
-  @Property()
-  date!: Date;
+    date!: Date;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  total!: string;
+    total!: string;
 
-  @Property()
-  status: 'Draft' | 'Pending Approval' | 'Approved' | 'Rejected' = 'Draft';
+    status: 'Draft' | 'Pending Approval' | 'Approved' | 'Rejected' = 'Draft';
 
-  @Property({ type: 'json' })
-  items!: any[]; // Using json for simplicity as per quick implementation, ideally separate entity
+    items!: any[]; // Using json for simplicity as per quick implementation, ideally separate entity
 
   constructor(tenantId: string, reqNumber: string, requester: string, department: string, date: Date, items: any[]) {
     this.tenantId = tenantId;

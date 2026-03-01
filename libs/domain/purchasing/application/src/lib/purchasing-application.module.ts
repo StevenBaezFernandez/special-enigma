@@ -8,12 +8,10 @@ import { RejectRequisitionUseCase } from './use-cases/reject-requisition.use-cas
 import { CreateVendorBillUseCase } from './use-cases/create-vendor-bill.use-case';
 import { UpdateVendorBillUseCase } from './use-cases/update-vendor-bill.use-case';
 import { GetVendorBillUseCase } from './use-cases/get-vendor-bill.use-case';
-import { PurchasingInfrastructureModule } from '../../../infrastructure/src/index';
+import { PurchasingInfrastructureModule } from '@virteex/infra-purchasing-infrastructure';
 
 @Module({
-  imports: [
-      PurchasingInfrastructureModule
-  ],
+  imports: [PurchasingInfrastructureModule],
   providers: [
     CreateSupplierUseCase,
     CreatePurchaseOrderUseCase,
@@ -23,7 +21,7 @@ import { PurchasingInfrastructureModule } from '../../../infrastructure/src/inde
     RejectRequisitionUseCase,
     CreateVendorBillUseCase,
     UpdateVendorBillUseCase,
-    GetVendorBillUseCase
+    GetVendorBillUseCase,
   ],
   exports: [
     CreateSupplierUseCase,
@@ -34,7 +32,7 @@ import { PurchasingInfrastructureModule } from '../../../infrastructure/src/inde
     RejectRequisitionUseCase,
     CreateVendorBillUseCase,
     UpdateVendorBillUseCase,
-    GetVendorBillUseCase
-  ]
+    GetVendorBillUseCase,
+  ],
 })
 export class PurchasingApplicationModule {}

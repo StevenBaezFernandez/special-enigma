@@ -1,4 +1,5 @@
-import { Injectable, Inject, BadRequestException, UnauthorizedException, ConflictException, Logger } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AuthService, NotificationService, UserRepository, CompanyRepository,
@@ -6,7 +7,6 @@ import {
   User, Company, Session, SessionRepository, CachePort
 } from '@virteex/domain-identity-domain';
 import { Tenant, TenantMode } from '@virteex/kernel-tenant';
-import { EntityManager } from '@mikro-orm/core';
 import * as crypto from 'crypto';
 import { TokenGenerationService } from '../services/token-generation.service';
 import { CompleteOnboardingDto } from '@virteex/contracts-identity-contracts';
@@ -38,13 +38,13 @@ export class CompleteOnboardingUseCase {
         }
         email = payload.email;
     } catch {
-        throw new UnauthorizedException('Invalid or expired onboarding token');
+        throw new DomainException('Invalid or expired onboarding token', 'UNAUTHORIZED');
     }
 
     const key = `signup:${email}`;
     const storedData = await this.cachePort.get(key);
     if (!storedData) {
-        throw new BadRequestException('Signup session expired. Please restart.');
+        throw new DomainException('Signup session expired. Please restart.', 'BAD_REQUEST');
     }
 
     const { passwordHash } = JSON.parse(storedData);
@@ -55,7 +55,7 @@ export class CompleteOnboardingUseCase {
     // Validate Duplicate Tax ID
     // CRITICAL FIX: Ensure no duplicate Tax ID exists before creating tenant
     if (await this.companyRepository.existsByTaxId(dto.taxId)) {
-        throw new ConflictException(`Company with Tax ID ${dto.taxId} already exists.`);
+        throw new DomainException(`Company with Tax ID ${dto.taxId} already exists.`, 'CONFLICT');
     }
 
     const result = await this.em.transactional(async (em) => {
@@ -181,7 +181,7 @@ export class CompleteOnboardingUseCase {
     }
 
     if (!isValid) {
-      throw new BadRequestException(errorMsg);
+      throw new DomainException(errorMsg, 'BAD_REQUEST');
     }
   }
 }

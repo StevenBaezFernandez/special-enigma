@@ -1,8 +1,8 @@
 import { Resolver, Query, Context } from '@nestjs/graphql';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { GetSatCatalogsUseCase, GetProductsUseCase } from '@virteex/application-catalog-application';
-import { Product } from './models/product.model';
-import { SatPaymentMethod, SatPaymentForm, SatCfdiUsage } from './models/sat-catalog.model';
+import { Product } from '../models/product.model';
+import { SatPaymentMethod, SatPaymentForm, SatCfdiUsage } from '../models/sat-catalog.model';
 import { JwtAuthGuard } from '@virteex/kernel-auth';
 
 @Resolver()

@@ -1,5 +1,6 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
-import { Sale, SaleRepository, SaleStatus } from '../../../../domain/src';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
+import { Sale, SaleRepository, SaleStatus } from '@virteex/domain-crm-domain';
 
 @Injectable()
 export class CancelSaleUseCase {
@@ -11,10 +12,10 @@ export class CancelSaleUseCase {
   async execute(id: string): Promise<Sale> {
     const sale = await this.repository.findById(id);
     if (!sale) {
-        throw new NotFoundException('Sale not found');
+        throw new DomainException('Sale not found', 'ENTITY_NOT_FOUND');
     }
     if (sale.status === SaleStatus.COMPLETED) {
-        throw new BadRequestException(`Cannot cancel completed sale`);
+        throw new DomainException(`Cannot cancel completed sale`, 'BAD_REQUEST');
     }
     sale.status = SaleStatus.CANCELLED;
     return this.repository.update(sale);

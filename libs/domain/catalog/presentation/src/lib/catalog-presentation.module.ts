@@ -5,10 +5,11 @@ import {
   GetProductByIdUseCase,
   CreateProductUseCase,
   UpdateProductUseCase,
-  DeleteProductUseCase
+  DeleteProductUseCase,
 } from '@virteex/application-catalog-application';
 import { CatalogInfrastructureModule } from '@virteex/infra-catalog-infrastructure';
 import { CatalogController } from './controllers/catalog.controller';
+import { CatalogResolver } from './resolvers/catalog.resolver';
 
 @Module({
   imports: [CatalogApplicationModule, CatalogInfrastructureModule],
@@ -18,7 +19,9 @@ import { CatalogController } from './controllers/catalog.controller';
     GetProductByIdUseCase,
     CreateProductUseCase,
     UpdateProductUseCase,
-    DeleteProductUseCase
-  ]
+    DeleteProductUseCase,
+    CatalogResolver,
+  ],
+  exports: [CatalogPresentationModule],
 })
 export class CatalogPresentationModule {}

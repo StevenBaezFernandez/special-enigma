@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, ManyToOne } from '@mikro-orm/core';
-import { AttendanceStatus } from '../../../domain/src/lib/enums';
+import { AttendanceStatus } from '@virteex/domain-payroll-domain/enums';
 
 @Entity({ schema: 'payroll', tableName: 'attendance' })
 export class AttendanceOrmEntity {

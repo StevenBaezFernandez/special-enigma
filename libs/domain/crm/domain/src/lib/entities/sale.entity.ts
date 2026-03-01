@@ -1,12 +1,3 @@
-import {
-  Entity,
-  PrimaryKey,
-  Property,
-  OneToMany,
-  Collection,
-  ManyToOne,
-  Enum
-} from '@mikro-orm/core';
 import { v4 } from 'uuid';
 
 export enum SaleStatus {
@@ -17,31 +8,22 @@ export enum SaleStatus {
   CANCELLED = 'CANCELLED'
 }
 
-@Entity()
 export class Sale {
-  @PrimaryKey({ type: 'uuid' })
-  id: string = v4();
+    id: string = v4();
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  customerId!: string;
+    customerId!: string;
 
-  @Property()
-  customerName!: string;
+    customerName!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  total!: string;
+    total!: string;
 
-  @Enum(() => SaleStatus)
-  status: SaleStatus = SaleStatus.DRAFT;
+    status: SaleStatus = SaleStatus.DRAFT;
 
-  @OneToMany('SaleItem', 'sale', { cascade: [] })
-  items = new Collection<any>(this);
+    items: any[] = [];
 
-  @Property()
-  createdAt: Date = new Date();
+    createdAt: Date = new Date();
 
   constructor(tenantId: string, customerId: string, customerName: string, total: string) {
     this.tenantId = tenantId;
@@ -51,25 +33,18 @@ export class Sale {
   }
 }
 
-@Entity()
 export class SaleItem {
-  @PrimaryKey({ type: 'uuid' })
-  id: string = v4();
+    id: string = v4();
 
-  @Property()
-  productId!: string;
+    productId!: string;
 
-  @Property()
-  productName!: string;
+    productName!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  price!: string;
+    price!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  quantity!: string;
+    quantity!: string;
 
-  @ManyToOne(() => Sale)
-  sale!: Sale;
+    sale!: Sale;
 
   constructor(
     productId: string,

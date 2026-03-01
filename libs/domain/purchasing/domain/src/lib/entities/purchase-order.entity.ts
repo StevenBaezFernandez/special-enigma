@@ -1,21 +1,17 @@
-import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection, Cascade } from '@mikro-orm/core';
 import { PurchaseOrderStatus } from '../enums/purchase-order-status.enum';
 import { Supplier } from './supplier.entity';
 import type { PurchaseOrderItem } from './purchase-order-item.entity';
 
-@Entity()
 export class PurchaseOrder {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
   @ManyToOne(() => Supplier)
   supplier!: Supplier;
 
-  @Property()
-  expectedDate!: Date;
+    expectedDate!: Date;
 
   @Enum(() => PurchaseOrderStatus)
   status: PurchaseOrderStatus = PurchaseOrderStatus.DRAFT;
@@ -23,13 +19,11 @@ export class PurchaseOrder {
   @OneToMany('PurchaseOrderItem', 'purchaseOrder', { cascade: [Cascade.ALL] })
   items = new Collection<PurchaseOrderItem>(this);
 
-  @Property({ persist: false })
-  get totalAmount(): number {
+    get totalAmount(): number {
     return this.items.getItems().reduce((sum, item) => sum + item.total, 0);
   }
 
-  @Property()
-  createdAt: Date = new Date();
+    createdAt: Date = new Date();
 
   constructor(tenantId: string, supplier: Supplier, expectedDate: Date) {
     this.tenantId = tenantId;

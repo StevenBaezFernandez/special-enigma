@@ -1,4 +1,5 @@
-import { Injectable, Inject, ConflictException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { User, UserRepository, AuthService, UserInvitedEvent } from '@virteex/domain-identity-domain';
 import { InviteUserDto } from '@virteex/contracts-identity-contracts';
@@ -15,7 +16,7 @@ export class InviteUserUseCase {
   async execute(dto: InviteUserDto, currentUserId: string): Promise<User> {
     const existing = await this.userRepository.findByEmail(dto.email);
     if (existing) {
-      throw new ConflictException('User already exists');
+      throw new DomainException('User already exists', 'CONFLICT');
     }
 
     const currentUser = await this.userRepository.findById(currentUserId);

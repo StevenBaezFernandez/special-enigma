@@ -1,6 +1,6 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { Tenant } from '@virteex/kernel-tenant';
-import { EntityManager } from '@mikro-orm/core';
 
 export class UpdateSubscriptionDto {
   plan!: string; // 'STARTER', 'PROFESSIONAL', 'ENTERPRISE'
@@ -14,7 +14,7 @@ export class UpdateSubscriptionUseCase {
   async execute(tenantId: string, dto: UpdateSubscriptionDto): Promise<Tenant> {
     const tenant = await this.em.findOne(Tenant, { id: tenantId });
     if (!tenant) {
-      throw new NotFoundException('Tenant not found');
+      throw new DomainException('Tenant not found', 'ENTITY_NOT_FOUND');
     }
 
     tenant.plan = dto.plan;

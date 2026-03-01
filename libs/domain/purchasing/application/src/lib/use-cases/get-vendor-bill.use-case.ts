@@ -1,4 +1,5 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { VendorBill, VendorBillRepository, VENDOR_BILL_REPOSITORY } from '@virteex/domain-purchasing-domain';
 
 @Injectable()
@@ -10,7 +11,7 @@ export class GetVendorBillUseCase {
   async execute(id: string, tenantId: string): Promise<VendorBill> {
     const bill = await this.repository.findById(id);
     if (!bill || bill.tenantId !== tenantId) {
-      throw new NotFoundException('Vendor bill not found');
+      throw new DomainException('Vendor bill not found', 'ENTITY_NOT_FOUND');
     }
     return bill;
   }

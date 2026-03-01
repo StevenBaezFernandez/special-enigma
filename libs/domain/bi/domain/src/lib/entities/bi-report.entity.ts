@@ -1,21 +1,15 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-@Entity()
 export class BiReport {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
-  @Property()
-  name!: string;
+    name!: string;
 
-  @Property()
-  type!: string;
+    type!: string;
 
-  @Property({ type: 'json' })
-  data!: any;
+    data!: any;
 
-  @Property()
-  generatedAt!: Date;
+    generatedAt!: Date;
 
   constructor(name: string, type: string, data: any) {
     this.name = name;

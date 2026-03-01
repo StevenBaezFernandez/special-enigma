@@ -3,9 +3,9 @@ import {
   CreateInvoiceUseCase,
   mapCreateInvoiceInputToDto,
 } from '@virteex/application-billing-application';
-import { CreateInvoiceInput } from './dto/create-invoice.input';
-import { InvoiceObject } from './dto/invoice.object';
-import { presentInvoice } from './invoice.presenter';
+import { CreateInvoiceInput } from '../dto/create-invoice.input';
+import { InvoiceObject } from '../dto/invoice.object';
+import { presentInvoice } from '../invoice.presenter';
 
 @Resolver()
 export class BillingResolver {

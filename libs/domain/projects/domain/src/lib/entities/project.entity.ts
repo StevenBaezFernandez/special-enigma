@@ -1,26 +1,19 @@
-import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection, Cascade } from '@mikro-orm/core';
 import { ProjectStatus } from '@virteex/shared-contracts';
 import type { Task } from './task.entity';
 
-@Entity()
 export class Project {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  name!: string;
+    name!: string;
 
-  @Property({ nullable: true })
-  description?: string;
+    description?: string;
 
-  @Property()
-  startDate!: Date;
+    startDate!: Date;
 
-  @Property({ nullable: true })
-  endDate?: Date;
+    endDate?: Date;
 
   @Enum(() => ProjectStatus)
   status: ProjectStatus = ProjectStatus.PLANNED;
@@ -28,11 +21,9 @@ export class Project {
   @OneToMany('Task', 'project', { cascade: [Cascade.ALL] })
   tasks = new Collection<Task>(this);
 
-  @Property({ onCreate: () => new Date() })
-  createdAt: Date = new Date();
+    createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+    updatedAt: Date = new Date();
 
   constructor(tenantId: string, name: string, startDate: Date) {
     this.tenantId = tenantId;

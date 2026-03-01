@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, ManyToOne } from '@mikro-orm/core';
-import { PayrollDetailType } from '../../../domain/src/lib/enums';
+import { PayrollDetailType } from '@virteex/domain-payroll-domain/enums';
 
 @Entity({ schema: 'payroll', tableName: 'payroll_detail' })
 export class PayrollDetailOrmEntity {

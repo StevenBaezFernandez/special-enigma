@@ -1,11 +1,7 @@
 import { Module, Global, OnModuleInit } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
-  Product,
   SAT_CATALOG_REPOSITORY,
-  SatPaymentForm,
-  SatPaymentMethod,
-  SatCfdiUsage,
   PRODUCT_READ_REPOSITORY,
   PRODUCT_WRITE_REPOSITORY,
 } from '@virteex/domain-catalog-domain';
@@ -13,10 +9,23 @@ import { MikroOrmProductRepository } from './repositories/mikro-orm-product.repo
 import { MikroOrmSatCatalogRepository } from './repositories/mikro-orm-sat-catalog.repository';
 import { CatalogSeederService } from './services/catalog-seeder.service';
 import { CatalogKafkaPublisher } from './listeners/catalog-kafka.publisher';
+import {
+  ProductSchema,
+  SatPaymentFormSchema,
+  SatPaymentMethodSchema,
+  SatCfdiUsageSchema,
+} from './persistence/mikro-orm.schemas';
 
 @Global()
 @Module({
-  imports: [MikroOrmModule.forFeature([Product, SatPaymentForm, SatPaymentMethod, SatCfdiUsage])],
+  imports: [
+    MikroOrmModule.forFeature([
+      ProductSchema,
+      SatPaymentFormSchema,
+      SatPaymentMethodSchema,
+      SatCfdiUsageSchema,
+    ]),
+  ],
   providers: [
     {
       provide: PRODUCT_READ_REPOSITORY,
@@ -37,7 +46,13 @@ import { CatalogKafkaPublisher } from './listeners/catalog-kafka.publisher';
     CatalogSeederService,
     CatalogKafkaPublisher,
   ],
-  exports: [PRODUCT_READ_REPOSITORY, PRODUCT_WRITE_REPOSITORY, 'ProductRepository', SAT_CATALOG_REPOSITORY, CatalogSeederService],
+  exports: [
+    PRODUCT_READ_REPOSITORY,
+    PRODUCT_WRITE_REPOSITORY,
+    'ProductRepository',
+    SAT_CATALOG_REPOSITORY,
+    CatalogSeederService,
+  ],
 })
 export class CatalogInfrastructureModule implements OnModuleInit {
   constructor(private readonly seeder: CatalogSeederService) {}

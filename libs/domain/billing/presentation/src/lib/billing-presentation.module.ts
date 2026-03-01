@@ -5,9 +5,15 @@ import { PaymentController } from './controllers/payment.controller';
 import { BillingApplicationModule } from '@virteex/application-billing-application';
 import { SubscriptionApplicationModule } from '@virteex/application-subscription-application';
 import { SubscriptionInfrastructureModule } from '@virteex/infra-subscription-infrastructure';
+import { BillingResolver } from './resolvers/billing.resolver';
 
 @Module({
-  imports: [BillingApplicationModule, SubscriptionApplicationModule, SubscriptionInfrastructureModule],
-  controllers: [BillingController, PaymentMethodController, PaymentController]
+  imports: [
+    BillingApplicationModule,
+    SubscriptionApplicationModule,
+    SubscriptionInfrastructureModule,
+  ],
+  controllers: [BillingController, PaymentMethodController, PaymentController],
+  providers: [BillingResolver],
 })
 export class BillingPresentationModule {}

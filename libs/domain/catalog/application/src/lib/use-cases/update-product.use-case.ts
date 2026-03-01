@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   PRODUCT_READ_REPOSITORY,
@@ -8,6 +8,7 @@ import {
   Product,
   ProductUpdatedEvent,
 } from '@virteex/domain-catalog-domain';
+import { DomainException } from '@virteex/shared-util-server-server-config';
 
 export interface UpdateProductDto {
   id: number;
@@ -32,7 +33,7 @@ export class UpdateProductUseCase {
   async execute(dto: UpdateProductDto): Promise<Product> {
     const product = await this.productReadRepository.findById(dto.id);
     if (!product) {
-      throw new NotFoundException(`Product with ID ${dto.id} not found`);
+      throw new DomainException(`Product with ID ${dto.id} not found`, 'ENTITY_NOT_FOUND');
     }
 
     if (dto.sku) product.sku = dto.sku;

@@ -1,21 +1,15 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-@Entity()
 export class TaxDeclaration {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  period!: string;
+    period!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  amount!: string;
+    amount!: string;
 
-  @Property()
-  status!: string;
+    status!: string;
 
   constructor(tenantId: string, period: string, amount: string) {
     this.tenantId = tenantId;

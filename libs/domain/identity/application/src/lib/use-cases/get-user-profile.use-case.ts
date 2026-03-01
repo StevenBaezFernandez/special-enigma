@@ -1,4 +1,5 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { User, UserRepository } from '@virteex/domain-identity-domain';
 
 @Injectable()
@@ -10,7 +11,7 @@ export class GetUserProfileUseCase {
   async execute(userId: string): Promise<User> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new DomainException('User not found', 'ENTITY_NOT_FOUND');
     }
     return user;
   }

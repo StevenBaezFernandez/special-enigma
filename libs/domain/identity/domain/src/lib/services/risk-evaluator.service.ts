@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 
 export interface ContextAnalysis {
   action: 'proceed' | 'suggest' | 'confirm' | 'verify' | 'require_selection';
@@ -7,7 +6,6 @@ export interface ContextAnalysis {
   discrepancyLevel: 'none' | 'low' | 'medium' | 'high';
 }
 
-@Injectable()
 export class RiskEvaluatorService {
   analyzeContext(urlCountry: string, ipCountry: string | null): ContextAnalysis {
     let discrepancyLevel: 'none' | 'low' | 'medium' | 'high' = 'none';

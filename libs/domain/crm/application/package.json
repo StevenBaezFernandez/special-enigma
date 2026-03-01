@@ -6,6 +6,12 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@nestjs/common": "^11.0.0",
+    "@virteex/domain-crm-domain": "0.0.1",
+    "@virteex/shared-contracts": "0.0.1",
+    "decimal.js": "^10.6.0",
+    "vitest": "^4.0.8",
+    "@nx/vite": "22.4.1"
   }
 }

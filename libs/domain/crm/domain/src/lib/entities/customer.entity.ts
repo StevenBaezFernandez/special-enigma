@@ -1,66 +1,48 @@
-import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection, Cascade, BeforeCreate, BeforeUpdate, ValidationError } from '@mikro-orm/core';
 import { CustomerType } from '@virteex/shared-contracts';
 import { v4 as uuidv4 } from 'uuid';
 import type { Opportunity } from './opportunity.entity';
 
-@Entity()
 export class Customer {
   @PrimaryKey({ type: 'uuid' })
   id: string = uuidv4();
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
   @Enum(() => CustomerType)
   type: CustomerType = CustomerType.COMPANY;
 
-  @Property({ nullable: true })
-  firstName?: string;
+    firstName?: string;
 
-  @Property({ nullable: true })
-  lastName?: string;
+    lastName?: string;
 
-  @Property({ nullable: true })
-  companyName?: string;
+    companyName?: string;
 
-  @Property({ nullable: true })
-  email?: string;
+    email?: string;
 
-  @Property({ nullable: true })
-  phone?: string;
+    phone?: string;
 
-  @Property({ nullable: true })
-  taxId?: string;
+    taxId?: string;
 
-  @Property({ nullable: true })
-  taxRegimen?: string;
+    taxRegimen?: string;
 
-  @Property({ nullable: true })
-  contactPerson?: string;
+    contactPerson?: string;
 
-  @Property({ nullable: true })
-  address?: string;
+    address?: string;
 
-  @Property({ nullable: true })
-  city?: string;
+    city?: string;
 
-  @Property({ nullable: true })
-  stateOrProvince?: string;
+    stateOrProvince?: string;
 
-  @Property({ nullable: true })
-  postalCode?: string;
+    postalCode?: string;
 
-  @Property({ nullable: true })
-  country?: string;
+    country?: string;
 
   @OneToMany('Opportunity', 'customer', { cascade: [Cascade.ALL] })
   opportunities = new Collection<Opportunity>(this);
 
-  @Property({ onCreate: () => new Date() })
-  createdAt: Date = new Date();
+    createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+    updatedAt: Date = new Date();
 
   constructor(tenantId: string, type: CustomerType) {
     this.tenantId = tenantId;

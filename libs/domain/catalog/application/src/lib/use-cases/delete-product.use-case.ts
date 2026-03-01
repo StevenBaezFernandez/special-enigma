@@ -1,10 +1,11 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import {
   PRODUCT_READ_REPOSITORY,
   ProductReadRepository,
   PRODUCT_WRITE_REPOSITORY,
   ProductWriteRepository,
 } from '@virteex/domain-catalog-domain';
+import { DomainException } from '@virteex/shared-util-server-server-config';
 
 @Injectable()
 export class DeleteProductUseCase {
@@ -18,7 +19,7 @@ export class DeleteProductUseCase {
   async execute(id: number): Promise<void> {
     const product = await this.productReadRepository.findById(id);
     if (!product) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
+      throw new DomainException(`Product with ID ${id} not found`, 'ENTITY_NOT_FOUND');
     }
     await this.productWriteRepository.delete(id);
   }

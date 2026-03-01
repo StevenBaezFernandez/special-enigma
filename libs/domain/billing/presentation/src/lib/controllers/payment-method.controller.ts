@@ -4,7 +4,7 @@ import {
   AddPaymentMethodUseCase,
   AddPaymentMethodDto,
   GetPaymentMethodUseCase
-} from '../../../../application/src/index';
+} from '@virteex/application-billing-application';
 
 @ApiTags('Billing')
 @Controller('billing/payment-methods')

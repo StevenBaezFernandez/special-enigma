@@ -1,4 +1,5 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { User, UserRepository } from '@virteex/domain-identity-domain';
 import { StoragePort } from '../ports/storage.port';
 
@@ -12,7 +13,7 @@ export class UploadAvatarUseCase {
   async execute(userId: string, fileName: string, buffer: Buffer): Promise<string> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new DomainException('User not found', 'ENTITY_NOT_FOUND');
     }
 
     const savedFileName = await this.storagePort.saveFile(fileName, buffer);

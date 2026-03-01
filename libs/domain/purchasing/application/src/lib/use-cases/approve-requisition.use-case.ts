@@ -1,4 +1,5 @@
-import { Injectable, Inject, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { RequisitionRepository } from '@virteex/domain-purchasing-domain';
 
 @Injectable()
@@ -11,11 +12,11 @@ export class ApproveRequisitionUseCase {
     const requisition = await this.requisitionRepository.findById(requisitionId);
 
     if (!requisition) {
-      throw new NotFoundException(`Requisition ${requisitionId} not found`);
+      throw new DomainException(`Requisition ${requisitionId} not found`, 'ENTITY_NOT_FOUND');
     }
 
     if (requisition.tenantId !== tenantId) {
-      throw new UnauthorizedException('Access denied');
+      throw new DomainException('Access denied', 'UNAUTHORIZED');
     }
 
     requisition.status = 'Approved';

@@ -1,8 +1,8 @@
 import { Body, Controller, Post, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { CalculatePayrollDto } from '../../../../contracts/src/index';
-import { CalculatePayrollUseCase, GetEmployeesUseCase } from '../../../../application/src/index';
-import { Payroll, Employee } from '../../../../domain/src/index';
+import { CalculatePayrollDto } from '@virteex/domain-payroll-contracts';
+import { CalculatePayrollUseCase, GetEmployeesUseCase } from '@virteex/application-payroll-application';
+import { Payroll, Employee } from '@virteex/domain-payroll-domain';
 
 @ApiTags('Payroll')
 @Controller('payroll')

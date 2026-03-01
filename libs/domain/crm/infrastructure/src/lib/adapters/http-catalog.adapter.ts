@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { CatalogService, Product } from '../../../../domain/src/lib/ports/catalog.service';
+import { CatalogService, Product } from '@virteex/domain-crm-domain/ports/catalog.service';
 
 @Injectable()
 export class HttpCatalogAdapter implements CatalogService {

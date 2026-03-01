@@ -1,37 +1,25 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 
-@Entity()
 export class VendorBill {
-  @PrimaryKey()
-  id: string = v4();
+    id: string = v4();
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  supplierId!: string;
+    supplierId!: string;
 
-  @Property()
-  billNumber!: string;
+    billNumber!: string;
 
-  @Property()
-  issueDate!: Date;
+    issueDate!: Date;
 
-  @Property()
-  dueDate!: Date;
+    dueDate!: Date;
 
-  @Property({ nullable: true })
-  notes?: string;
+    notes?: string;
 
-  @Property({ type: 'json' })
-  lineItems!: any[];
+    lineItems!: any[];
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  totalAmount!: string;
+    totalAmount!: string;
 
-  @Property()
-  status: 'DRAFT' | 'POSTED' | 'PAID' = 'DRAFT';
+    status: 'DRAFT' | 'POSTED' | 'PAID' = 'DRAFT';
 
   constructor(tenantId: string, supplierId: string, billNumber: string, issueDate: Date, dueDate: Date, lineItems: any[]) {
     this.tenantId = tenantId;

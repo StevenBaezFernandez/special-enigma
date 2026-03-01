@@ -1,9 +1,10 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { Transaction } from '../../../../domain/src/lib/entities/transaction.entity';
-import { TransactionType } from '../../../../contracts/src/lib/enums/transaction-type.enum';
-import { TransactionRepository } from '../../../../domain/src/lib/repositories/transaction.repository';
-import { BankAccountRepository } from '../../../../domain/src/lib/repositories/bank-account.repository';
-import { RegisterTransactionDto } from '../../../../contracts/src/lib/dtos/register-transaction.dto';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
+import { Transaction } from '@virteex/domain-treasury-domain/entities/transaction.entity';
+import { TransactionType } from '@virteex/domain-treasury-contracts/enums/transaction-type.enum';
+import { TransactionRepository } from '@virteex/domain-treasury-domain/repositories/transaction.repository';
+import { BankAccountRepository } from '@virteex/domain-treasury-domain/repositories/bank-account.repository';
+import { RegisterTransactionDto } from '@virteex/domain-treasury-contracts/dtos/register-transaction.dto';
 
 @Injectable()
 export class RegisterTransactionUseCase {
@@ -17,7 +18,7 @@ export class RegisterTransactionUseCase {
   async execute(dto: RegisterTransactionDto): Promise<Transaction> {
     const bankAccount = await this.bankAccountRepository.findById(dto.bankAccountId);
     if (!bankAccount) {
-      throw new NotFoundException('Bank account not found');
+      throw new DomainException('Bank account not found', 'ENTITY_NOT_FOUND');
     }
 
     const transaction = new Transaction(

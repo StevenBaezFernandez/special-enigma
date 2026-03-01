@@ -1,35 +1,27 @@
-import { Entity, PrimaryKey, Property, Enum, ManyToOne } from '@mikro-orm/core';
 import { BankAccount } from './bank-account.entity';
-import { TransactionType } from '../../../../contracts/src/lib/enums/transaction-type.enum';
+import { TransactionType } from '@virteex/domain-treasury-contracts/enums/transaction-type.enum';
 
-@Entity()
 export class Transaction {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  date!: Date;
+    date!: Date;
 
-  @Property({ type: 'decimal', precision: 12, scale: 2 })
-  amount!: number;
+    amount!: number;
 
   @Enum(() => TransactionType)
   type!: TransactionType;
 
-  @Property()
-  description!: string;
+    description!: string;
 
-  @Property({ nullable: true })
-  reference?: string;
+    reference?: string;
 
   @ManyToOne(() => BankAccount)
   bankAccount!: BankAccount;
 
-  @Property({ onCreate: () => new Date() })
-  createdAt: Date = new Date();
+    createdAt: Date = new Date();
 
   constructor(tenantId: string, bankAccount: BankAccount, amount: number, type: TransactionType, description: string) {
     this.tenantId = tenantId;

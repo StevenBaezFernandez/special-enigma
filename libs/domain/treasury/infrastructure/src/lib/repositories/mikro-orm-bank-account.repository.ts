@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { BankAccount, BankAccountRepository } from '../../../../domain/src/index';
+import { BankAccount, BankAccountRepository } from '@virteex/domain-treasury-domain';
 
 @Injectable()
 export class MikroOrmBankAccountRepository implements BankAccountRepository {

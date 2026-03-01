@@ -1,31 +1,33 @@
-# Contributing
+# Contributing to Virteex ERP
 
-## Pull Requests
+Este documento proporciona pautas para contribuir al monorepo manteniendo la integridad de la arquitectura y la calidad del código.
 
-1. Ejecuta validaciones locales:
-   - `./tools/enforce-production-readiness.sh`
-   - `npx nx affected --target=lint --base=origin/main --head=HEAD`
-   - `npx nx affected --target=test --base=origin/main --head=HEAD`
-2. No introducir providers mock/simulated en rutas productivas.
-3. No usar secretos hardcoded, placeholders o fallbacks silenciosos para producción.
-4. Si hay breaking change, documentar migración en el PR.
+## Proceso de Desarrollo
+
+1.  **Exploración**: Consulta el [Monorepo Map](docs/MONOREPO_MAP.md) para entender dónde debe vivir cada parte de tu código.
+2.  **Límites Arquitectónicos**: No rompas las capas. La capa `domain` es sagrada y no debe depender de frameworks externos. La capa `application` es agnóstica al transporte.
+3.  **App Shells**: Mantén las apps en `apps/*` lo más pequeñas posible. Si tu lógica de presentación puede ser compartida o es lógica de negocio pura, debe vivir en una librería.
+
+## Antes de enviar un Pull Request
+
+Ejecuta estas validaciones locales:
+
+- `npm run arch:check`: Asegura que tu código no rompe los límites arquitectónicos.
+- `npm run quality:lint`: Valida el estilo y reglas estáticas de código.
+- `npm run test:unit`: Ejecuta las pruebas unitarias.
+- `npm run readiness:check`: Verifica que el código está listo para producción (secretos, placeholders, etc.).
 
 ## Taxonomía de tags Nx
 
-`tools/validate-project-tags.mjs` valida `project.json` de `apps/` y `libs/` con estas reglas:
+Utilizamos etiquetas de proyecto (`tags` en `project.json`) para imponer gobernanza:
 
-- Familias base obligatorias: `scope:*`, `type:*`, `platform:*`, `criticality:*`.
-- Catálogos de valores permitidos para `type`, `platform`, `criticality`, `compliance`, `tenant-mode` y `region`.
-- Formato de tags: `familia:valor` en minúsculas y kebab-case (`[a-z0-9-]`).
-- Regla condicional: `criticality:high` requiere `compliance:*`, `tenant-mode:*` y `region:*` con valor no vacío.
+- `scope:<dominio>`: Define a qué dominio pertenece la librería o app (ej. `scope:catalog`).
+- `layer:<capa>`: Define la capa arquitectónica (`domain`, `application`, `infrastructure`, `presentation`, `contracts`, `app`).
+- `platform:<plataforma>`: Define la plataforma objetivo (`api`, `web`, `mobile`, `desktop`, `agnostic`).
+- `criticality:<nivel>`: Define la criticidad del componente (`high`, `medium`, `low`).
 
-Migración gradual:
+## Reglas y Convenciones
 
-- Modo por defecto: `TAG_POLICY_MODE=warn` (las nuevas reglas emiten warnings).
-- Modo estricto: `TAG_POLICY_MODE=error` (warnings de política pasan a errores bloqueantes).
-
-Ejemplos:
-
-- `npm run validate:nx-tags`
-- `TAG_POLICY_MODE=error npm run validate:nx-tags`
-
+- No introduzcas proveedores `mock` o `simulated` en rutas de código productivo.
+- No uses secretos hardcoded ni placeholders en archivos de configuración.
+- Si realizas un `breaking change`, es obligatorio documentar el proceso de migración en la descripción del PR.

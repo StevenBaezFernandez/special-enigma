@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BankAccount, BANK_ACCOUNT_REPOSITORY, BankAccountRepository } from '../../../../domain/src/index';
-import { CreateBankAccountDto, BankAccountDto } from '../../../../contracts/src/index';
+import { BankAccount, BANK_ACCOUNT_REPOSITORY, BankAccountRepository } from '@virteex/domain-treasury-domain';
+import { CreateBankAccountDto, BankAccountDto } from '@virteex/domain-treasury-contracts';
 
 @Injectable()
 export class CreateBankAccountUseCase {

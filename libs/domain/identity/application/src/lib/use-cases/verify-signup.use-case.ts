@@ -1,4 +1,5 @@
-import { Injectable, Inject, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { AuthService, CachePort } from '@virteex/domain-identity-domain';
 import { VerifySignupDto, VerifySignupResponse } from '@virteex/contracts-identity-contracts';
 
@@ -14,18 +15,18 @@ export class VerifySignupUseCase {
     const payloadStr = await this.cachePort.get(key);
 
     if (!payloadStr) {
-      throw new UnauthorizedException('OTP expired or invalid');
+      throw new DomainException('OTP expired or invalid', 'UNAUTHORIZED');
     }
 
     let payload: { otp: string; passwordHash: string; timestamp: number };
     try {
       payload = JSON.parse(payloadStr);
     } catch {
-      throw new UnauthorizedException('Invalid payload');
+      throw new DomainException('Invalid payload', 'UNAUTHORIZED');
     }
 
     if (payload.otp !== dto.otp) {
-        throw new BadRequestException('Invalid OTP');
+        throw new DomainException('Invalid OTP', 'BAD_REQUEST');
     }
 
     await this.cachePort.set(key, payloadStr, 3600);

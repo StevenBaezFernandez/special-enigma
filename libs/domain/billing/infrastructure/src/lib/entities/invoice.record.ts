@@ -1,55 +1,38 @@
-import { Entity, PrimaryKey, Property, OneToMany, Collection, Cascade } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 
-@Entity({ tableName: 'billing_invoices' })
 export class InvoiceRecord {
   @PrimaryKey({ type: 'uuid' })
   id: string = v4();
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  customerId!: string;
+    customerId!: string;
 
-  @Property()
-  issueDate!: Date;
+    issueDate!: Date;
 
-  @Property()
-  dueDate!: Date;
+    dueDate!: Date;
 
-  @Property()
-  paymentForm!: string;
+    paymentForm!: string;
 
-  @Property()
-  paymentMethod!: string;
+    paymentMethod!: string;
 
-  @Property()
-  usage!: string;
+    usage!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  totalAmount!: string;
+    totalAmount!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
-  taxAmount!: string;
+    taxAmount!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  subTotal?: string;
+    subTotal?: string;
 
-  @Property({ nullable: true })
-  notes?: string;
+    notes?: string;
 
-  @Property()
-  status!: string;
+    status!: string;
 
-  @Property({ nullable: true })
-  fiscalUuid?: string;
+    fiscalUuid?: string;
 
-  @Property({ nullable: true, type: 'text' })
-  xmlContent?: string;
+    xmlContent?: string;
 
-  @Property({ nullable: true })
-  stampedAt?: Date;
+    stampedAt?: Date;
 
   @OneToMany('InvoiceItemRecord', 'invoice', { cascade: [Cascade.ALL], orphanRemoval: true })
   items = new Collection<any>(this);

@@ -3,16 +3,13 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from '@virteex/kernel-auth';
 import { FiscalInfrastructureModule } from '@virteex/infra-fiscal-infrastructure';
 import {
-  TaxLine,
-  TaxRule,
   PAC_STRATEGY_FACTORY,
   TENANT_CONFIG_REPOSITORY,
-  PaymentMethod,
   INVOICE_REPOSITORY,
   PAYMENT_METHOD_REPOSITORY,
   PRODUCT_REPOSITORY,
   CUSTOMER_REPOSITORY,
-  BillingDomainModule
+  BillingDomainModule,
 } from '@virteex/domain-billing-domain';
 import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '@virteex/domain-fiscal-domain';
 import { BILLING_TAX_STRATEGY_FACTORY } from '@virteex/domain-billing-domain';
@@ -22,13 +19,6 @@ import { NullPacProvider } from './providers/null-pac.provider';
 import { PacStrategyFactoryImpl } from './factories/pac-strategy.factory';
 import { FiscalDocumentBuilderFactoryImpl } from './factories/fiscal-document-builder.factory';
 import { TaxStrategyFactoryImpl } from './factories/tax-strategy.factory';
-
-import {
-    MxFiscalDocumentBuilder,
-    UsFiscalDocumentBuilder,
-    BrFiscalDocumentBuilder,
-    CoFiscalDocumentBuilder
-} from '@virteex/infra-fiscal-infrastructure';
 
 import { MxTaxStrategy } from './strategies/mx-tax.strategy';
 import { BrTaxStrategy } from './strategies/br-tax.strategy';
@@ -49,6 +39,11 @@ import { ProductEventsController } from './listeners/product-events.controller';
 
 import { XsltService } from '@virteex/shared-infrastructure-xslt';
 import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/application-billing-application';
+import {
+  PaymentMethodSchema,
+  TaxLineSchema,
+  TaxRuleSchema,
+} from './persistence/mikro-orm.schemas';
 
 @Global()
 @Module({
@@ -59,63 +54,63 @@ import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/application-billing-appl
     MikroOrmModule.forFeature([
       InvoiceRecord,
       InvoiceItemRecord,
-      PaymentMethod,
-      TaxLine,
-      TaxRule,
-      BillingProductEntity
-    ])
+      PaymentMethodSchema,
+      TaxLineSchema,
+      TaxRuleSchema,
+      BillingProductEntity,
+    ]),
   ],
   controllers: [ProductEventsController],
   providers: [
     {
       provide: INVOICE_REPOSITORY,
-      useClass: MikroOrmInvoiceRepository
+      useClass: MikroOrmInvoiceRepository,
     },
     {
       provide: PAYMENT_METHOD_REPOSITORY,
-      useClass: MikroOrmPaymentMethodRepository
+      useClass: MikroOrmPaymentMethodRepository,
     },
     {
       provide: PRODUCT_REPOSITORY,
-      useClass: LocalProductRepository
+      useClass: LocalProductRepository,
     },
     {
       provide: CUSTOMER_REPOSITORY,
-      useClass: HttpCustomerRepository
+      useClass: HttpCustomerRepository,
     },
     FinkokPacProvider,
     NullPacProvider,
     {
       provide: PAC_STRATEGY_FACTORY,
-      useClass: PacStrategyFactoryImpl
+      useClass: PacStrategyFactoryImpl,
     },
     {
       provide: TENANT_CONFIG_REPOSITORY,
-      useClass: MikroOrmTenantConfigRepository
+      useClass: MikroOrmTenantConfigRepository,
     },
     {
       provide: 'PaymentProvider',
-      useClass: StripePaymentProvider
+      useClass: StripePaymentProvider,
     },
     {
       provide: INVOICE_INTEGRATION_PUBLISHER,
-      useClass: InvoiceIntegrationPublisher
+      useClass: InvoiceIntegrationPublisher,
     },
     // Xslt Service
     XsltService,
     // Note: Builders are now provided by FiscalInfrastructureModule
     {
-        provide: FISCAL_DOCUMENT_BUILDER_FACTORY,
-        useClass: FiscalDocumentBuilderFactoryImpl
+      provide: FISCAL_DOCUMENT_BUILDER_FACTORY,
+      useClass: FiscalDocumentBuilderFactoryImpl,
     },
     // Strategies
     MxTaxStrategy,
     BrTaxStrategy,
     UsTaxStrategy,
     {
-        provide: BILLING_TAX_STRATEGY_FACTORY,
-        useClass: TaxStrategyFactoryImpl
-    }
+      provide: BILLING_TAX_STRATEGY_FACTORY,
+      useClass: TaxStrategyFactoryImpl,
+    },
   ],
   exports: [
     INVOICE_REPOSITORY,
@@ -130,7 +125,7 @@ import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/application-billing-appl
     FinkokPacProvider,
     NullPacProvider,
     'PaymentProvider',
-    INVOICE_INTEGRATION_PUBLISHER
-  ]
+    INVOICE_INTEGRATION_PUBLISHER,
+  ],
 })
 export class BillingInfrastructureModule {}

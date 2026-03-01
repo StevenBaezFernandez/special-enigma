@@ -1,4 +1,5 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import { TenantConfigRepository, TENANT_CONFIG_REPOSITORY } from '@virteex/domain-fiscal-domain';
 
 @Injectable()

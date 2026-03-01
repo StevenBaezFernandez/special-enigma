@@ -1,14 +1,12 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { BankAccount, CashFlow, Transaction } from '../../../domain/src/index';
+import { BankAccount, CashFlow, Transaction } from '@virteex/domain-treasury-domain';
 import { MikroOrmBankAccountRepository } from './repositories/mikro-orm-bank-account.repository';
 import { MikroOrmTransactionRepository } from './repositories/mikro-orm-transaction.repository';
 
 @Global()
 @Module({
-  imports: [
-    MikroOrmModule.forFeature([BankAccount, CashFlow, Transaction]),
-  ],
+  imports: [MikroOrmModule.forFeature([BankAccount, CashFlow, Transaction])],
   providers: [
     {
       provide: 'BANK_ACCOUNT_REPOSITORY',
@@ -19,10 +17,6 @@ import { MikroOrmTransactionRepository } from './repositories/mikro-orm-transact
       useClass: MikroOrmTransactionRepository,
     },
   ],
-  exports: [
-    'BANK_ACCOUNT_REPOSITORY',
-    'TRANSACTION_REPOSITORY',
-    MikroOrmModule
-  ],
+  exports: ['BANK_ACCOUNT_REPOSITORY', 'TRANSACTION_REPOSITORY', MikroOrmModule],
 })
 export class TreasuryInfrastructureModule {}

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PaymentProvider } from '../../../../domain/src/lib/ports/payment-provider.port';
+import { PaymentProvider } from '@virteex/domain-billing-domain/ports/payment-provider.port';
 import Stripe from 'stripe';
 
 @Injectable()

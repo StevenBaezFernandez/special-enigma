@@ -1,29 +1,18 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-
-@Entity({ schema: 'catalog' })
 export class Product {
-  @PrimaryKey()
   id!: number;
 
-  @Property()
   tenantId!: string; // Managed by TenantSubscriber, not by user
 
-  @Property()
   sku!: string;
 
-  @Property()
   name!: string;
 
-  @Property({ type: 'decimal', precision: 10, scale: 2 })
   price!: string;
 
-  @Property({ nullable: true })
   fiscalCode?: string; // NCM/HS Code
 
-  @Property({ nullable: true })
   taxGroup?: string;
 
-  @Property()
   isActive = true;
 
   constructor(sku: string, name: string, price: string) {

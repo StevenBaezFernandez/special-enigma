@@ -10,16 +10,53 @@
 /libs/kernel/ @virteex/architects
 /libs/shared/ @virteex/architects
 
-# Backend Services (by domain)
+# Backend Services (General)
 /apps/api/ @virteex/backend-leads
 /apps/worker/ @virteex/backend-leads
+
+# Domain Ownership (Granular)
+
+## Catalog
+/libs/domain/catalog/ @virteex/domain-catalog-team
+
+## Billing
+/libs/domain/billing/ @virteex/domain-billing-team
+
+## CRM
+/libs/domain/crm/ @virteex/domain-crm-team
+
+## Identity
+/libs/domain/identity/ @virteex/domain-identity-team
+
+## Inventory
+/libs/domain/inventory/ @virteex/domain-inventory-team
+
+## Manufacturing
+/libs/domain/manufacturing/ @virteex/domain-manufacturing-team
+
+## Payroll
+/libs/domain/payroll/ @virteex/domain-payroll-team
+
+## Projects
+/libs/domain/projects/ @virteex/domain-projects-team
+
+## Treasury
+/libs/domain/treasury/ @virteex/domain-treasury-team
+
+## Fiscal
+/libs/domain/fiscal/ @virteex/domain-fiscal-team
+
+## Accounting
+/libs/domain/accounting/ @virteex/domain-accounting-team
+
+# Layer-specific cross-cutting review
+/libs/domain/*/domain/ @virteex/architects
 /libs/domain/*/application/ @virteex/backend-leads
-/libs/domain/*/domain/ @virteex/backend-leads
 /libs/domain/*/contracts/ @virteex/backend-leads
+/libs/domain/*/presentation/ @virteex/backend-leads @virteex/frontend-leads
 
 # Frontend
 /apps/web/ @virteex/frontend-leads
 /apps/mobile/ @virteex/frontend-leads
 /apps/desktop/ @virteex/frontend-leads
 /libs/domain/*/ui/ @virteex/frontend-leads
-/libs/domain/*/presentation/ @virteex/frontend-leads

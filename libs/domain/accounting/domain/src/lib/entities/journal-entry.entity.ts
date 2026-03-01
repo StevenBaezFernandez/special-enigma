@@ -1,20 +1,15 @@
-import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection, Cascade } from '@mikro-orm/core';
 import type { JournalEntryLine } from './journal-entry-line.entity';
 import { JournalEntryStatus } from '@virteex/contracts-accounting-contracts';
 
-@Entity()
 export class JournalEntry {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
-  @Property()
-  date!: Date;
+    date!: Date;
 
-  @Property()
-  description!: string;
+    description!: string;
 
   @Enum(() => JournalEntryStatus)
   status: JournalEntryStatus = JournalEntryStatus.DRAFT;

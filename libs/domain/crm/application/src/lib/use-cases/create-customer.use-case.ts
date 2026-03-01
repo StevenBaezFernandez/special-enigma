@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Customer, CustomerRepository } from '../../../../domain/src';
+import { Customer, CustomerRepository } from '@virteex/domain-crm-domain';
 import { CustomerType } from '@virteex/shared-contracts';
 
 export interface CreateCustomerDto {

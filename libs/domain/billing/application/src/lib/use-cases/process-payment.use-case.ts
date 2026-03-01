@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PaymentProvider } from '../../../../domain/src/lib/ports/payment-provider.port';
+import { PaymentProvider } from '@virteex/domain-billing-domain/ports/payment-provider.port';
 
 @Injectable()
 export class ProcessPaymentUseCase {

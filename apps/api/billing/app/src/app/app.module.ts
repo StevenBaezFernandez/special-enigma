@@ -13,7 +13,6 @@ import { BillingPresentationModule } from '@virteex/billing-presentation';
 import { BillingInfrastructureModule } from '@virteex/infra-billing-infrastructure';
 import { BillingApplicationModule } from '@virteex/application-billing-application';
 import { InitialSeederService } from './seeds/initial-seeder.service';
-import { BillingResolver } from './billing.resolver';
 import { OpsController } from './ops.controller';
 import { OpsReadinessService } from './ops-readiness.service';
 
@@ -25,9 +24,8 @@ import { OpsReadinessService } from './ops-readiness.service';
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.LOG_LEVEL || 'info',
-        transport: process.env.NODE_ENV !== 'production'
-          ? { target: 'pino-pretty' }
-          : undefined,
+        transport:
+          process.env.NODE_ENV !== 'production' ? { target: 'pino-pretty' } : undefined,
       },
     }),
     TerminusModule,
@@ -49,10 +47,19 @@ import { OpsReadinessService } from './ops-readiness.service';
         const isPostgres = configService.get('DB_DRIVER') === 'postgres';
         return {
           driver: isPostgres ? PostgreSqlDriver : SqliteDriver,
-          host: isPostgres ? (configService.get<string>('BILLING_DB_HOST') || configService.get<string>('DB_HOST')) : undefined,
-          port: isPostgres ? (configService.get<number>('BILLING_DB_PORT') || configService.get<number>('DB_PORT')) : undefined,
-          user: isPostgres ? (configService.get<string>('BILLING_DB_USER') || configService.get<string>('DB_USER')) : undefined,
-          password: isPostgres ? (configService.get<string>('BILLING_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
+          host: isPostgres
+            ? configService.get<string>('BILLING_DB_HOST') || configService.get<string>('DB_HOST')
+            : undefined,
+          port: isPostgres
+            ? configService.get<number>('BILLING_DB_PORT') || configService.get<number>('DB_PORT')
+            : undefined,
+          user: isPostgres
+            ? configService.get<string>('BILLING_DB_USER') || configService.get<string>('DB_USER')
+            : undefined,
+          password: isPostgres
+            ? configService.get<string>('BILLING_DB_PASSWORD') ||
+              configService.get<string>('DB_PASSWORD')
+            : undefined,
           dbName: (() => {
             const dbName = configService.get<string>('BILLING_DB_NAME');
             if (!dbName) {
@@ -61,11 +68,12 @@ import { OpsReadinessService } from './ops-readiness.service';
             return dbName;
           })(),
           autoLoadEntities: true,
-          driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))
-            ? {
-                connection: { ssl: { rejectUnauthorized: false } },
-              }
-            : undefined,
+          driverOptions:
+            isPostgres && configService.get<boolean>('DB_SSL_ENABLED')
+              ? {
+                  connection: { ssl: { rejectUnauthorized: false } },
+                }
+              : undefined,
         };
       },
     }),
@@ -74,6 +82,6 @@ import { OpsReadinessService } from './ops-readiness.service';
     BillingApplicationModule,
   ],
   controllers: [OpsController],
-  providers: [InitialSeederService, BillingResolver, OpsReadinessService],
+  providers: [InitialSeederService, OpsReadinessService],
 })
 export class AppModule {}

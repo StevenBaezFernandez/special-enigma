@@ -12,8 +12,6 @@ import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
 import { CatalogInfrastructureModule } from '@virteex/infra-catalog-infrastructure';
 import { CatalogApplicationModule } from '@virteex/application-catalog-application';
 import { CatalogPresentationModule } from '@virteex/api-catalog-presentation';
-import { CatalogResolver } from './catalog.resolver';
-import { SchemaService } from './schema.service';
 
 @Module({
   imports: [
@@ -38,10 +36,19 @@ import { SchemaService } from './schema.service';
         const isPostgres = configService.get('DB_DRIVER') === 'postgres';
         return {
           driver: isPostgres ? PostgreSqlDriver : SqliteDriver,
-          host: isPostgres ? (configService.get<string>('CATALOG_DB_HOST') || configService.get<string>('DB_HOST')) : undefined,
-          port: isPostgres ? (configService.get<number>('CATALOG_DB_PORT') || configService.get<number>('DB_PORT')) : undefined,
-          user: isPostgres ? (configService.get<string>('CATALOG_DB_USER') || configService.get<string>('DB_USER')) : undefined,
-          password: isPostgres ? (configService.get<string>('CATALOG_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
+          host: isPostgres
+            ? configService.get<string>('CATALOG_DB_HOST') || configService.get<string>('DB_HOST')
+            : undefined,
+          port: isPostgres
+            ? configService.get<number>('CATALOG_DB_PORT') || configService.get<number>('DB_PORT')
+            : undefined,
+          user: isPostgres
+            ? configService.get<string>('CATALOG_DB_USER') || configService.get<string>('DB_USER')
+            : undefined,
+          password: isPostgres
+            ? configService.get<string>('CATALOG_DB_PASSWORD') ||
+              configService.get<string>('DB_PASSWORD')
+            : undefined,
           dbName: (() => {
             const dbName = configService.get<string>('CATALOG_DB_NAME');
             if (!dbName) {
@@ -50,11 +57,12 @@ import { SchemaService } from './schema.service';
             return dbName;
           })(),
           autoLoadEntities: true,
-          driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))
-            ? {
-                connection: { ssl: { rejectUnauthorized: false } },
-              }
-            : undefined,
+          driverOptions:
+            isPostgres && configService.get<boolean>('DB_SSL_ENABLED')
+              ? {
+                  connection: { ssl: { rejectUnauthorized: false } },
+                }
+              : undefined,
         };
       },
     }),
@@ -63,12 +71,10 @@ import { SchemaService } from './schema.service';
     CatalogApplicationModule,
     CatalogPresentationModule,
   ],
-  providers: [CatalogResolver, SchemaService],
+  providers: [],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(JwtTenantMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+    consumer.apply(JwtTenantMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

@@ -1,4 +1,3 @@
-import { Entity, PrimaryKey, Property, ManyToOne, Enum } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 import { SubscriptionPlan } from './subscription-plan.entity';
 
@@ -11,13 +10,11 @@ export enum SubscriptionStatus {
   PAYMENT_PENDING = 'PAYMENT_PENDING'
 }
 
-@Entity()
 export class Subscription {
   @PrimaryKey({ type: 'uuid' })
   id: string = v4();
 
-  @Property()
-  tenantId!: string;
+    tenantId!: string;
 
   @ManyToOne(() => SubscriptionPlan)
   plan!: SubscriptionPlan;
@@ -25,29 +22,21 @@ export class Subscription {
   @Enum(() => SubscriptionStatus)
   status: SubscriptionStatus = SubscriptionStatus.ACTIVE;
 
-  @Property({ nullable: true })
-  externalSubscriptionId?: string;
+    externalSubscriptionId?: string;
 
-  @Property({ nullable: true })
-  externalCustomerId?: string;
+    externalCustomerId?: string;
 
-  @Property({ nullable: true })
-  currentPeriodEnd?: Date;
+    currentPeriodEnd?: Date;
 
-  @Property()
-  cancelAtPeriodEnd = false;
+    cancelAtPeriodEnd = false;
 
-  @Property()
-  startDate: Date = new Date();
+    startDate: Date = new Date();
 
-  @Property({ nullable: true })
-  endDate?: Date;
+    endDate?: Date;
 
-  @Property()
-  createdAt: Date = new Date();
+    createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+    updatedAt: Date = new Date();
 
   constructor(tenantId: string, plan: SubscriptionPlan, status: SubscriptionStatus = SubscriptionStatus.ACTIVE) {
     this.tenantId = tenantId;

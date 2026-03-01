@@ -1,4 +1,5 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
+import { Injectable, Inject } from '@nestjs/common';
 import {
   Subscription,
   SubscriptionRepository,
@@ -34,13 +35,13 @@ export class ChangeSubscriptionPlanUseCase {
   async execute(dto: ChangeSubscriptionPlanDto): Promise<ChangeSubscriptionResult> {
     const plan = await this.subscriptionPlanRepository.findById(dto.planId);
     if (!plan) {
-      throw new NotFoundException(`Plan with ID ${dto.planId} not found`);
+      throw new DomainException(`Plan with ID ${dto.planId} not found`, 'ENTITY_NOT_FOUND');
     }
 
     const subscription = await this.subscriptionRepository.findByTenantId(dto.tenantId);
 
     if (!subscription || !subscription.externalSubscriptionId) {
-        throw new BadRequestException('No active subscription found for this tenant.');
+        throw new DomainException('No active subscription found for this tenant.', 'BAD_REQUEST');
     }
 
     const externalSub = await this.subscriptionProviderGateway.updateSubscription(subscription.externalSubscriptionId, dto.price);
