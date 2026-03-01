@@ -1,0 +1,12 @@
+{
+  "requiredPlatforms": ["api", "web"],
+  "exemptions": {
+    "api-crm-app": "Pending domain decomposition and replacement of legacy transport contracts.",
+    "api-inventory-app": "Blocked until deterministic seed fixture and isolated warehouse test environment are available.",
+    "api-plugin-host-app": "Requires sandbox harness hardening before stable end-to-end assertions.",
+    "api-subscription-app": "Stripe webhook replay harness is not production-equivalent yet.",
+    "web-shopfloor-app": "Frontline hardware emulation suite is pending for stable CI runs.",
+    "web-store-app": "Checkout/payment simulator still under migration to deterministic fixtures.",
+    "web-wms-app": "Warehouse scanner simulation test rig is not yet integrated in CI."
+  }
+}

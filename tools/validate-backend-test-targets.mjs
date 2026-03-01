@@ -1,48 +1,92 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { globSync } from 'glob';
 
-const backendAppsRoots = [join('apps', 'api'), join('apps', 'worker')];
+const backendRoots = [join('apps', 'api'), join('apps', 'worker')];
+const supportedExecutors = new Set(['@nx/jest:jest', '@nx/vitest:test']);
+const policyPath = join('config', 'governance', 'backend-test-policy.json');
+const policy = existsSync(policyPath) ? JSON.parse(readFileSync(policyPath, 'utf8')) : { allowMissingTestTarget: {} };
+const allowMissingTestTarget = new Map(Object.entries(policy.allowMissingTestTarget ?? {}));
+const inspectedProjects = [];
+const discoveredProjects = new Set();
 const errors = [];
 
-for (const backendAppsRoot of backendAppsRoots) {
-  if (!existsSync(backendAppsRoot)) continue;
+function findProjectJsonFiles(rootDir) {
+  const projectJsonFiles = [];
 
-  for (const entry of readdirSync(backendAppsRoot, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
+  function walk(currentDir) {
+    for (const entry of readdirSync(currentDir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
 
-    if (entry.name.endsWith('-e2e')) continue;
+      const dirPath = join(currentDir, entry.name);
+      const projectJsonPath = join(dirPath, 'project.json');
+      if (existsSync(projectJsonPath)) {
+        projectJsonFiles.push(projectJsonPath);
+        continue;
+      }
 
-    const projectJsonPath = join(backendAppsRoot, entry.name, 'project.json');
-    if (!existsSync(projectJsonPath)) continue;
+      walk(dirPath);
+    }
+  }
 
+  walk(rootDir);
+  return projectJsonFiles;
+}
+
+for (const backendRoot of backendRoots) {
+  if (!existsSync(backendRoot)) {
+    errors.push(`Backend root '${backendRoot}' does not exist.`);
+    continue;
+  }
+
+  const projectJsonFiles = findProjectJsonFiles(backendRoot);
+  for (const projectJsonPath of projectJsonFiles) {
     const project = JSON.parse(readFileSync(projectJsonPath, 'utf8'));
-    const testTarget = project.targets?.test;
 
+    if (project.projectType !== 'application') continue;
+    if ((project.tags ?? []).includes('type:e2e')) continue;
+
+    const projectName = project.name ?? projectJsonPath;
+    inspectedProjects.push(projectName);
+    discoveredProjects.add(projectName);
+
+    const testTarget = project.targets?.test;
     if (!testTarget || typeof testTarget !== 'object' || Array.isArray(testTarget)) {
+      if (allowMissingTestTarget.has(projectName)) continue;
       errors.push(`${projectJsonPath}: missing test target.`);
       continue;
     }
 
-    if (!testTarget.executor || typeof testTarget.executor !== 'string') {
-      errors.push(`${projectJsonPath}: test target must define an executor.`);
-    }
-
-    const supportedExecutors = new Set(['@nx/jest:jest', '@nx/vitest:test']);
-    if (testTarget.executor && !supportedExecutors.has(testTarget.executor)) {
-      errors.push(
-        `${projectJsonPath}: unsupported test executor '${testTarget.executor}'. Supported executors: ${[
-          ...supportedExecutors,
-        ].join(', ')}.`
-      );
-    }
-
-    if (Object.keys(testTarget).length === 0) {
-      errors.push(`${projectJsonPath}: test target cannot be an empty object.`);
+    const executor = testTarget.executor;
+    if (executor && typeof executor !== 'string') {
+      errors.push(`${projectJsonPath}: test target executor must be a string when defined.`);
       continue;
     }
 
-    if (testTarget.executor === '@nx/jest:jest') {
+    if (executor && !supportedExecutors.has(executor)) {
+      errors.push(
+        `${projectJsonPath}: unsupported test executor '${executor}'. Supported executors: ${[
+          ...supportedExecutors,
+        ].join(', ')}.`
+      );
+      continue;
+    }
+
+    const sourceRoot = project.sourceRoot;
+    const hasTests =
+      typeof sourceRoot === 'string' &&
+      globSync(`${sourceRoot}/**/*.{spec,test}.ts`, { nodir: true }).length > 0;
+    const passWithNoTests = testTarget.options?.passWithNoTests === true;
+
+    if (!hasTests && !passWithNoTests) {
+      errors.push(
+        `${projectJsonPath}: no test files found under '${sourceRoot ?? '<sourceRoot>'}' and options.passWithNoTests is not true.`
+      );
+    }
+
+    if (executor === '@nx/jest:jest') {
       const jestConfigPath = testTarget.options?.jestConfig;
       if (!jestConfigPath || typeof jestConfigPath !== 'string') {
         errors.push(`${projectJsonPath}: Jest test target must include options.jestConfig.`);
@@ -50,22 +94,17 @@ for (const backendAppsRoot of backendAppsRoots) {
         errors.push(`${projectJsonPath}: Jest config file '${jestConfigPath}' does not exist.`);
       }
     }
-
-    if (testTarget.executor === '@nx/vitest:test') {
-      const candidatePaths = ['vitest.config.ts', 'vitest.config.mts', 'vite.config.ts'].map((filename) =>
-        join(backendAppsRoot, entry.name, filename)
-      );
-
-      if (!candidatePaths.some((candidatePath) => existsSync(candidatePath))) {
-        errors.push(
-          `${projectJsonPath}: Vitest test target requires a vitest/vite config file in ${join(
-            backendAppsRoot,
-            entry.name
-          )}.`
-        );
-      }
-    }
   }
+}
+
+for (const [projectName, reason] of allowMissingTestTarget.entries()) {
+  if (!discoveredProjects.has(projectName)) {
+    errors.push(`backend-test-policy references unknown project '${projectName}' (${reason}).`);
+  }
+}
+
+if (inspectedProjects.length === 0) {
+  errors.push('No backend application projects were inspected. Ensure project discovery covers apps/api and apps/worker.');
 }
 
 if (errors.length > 0) {
@@ -76,4 +115,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log('✅ Backend test target validation passed.');
+console.log(`✅ Backend test target validation passed (${inspectedProjects.length} projects inspected).`);

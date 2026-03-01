@@ -1,36 +1,57 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+#!/usr/bin/env node
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { globSync } from 'glob';
 
-const searchDirs = ['apps', 'libs'];
+const policyPath = join('config', 'governance', 'naming-policy.json');
+if (!existsSync(policyPath)) {
+  console.error(`✖ Missing naming policy file: ${policyPath}`);
+  process.exit(1);
+}
+
+const policy = JSON.parse(readFileSync(policyPath, 'utf8'));
+const rules = policy.rules ?? [];
+const exceptions = new Map(Object.entries(policy.exceptions ?? {}));
+
 let hasViolations = false;
+const knownProjects = new Set();
+let inspectedProjects = 0;
 
-function validate(dir) {
-  const entries = readdirSync(dir, { withFileTypes: true });
-  if (entries.some(e => e.name === 'project.json')) {
-    const projectPath = join(dir, 'project.json');
-    const project = JSON.parse(readFileSync(projectPath, 'utf8'));
-    const name = project.name;
+for (const projectPath of globSync('{apps,libs}/**/project.json', { nodir: true })) {
+  const project = JSON.parse(readFileSync(projectPath, 'utf8'));
+  const name = project.name;
+  const normalizedPath = projectPath.replace(/\\/g, '/');
+  knownProjects.add(name);
+  inspectedProjects += 1;
 
-    if (dir.includes('apps/api/') && !name.startsWith('api-')) {
-       console.error(`✖ API App ${name} at ${dir} must start with api-`);
-       hasViolations = true;
-    }
-    if (dir.includes('apps/web/') && !name.startsWith('web-')) {
-       console.error(`✖ Web App ${name} at ${dir} must start with web-`);
-       hasViolations = true;
-    }
-    if (dir.includes('libs/domain/') && !name.startsWith('domain-')) {
-       console.error(`✖ Domain Lib ${name} at ${dir} must start with domain-`);
-       hasViolations = true;
-    }
-  }
-  for (const entry of entries) {
-    if (entry.isDirectory() && entry.name !== 'node_modules' && !entry.name.startsWith('.')) {
-      validate(join(dir, entry.name));
-    }
+  for (const rule of rules) {
+    const pathRegex = new RegExp(rule.pathRegex);
+    if (!pathRegex.test(normalizedPath)) continue;
+
+    const acceptedPrefixes = rule.allowedPrefixes ?? [];
+    const matches = acceptedPrefixes.some((prefix) => name.startsWith(prefix));
+    if (matches) continue;
+
+    if (exceptions.has(name)) continue;
+
+    console.error(
+      `✖ ${name} (${projectPath}) must start with one of: ${acceptedPrefixes.join(', ')}.`
+    );
+    hasViolations = true;
   }
 }
 
-searchDirs.forEach(d => existsSync(d) && validate(d));
+for (const [projectName, reason] of exceptions.entries()) {
+  if (!knownProjects.has(projectName)) {
+    console.error(`✖ Naming exception references unknown project '${projectName}' (${reason}).`);
+    hasViolations = true;
+  }
+}
+
+if (inspectedProjects === 0) {
+  console.error('✖ Naming validator did not inspect any project.json files.');
+  process.exit(1);
+}
+
 if (hasViolations) process.exit(1);
-console.log('✔ Naming validation passed');
+console.log(`✔ Naming validation passed (${inspectedProjects} projects inspected)`);

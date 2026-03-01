@@ -23,7 +23,9 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
-      - run: npm run validate:nx-tags
+      - run: npm run governance:consistency
+      - run: npm run arch:validate-tags
+      - run: npm run arch:validate-naming
       - run: npm run arch:check
       - run: npx nx affected --target=lint --base=origin/main --head=HEAD
 
@@ -47,7 +49,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
-      - run: npm run validate:backend-tests
+      - run: npm run test:validate-backend
+      - run: npm run quality:e2e-coverage
       - run: npx nx affected --target=test --base=origin/main --head=HEAD --exclude='*-e2e'
 
   integration:
@@ -87,7 +90,7 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
-      - run: npm run sbom:generate
+      - run: npm run security:sbom
       - name: Verify SBOM artifact exists
         run: test -s sbom.json
       - run: ./tools/readiness/validate-signing-readiness.sh
@@ -100,8 +103,8 @@ jobs:
           else
             openssl genrsa -out cosign.key 2048
           fi
-      - run: npm run sign:artifact
-      - run: npm run verify:artifact
+      - run: npm run security:sign
+      - run: npm run security:verify
       - name: Generate provenance attestation
         uses: actions/attest-build-provenance@v1
         with:

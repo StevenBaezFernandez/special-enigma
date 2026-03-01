@@ -1,0 +1,6 @@
+{
+  "allowMissingTestTarget": {
+    "api-gateway-legacy-app": "Legacy gateway kept only for migration fallback; removal in progress.",
+    "worker-notification-app": "Worker notification runtime still under consolidation with scheduler tests."
+  }
+}

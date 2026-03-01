@@ -3,59 +3,105 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const searchDirs = ['apps', 'libs'];
+const policyMode = process.env.TAG_POLICY_MODE || 'error';
+const catalogPath = join('config', 'governance', 'tag-catalog.json');
+
+if (!existsSync(catalogPath)) {
+  console.error(`✖ Missing tag catalog: ${catalogPath}`);
+  process.exit(1);
+}
+
+const catalog = JSON.parse(readFileSync(catalogPath, 'utf8'));
+const requiredFamilies = catalog.requiredFamilies ?? [];
+const allowedFamilies = new Set(catalog.allowedFamilies ?? []);
+const criticalityHighRequires = catalog.criticalityHighRequires ?? [];
+const allowedValues = Object.fromEntries(
+  Object.entries(catalog.allowedValues ?? {}).map(([family, values]) => [family, new Set(values)])
+);
+
 let hasViolations = false;
+let inspectedProjects = 0;
 
-const POLICY_MODE = process.env.TAG_POLICY_MODE || 'error';
-const REQUIRED_FAMILIES = ['scope:', 'type:', 'platform:', 'criticality:'];
+function report(message) {
+  if (policyMode === 'error') {
+    console.error(`✖ ${message}`);
+    hasViolations = true;
+  } else {
+    console.warn(`⚠ ${message}`);
+  }
+}
 
-function validateDir(dir) {
-  const entries = readdirSync(dir, { withFileTypes: true });
-  if (entries.some(e => e.name === 'project.json')) {
-    const projectPath = join(dir, 'project.json');
-    const project = JSON.parse(readFileSync(projectPath, 'utf8'));
-    const tags = project.tags || [];
+function validateProject(projectPath) {
+  const project = JSON.parse(readFileSync(projectPath, 'utf8'));
+  const projectName = project.name ?? projectPath;
+  const tags = project.tags ?? [];
+  inspectedProjects += 1;
 
-    const missingFamilies = REQUIRED_FAMILIES.filter(
-      family => !tags.some(t => t.startsWith(family))
-    );
+  if (!Array.isArray(tags) || tags.length === 0) {
+    report(`${projectName} (${projectPath}) must declare tags[] with governance families.`);
+    return;
+  }
 
-    if (missingFamilies.length > 0) {
-      const msg = `✖ ${project.name} (${projectPath}) is missing required tags (${missingFamilies.join(', ')})`;
-      if (POLICY_MODE === 'error') {
-        console.error(msg);
-        hasViolations = true;
-      } else {
-        console.warn(`⚠ (Warn) ${msg}`);
-      }
+  const missingFamilies = requiredFamilies.filter((family) => !tags.some((tag) => tag.startsWith(family)));
+  if (missingFamilies.length > 0) {
+    report(`${projectName} (${projectPath}) is missing required tags: ${missingFamilies.join(', ')}`);
+  }
+
+  for (const tag of tags) {
+    if (!/^[a-z0-9-]+:[a-z0-9-]+$/.test(tag)) {
+      report(`${projectName} (${projectPath}) tag '${tag}' must use lower-kebab format family:value.`);
+      continue;
     }
 
-    if (tags.some((t) => t === 'criticality:high')) {
-      const extraFamilies = ['compliance:', 'tenant-mode:', 'region:'];
-      const missingExtra = extraFamilies.filter(
-        (family) => !tags.some((t) => t.startsWith(family))
+    const [family, value] = tag.split(':');
+    const familyPrefix = `${family}:`;
+    if (!allowedFamilies.has(familyPrefix)) {
+      report(`${projectName} (${projectPath}) tag family '${familyPrefix}' is not allowed by catalog.`);
+      continue;
+    }
+
+    const allowedFamilyValues = allowedValues[family];
+    if (allowedFamilyValues && !allowedFamilyValues.has(value)) {
+      report(
+        `${projectName} (${projectPath}) tag '${tag}' is not allowed. Allowed ${family}: ${[
+          ...allowedFamilyValues,
+        ].join(', ')}`
       );
-      if (missingExtra.length > 0) {
-        const msg = `✖ ${project.name} (${projectPath}) is missing high criticality tags (${missingExtra.join(', ')})`;
-        if (POLICY_MODE === 'error') {
-          console.error(msg);
-          hasViolations = true;
-        } else {
-          console.warn(`⚠ (Warn) ${msg}`);
-        }
-      }
     }
   }
 
-  for (const entry of entries) {
-    if (entry.isDirectory() && entry.name !== 'node_modules' && !entry.name.startsWith('.')) {
-      validateDir(join(dir, entry.name));
+  if (tags.includes('criticality:high')) {
+    const missingHigh = criticalityHighRequires.filter((family) => !tags.some((tag) => tag.startsWith(family)));
+    if (missingHigh.length > 0) {
+      report(`${projectName} (${projectPath}) is missing criticality:high requirements: ${missingHigh.join(', ')}`);
     }
+  }
+}
+
+function walk(dir) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+
+    const nextDir = join(dir, entry.name);
+    const projectPath = join(nextDir, 'project.json');
+    if (existsSync(projectPath)) {
+      validateProject(projectPath);
+      continue;
+    }
+
+    walk(nextDir);
   }
 }
 
 for (const dir of searchDirs) {
-  if (existsSync(dir)) validateDir(dir);
+  if (existsSync(dir)) walk(dir);
+}
+
+if (inspectedProjects === 0) {
+  console.error('✖ No project.json files were inspected under apps/ and libs/.');
+  process.exit(1);
 }
 
 if (hasViolations) process.exit(1);
-console.log('✔ Project tags validation passed');
+console.log(`✔ Project tags validation passed (${inspectedProjects} projects inspected)`);
