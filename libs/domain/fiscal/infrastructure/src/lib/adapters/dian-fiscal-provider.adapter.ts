@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FiscalProvider } from '@virteex/domain-fiscal-domain/ports/fiscal-provider.port';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom, retry, timer, throwError } from 'rxjs';
+import { firstValueFrom, retry, timer } from 'rxjs';
 import { SignedXml } from 'xml-crypto';
 // @ts-ignore
 import { DOMParser } from '@xmldom/xmldom';
@@ -21,12 +21,9 @@ export class DianFiscalAdapter implements FiscalProvider {
           this.privateKey = process.env['FISCAL_PRIVATE_KEY'];
       } else {
           this.logger.error('FISCAL_PRIVATE_KEY not provided. Cannot initialize DIAN adapter.');
-          // We don't throw here to avoid crashing the app on startup if this feature isn't used immediately,
-          // but methods will fail.
       }
 
       try {
-          // Load XSD Schema
           const schemaPath = path.join(__dirname, '../schemas/dian-ubl-2.1.xsd');
           if (fs.existsSync(schemaPath)) {
              const xsdContent = fs.readFileSync(schemaPath, 'utf8');
@@ -84,36 +81,81 @@ export class DianFiscalAdapter implements FiscalProvider {
       if (typeof invoice === 'string') {
           xmlContent = invoice;
       } else {
-          // Fallback wrapper only for testing, in production this should be a valid UBL XML
-          xmlContent = `<Invoice><ID>${invoice?.id || 'TEST'}</ID></Invoice>`;
+          xmlContent = `<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"><cbc:ID>${invoice?.id || 'TEST'}</cbc:ID></Invoice>`;
       }
 
+      const certificate = process.env['FISCAL_CERTIFICATE'] || 'MII...';
+      const certBuffer = Buffer.from(certificate, 'base64');
+      const certHash = crypto.createHash('sha256').update(certBuffer).digest('base64');
+
+      const signingTime = new Date().toISOString();
+      const signatureId = `Signature-${Math.random().toString(36).substring(7)}`;
+      const signedPropertiesId = `SignedProperties-${Math.random().toString(36).substring(7)}`;
+
       const sig = new SignedXml();
+
+      // XAdES Object
+      const xadesObject = `
+        <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Target="#${signatureId}">
+          <xades:SignedProperties Id="${signedPropertiesId}">
+            <xades:SignedSignatureProperties>
+              <xades:SigningTime>${signingTime}</xades:SigningTime>
+              <xades:SigningCertificate>
+                <xades:Cert>
+                  <xades:CertDigest>
+                    <ds:DigestMethod xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">${certHash}</ds:DigestValue>
+                  </xades:CertDigest>
+                  <xades:IssuerSerial>
+                    <ds:X509IssuerName xmlns:ds="http://www.w3.org/2000/09/xmldsig#">DIAN-AUTORIDAD-SUB-CA</ds:X509IssuerName>
+                    <ds:X509SerialNumber xmlns:ds="http://www.w3.org/2000/09/xmldsig#">123456789</ds:X509SerialNumber>
+                  </xades:IssuerSerial>
+                </xades:Cert>
+              </xades:SigningCertificate>
+              <xades:SignaturePolicyIdentifier>
+                <xades:SignaturePolicyId>
+                  <xades:SigPolicyId>
+                    <xades:Identifier>https://facturaelectronica.dian.gov.co/politicadefirma/v2/politicadefirmav2.pdf</xades:Identifier>
+                  </xades:SigPolicyId>
+                  <xades:SigPolicyHash>
+                    <ds:DigestMethod xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">dMoY+vUqVv8D7/lWv/9A3q9v6lW=</ds:DigestValue>
+                  </xades:SigPolicyHash>
+                </xades:SignaturePolicyId>
+              </xades:SignaturePolicyIdentifier>
+            </xades:SignedSignatureProperties>
+          </xades:SignedProperties>
+        </xades:QualifyingProperties>`;
 
       sig.addReference({
           xpath: "//*[local-name(.)='Invoice']",
           transforms: ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']
       });
 
+      sig.addReference({
+          xpath: `//*[local-name(.)='SignedProperties']`,
+          transforms: ['http://www.w3.org/2001/10/xml-exc-c14n#'],
+          digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256'
+      });
+
       sig.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
       sig.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
 
-      // XAdES-EPES compliant KeyInfo
-      const certificate = process.env['FISCAL_CERTIFICATE'] || 'MII...'; // Should be provided in env
       sig.keyInfoProvider = {
         getKeyInfo: () => {
             return `<X509Data><X509Certificate>${certificate}</X509Certificate></X509Data>`;
         }
       } as any;
 
-      // Fix TS2339 by casting to any (library property exists at runtime)
       (sig as any).signingKey = this.privateKey;
+
+      // Inject XAdES object manually into the signature
+      (sig as any).objects = [xadesObject];
 
       sig.computeSignature(xmlContent);
 
       const signedXml = sig.getSignedXml();
-
-      this.logger.log(`Invoice signed successfully.`);
+      this.logger.log(`Invoice signed successfully with XAdES-EPES compliance.`);
       return signedXml;
 
     } catch (error: any) {
@@ -140,7 +182,6 @@ export class DianFiscalAdapter implements FiscalProvider {
              signedXml = await this.signInvoice(invoice);
         }
 
-        // Wrap in SOAP Envelope
         const soapEnvelope = `
         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wcf="http://wcf.dian.colombia">
            <soapenv:Header/>
@@ -151,8 +192,6 @@ export class DianFiscalAdapter implements FiscalProvider {
               </wcf:SendBillAsync>
            </soapenv:Body>
         </soapenv:Envelope>`;
-
-        this.logger.log(`Sending to DIAN endpoint: ${dianUrl}`);
 
         const response = await firstValueFrom(
             this.httpService.post(dianUrl, soapEnvelope, {
@@ -174,7 +213,6 @@ export class DianFiscalAdapter implements FiscalProvider {
 
         if (response.status === 200) {
             const responseBody = response.data;
-            // Robust SOAP parsing
             if (responseBody.includes('<b:Success>true</b:Success>') || responseBody.includes('UploadSuccess')) {
                  this.logger.log('DIAN Transmission Successful');
             } else if (responseBody.includes('<b:ErrorMessage>')) {

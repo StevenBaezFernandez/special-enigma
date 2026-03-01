@@ -42,19 +42,22 @@ export class SyncService {
       try {
         return await firstValueFrom(this.http.request(method, url, { body: payload }));
       } catch (e: any) {
+        // Network/Server Errors
         if (e.status === 0 || e.status >= 500) {
           await this.enqueue(method, url, payload, e.message);
           return { offline: true, message: 'Request queued due to network/server error' };
         }
 
+        // Real ERP Conflict Handling (HTTP 409)
         if (e.status === 409) {
-          return this.conflictResolver.resolve(conflictStrategy, e);
+          return await this.conflictResolver.resolve(conflictStrategy, e, { url, payload, method });
         }
 
         throw e;
       }
     }
 
+    // Offline Handling
     await this.enqueue(method, url, payload);
     return { offline: true, message: 'Request queued (offline)' };
   }
@@ -82,6 +85,12 @@ export class SyncService {
     });
 
     this.connectivity.onOffline();
+
+    // Listen to manual conflicts to possibly alert the user
+    this.conflictResolver.manualConflict$.subscribe((conflict) => {
+        console.warn('Sync conflict requires manual resolution:', conflict);
+        // This could trigger a Toast or Modal in Ionic
+    });
   }
 
   private async enqueue(method: 'POST' | 'PUT' | 'DELETE', url: string, payload: unknown, lastError?: string): Promise<void> {

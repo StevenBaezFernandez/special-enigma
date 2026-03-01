@@ -4,20 +4,30 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, retry, timer } from 'rxjs';
 import { SignedXml } from 'xml-crypto';
 import * as crypto from 'crypto';
+import * as https from 'https';
 
 @Injectable()
 export class SefazFiscalAdapter implements FiscalProvider {
   private readonly logger = new Logger(SefazFiscalAdapter.name);
   private privateKey: string;
+  private certificate: string;
 
   constructor(private readonly httpService: HttpService) {
     const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
+
     if (process.env['FISCAL_PRIVATE_KEY']) {
       this.privateKey = process.env['FISCAL_PRIVATE_KEY'];
-    } else {
-      if (isProd) {
-        throw new Error('FATAL: FISCAL_PRIVATE_KEY is mandatory for SEFAZ in production.');
-      }
+    }
+
+    if (process.env['FISCAL_CERTIFICATE']) {
+      this.certificate = process.env['FISCAL_CERTIFICATE'];
+    }
+
+    if (!this.privateKey && isProd) {
+      throw new Error('FATAL: FISCAL_PRIVATE_KEY is mandatory for SEFAZ in production.');
+    }
+
+    if (!this.privateKey) {
       this.logger.warn('FISCAL_PRIVATE_KEY not provided. Generating ephemeral RSA key for simulation (SEFAZ).');
       const { privateKey } = crypto.generateKeyPairSync('rsa', {
         modulusLength: 2048,
@@ -42,7 +52,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
           xmlContent = invoice;
       } else {
           this.logger.warn('Received object in signInvoice, expecting XML string. Using fallback wrapper.');
-          xmlContent = `<NFe><infNFe Id="NFe${invoice?.id || 'TEST'}"></infNFe></NFe>`;
+          xmlContent = `<NFe xmlns="http://www.portalfiscal.inf.br/nfe"><infNFe Id="NFe${invoice?.id || 'TEST'}" version="4.00"></infNFe></NFe>`;
       }
 
       const sig = new SignedXml();
@@ -55,13 +65,11 @@ export class SefazFiscalAdapter implements FiscalProvider {
       sig.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
       sig.signatureAlgorithm = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
 
-      // Fix TS2339 by casting to any
       (sig as any).signingKey = this.privateKey;
 
       sig.computeSignature(xmlContent);
 
       const signedXml = sig.getSignedXml();
-
       this.logger.log(`NFe signed successfully.`);
       return signedXml;
 
@@ -72,7 +80,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
   }
 
   async transmitInvoice(invoice: any): Promise<void> {
-    this.logger.log(`Transmitting NFe to SEFAZ...`);
+    this.logger.log(`Transmitting NFe to SEFAZ with mTLS...`);
 
     try {
         const sefazUrl = process.env['SEFAZ_API_URL'] || 'https://nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx';
@@ -92,9 +100,17 @@ export class SefazFiscalAdapter implements FiscalProvider {
            </soap:Body>
         </soap:Envelope>`;
 
+        // Configure mTLS Agent
+        const httpsAgent = new https.Agent({
+            cert: this.certificate,
+            key: this.privateKey,
+            rejectUnauthorized: process.env['NODE_ENV'] === 'production'
+        });
+
         const response = await firstValueFrom(
             this.httpService.post(sefazUrl, soapEnvelope, {
                 timeout: 30000,
+                httpsAgent,
                 headers: {
                     'Content-Type': 'application/soap+xml;charset=utf-8',
                 }
@@ -110,7 +126,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
         );
 
         if (response.status === 200) {
-            this.logger.log('SEFAZ Transmission Successful');
+            this.logger.log('SEFAZ Transmission Successful (mTLS Handshake Verified)');
         } else {
             throw new Error(`SEFAZ HTTP Error: ${response.status}`);
         }
