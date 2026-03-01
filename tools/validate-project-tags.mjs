@@ -5,7 +5,7 @@ import { join } from 'node:path';
 const searchDirs = ['apps', 'libs'];
 let hasViolations = false;
 
-const POLICY_MODE = process.env.TAG_POLICY_MODE || 'warn';
+const POLICY_MODE = process.env.TAG_POLICY_MODE || 'error';
 const REQUIRED_FAMILIES = ['scope:', 'type:', 'platform:', 'criticality:'];
 
 function validateDir(dir) {
@@ -26,6 +26,22 @@ function validateDir(dir) {
         hasViolations = true;
       } else {
         console.warn(`⚠ (Warn) ${msg}`);
+      }
+    }
+
+    if (tags.some((t) => t === 'criticality:high')) {
+      const extraFamilies = ['compliance:', 'tenant-mode:', 'region:'];
+      const missingExtra = extraFamilies.filter(
+        (family) => !tags.some((t) => t.startsWith(family))
+      );
+      if (missingExtra.length > 0) {
+        const msg = `✖ ${project.name} (${projectPath}) is criticality:high but missing required extra tags (${missingExtra.join(', ')})`;
+        if (POLICY_MODE === 'error') {
+          console.error(msg);
+          hasViolations = true;
+        } else {
+          console.warn(`⚠ (Warn) ${msg}`);
+        }
       }
     }
   }

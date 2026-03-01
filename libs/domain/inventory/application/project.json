@@ -8,17 +8,24 @@
     "scope:inventory",
     "type:application",
     "platform:agnostic",
-    "criticality:high"
+    "criticality:high",
+    "compliance:none",
+    "tenant-mode:multi",
+    "region:global"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domain/inventory/application",
         "main": "libs/domain/inventory/application/src/index.ts",
         "tsConfig": "libs/domain/inventory/application/tsconfig.lib.json",
-        "assets": ["libs/domain/inventory/application/*.md"],
+        "assets": [
+          "libs/domain/inventory/application/*.md"
+        ],
         "rootDir": "."
       }
     }

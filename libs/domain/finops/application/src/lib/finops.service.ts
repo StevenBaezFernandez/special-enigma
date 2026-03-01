@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { USAGE_REPOSITORY, UsageRecord, UsageRepository } from './ports/usage.repository';
+import { USAGE_REPOSITORY, UsageRecord, UsageRepository } from '@virteex/domain-finops-domain';
 
 @Injectable()
 export class FinOpsService {

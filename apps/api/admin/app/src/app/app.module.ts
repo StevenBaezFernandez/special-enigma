@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TenantsController } from './tenants.controller';
+import { TenantsController } from '@virteex/domain-admin-presentation';
 
 @Module({
   imports: [],

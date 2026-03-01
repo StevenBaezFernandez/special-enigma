@@ -9,7 +9,9 @@
     "type:domain",
     "platform:agnostic",
     "criticality:high",
-    "tenant-mode:schema"
+    "tenant-mode:schema",
+    "compliance:none",
+    "region:global"
   ],
   "targets": {
     "build": {
