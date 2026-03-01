@@ -24,4 +24,11 @@ export class StatCard {
   isPositive(): boolean {
     return this.data.change?.startsWith('+');
   }
+
+  isStale(): boolean {
+    if (!this.data?.lastUpdated) return false;
+    const lastUpdate = new Date(this.data.lastUpdated).getTime();
+    const now = new Date().getTime();
+    return (now - lastUpdate) > 24 * 60 * 60 * 1000;
+  }
 }

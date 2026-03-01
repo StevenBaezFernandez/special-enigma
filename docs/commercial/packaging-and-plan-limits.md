@@ -16,3 +16,12 @@
 ## Reglas comerciales
 - Países y módulos Beta deben venderse con cláusula de limitación y roadmap firmado.
 - Funcionalidad fiscal no-GA no puede incluirse como compromiso contractual de cumplimiento.
+
+## Límites operativos por región (Readiness Based)
+
+| Región | Estado Fiscal | Límite Facturación (Hard) | Marketplace Mode |
+| --- | --- | --- | --- |
+| **MX** | GA | Sin límite (enforced por plan) | Beta (Restricted) |
+| **BR** | Beta | 500 / mes (Homologación) | Beta (Restricted) |
+| **CO** | Beta | 100 / mes (Early Access) | No disponible |
+| **US** | Beta | En pruebas (Tax Partner) | Beta (Restricted) |

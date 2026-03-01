@@ -7,6 +7,7 @@ export interface Kpi {
     isPositive: boolean; // El cambio es bueno o malo?
     iconName: string;
     color: 'blue' | 'green' | 'orange' | 'red' | 'purple' | 'teal';
+    lastUpdated?: string; // ISO date
 }
 
 export interface AlertItem {
