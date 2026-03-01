@@ -24,7 +24,7 @@ export default [
             {
               sourceTag: 'type:domain',
               onlyDependOnLibsWithTags: [
-                'type:contract',
+                'type:contracts',
                 'type:util',
               ],
             },
@@ -32,7 +32,7 @@ export default [
               sourceTag: 'type:application',
               onlyDependOnLibsWithTags: [
                 'type:domain',
-                'type:contract',
+                'type:contracts',
                 'type:util',
               ],
             },
@@ -41,7 +41,7 @@ export default [
               onlyDependOnLibsWithTags: [
                 'type:domain',
                 'type:application',
-                'type:contract',
+                'type:contracts',
                 'type:util',
               ],
             },
@@ -53,7 +53,7 @@ export default [
                 'type:application',
                 'type:domain',
                 'type:infrastructure',
-                'type:contract',
+                'type:contracts',
                 'type:util',
                 'type:ui',
               ],
@@ -64,24 +64,32 @@ export default [
                 'type:application',
                 'type:domain',
                 'type:infrastructure',
-                'type:contract',
+                'type:contracts',
                 'type:util',
               ],
             },
             {
               sourceTag: 'type:ui',
               onlyDependOnLibsWithTags: [
-                'type:contract',
+                'type:contracts',
                 'type:util',
                 'type:ui',
               ],
             },
             {
-              sourceTag: 'type:contract',
+              sourceTag: 'type:contracts',
               onlyDependOnLibsWithTags: ['type:util'],
             },
 
             // Domain Scopes (Strict Boundaries)
+            {
+              sourceTag: 'scope:finops',
+              onlyDependOnLibsWithTags: ['scope:finops', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:platform',
+              onlyDependOnLibsWithTags: ['scope:platform', 'scope:shared', 'scope:kernel']
+            },
             {
               sourceTag: 'scope:accounting',
               onlyDependOnLibsWithTags: ['scope:accounting', 'scope:shared', 'scope:kernel']

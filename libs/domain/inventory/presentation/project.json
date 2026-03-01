@@ -8,18 +8,25 @@
     "scope:inventory",
     "type:presentation",
     "platform:agnostic",
-    "criticality:high"
+    "criticality:high",
+    "compliance:none",
+    "tenant-mode:multi",
+    "region:global"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domain/inventory/presentation",
         "main": "libs/domain/inventory/presentation/src/index.ts",
         "tsConfig": "libs/domain/inventory/presentation/tsconfig.lib.json",
-        "assets": ["libs/domain/inventory/presentation/*.md"],
-        "rootDir": "libs/domains/inventory"
+        "assets": [
+          "libs/domain/inventory/presentation/*.md"
+        ],
+        "rootDir": "libs/domain/inventory"
       }
     }
   }

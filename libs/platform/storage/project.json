@@ -5,10 +5,10 @@
   "prefix": "virteex",
   "projectType": "library",
   "tags": [
-    "scope:shared",
     "type:infrastructure",
     "platform:agnostic",
-    "criticality:medium"
+    "criticality:medium",
+    "scope:platform"
   ],
   "targets": {
     "build": {

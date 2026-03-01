@@ -6,20 +6,26 @@
   "prefix": "virteex",
   "tags": [
     "scope:accounting",
-    "type:contract",
+    "type:contracts",
     "platform:agnostic",
     "criticality:high",
-    "tenant-mode:schema"
+    "tenant-mode:schema",
+    "compliance:none",
+    "region:global"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domain/accounting/contracts",
         "main": "libs/domain/accounting/contracts/src/index.ts",
         "tsConfig": "libs/domain/accounting/contracts/tsconfig.lib.json",
-        "assets": ["libs/domain/accounting/contracts/*.md"]
+        "assets": [
+          "libs/domain/accounting/contracts/*.md"
+        ]
       }
     }
   }

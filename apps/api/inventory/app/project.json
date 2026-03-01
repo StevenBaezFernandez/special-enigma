@@ -7,7 +7,10 @@
     "scope:inventory",
     "type:app",
     "platform:backend",
-    "criticality:high"
+    "criticality:high",
+    "compliance:none",
+    "tenant-mode:multi",
+    "region:global"
   ],
   "targets": {
     "build": {

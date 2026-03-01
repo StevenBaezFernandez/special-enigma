@@ -7,7 +7,10 @@
     "scope:kernel",
     "type:kernel",
     "platform:agnostic",
-    "criticality:high"
+    "criticality:high",
+    "compliance:none",
+    "tenant-mode:multi",
+    "region:global"
   ],
   "// targets": "to see all targets run: nx show project kernel-audit --web",
   "targets": {}
