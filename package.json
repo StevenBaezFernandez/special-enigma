@@ -28,7 +28,13 @@
     "dev:frontend": "nx serve web-portal-app",
     "dev:backend": "nx serve desktop-app",
     "build:frontend": "nx build web-portal-app",
-    "build:backend": "nx build desktop-app"
+    "build:backend": "nx build desktop-app",
+    "readiness:evidence": "node tools/readiness/generate-evidence-pack.mjs",
+    "validate:nx-tags": "node tools/validate-project-tags.mjs",
+    "validate:backend-tests": "node tools/validate-backend-test-targets.mjs",
+    "sbom:generate": "cyclonedx-npm --output-file sbom.json",
+    "sign:artifact": "cosign sign-blob --yes --key cosign.key --output-signature sbom.json.sig",
+    "verify:artifact": "cosign verify-blob --key cosign.key --signature sbom.json.sig sbom.json"
   },
   "private": true,
   "devDependencies": {

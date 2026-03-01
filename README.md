@@ -31,3 +31,12 @@ El repositorio incluye herramientas automáticas para asegurar la salud de la ar
 ## CI/CD
 
 El flujo principal de CI/CD se encuentra en `.github/workflows/ci-cd.yml`, integrando validaciones de arquitectura, seguridad y calidad en cada etapa.
+
+## Readiness comercial y evidencia de release
+
+- `npm run readiness:commercial`: valida matriz país/módulo y bloquea estados inconsistentes.
+- `npm run quality:docs`: detecta drift entre documentación y árbol real del repo.
+- `npm run readiness:evidence`: genera `evidence/releases/<version>/` con summary, manifest y huellas SHA-256.
+- `npm run readiness:report`: genera reporte consolidado en `evidence/reports/RELEASE_READINESS_REPORT.md`.
+
+Ver también: [Release Trust Packet](docs/commercial/release-trust-packet.md) y [POC Execution Matrix](docs/readiness/poc-execution-matrix.md).

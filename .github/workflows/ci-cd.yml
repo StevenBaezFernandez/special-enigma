@@ -75,7 +75,7 @@ jobs:
       - run: npm run readiness:commercial
       - run: npm run quality:docs
       - run: npm run quality:plugin-isolation
-      - run: ./tools/enforce-production-readiness.sh
+      - run: npm run readiness:check
 
   security:
     runs-on: ubuntu-latest
@@ -124,5 +124,13 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
+      - run: npm run readiness:evidence
       - run: npm run readiness:report
       - run: ./tools/run-pocs.sh artifacts/poc-results
+      - name: Upload release evidence pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence-${{ github.run_id }}
+          path: |
+            evidence/releases
+            evidence/reports/RELEASE_READINESS_REPORT.md

@@ -1,24 +1,32 @@
-# POCs críticos (A/B/C) — ejecución y evidencia
+# POC Execution Matrix (Release Readiness)
 
-## Inventario
+## Objetivo
 
-| POC | Objetivo | Script | Criterio de aceptación | Estado esperado |
-|---|---|---|---|---|
-| A | Escala RLS en alta cardinalidad multi-tenant | `tools/k6/suite/rls-load-test.js` | p95 < 200ms y error < 0.1% | Bloqueante para release |
-| B | Resiliencia de sincronización offline bajo red inestable | `tools/k6/suite/offline-sync-chaos.js` | Replays sin 500 y convergencia de cola | Bloqueante para release |
-| C | Aislamiento + revocación en tiempo real de plugins | `tools/k6/suite/plugin-security.js` | Payloads maliciosos bloqueados y plugin revocado no ejecutable | Bloqueante para marketplace |
+Estandarizar la ejecución y evidencia de POCs críticos por candidate release.
 
-## Ejecución
+## POCs requeridos
 
-```bash
-./tools/run-pocs.sh artifacts/poc-results
-```
+| POC                          | Comando base                                | Evidencia mínima                          |
+| ---------------------------- | ------------------------------------------- | ----------------------------------------- |
+| A - RLS performance          | `./tools/run-pocs.sh artifacts/poc-results` | `artifacts/poc-results/poc-a-rls.json`    |
+| B - ORM read/write split     | `./tools/run-pocs.sh artifacts/poc-results` | `artifacts/poc-results/poc-b-orm.json`    |
+| C - Plugin sandbox/admission | `./tools/run-pocs.sh artifacts/poc-results` | `artifacts/poc-results/poc-c-plugin.json` |
+| D - Fiscal flow              | `./tools/run-pocs.sh artifacts/poc-results` | `artifacts/poc-results/poc-d-fiscal.json` |
 
-Cada corrida genera:
-- `artifacts/poc-results/<poc>.json` (summary export k6)
-- `artifacts/poc-results/<poc>.md` (evidencia mínima)
+## Consolidación de evidencia por release
 
-## Gating
+1. Ejecutar gates de readiness y seguridad.
+2. Generar pack de evidencia:
+   ```bash
+   RELEASE_VERSION=<version> npm run readiness:evidence
+   RELEASE_VERSION=<version> npm run readiness:report
+   ```
+3. Publicar `evidence/releases/<version>/manifest.json` como artefacto inmutable.
 
-- En ramas `release/*`, `ci-cd.yml` ejecuta `tools/run-pocs.sh` en el job `release-evidence`.
-- Un fallo de POC bloquea promoción.
+## Gate de promoción
+
+No se promueve un release branch sin:
+
+- `summary.json` con estado `ready-with-evidence`.
+- SBOM y firma presentes.
+- carpeta `artifacts/poc-results` disponible.

@@ -1,0 +1,18 @@
+{
+  "releaseVersion": "2026.03-rc1",
+  "generatedAt": "2026-03-01T13:28:45.005Z",
+  "artifacts": [
+    {
+      "path": "evidence/releases/2026.03-rc1/summary.json",
+      "sha256": "fd66905ad54557c36c067117144220b919868c4357ed7f0cfd1e205a51d73632"
+    },
+    {
+      "path": "evidence/releases/2026.03-rc1/manifest.json",
+      "sha256": "aafceda4de4fa30f260e146452a1f51313a041eb305ed8772042dec81d550a59"
+    },
+    {
+      "path": "evidence/releases/2026.03-rc1/README.md",
+      "sha256": "9b220d55d7f59b986fc8a7b77e0a5f69760b5ee38e8e445e76a1d20ec71dd091"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "releaseVersion": "2026.03-rc1",
+  "generatedAt": "2026-03-01T13:28:45.005Z",
+  "readinessState": "ready-with-evidence",
+  "gateResults": [
+    {
+      "id": "commercial",
+      "cmd": "node tools/readiness/validate-commercial-readiness.mjs",
+      "status": "passed"
+    },
+    {
+      "id": "docs-consistency",
+      "cmd": "node tools/quality-gates/validate-docs-consistency.mjs",
+      "status": "passed"
+    },
+    {
+      "id": "plugin-isolation",
+      "cmd": "node tools/quality-gates/validate-plugin-isolation.mjs",
+      "status": "passed"
+    },
+    {
+      "id": "production-readiness",
+      "cmd": "bash ./tools/enforce-production-readiness.sh",
+      "status": "passed"
+    }
+  ],
+  "evidence": {
+    "commercialReadiness": {
+      "version": "2026.02",
+      "countries": [
+        "MX",
+        "BR",
+        "CO",
+        "US"
+      ],
+      "modules": {
+        "fiscal": {
+          "MX": "GA",
+          "BR": "Beta",
+          "CO": "Beta",
+          "US": "Beta"
+        },
+        "billing": {
+          "MX": "GA",
+          "BR": "Beta",
+          "CO": "Beta",
+          "US": "GA"
+        },
+        "inventory": {
+          "MX": "GA",
+          "BR": "GA",
+          "CO": "GA",
+          "US": "GA"
+        },
+        "marketplace": {
+          "MX": "Beta",
+          "BR": "Beta",
+          "CO": "No listo",
+          "US": "Beta"
+        },
+        "manufacturing": {
+          "MX": "Beta",
+          "BR": "Beta",
+          "CO": "No listo",
+          "US": "Beta"
+        },
+        "projects": {
+          "MX": "Beta",
+          "BR": "Beta",
+          "CO": "Beta",
+          "US": "Beta"
+        },
+        "fixedAssets": {
+          "MX": "Beta",
+          "BR": "Beta",
+          "CO": "Beta",
+          "US": "Beta"
+        }
+      }
+    },
+    "sbomPresent": false,
+    "signaturePresent": false,
+    "pocResultsPresent": true
+  }
+}

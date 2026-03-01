@@ -1,7 +1,7 @@
 # Virteex ERP Release Readiness Report
 
-**Date:** 2026-03-01T13:12:17.228Z
-**Version:** DEV-SNAPSHOT
+**Date:** 2026-03-01T13:28:45.771Z
+**Version:** 2026.03-rc1
 
 ## 1. Commercial Readiness
 
@@ -20,20 +20,24 @@
 - **SBOM:** NOT FOUND. Run `npm run security:sbom` first.
 - **Firma Digital:** Ausente
 
-## 3. POC Evidence (Scalability & Security)
+## 3. POC Evidence
 
-| POC | Status | Metrics |
+| POC | Status | p95 |
 | --- | --- | --- |
-| plugin-security | PASSED | p95: 210ms |
-| rls-load-test | PASSED | p95: 145ms |
+| plugin-security | PASSED | 210ms |
+| rls-load-test | PASSED | 145ms |
 
-## 4. Quality Gates Status
+## 4. Release Evidence Pack
 
-- [x] **Architecture Boundaries:** PASSED
-- [x] **Production Readiness:** PASSED
-- [x] **Commercial Eligibility:** PASSED
-- [x] **Documentation Consistency:** PASSED
-- [x] **Plugin Sandbox Isolation:** PASSED
+- **Readiness state:** ready-with-evidence
+- **Evidence path:** evidence/releases/2026.03-rc1
+
+| Gate | Status |
+| --- | --- |
+| commercial | PASSED |
+| docs-consistency | PASSED |
+| plugin-isolation | PASSED |
+| production-readiness | PASSED |
 
 ---
-*Report generated automatically by Virteex Readiness Tooling*
+*Report generated automatically by Virteex readiness tooling*
