@@ -1,10 +1,14 @@
-import { Injectable, Inject, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { LoginUserDto, LoginResponseDto } from '@virteex/contracts-identity-contracts';
 import {
   UserRepository, AuditLogRepository, AuditLog,
   RiskEngineService, AuthService
 } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
+import {
+  UnauthorizedException,
+  ForbiddenException
+} from '@virteex/kernel-exceptions';
 
 export interface LoginContext {
   ip: string;

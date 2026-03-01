@@ -1,9 +1,8 @@
-import { Invoice } from '@virteex/domain-billing-domain';
-import { CustomerBillingInfo } from '@virteex/domain-billing-domain';
+import { InvoiceContract, CustomerBillingInfoContract } from '@virteex/domain-billing-contracts';
 import { TenantFiscalConfig } from './tenant-config.port';
 
 export interface FiscalDocumentBuilder {
-  build(invoice: Invoice, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfo): Promise<string>;
+  build(invoice: InvoiceContract, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfoContract): Promise<string>;
 }
 
 export const FISCAL_DOCUMENT_BUILDER_FACTORY = 'FISCAL_DOCUMENT_BUILDER_FACTORY';

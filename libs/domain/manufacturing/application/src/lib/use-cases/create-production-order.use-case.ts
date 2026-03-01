@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import {
   ProductionOrder,
   ProductionOrderComponent,
@@ -9,6 +9,7 @@ import {
   BillOfMaterialsRepository,
   BILL_OF_MATERIALS_REPOSITORY
 } from '@virteex/domain-manufacturing-domain';
+import { EntityNotFoundException } from '@virteex/kernel-exceptions';
 
 export interface CreateProductionOrderInput {
   tenantId: string;
@@ -30,7 +31,7 @@ export class CreateProductionOrderUseCase {
     // 1. Validate BOM Existence (Robustness)
     const bom = await this.bomRepository.findByProductSku(dto.productSku);
     if (!bom) {
-      throw new NotFoundException(`No active Bill of Materials (BOM) found for product SKU: ${dto.productSku}`);
+      throw new EntityNotFoundException('BillOfMaterials', dto.productSku);
     }
 
     // 2. Check and Reserve Stock (Existing Logic)
@@ -54,7 +55,7 @@ export class CreateProductionOrderUseCase {
             console.warn(`Insufficient stock for component ${bomComponent.componentProductSku}`);
         }
 
-        order.components.add(orderComponent);
+        order.components.push(orderComponent);
     }
 
     await this.repository.save(order);

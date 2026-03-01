@@ -1,0 +1,26 @@
+{
+  "name": "exceptions",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/kernel/exceptions/src",
+  "projectType": "library",
+  "tags": ["scope:kernel", "type:kernel"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/kernel/exceptions",
+        "main": "libs/kernel/exceptions/src/index.ts",
+        "tsConfig": "libs/kernel/exceptions/tsconfig.lib.json",
+        "assets": ["libs/kernel/exceptions/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../../coverage/libs/kernel/exceptions"
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException, BadRequestException, ConflictException, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { PayrollStatus, PayrollType, PayrollDetailType } from '@virteex/contracts-payroll-contracts';
 import {
   EmployeeRepository,
@@ -17,6 +17,11 @@ import {
 } from '@virteex/domain-payroll-domain';
 import { GlobalConfigService } from '@virteex/shared-util-server-config';
 import { CalculatePayrollDto } from '@virteex/contracts-payroll-contracts-payroll-contracts';
+import {
+  BadRequestException,
+  EntityNotFoundException,
+  ConflictException
+} from '@virteex/kernel-exceptions';
 
 @Injectable()
 export class CalculatePayrollUseCase {
@@ -47,11 +52,11 @@ export class CalculatePayrollUseCase {
 
     const employee = await this.employeeRepository.findById(employeeId);
     if (!employee) {
-      throw new NotFoundException(`Employee with ID ${employeeId} not found`);
+      throw new EntityNotFoundException('Employee', employeeId);
     }
 
     if (employee.tenantId !== tenantId) {
-       throw new NotFoundException(`Employee with ID ${employeeId} not found in tenant ${tenantId}`);
+       throw new EntityNotFoundException('Employee', employeeId);
     }
 
     // Check if payroll already exists for this period
@@ -81,7 +86,7 @@ export class CalculatePayrollUseCase {
 
     // Add Salary Detail
     const salaryDetail = new PayrollDetail(tenantId, 'Sueldo Base', baseAmount, PayrollDetailType.EARNING);
-    payroll.details.add(salaryDetail);
+    payroll.details.push(salaryDetail);
 
     // Prepare Options (e.g. State Tax Rate)
     const stateTaxRate = this.configService.defaultStateTaxRate;
@@ -96,7 +101,7 @@ export class CalculatePayrollUseCase {
 
     // Calculate Taxes (Unified)
     // Using 'MONTHLY' as default frequency. Should be derived from contract.
-    const taxResult = await taxStrategy.calculatePayrollTaxes(baseAmount, end, 'MONTHLY', taxOptions);
+    const taxResult = await this.payrollCalculator.calculatePayrollTaxes(this.taxStrategyFactory, baseAmount, tenantConfig.country, end, 'MONTHLY', taxOptions);
 
     const detailMap: Record<string, string> = {
         'ISR': 'ISR Retenido',
@@ -117,7 +122,7 @@ export class CalculatePayrollUseCase {
             detail.amount,
             PayrollDetailType.DEDUCTION
         );
-        payroll.details.add(payrollDetail);
+        payroll.details.push(payrollDetail);
         totalDeductions += detail.amount;
     }
 
