@@ -1,16 +1,21 @@
-export const USAGE_REPOSITORY = 'USAGE_REPOSITORY';
-
 export interface UsageRecord {
   idempotencyKey?: string;
   tenantId: string;
-  metric: 'compute' | 'storage' | 'network' | 'requests';
+  metric: 'compute' | 'storage' | 'database' | 'network';
   value: number;
   timestamp: Date;
-  source: string;
+  source?: string;
 }
 
+export interface UsageAggregate {
+  metric: UsageRecord['metric'];
+  total: number;
+}
+
+export const USAGE_REPOSITORY = 'USAGE_REPOSITORY';
+
 export interface UsageRepository {
-  recordUsage(record: UsageRecord): Promise<void>;
   getUsage(tenantId: string, startDate?: Date, endDate?: Date): Promise<UsageRecord[]>;
-  aggregateUsage(tenantId: string, startDate: Date, endDate: Date): Promise<any>;
+  recordUsage(record: UsageRecord): Promise<void>;
+  aggregateUsage(tenantId: string, startDate: Date, endDate: Date): Promise<UsageAggregate[]>;
 }

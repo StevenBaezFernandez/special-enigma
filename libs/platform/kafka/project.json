@@ -4,17 +4,15 @@
   "sourceRoot": "libs/platform/kafka/src",
   "projectType": "library",
   "tags": [
+    "scope:shared",
     "type:infrastructure",
     "platform:agnostic",
-    "criticality:medium",
-    "scope:platform"
+    "criticality:medium"
   ],
   "// targets": "to see all targets run: nx show project platform-kafka --web",
   "targets": {
     "test": {
-      "outputs": [
-        "{workspaceRoot}/coverage/libs/platform/kafka"
-      ]
+      "outputs": ["{workspaceRoot}/coverage/libs/platform/kafka"]
     }
   }
 }

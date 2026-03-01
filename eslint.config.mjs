@@ -22,17 +22,9 @@ export default [
           depConstraints: [
             // Architectural Layers
             {
-              sourceTag: 'scope:platform',
-              onlyDependOnLibsWithTags: ['scope:platform', 'scope:shared', 'scope:kernel']
-            },
-            {
-              sourceTag: 'scope:finops',
-              onlyDependOnLibsWithTags: ['scope:finops', 'scope:shared', 'scope:kernel']
-            },
-            {
               sourceTag: 'type:domain',
               onlyDependOnLibsWithTags: [
-                'type:contracts',
+                'type:contract',
                 'type:util',
               ],
             },
@@ -40,7 +32,7 @@ export default [
               sourceTag: 'type:application',
               onlyDependOnLibsWithTags: [
                 'type:domain',
-                'type:contracts',
+                'type:contract',
                 'type:util',
               ],
             },
@@ -49,9 +41,8 @@ export default [
               onlyDependOnLibsWithTags: [
                 'type:domain',
                 'type:application',
-                'type:contracts',
+                'type:contract',
                 'type:util',
-                              'scope:platform',
               ],
             },
 
@@ -62,10 +53,9 @@ export default [
                 'type:application',
                 'type:domain',
                 'type:infrastructure',
-                'type:contracts',
+                'type:contract',
                 'type:util',
                 'type:ui',
-                              'scope:platform',
               ],
             },
             {
@@ -74,21 +64,20 @@ export default [
                 'type:application',
                 'type:domain',
                 'type:infrastructure',
-                'type:contracts',
+                'type:contract',
                 'type:util',
-                              'scope:platform',
               ],
             },
             {
               sourceTag: 'type:ui',
               onlyDependOnLibsWithTags: [
-                'type:contracts',
+                'type:contract',
                 'type:util',
                 'type:ui',
               ],
             },
             {
-              sourceTag: 'type:contracts',
+              sourceTag: 'type:contract',
               onlyDependOnLibsWithTags: ['type:util'],
             },
 

@@ -8,10 +8,7 @@
     "scope:shared",
     "type:app",
     "platform:mobile",
-    "criticality:high",
-    "compliance:none",
-    "tenant-mode:multi",
-    "region:global"
+    "criticality:high"
   ],
   "targets": {
     "build": {

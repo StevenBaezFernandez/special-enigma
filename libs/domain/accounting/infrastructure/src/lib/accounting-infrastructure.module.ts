@@ -1,14 +1,13 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, JournalEntry, JournalEntryLine, FiscalYear } from '@virteex/domain-accounting-domain';
+import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, Account, JournalEntry, JournalEntryLine, FiscalYear } from '@virteex/domain-accounting-domain';
 import { MikroOrmAccountRepository } from './repositories/mikro-orm-account.repository';
 import { MikroOrmJournalEntryRepository } from './repositories/mikro-orm-journal-entry.repository';
-import { AccountSchema } from './persistence/mappings/account.mapping';
 
 @Global()
 @Module({
   imports: [
-    MikroOrmModule.forFeature([AccountSchema, JournalEntry, JournalEntryLine, FiscalYear]),
+    MikroOrmModule.forFeature([Account, JournalEntry, JournalEntryLine, FiscalYear]),
   ],
   providers: [
     {

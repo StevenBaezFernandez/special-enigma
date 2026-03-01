@@ -6,26 +6,19 @@
   "prefix": "virteex",
   "tags": [
     "scope:inventory",
-    "type:contracts",
+    "type:contract",
     "platform:agnostic",
-    "criticality:high",
-    "compliance:none",
-    "tenant-mode:multi",
-    "region:global"
+    "criticality:high"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/domain/inventory/contracts",
         "main": "libs/domain/inventory/contracts/src/index.ts",
         "tsConfig": "libs/domain/inventory/contracts/tsconfig.lib.json",
-        "assets": [
-          "libs/domain/inventory/contracts/*.md"
-        ]
+        "assets": ["libs/domain/inventory/contracts/*.md"]
       }
     }
   }

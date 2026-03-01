@@ -9,24 +9,18 @@
     "type:infrastructure",
     "platform:nest",
     "criticality:high",
-    "tenant-mode:schema",
-    "compliance:none",
-    "region:global"
+    "tenant-mode:schema"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/domain/accounting/infrastructure",
         "tsConfig": "libs/domain/accounting/infrastructure/tsconfig.lib.json",
         "packageJson": "libs/domain/accounting/infrastructure/package.json",
         "main": "libs/domain/accounting/infrastructure/src/index.ts",
-        "assets": [
-          "libs/domain/accounting/infrastructure/*.md"
-        ]
+        "assets": ["libs/domain/accounting/infrastructure/*.md"]
       }
     }
   }

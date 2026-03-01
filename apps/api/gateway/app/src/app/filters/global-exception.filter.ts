@@ -1,6 +1,5 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { DomainException, EntityNotFoundException, UnauthorizedException, ForbiddenException, ConflictException, BadRequestException } from '@virteex/kernel-exceptions';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -11,31 +10,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message: any = 'Internal server error';
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    if (exception instanceof HttpException) {
-      status = exception.getStatus();
-      message = exception.getResponse();
-    } else if (exception instanceof EntityNotFoundException) {
-      status = HttpStatus.NOT_FOUND;
-      message = exception.message;
-    } else if (exception instanceof UnauthorizedException) {
-      status = HttpStatus.UNAUTHORIZED;
-      message = exception.message;
-    } else if (exception instanceof ForbiddenException) {
-      status = HttpStatus.FORBIDDEN;
-      message = exception.message;
-    } else if (exception instanceof ConflictException) {
-      status = HttpStatus.CONFLICT;
-      message = exception.message;
-    } else if (exception instanceof BadRequestException) {
-      status = HttpStatus.BAD_REQUEST;
-      message = exception.message;
-    } else if (exception instanceof DomainException) {
-      status = HttpStatus.UNPROCESSABLE_ENTITY;
-      message = exception.message;
-    }
+    const message =
+      exception instanceof HttpException
+        ? exception.getResponse()
+        : 'Internal server error';
 
     this.logger.error(
       `Http Status: ${status} Error Message: ${JSON.stringify(message)}`,

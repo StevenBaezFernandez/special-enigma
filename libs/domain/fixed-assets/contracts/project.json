@@ -6,7 +6,7 @@
   "prefix": "virteex",
   "tags": [
     "scope:fixed-assets",
-    "type:contracts",
+    "type:contract",
     "platform:agnostic",
     "criticality:medium"
   ],

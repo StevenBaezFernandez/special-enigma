@@ -4,10 +4,10 @@
   "sourceRoot": "libs/platform/cache/src",
   "projectType": "library",
   "tags": [
+    "scope:shared",
     "type:infrastructure",
     "platform:agnostic",
-    "criticality:medium",
-    "scope:platform"
+    "criticality:medium"
   ],
   "targets": {
     "test": {

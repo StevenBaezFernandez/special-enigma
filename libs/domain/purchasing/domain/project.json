@@ -8,10 +8,7 @@
     "scope:purchasing",
     "type:domain",
     "platform:agnostic",
-    "criticality:high",
-    "compliance:none",
-    "tenant-mode:multi",
-    "region:global"
+    "criticality:high"
   ],
   "targets": {
     "build": {

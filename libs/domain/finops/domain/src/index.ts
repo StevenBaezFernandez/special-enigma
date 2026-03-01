@@ -1,1 +1,2 @@
-export * from './lib/ports/usage.repository';
+export * from './lib/finops.service';
+export * from './lib/finops.module';

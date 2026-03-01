@@ -8,24 +8,17 @@
     "scope:kernel",
     "type:util",
     "platform:agnostic",
-    "criticality:high",
-    "compliance:none",
-    "tenant-mode:multi",
-    "region:global"
+    "criticality:high"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/kernel/auth",
         "main": "libs/kernel/auth/src/index.ts",
         "tsConfig": "libs/kernel/auth/tsconfig.lib.json",
-        "assets": [
-          "libs/kernel/auth/*.md"
-        ]
+        "assets": ["libs/kernel/auth/*.md"]
       }
     }
   }

@@ -8,10 +8,7 @@
     "scope:inventory",
     "type:ui",
     "platform:web",
-    "criticality:high",
-    "compliance:none",
-    "tenant-mode:multi",
-    "region:global"
+    "criticality:high"
   ],
   "targets": {
     "test": {

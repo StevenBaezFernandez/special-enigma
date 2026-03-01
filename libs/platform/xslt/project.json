@@ -4,16 +4,14 @@
   "sourceRoot": "libs/platform/xslt/src",
   "projectType": "library",
   "tags": [
+    "scope:shared",
     "type:util",
     "platform:agnostic",
-    "criticality:medium",
-    "scope:platform"
+    "criticality:medium"
   ],
   "targets": {
     "test": {
-      "outputs": [
-        "{workspaceRoot}/coverage/libs/platform/xslt"
-      ]
+      "outputs": ["{workspaceRoot}/coverage/libs/platform/xslt"]
     },
     "build": {
       "executor": "@nx/js:tsc",

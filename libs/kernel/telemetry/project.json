@@ -8,24 +8,17 @@
     "scope:kernel",
     "type:util",
     "platform:agnostic",
-    "criticality:high",
-    "compliance:none",
-    "tenant-mode:multi",
-    "region:global"
+    "criticality:high"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/kernel/telemetry",
         "main": "libs/kernel/telemetry/src/index.ts",
         "tsConfig": "libs/kernel/telemetry/tsconfig.lib.json",
-        "assets": [
-          "libs/kernel/telemetry/*.md"
-        ]
+        "assets": ["libs/kernel/telemetry/*.md"]
       }
     }
   }

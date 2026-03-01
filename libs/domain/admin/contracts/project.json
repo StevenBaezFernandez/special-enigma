@@ -6,7 +6,7 @@
   "prefix": "virteex",
   "tags": [
     "scope:admin",
-    "type:contracts",
+    "type:contract",
     "platform:agnostic",
     "criticality:medium"
   ],

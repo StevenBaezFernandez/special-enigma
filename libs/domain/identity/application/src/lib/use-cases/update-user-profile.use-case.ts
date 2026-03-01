@@ -1,6 +1,5 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { User, UserRepository } from '@virteex/domain-identity-domain';
-import { EntityNotFoundException } from '@virteex/kernel-exceptions';
 import { UpdateUserDto } from '@virteex/contracts-identity-contracts';
 
 @Injectable()
@@ -12,7 +11,7 @@ export class UpdateUserProfileUseCase {
   async execute(userId: string, dto: UpdateUserDto): Promise<User> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new EntityNotFoundException('User', userId);
+      throw new NotFoundException('User not found');
     }
 
     user.updateProfile(dto.firstName, dto.lastName, dto.phone);

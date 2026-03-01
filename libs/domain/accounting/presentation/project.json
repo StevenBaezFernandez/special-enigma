@@ -9,24 +9,18 @@
     "type:presentation",
     "platform:nest",
     "criticality:high",
-    "tenant-mode:schema",
-    "compliance:none",
-    "region:global"
+    "tenant-mode:schema"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/domain/accounting/presentation",
         "tsConfig": "libs/domain/accounting/presentation/tsconfig.lib.json",
         "packageJson": "libs/domain/accounting/presentation/package.json",
         "main": "libs/domain/accounting/presentation/src/index.ts",
-        "assets": [
-          "libs/domain/accounting/presentation/*.md"
-        ]
+        "assets": ["libs/domain/accounting/presentation/*.md"]
       }
     }
   }

@@ -9,23 +9,17 @@
     "type:application",
     "platform:agnostic",
     "criticality:high",
-    "tenant-mode:schema",
-    "compliance:none",
-    "region:global"
+    "tenant-mode:schema"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/domain/accounting/application",
         "main": "libs/domain/accounting/application/src/index.ts",
         "tsConfig": "libs/domain/accounting/application/tsconfig.lib.json",
-        "assets": [
-          "libs/domain/accounting/application/*.md"
-        ]
+        "assets": ["libs/domain/accounting/application/*.md"]
       }
     }
   }
