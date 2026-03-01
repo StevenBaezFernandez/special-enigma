@@ -2,6 +2,9 @@
 <div class="kpi-card">
     <div class="kpi-header">
         <span class="kpi-title">{{ data.title }}</span>
+        @if (isStale()) {
+            <span class="stale-badge" title="Data might be stale">STALE</span>
+        }
     </div>
     <div class="kpi-body">
         <span class="kpi-value">{{ data.value }}</span>

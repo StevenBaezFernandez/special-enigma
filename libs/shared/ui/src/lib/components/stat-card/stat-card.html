@@ -3,7 +3,12 @@
         <lucide-icon [img]="icon" size="24"></lucide-icon>
     </div>
     <div class="card-content">
-        <span class="title">{{ data.title }}</span>
+        <div class="title-row">
+            <span class="title">{{ data.title }}</span>
+            @if (isStale()) {
+                <span class="stale-dot" title="Data might be stale"></span>
+            }
+        </div>
         <span class="value">{{ data.value }}</span>
     </div>
     <div class="card-change" [class.positive]="isPositive()" [class.negative]="!isPositive()">

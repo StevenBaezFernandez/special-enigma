@@ -73,6 +73,8 @@ jobs:
           cache: npm
       - run: npm ci --legacy-peer-deps
       - run: npm run readiness:commercial
+      - run: npm run quality:docs
+      - run: npm run quality:plugin-isolation
       - run: ./tools/enforce-production-readiness.sh
 
   security:
@@ -122,4 +124,5 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
+      - run: npm run readiness:report
       - run: ./tools/run-pocs.sh artifacts/poc-results

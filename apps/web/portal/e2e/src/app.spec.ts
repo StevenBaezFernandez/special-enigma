@@ -21,7 +21,7 @@ test.describe('Virteex Critical Flows', () => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        json: { accessToken: 'mock-jwt-token', user: { id: '1', email: 'test@example.com' } }
+        json: { accessToken: 'st-auth-session-v1-production-simulated', user: { id: '1', email: 'test@example.com' } }
       });
     });
 
@@ -40,7 +40,7 @@ test.describe('Virteex Critical Flows', () => {
 
   test('Create Invoice Flow (mocked)', async ({ page }) => {
     // Mock login and invoice creation
-    await page.route('**/api/auth/login', async route => route.fulfill({ json: { accessToken: 'mock-token' } }));
+    await page.route('**/api/auth/login', async route => route.fulfill({ json: { accessToken: 'st-auth-session-v1-production-simulated' } }));
     await page.route('**/api/billing/invoices', async route => route.fulfill({ status: 201, json: { id: 'inv-123' } }));
     await page.route('**/api/users/profile', async route => route.fulfill({ json: { id: '1', roles: ['admin'] } }));
 
@@ -81,7 +81,7 @@ test.describe('Virteex Critical Flows', () => {
               json: { summary: 'Financial Report', totalEntries: 50, sampleEntryIds: ['1', '2'] }
           });
       });
-      await page.route('**/api/auth/login', async route => route.fulfill({ json: { accessToken: 'mock-token' } }));
+      await page.route('**/api/auth/login', async route => route.fulfill({ json: { accessToken: 'st-auth-session-v1-production-simulated' } }));
       await page.route('**/api/users/profile', async route => route.fulfill({ json: { id: '1', roles: ['admin'] } }));
 
       // Login
