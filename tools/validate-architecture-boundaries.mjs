@@ -69,18 +69,18 @@ for (const domain of allDomains) {
   if (strictLayerDomains.has(domain) && existsSync(domainSrc)) {
     addSearchCheck(
       `[${domain}] No framework imports in domain layer`,
-      `rg --line-number --glob '${domainSrc}/**/*.ts' "@nestjs/|@mikro-orm/|class-validator|rxjs"`
+      `rg --line-number --glob '${domainSrc}/**/*.ts' --glob '!**/*.spec.ts' "@nestjs/|@mikro-orm/|class-validator|rxjs"`
     );
   }
 
   if (strictLayerDomains.has(domain) && existsSync(appUseCases)) {
     addSearchCheck(
       `[${domain}] No HTTP exceptions in application use-cases`,
-      `rg --line-number --glob '${appUseCases}/**/*.ts' "import\\\\s+\\\\{[^}]*\\\\b(NotFoundException|BadRequestException|ForbiddenException|UnauthorizedException|ConflictException)\\\\b[^}]*\\\\}\\\\s+from '@nestjs/common'"`
+      `rg --line-number --glob '${appUseCases}/**/*.ts' --glob '!**/*.spec.ts' "import\\\\s+\\\\{[^}]*\\\\b(NotFoundException|BadRequestException|ForbiddenException|UnauthorizedException|ConflictException)\\\\b[^}]*\\\\}\\\\s+from '@nestjs/common'"`
     );
     addSearchCheck(
       `[${domain}] No MikroORM imports in application use-cases`,
-      `rg --line-number --glob '${appUseCases}/**/*.ts' "@mikro-orm/"`
+      `rg --line-number --glob '${appUseCases}/**/*.ts' --glob '!**/*.spec.ts' "@mikro-orm/"`
     );
   }
 

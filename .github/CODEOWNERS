@@ -11,13 +11,15 @@
 /libs/shared/ @virteex/architects
 
 # Backend Services (by domain)
-/apps/*-service/ @virteex/backend-leads
-/libs/domains/*/application/ @virteex/backend-leads
-/libs/domains/*/domain/ @virteex/backend-leads
-/libs/domains/*/contracts/ @virteex/backend-leads
+/apps/api/ @virteex/backend-leads
+/apps/worker/ @virteex/backend-leads
+/libs/domain/*/application/ @virteex/backend-leads
+/libs/domain/*/domain/ @virteex/backend-leads
+/libs/domain/*/contracts/ @virteex/backend-leads
 
 # Frontend
-/apps/virteex-web/ @virteex/frontend-leads
-/apps/virteex-mobile/ @virteex/frontend-leads
-/libs/domains/*/ui/ @virteex/frontend-leads
-/libs/domains/*/presentation/ @virteex/frontend-leads
+/apps/web/ @virteex/frontend-leads
+/apps/mobile/ @virteex/frontend-leads
+/apps/desktop/ @virteex/frontend-leads
+/libs/domain/*/ui/ @virteex/frontend-leads
+/libs/domain/*/presentation/ @virteex/frontend-leads

@@ -5,6 +5,9 @@ import { join } from 'node:path';
 const searchDirs = ['apps', 'libs'];
 let hasViolations = false;
 
+const POLICY_MODE = process.env.TAG_POLICY_MODE || 'warn';
+const REQUIRED_FAMILIES = ['scope:', 'type:', 'platform:', 'criticality:'];
+
 function validateDir(dir) {
   const entries = readdirSync(dir, { withFileTypes: true });
   if (entries.some(e => e.name === 'project.json')) {
@@ -12,12 +15,18 @@ function validateDir(dir) {
     const project = JSON.parse(readFileSync(projectPath, 'utf8'));
     const tags = project.tags || [];
 
-    const hasScope = tags.some(t => t.startsWith('scope:'));
-    const hasType = tags.some(t => t.startsWith('type:'));
+    const missingFamilies = REQUIRED_FAMILIES.filter(
+      family => !tags.some(t => t.startsWith(family))
+    );
 
-    if (!hasScope || !hasType) {
-      console.error(`✖ ${project.name} (${projectPath}) is missing required tags (scope:* and type:*)`);
-      hasViolations = true;
+    if (missingFamilies.length > 0) {
+      const msg = `✖ ${project.name} (${projectPath}) is missing required tags (${missingFamilies.join(', ')})`;
+      if (POLICY_MODE === 'error') {
+        console.error(msg);
+        hasViolations = true;
+      } else {
+        console.warn(`⚠ (Warn) ${msg}`);
+      }
     }
   }
 

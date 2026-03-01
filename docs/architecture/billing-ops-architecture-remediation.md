@@ -10,16 +10,16 @@
 - Se eliminó `as any` en `BillingResolver` y se introdujo presenter dedicado.
 - En frontend ops se separaron responsabilidades de auth (`AuthApiClient`, `AuthSessionStore`, `AuthService`) y tenants (`TenantsApiClient`, `TenantsFacade`, `TenantsTableComponent`).
 - Se corrigió naming semántico `Company` -> `TenantSummary`.
-- Se formalizó el proyecto Nx de `libs/domains/billing/presentation`.
+- Se formalizó el proyecto Nx de `libs/domain/billing/presentation`.
 
 ## Enforcement agregado
 
-- Regla ESLint para prohibir imports `@nestjs/*` y `@mikro-orm/*` en `libs/domains/**/domain/src/lib/entities/**/*.ts`.
+- Regla ESLint para prohibir imports `@nestjs/*` y `@mikro-orm/*` en `libs/domain/**/domain/src/lib/entities/**/*.ts`.
 - Tagging de `ops-console-web` actualizado para reflejar scope real (`scope:admin`, `scope:identity`, `type:app`).
 
 ## Deuda residual / siguiente fase recomendada
 
 1. Migrar `PaymentMethod`, `TaxLine`, `TaxRule` a modelos de dominio puros + records ORM.
-2. Extraer `virteex-ops` a librerías Nx (`feature`, `ui`, `data-access`) fuera de `apps/frontend/virteex-ops`.
+2. Extraer `virteex-ops` a librerías Nx (`feature`, `ui`, `data-access`) fuera de `apps/web/virteex-ops`.
 3. Completar reglas anti-framework para **todo** `type:domain` cuando finalice migración de entidades legacy.
 4. Reorganizar `AppModule` de billing por módulos de bootstrap (transport, observability, persistence).

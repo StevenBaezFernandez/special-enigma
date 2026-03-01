@@ -16,13 +16,13 @@ The repository had a "Shared Monster" (`libs/shared/contracts`) that contained d
 
 ## Decision
 
-We have decided to move domain-specific contracts (Enums, DTOs, Interfaces) to their respective domain libraries: `libs/domains/<domain>/contracts`.
+We have decided to move domain-specific contracts (Enums, DTOs, Interfaces) to their respective domain libraries: `libs/domain/<domain>/contracts`.
 
 `libs/shared/contracts` should only contain truly generic contracts (e.g., `PaginationDto`, `SortOrder`).
 
 As a Proof of Concept (POC), we have migrated the **Payroll** domain contracts:
-- Consolidated duplicated Enums (`PayrollType`, `AttendanceStatus`, etc.) into `libs/domains/payroll/contracts`.
-- Updated imports in `libs/domains/payroll` to use `@virteex/contracts-payroll-contracts`.
+- Consolidated duplicated Enums (`PayrollType`, `AttendanceStatus`, etc.) into `libs/domain/payroll/contracts`.
+- Updated imports in `libs/domain/payroll` to use `@virteex/contracts-payroll-contracts`.
 - Removed Payroll Enums from `libs/shared/contracts`.
 
 ## Consequences

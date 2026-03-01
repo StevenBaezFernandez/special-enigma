@@ -39,9 +39,9 @@ El comando valida:
 El pipeline ejecuta `npm run validate:nx-tags` antes de `nx affected --target=lint`.
 
 ## Convenciones de estructura
-- Apps frontend deben vivir en `apps/frontend/*`.
-- Apps backend deben vivir en `apps/backend/*`.
-- Se movió `ops-console-web` y su e2e a `apps/frontend/virteex-ops*` para alinear ubicación física con runtime y ownership.
+- Apps frontend deben vivir en `apps/web/*`.
+- Apps backend deben vivir en `apps/api/*`.
+- Se movió `ops-console-web` y su e2e a `apps/web/virteex-ops*` para alinear ubicación física con runtime y ownership.
 
 ## Política de evolución
 Para cambios de arquitectura en tags o boundaries:
@@ -51,7 +51,7 @@ Para cambios de arquitectura en tags o boundaries:
 4. validar con `npm run validate:nx-tags` y lint affected.
 
 ## Convención apps backend como composition root
-- `apps/backend/*` debe permanecer como **app shell**: bootstrap, wiring de módulos y configuración de borde.
-- Resolvers, DTOs de transporte y validaciones de entrada se centralizan en `libs/domains/*/presentation`.
-- Adaptadores concretos (gateways/repositorios HTTP/DB) se centralizan en `libs/domains/*/infrastructure`.
+- `apps/api/*` debe permanecer como **app shell**: bootstrap, wiring de módulos y configuración de borde.
+- Resolvers, DTOs de transporte y validaciones de entrada se centralizan en `libs/domain/*/presentation`.
+- Adaptadores concretos (gateways/repositorios HTTP/DB) se centralizan en `libs/domain/*/infrastructure`.
 - Para proyectos desplegables (`projectType: application`) se exige `type:app` (excepto apps e2e que usan `type:e2e`).
