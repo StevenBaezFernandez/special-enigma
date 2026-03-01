@@ -131,8 +131,52 @@ export default [
               onlyDependOnLibsWithTags: ['scope:identity', 'scope:shared', 'scope:kernel']
             },
             {
+              sourceTag: 'scope:gateway',
+              onlyDependOnLibsWithTags: [
+                'scope:gateway',
+                'scope:accounting',
+                'scope:admin',
+                'scope:bi',
+                'scope:billing',
+                'scope:catalog',
+                'scope:crm',
+                'scope:fiscal',
+                'scope:fixed-assets',
+                'scope:identity',
+                'scope:inventory',
+                'scope:manufacturing',
+                'scope:payroll',
+                'scope:projects',
+                'scope:purchasing',
+                'scope:subscription',
+                'scope:treasury',
+                'scope:shared',
+                'scope:kernel',
+              ]
+            },
+            {
               sourceTag: 'scope:fixed-assets',
               onlyDependOnLibsWithTags: ['scope:fixed-assets', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:subscription',
+              onlyDependOnLibsWithTags: ['scope:subscription', 'scope:billing', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:notification',
+              onlyDependOnLibsWithTags: ['scope:notification', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:store',
+              onlyDependOnLibsWithTags: ['scope:store', 'scope:catalog', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:shopfloor',
+              onlyDependOnLibsWithTags: ['scope:shopfloor', 'scope:manufacturing', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:wms',
+              onlyDependOnLibsWithTags: ['scope:wms', 'scope:inventory', 'scope:shared', 'scope:kernel']
             },
             {
               sourceTag: 'scope:projects',

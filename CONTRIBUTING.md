@@ -12,6 +12,7 @@ Este documento proporciona pautas para contribuir al monorepo manteniendo la int
 
 Ejecuta estas validaciones locales:
 
+- `npm run doctor`: baseline de consistencia operativa (scripts, docs, workflows, tags, naming, e2e, backend tests).
 - `npm run arch:check`: Asegura que tu código no rompe los límites arquitectónicos.
 - `npm run quality:lint`: Valida el estilo y reglas estáticas de código.
 - `npm run test:unit`: Ejecuta las pruebas unitarias.
@@ -22,9 +23,11 @@ Ejecuta estas validaciones locales:
 Utilizamos etiquetas de proyecto (`tags` en `project.json`) para imponer gobernanza:
 
 - `scope:<dominio>`: Define a qué dominio pertenece la librería o app (ej. `scope:catalog`).
-- `layer:<capa>`: Define la capa arquitectónica (`domain`, `application`, `infrastructure`, `presentation`, `contracts`, `app`).
+- `type:<capa>`: Define la capa arquitectónica (`domain`, `application`, `infrastructure`, `presentation`, `contracts`, `app`, `e2e`, `ui`, `util`).
 - `platform:<plataforma>`: Define la plataforma objetivo (`api`, `web`, `mobile`, `desktop`, `agnostic`).
 - `criticality:<nivel>`: Define la criticidad del componente (`high`, `medium`, `low`).
+
+La taxonomía y catálogo válido se valida con `npm run arch:validate-tags` usando `config/governance/tag-catalog.json`.
 
 ## Reglas y Convenciones
 

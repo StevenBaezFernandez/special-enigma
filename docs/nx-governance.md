@@ -25,7 +25,7 @@ No se permiten familias legacy como `domain:*`.
 Se endureció el guard de taxonomía para **todo el monorepo**:
 
 ```bash
-npm run validate:nx-tags
+npm run arch:validate-tags
 ```
 
 El comando valida:
@@ -33,10 +33,10 @@ El comando valida:
 - reglas condicionales por criticidad (`criticality:high` exige `compliance:*`, `tenant-mode:*`, `region:*`);
 - formato `familia:valor` en minúsculas + kebab-case;
 - catálogo de valores permitidos para `type`, `platform`, `criticality`, `compliance`, `tenant-mode`, `region`;
-- migración gradual con `TAG_POLICY_MODE=warn|error` (por defecto `warn`, estricto en `error`).
+- migración gradual con `TAG_POLICY_MODE=warn|error` (por defecto `error`, puede degradarse temporalmente a `warn`).
 
 ### 3) CI gates
-El pipeline ejecuta `npm run validate:nx-tags` antes de `nx affected --target=lint`.
+El pipeline ejecuta `npm run governance:consistency` y `npm run arch:validate-tags` antes de `nx affected --target=lint`.
 
 ## Convenciones de estructura
 - Apps frontend deben vivir en `apps/web/*`.
@@ -48,7 +48,13 @@ Para cambios de arquitectura en tags o boundaries:
 1. actualizar convención en este documento;
 2. actualizar `tools/validate-project-tags.mjs`;
 3. ejecutar normalización de `project.json`;
-4. validar con `npm run validate:nx-tags` y lint affected.
+4. validar con `npm run arch:validate-tags` y lint affected.
+
+## Catálogo de scopes (fuente ejecutable)
+
+El catálogo canónico de `scope:*` se mantiene en `config/governance/tag-catalog.json` y se valida automáticamente en CI/local con `npm run arch:validate-tags`.
+
+`scope:fixed` queda deprecado y reemplazado por `scope:fixed-assets`.
 
 ## Convención apps backend como composition root
 - `apps/api/*` debe permanecer como **app shell**: bootstrap, wiring de módulos y configuración de borde.

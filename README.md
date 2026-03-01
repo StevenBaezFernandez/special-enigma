@@ -19,14 +19,25 @@ Para una visión detallada de la estructura, consulta el [Monorepo Map](docs/MON
 El repositorio incluye herramientas automáticas para asegurar la salud de la arquitectura:
 
 - `npm run arch:check`: Valida los límites entre capas y dominios (se ejecuta en pre-commit).
+- `npm run governance:check`: Ejecuta el baseline de gobernanza ejecutable (consistencia scripts/docs/workflows, tags, naming, backend test targets, cobertura e2e).
+- `npm run doctor`: Alias de `governance:check` para onboarding rápido.
 - `npm run quality:lint`: Ejecuta el linter en todo el monorepo.
 - `npm run quality:dep-graph`: Analiza las dependencias y detecta violaciones de límites (dependency-cruiser).
+- `npm run governance:scorecard`: Reporta scopes/tipos activos y estado de cobertura de gobernanza.
 
 ## Producción y Seguridad
 
 - `./tools/enforce-production-readiness.sh`: Bloquea placeholders de secretos y regresiones de pipeline.
 - `security:*` scripts: Generación de SBOM, firma de artefactos y validación de políticas OPA.
 - En producción quedan prohibidos los providers simulados para timbrado fiscal.
+
+## Comandos oficiales (golden path)
+
+1. `npm run doctor`
+2. `npm run quality:lint`
+3. `npm run test:unit`
+4. `npm run arch:check`
+5. `npm run readiness:check`
 
 ## CI/CD
 
@@ -40,3 +51,7 @@ El flujo principal de CI/CD se encuentra en `.github/workflows/ci-cd.yml`, integ
 - `npm run readiness:report`: genera reporte consolidado en `evidence/reports/RELEASE_READINESS_REPORT.md`.
 
 Ver también: [Release Trust Packet](docs/commercial/release-trust-packet.md) y [POC Execution Matrix](docs/readiness/poc-execution-matrix.md).
+
+## Fuente de verdad documental
+
+La clasificación normativa/operativa/referencia/histórica del monorepo está en [docs/governance/source-of-truth.md](docs/governance/source-of-truth.md).

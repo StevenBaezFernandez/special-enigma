@@ -1,0 +1,31 @@
+{
+  "rules": [
+    {
+      "pathRegex": "^apps/api/",
+      "allowedPrefixes": ["api-"]
+    },
+    {
+      "pathRegex": "^apps/web/",
+      "allowedPrefixes": ["web-"]
+    },
+    {
+      "pathRegex": "^apps/mobile/",
+      "allowedPrefixes": ["mobile-"]
+    },
+    {
+      "pathRegex": "^apps/desktop/",
+      "allowedPrefixes": ["desktop-"]
+    },
+    {
+      "pathRegex": "^apps/worker/",
+      "allowedPrefixes": ["worker-"]
+    },
+    {
+      "pathRegex": "^libs/domain/",
+      "allowedPrefixes": ["domain-", "application-", "api-", "infra-"]
+    }
+  ],
+  "exceptions": {
+    "billing-contracts": "Legacy package name retained temporarily for external import compatibility."
+  }
+}

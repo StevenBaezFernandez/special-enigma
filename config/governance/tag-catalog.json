@@ -1,0 +1,104 @@
+{
+  "requiredFamilies": [
+    "scope:",
+    "type:",
+    "platform:",
+    "criticality:"
+  ],
+  "allowedFamilies": [
+    "scope:",
+    "type:",
+    "platform:",
+    "criticality:",
+    "compliance:",
+    "tenant-mode:",
+    "region:"
+  ],
+  "allowedValues": {
+    "scope": [
+      "accounting",
+      "admin",
+      "bi",
+      "billing",
+      "catalog",
+      "crm",
+      "finops",
+      "fiscal",
+      "fixed-assets",
+      "gateway",
+      "identity",
+      "inventory",
+      "kernel",
+      "manufacturing",
+      "notification",
+      "payroll",
+      "platform",
+      "projects",
+      "purchasing",
+      "shared",
+      "shopfloor",
+      "store",
+      "subscription",
+      "treasury",
+      "wms"
+    ],
+    "type": [
+      "app",
+      "application",
+      "contracts",
+      "domain",
+      "e2e",
+      "infrastructure",
+      "kernel",
+      "lib",
+      "presentation",
+      "ui",
+      "util"
+    ],
+    "platform": [
+      "agnostic",
+      "api",
+      "backend",
+      "e2e",
+      "fiscal",
+      "identity",
+      "mobile",
+      "nest",
+      "plugin-host",
+      "scheduler",
+      "server",
+      "web"
+    ],
+    "criticality": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "compliance": [
+      "encryption-at-rest",
+      "fiscal-critical",
+      "none",
+      "pii-hashed",
+      "sensitive-personal",
+      "soc2"
+    ],
+    "tenant-mode": [
+      "multi",
+      "none",
+      "schema",
+      "shared",
+      "db"
+    ],
+    "region": [
+      "global",
+      "latam",
+      "mx",
+      "us"
+    ]
+  },
+  "criticalityHighRequires": [
+    "compliance:",
+    "tenant-mode:",
+    "region:"
+  ]
+}

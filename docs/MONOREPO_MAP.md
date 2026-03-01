@@ -2,6 +2,8 @@
 
 Este documento proporciona una visión clara de la estructura del monorepo y la ubicación de los diferentes artefactos arquitectónicos siguiendo los principios de Clean Architecture y DDD.
 
+> Clasificación documental y precedencia normativa: ver [docs/governance/source-of-truth.md](governance/source-of-truth.md).
+
 ## Estructura de Directorios Principal
 
 ```text
