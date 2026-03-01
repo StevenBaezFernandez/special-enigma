@@ -1,15 +1,8 @@
 // app/core/models/account.model.ts
+import { AccountType } from '../enums/account-type.enum';
 
 // --- TIPOS ENUMERADOS (ENUM TYPES) ---
 // Se cambian a 'enum' para que existan en tiempo de ejecución y se puedan iterar.
-
-export enum AccountType {
-    ASSET = 'ASSET',
-    LIABILITY = 'LIABILITY',
-    EQUITY = 'EQUITY',
-    REVENUE = 'REVENUE',
-    EXPENSE = 'EXPENSE',
-}
 
 export enum AccountNature {
     DEBIT = 'DEBIT',

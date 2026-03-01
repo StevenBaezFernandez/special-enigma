@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FiscalProvider } from '@virteex/domain-fiscal-domain/ports/fiscal-provider.port';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, retry, timer } from 'rxjs';
 import { SignedXml } from 'xml-crypto';
 import * as crypto from 'crypto';
 
@@ -75,12 +75,48 @@ export class SefazFiscalAdapter implements FiscalProvider {
     this.logger.log(`Transmitting NFe to SEFAZ...`);
 
     try {
-        // Fix TS4111 by using index access
         const sefazUrl = process.env['SEFAZ_API_URL'] || 'https://nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx';
-        this.logger.log(`NFe transmitted to SEFAZ at ${sefazUrl} (Simulated mTLS)`);
-    } catch (error) {
-        this.logger.error(`Transmission failed`, error);
-        throw error;
+
+        let signedXml = '';
+        if (typeof invoice === 'string') {
+            signedXml = invoice;
+        } else {
+             signedXml = await this.signInvoice(invoice);
+        }
+
+        const soapEnvelope = `
+        <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:nfe="http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4">
+           <soap:Header/>
+           <soap:Body>
+              <nfe:nfeDadosMsg>${signedXml}</nfe:nfeDadosMsg>
+           </soap:Body>
+        </soap:Envelope>`;
+
+        const response = await firstValueFrom(
+            this.httpService.post(sefazUrl, soapEnvelope, {
+                timeout: 30000,
+                headers: {
+                    'Content-Type': 'application/soap+xml;charset=utf-8',
+                }
+            }).pipe(
+                retry({
+                    count: 3,
+                    delay: (error, retryCount) => {
+                        this.logger.warn(`Retrying SEFAZ transmission (${retryCount}/3)...`);
+                        return timer(Math.pow(2, retryCount) * 1000);
+                    }
+                })
+            )
+        );
+
+        if (response.status === 200) {
+            this.logger.log('SEFAZ Transmission Successful');
+        } else {
+            throw new Error(`SEFAZ HTTP Error: ${response.status}`);
+        }
+    } catch (error: any) {
+        this.logger.error(`SEFAZ Transmission failed: ${error.message}`, error.response?.data);
+        throw new Error(`SEFAZ Transmission Error: ${error.message}`);
     }
   }
 }

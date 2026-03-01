@@ -1,3 +1,5 @@
+import { JournalEntryStatus } from '../enums/journal-entry-status.enum';
+
 export interface JournalEntry {
     id: string;
     date: string;
@@ -18,9 +20,4 @@ export interface JournalEntryLine {
     debit: number;
     credit: number;
     description?: string;
-}
-
-export enum JournalEntryStatus {
-    DRAFT = 'Draft',
-    POSTED = 'Posted',
 }

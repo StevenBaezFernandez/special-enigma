@@ -8,6 +8,8 @@ import { ServerConfigModule, IdempotencyInterceptor } from '@virteex/shared-util
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import * as depthLimit from 'graphql-depth-limit';
+import { createComplexityLimitRule } from 'graphql-query-complexity';
 import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
 import { TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/kernel-tenant';
 import { KafkaModule } from '@virteex/shared-infrastructure-kafka';

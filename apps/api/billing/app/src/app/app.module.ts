@@ -8,6 +8,8 @@ import { TerminusModule } from '@nestjs/terminus';
 import { ServerConfigModule } from '@virteex/shared-util-server-config';
 import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
+import * as depthLimit from 'graphql-depth-limit';
+import { createComplexityLimitRule } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { BillingPresentationModule } from '@virteex/billing-presentation';
 import { BillingInfrastructureModule } from '@virteex/infra-billing-infrastructure';
@@ -35,6 +37,10 @@ import { OpsReadinessService } from './ops-readiness.service';
       autoSchemaFile: {
         federation: 2,
       },
+      validationRules: [
+        depthLimit(10),
+        createComplexityLimitRule(1000)
+      ],
     }),
     KafkaModule.forRoot({
       clientId: 'billing-service',

@@ -3,7 +3,7 @@ import { NodeSDK } from '@opentelemetry/sdk-node';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { ConsoleSpanExporter, SimpleSpanProcessor, BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
-import { trace, context, Span } from '@opentelemetry/api';
+import { trace, context, Span, metrics, Meter } from '@opentelemetry/api';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
@@ -13,8 +13,10 @@ import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core'
 export class TelemetryService implements OnModuleInit, OnModuleDestroy {
   private sdk: NodeSDK;
   private readonly logger = new Logger(TelemetryService.name);
+  private meter: Meter;
 
   constructor() {
+    this.meter = metrics.getMeter('virteex-business-metrics');
     let traceExporter;
     let spanProcessor;
 
@@ -76,5 +78,20 @@ export class TelemetryService implements OnModuleInit, OnModuleDestroy {
       span.addEvent(eventName, details);
     }
     this.logger.warn(`[SECURITY] ${eventName}`, details);
+    this.recordBusinessMetric('security_events_total', 1, { event: eventName });
+  }
+
+  recordBusinessMetric(name: string, value: number, attributes: Record<string, string | number | boolean> = {}) {
+    const counter = this.meter.createCounter(name);
+    counter.add(value, attributes);
+    this.logger.log(`[METRIC] ${name}: ${value}`, attributes);
+  }
+
+  recordInvoiceEmitted(country: string, status: string) {
+    this.recordBusinessMetric('invoices_emitted_total', 1, { country, status });
+  }
+
+  recordPaymentProcessed(amount: number, currency: string, success: boolean) {
+    this.recordBusinessMetric('payments_processed_total', 1, { currency, success: String(success) });
   }
 }

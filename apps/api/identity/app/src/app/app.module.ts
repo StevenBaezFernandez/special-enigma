@@ -7,6 +7,8 @@ import { SqliteDriver } from '@mikro-orm/sqlite';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { GraphQLModule } from '@nestjs/graphql';
+import * as depthLimit from 'graphql-depth-limit';
+import { createComplexityLimitRule } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { JwtTenantMiddleware } from '@virteex/kernel-auth';
@@ -30,6 +32,10 @@ import { AppService } from './app.service';
       autoSchemaFile: {
         federation: 2,
       },
+      validationRules: [
+        depthLimit(10),
+        createComplexityLimitRule(1000)
+      ],
     }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
