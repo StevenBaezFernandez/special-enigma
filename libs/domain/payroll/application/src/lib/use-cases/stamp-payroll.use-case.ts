@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PayrollStatus, PayrollDetailType } from '@virteex/contracts-payroll-contracts';
 import {
@@ -14,6 +14,7 @@ import {
 import { XMLBuilder } from 'fast-xml-parser';
 import { XsltService } from '@virteex/shared-infrastructure-xslt';
 import * as crypto from 'crypto';
+import { EntityNotFoundException } from '@virteex/kernel-exceptions';
 
 @Injectable()
 export class StampPayrollUseCase {
@@ -31,7 +32,7 @@ export class StampPayrollUseCase {
   async execute(payrollId: string): Promise<Payroll> {
     const payroll = await this.payrollRepository.findById(payrollId);
     if (!payroll) {
-      throw new NotFoundException(`Payroll ${payrollId} not found`);
+      throw new EntityNotFoundException('Payroll', payrollId);
     }
 
     if (payroll.status === PayrollStatus.PAID) {
@@ -98,8 +99,8 @@ export class StampPayrollUseCase {
     const employeeName = `${payroll.employee.firstName} ${payroll.employee.lastName}`;
 
     // Categorize details
-    const earnings = payroll.details.getItems().filter(d => d.type === PayrollDetailType.EARNING);
-    const deductions = payroll.details.getItems().filter(d => d.type === PayrollDetailType.DEDUCTION);
+    const earnings = payroll.details.filter(d => d.type === PayrollDetailType.EARNING);
+    const deductions = payroll.details.filter(d => d.type === PayrollDetailType.DEDUCTION);
 
     // Calculate Gravado/Exento
     const percepcionesData = earnings.map(e => {

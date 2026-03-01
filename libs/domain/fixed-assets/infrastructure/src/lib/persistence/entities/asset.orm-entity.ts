@@ -1,6 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection, Cascade } from '@mikro-orm/core';
 import { AssetStatus, DepreciationMethod } from '@virteex/domain-fixed-assets-domain';
-import { DepreciationOrmEntity } from './depreciation.orm-entity';
 
 @Entity({ tableName: 'assets' })
 export class AssetOrmEntity {
@@ -34,8 +33,8 @@ export class AssetOrmEntity {
   @Enum(() => DepreciationMethod)
   depreciationMethod!: DepreciationMethod;
 
-  @OneToMany(() => DepreciationOrmEntity, depreciation => depreciation.asset, { cascade: [Cascade.ALL] })
-  depreciations = new Collection<DepreciationOrmEntity>(this);
+  @OneToMany('DepreciationOrmEntity', 'asset', { cascade: [Cascade.ALL] })
+  depreciations = new Collection<any>(this);
 
   @Property()
   createdAt!: Date;

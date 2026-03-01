@@ -5,7 +5,7 @@ import {
   AuthService, RiskEngineService
 } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
-import { UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import { UnauthorizedException, ForbiddenException } from '@virteex/kernel-exceptions';
 import { vi, Mock } from 'vitest';
 
 describe('LoginUserUseCase', () => {
