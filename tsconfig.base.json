@@ -384,6 +384,57 @@
       "@virteex/domain-subscription-domain/*": [
         "libs/domain/subscription/domain/src/*"
       ],
+      "@virteex/accounting-ui": [
+        "libs/domain/accounting/ui/src/index.ts"
+      ],
+      "@virteex/billing-ui": [
+        "libs/domain/billing/ui/src/index.ts"
+      ],
+      "@virteex/crm-ui": [
+        "libs/domain/crm/ui/src/index.ts"
+      ],
+      "@virteex/fiscal-ui": [
+        "libs/domain/fiscal/ui/src/index.ts"
+      ],
+      "@virteex/inventory-ui": [
+        "libs/domain/inventory/ui-wms/src/index.ts"
+      ],
+      "@virteex/payroll-ui": [
+        "libs/domain/payroll/ui/src/index.ts"
+      ],
+      "@virteex/purchasing-ui": [
+        "libs/domain/purchasing/ui/src/index.ts"
+      ],
+      "@virteex/treasury-ui": [
+        "libs/domain/treasury/ui/src/index.ts"
+      ],
+      "@virteex/fixed-assets-ui": [
+        "libs/domain/fixed-assets/ui/src/index.ts"
+      ],
+      "@virteex/projects-ui": [
+        "libs/domain/projects/ui/src/index.ts"
+      ],
+      "@virteex/manufacturing-ui": [
+        "libs/domain/manufacturing/ui-shopfloor/src/index.ts"
+      ],
+      "@virteex/catalog-ui": [
+        "libs/domain/catalog/ui-store/src/index.ts"
+      ],
+      "@virteex/bi-ui": [
+        "libs/domain/bi/ui/src/index.ts"
+      ],
+      "@virteex/admin-ui": [
+        "libs/domain/admin/ui/src/index.ts"
+      ],
+      "@virteex/identity-ui": [
+        "libs/domain/identity/ui/src/index.ts"
+      ],
+      "@virteex/shared-util-auth": [
+        "libs/shared/util/client/auth/src/index.ts"
+      ],
+      "@virteex/shared-util-http": [
+        "libs/shared/util/client/http/src/index.ts"
+      ],
       "@virteex/domain-treasury-domain": [
         "libs/domain/treasury/domain/src/index.ts"
       ],

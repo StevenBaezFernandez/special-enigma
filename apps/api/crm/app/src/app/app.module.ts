@@ -11,6 +11,8 @@ import { CrmPresentationModule } from '@virteex/api-crm-presentation';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
+import * as depthLimit from 'graphql-depth-limit';
+import { createComplexityLimitRule } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { FederationSupportModule } from '@virteex/shared-util-server-config';
 
@@ -19,6 +21,10 @@ import { FederationSupportModule } from '@virteex/shared-util-server-config';
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: true,
+      validationRules: [
+        depthLimit(10),
+        createComplexityLimitRule(1000)
+      ],
     }),
     FederationSupportModule,
     ConfigModule.forRoot({

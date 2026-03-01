@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FiscalProvider } from '@virteex/domain-fiscal-domain/ports/fiscal-provider.port';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, retry, timer, throwError } from 'rxjs';
 import { SignedXml } from 'xml-crypto';
 // @ts-ignore
 import { DOMParser } from '@xmldom/xmldom';
@@ -123,6 +123,11 @@ export class DianFiscalAdapter implements FiscalProvider {
   }
 
   async transmitInvoice(invoice: any): Promise<void> {
+    const isProd = process.env['NODE_ENV'] === 'production';
+    if (isProd && !process.env['FISCAL_PRIVATE_KEY']) {
+        throw new Error('DIAN Adapter: Production requires FISCAL_PRIVATE_KEY');
+    }
+
     this.logger.log(`Transmitting invoice to DIAN (SOAP)...`);
 
     try {
@@ -151,11 +156,20 @@ export class DianFiscalAdapter implements FiscalProvider {
 
         const response = await firstValueFrom(
             this.httpService.post(dianUrl, soapEnvelope, {
+                timeout: 30000,
                 headers: {
                     'Content-Type': 'text/xml;charset=UTF-8',
                     'SOAPAction': 'http://wcf.dian.colombia/iwcfDianCustomerServices/SendBillAsync'
                 }
-            })
+            }).pipe(
+                retry({
+                    count: 3,
+                    delay: (error, retryCount) => {
+                        this.logger.warn(`Retrying DIAN transmission (${retryCount}/3)...`);
+                        return timer(Math.pow(2, retryCount) * 1000);
+                    }
+                })
+            )
         );
 
         if (response.status === 200) {

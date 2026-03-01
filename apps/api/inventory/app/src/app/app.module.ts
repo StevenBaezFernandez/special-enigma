@@ -13,6 +13,8 @@ import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
 import { TenantRlsInterceptor, TenantModule } from '@virteex/kernel-tenant';
 import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
+import * as depthLimit from 'graphql-depth-limit';
+import { createComplexityLimitRule } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';

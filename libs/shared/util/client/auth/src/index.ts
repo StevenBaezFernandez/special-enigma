@@ -1,12 +1,10 @@
-export * from './lib/services/session.service';
-export * from './lib/services/token.service';
-export * from './lib/services/storage/secure-storage.service';
+import { Observable, of } from 'rxjs';
 export * from './lib/guards/auth.guard';
 export * from './lib/interceptors/auth.interceptor';
-
-export function hasPermission(userPermissions: string[] | undefined, requiredPermissions: string[]): boolean {
-  if (!userPermissions || userPermissions.length === 0) {
-    return false;
-  }
-  return requiredPermissions.every(permission => userPermissions.includes(permission));
-}
+export * from './lib/services/token.service';
+export * from './lib/services/session.service';
+export const hasPermission = (permissions: string[] | undefined, required: string[]) => {
+  if (!required || required.length === 0) return true;
+  if (!permissions) return false;
+  return required.every(p => permissions.includes(p));
+};
