@@ -15,7 +15,7 @@ module.exports = {
       name: 'domain-no-infra-app-presentation',
       severity: 'error',
       comment: 'Domain must not depend on Infrastructure, Application or Presentation',
-      from: { path: '^libs/domains/.+/domain' },
+      from: { path: '^libs/domain/.+/domain' },
       to: {
         path: [
           '^libs/.*infrastructure',

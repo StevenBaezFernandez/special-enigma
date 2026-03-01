@@ -5,8 +5,8 @@
 | Brecha | Implementación | Evidencia |
 |---|---|---|
 | JWT hardening (alg deny-by-default, kid/JWKS, revocación, anti-replay jti) | `JwtTokenService` con allowlist, validación `typ/sub/iat/nbf`, revocación y detección de reuse | `libs/kernel/auth/src/lib/services/jwt-token.service.ts` |
-| MFA obligatoria para roles privilegiados | `LoginUserUseCase` exige MFA por rol/riesgo, `StepUpGuard` para acciones críticas | `libs/domains/identity/application/src/lib/use-cases/login-user.use-case.ts` |
-| Step-up para operaciones sensibles | Decorador `@StepUp` + `StepUpGuard` en endpoints de tenants, billing e invitaciones | `libs/domains/identity/presentation/src/lib/controllers/*.ts` |
+| MFA obligatoria para roles privilegiados | `LoginUserUseCase` exige MFA por rol/riesgo, `StepUpGuard` para acciones críticas | `libs/domain/identity/application/src/lib/use-cases/login-user.use-case.ts` |
+| Step-up para operaciones sensibles | Decorador `@StepUp` + `StepUpGuard` en endpoints de tenants, billing e invitaciones | `libs/domain/identity/presentation/src/lib/controllers/*.ts` |
 | Cookies/CSRF hardening | Política centralizada de cookies + bypass M2M sin cookies + double submit estricto | `libs/kernel/auth/src/lib/cookie-policy.ts`, `csrf.middleware.ts` |
 | Aislamiento tenant fail-closed | `TenantRlsInterceptor` bloquea writes sin tenant + `SET LOCAL app.current_tenant` | `libs/kernel/tenant/src/lib/interceptors/tenant-rls.interceptor.ts` |
 | Rate limiting contextual | Tracker segmentado por tenant/user/ip/route/risk-tier | `libs/kernel/tenant/src/lib/guards/tenant-throttler.guard.ts` |
