@@ -8,17 +8,24 @@
     "scope:kernel",
     "type:util",
     "platform:agnostic",
-    "criticality:high"
+    "criticality:high",
+    "compliance:none",
+    "tenant-mode:multi",
+    "region:global"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/kernel/tenant",
         "main": "libs/kernel/tenant/src/index.ts",
         "tsConfig": "libs/kernel/tenant/tsconfig.lib.json",
-        "assets": ["libs/kernel/tenant/*.md"]
+        "assets": [
+          "libs/kernel/tenant/*.md"
+        ]
       }
     }
   }
