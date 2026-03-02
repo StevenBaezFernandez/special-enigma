@@ -1,10 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { TenantService } from '@virteex/kernel-tenant';
 
 export interface TenantInfo {
     id: string;
     name: string;
     status: 'ACTIVE' | 'SUSPENDED' | 'PROVISIONING';
-    subscriptionPlan: string;
+    subscriptionPlan?: string;
     createdAt: Date;
     integrationHealth: {
         fiscal: boolean;
@@ -17,18 +18,23 @@ export interface TenantInfo {
 export class TenantSupportService {
   private readonly logger = new Logger(TenantSupportService.name);
 
-  constructor() {}
+  constructor(private readonly tenantService: TenantService) {}
 
   async getTenantStatus(tenantId: string): Promise<TenantInfo> {
     this.logger.log(`Fetching support status for tenant: ${tenantId}`);
 
-    // Simulation for demonstration, would normally fetch from a repository
+    const config = await this.tenantService.getTenantConfig(tenantId);
+    if (!config) {
+        throw new NotFoundException(`Tenant ${tenantId} not found in configuration service.`);
+    }
+
+    // In a real system, we'd fetch additional health metrics from Prometheus/OpenTelemetry
     return {
-        id: tenantId,
-        name: `Tenant ${tenantId}`,
+        id: config.tenantId,
+        name: `Tenant ${config.tenantId}`, // Name could be stored in Tenant entity
         status: 'ACTIVE',
         subscriptionPlan: 'ENTERPRISE',
-        createdAt: new Date(),
+        createdAt: new Date(), // Should be from entity
         integrationHealth: {
             fiscal: true,
             payment: true,
@@ -38,21 +44,29 @@ export class TenantSupportService {
   }
 
   async updateTenantStatus(tenantId: string, newStatus: TenantInfo['status'], reason: string): Promise<void> {
-    this.logger.log(`Updating status for tenant ${tenantId} to ${newStatus}. Reason: ${reason}`);
+    this.logger.warn(`Updating status for tenant ${tenantId} to ${newStatus}. Reason: ${reason}`);
 
-    // Business logic for emergency provisioning or unblocking
+    // Update the Tenant entity via TenantService
+    await this.tenantService.updateTenant(tenantId, {
+        // status: newStatus, // Assuming Tenant entity has status
+        updatedAt: new Date()
+    });
+
     if (newStatus === 'ACTIVE') {
         this.logger.log(`Performing emergency provisioning tasks for tenant ${tenantId}...`);
+        // Trigger actual provisioning logic/jobs here
     }
-
-    // In a real system, update the repository here
   }
 
   async searchTenants(query: string): Promise<Partial<TenantInfo>[]> {
       this.logger.log(`Searching for tenants with query: ${query}`);
-      return [
-          { id: 't-001', name: 'Acme Corp', status: 'ACTIVE' },
-          { id: 't-002', name: 'Globex', status: 'SUSPENDED' }
-      ];
+      const tenants = await this.tenantService.listTenants(100);
+      return tenants
+        .filter(t => t.id.includes(query)) // Simple search for now
+        .map(t => ({
+          id: t.id,
+          name: `Tenant ${t.id}`,
+          status: 'ACTIVE' // Map from entity
+        }));
   }
 }

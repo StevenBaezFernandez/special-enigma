@@ -3,7 +3,7 @@ import { JournalEntryDto, JournalEntryLineDto } from '@virteex/domain-accounting
 
 export class JournalEntryMapper {
   static toDto(entity: JournalEntry): JournalEntryDto {
-    const lines: JournalEntryLineDto[] = entity.lines.getItems().map(line => ({
+    const lines: JournalEntryLineDto[] = entity.lines.map(line => ({
       id: line.id,
       accountId: line.account.id,
       debit: line.debit,

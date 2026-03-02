@@ -1,0 +1,57 @@
+import { EntitySchema } from '@mikro-orm/core';
+import { Account, JournalEntry, JournalEntryLine, FiscalYear, FiscalYearStatus } from '@virteex/domain-accounting-domain';
+import { AccountType, JournalEntryStatus } from '@virteex/domain-accounting-contracts';
+
+export const AccountSchema = new EntitySchema<Account>({
+  class: Account,
+  properties: {
+    id: { primary: true, type: 'uuid' },
+    tenantId: { type: 'string' },
+    code: { type: 'string' },
+    name: { type: 'string' },
+    type: { enum: true, items: () => AccountType },
+    parent: { kind: 'm:1', entity: () => Account, nullable: true },
+    level: { type: 'number' },
+    isControl: { type: 'boolean', default: false },
+    currency: { type: 'string', nullable: true },
+  },
+});
+
+export const JournalEntrySchema = new EntitySchema<JournalEntry>({
+  class: JournalEntry,
+  properties: {
+    id: { primary: true, type: 'uuid' },
+    tenantId: { type: 'string' },
+    date: { type: 'date' },
+    description: { type: 'string' },
+    status: { enum: true, items: () => JournalEntryStatus, default: JournalEntryStatus.DRAFT },
+    lines: { kind: '1:m', entity: () => 'JournalEntryLine', mappedBy: 'journalEntry', orphanRemoval: true },
+  },
+});
+
+export const JournalEntryLineSchema = new EntitySchema<JournalEntryLine>({
+  class: JournalEntryLine,
+  properties: {
+    id: { primary: true, type: 'uuid' },
+    journalEntry: { kind: 'm:1', entity: () => 'JournalEntry' },
+    account: { kind: 'm:1', entity: () => Account },
+    debit: { type: 'string', default: '0' },
+    credit: { type: 'string', default: '0' },
+    description: { type: 'string', nullable: true },
+    currencyId: { type: 'string', nullable: true },
+    amountCurrency: { type: 'string', nullable: true },
+    exchangeRate: { type: 'string', nullable: true },
+  },
+});
+
+export const FiscalYearSchema = new EntitySchema<FiscalYear>({
+  class: FiscalYear,
+  properties: {
+    id: { primary: true, type: 'uuid' },
+    tenantId: { type: 'string' },
+    year: { type: 'number' },
+    status: { enum: true, items: () => FiscalYearStatus, default: FiscalYearStatus.OPEN },
+    startDate: { type: 'date' },
+    endDate: { type: 'date' },
+  },
+});

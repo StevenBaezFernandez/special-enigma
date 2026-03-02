@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager } from '@mikro-orm/core';
 import { JournalEntry, JournalEntryRepository } from '@virteex/domain-accounting-domain';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
   }
 
   async findById(id: string): Promise<JournalEntry | null> {
-    return this.em.findOne(JournalEntry, { id }, { populate: ['lines'] as any });
+    return this.em.findOne(JournalEntry, { id } as any, { populate: ['lines'] as any });
   }
 
   async findAll(tenantId: string): Promise<JournalEntry[]> {
@@ -24,9 +24,9 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
   }
 
   async getBalancesByAccount(tenantId: string, startDate?: Date, endDate?: Date, dimensions?: Record<string, string>): Promise<Map<string, { debit: string; credit: string }>> {
-    const qb = (this.em as any).createQueryBuilder('JournalEntryLine', 'l');
+    const qb = this.em.createQueryBuilder('JournalEntryLine', 'l');
     qb.select(['l.account_id', 'SUM(l.debit) as total_debit', 'SUM(l.credit) as total_credit'])
-      .join('l.entry', 'e')
+      .join('l.journalEntry', 'e')
       .where({ 'e.tenantId': tenantId });
 
     if (startDate) qb.andWhere('e.date >= ?', [startDate]);
@@ -34,11 +34,9 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
 
     if (dimensions) {
         Object.entries(dimensions).forEach(([key, value]) => {
-            // Sanitize key to prevent SQL injection (only allow alphanumeric and underscore)
             if (!/^[a-zA-Z0-9_]+$/.test(key)) {
                 throw new Error(`Invalid dimension key: ${key}`);
             }
-            // Use parameterized query for the value
             qb.andWhere(`e.dimensions->>'${key}' = ?`, [value]);
         });
     }
