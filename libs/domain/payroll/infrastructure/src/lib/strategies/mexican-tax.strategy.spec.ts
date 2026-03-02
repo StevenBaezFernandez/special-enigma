@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MexicanTaxStrategy } from './mexican-tax.strategy';
 import { TAX_TABLE_REPOSITORY, MissingTaxTableException } from '@virteex/domain-payroll-domain';
@@ -19,7 +19,7 @@ describe('MexicanTaxStrategy', () => {
     }).compile();
 
     strategy = module.get<MexicanTaxStrategy>(MexicanTaxStrategy);
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should calculate tax correctly for MONTHLY frequency', async () => {
@@ -31,8 +31,6 @@ describe('MexicanTaxStrategy', () => {
     mockTaxTableRepository.findForYear.mockResolvedValue(tables);
 
     const income = 10000;
-    // Calculation: (10000 - 6332.06) * 0.1088 + 371.83 = 770.90
-
     const result = await strategy.calculateTax(income, new Date('2024-01-01'), 'MONTHLY');
 
     expect(mockTaxTableRepository.findForYear).toHaveBeenCalledWith(2024, 'MONTHLY');

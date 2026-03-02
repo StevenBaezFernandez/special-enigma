@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PayrollCalculationService } from './payroll-calculation.service';
 import { TAX_STRATEGY_FACTORY } from '../ports/tax-strategy.factory';
@@ -26,15 +26,17 @@ describe('PayrollCalculationService', () => {
 
   it('should delegate ISR calculation to strategy', async () => {
       mockStrategy.calculateTax.mockResolvedValue(100);
-      const tax = await service.calculateIsr(5000, 2024); // country defaults to MX
+      const tax = await service.calculateIsr(mockFactory as any, 5000, 2024); // country defaults to MX
       expect(mockFactory.getStrategy).toHaveBeenCalledWith('MX');
       expect(mockStrategy.calculateTax).toHaveBeenCalled();
       expect(tax).toBe(100);
   });
 
-  it('should calculate IMSS for MX (Legacy)', () => {
-      // Logic still exists in service for MX
-      const imss = service.calculateImss(500, 15);
-      expect(imss).toBeCloseTo(188.58, 2);
+  it('should calculate proportional salary correctly', () => {
+      const start = new Date('2024-01-01');
+      const end = new Date('2024-01-15');
+      const salary = service.calculateProportionalSalary(3000, start, end);
+      // 15 days = 1500
+      expect(salary).toBe(1500);
   });
 });

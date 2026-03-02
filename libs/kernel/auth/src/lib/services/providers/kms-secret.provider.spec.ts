@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { KmsSecretProvider } from './kms-secret.provider';
 
 describe('KmsSecretProvider', () => {

@@ -5,12 +5,16 @@ import { firstValueFrom, retry, timer } from 'rxjs';
 import { SignedXml } from 'xml-crypto';
 import * as crypto from 'crypto';
 import * as https from 'https';
+import * as libxmljs from 'libxmljs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class SefazFiscalAdapter implements FiscalProvider {
   private readonly logger = new Logger(SefazFiscalAdapter.name);
   private privateKey: string;
   private certificate: string;
+  private xsdSchema: libxmljs.Document;
 
   constructor(private readonly httpService: HttpService) {
     const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
@@ -30,10 +34,61 @@ export class SefazFiscalAdapter implements FiscalProvider {
     if (!this.privateKey) {
       throw new Error('FISCAL_PRIVATE_KEY not provided. SEFAZ adapter requires a valid persistent private key.');
     }
+
+    if (isProd && !this.certificate) {
+      throw new Error('FATAL: FISCAL_CERTIFICATE is mandatory for SEFAZ in production (mTLS).');
+    }
+
+    try {
+        const schemaPath = path.join(__dirname, '../schemas/nfe-4.00.xsd');
+        if (fs.existsSync(schemaPath)) {
+            const xsdContent = fs.readFileSync(schemaPath, 'utf8');
+            this.xsdSchema = libxmljs.parseXml(xsdContent);
+        } else {
+            this.logger.error(`SEFAZ XSD Schema not found at ${schemaPath}. Blocking fiscal transmission.`);
+            if (isProd) {
+                throw new Error('FATAL: SEFAZ XSD schema missing in production.');
+            }
+        }
+    } catch (e) {
+        this.logger.error('Failed to load SEFAZ XSD schema', e);
+        if (isProd) throw e;
+    }
   }
 
   async validateInvoice(invoice: any): Promise<boolean> {
     this.logger.log(`Validating invoice ${invoice?.id} with SEFAZ (Brazil)...`);
+
+    if (!invoice) {
+        throw new Error('Invoice is null or undefined');
+    }
+
+    let xmlContent = '';
+    if (typeof invoice === 'string') {
+        xmlContent = invoice;
+    } else {
+        this.logger.warn('validateInvoice received an object, structural validation requires XML string. Falling back to basic check.');
+        return !!invoice.id;
+    }
+
+    if (!this.xsdSchema) {
+        this.logger.error('XSD Schema not loaded. Structural validation cannot proceed.');
+        return false;
+    }
+
+    try {
+        const xmlDoc = libxmljs.parseXml(xmlContent);
+        const isValid = xmlDoc.validate(this.xsdSchema);
+        if (!isValid) {
+            this.logger.error('NFe XML Validation Failed', xmlDoc.validationErrors);
+            throw new Error(`NFe XML Validation Failed: ${xmlDoc.validationErrors.map(e => e.message).join(', ')}`);
+        }
+        this.logger.log('NFe XML Validation Successful');
+    } catch (e: any) {
+        this.logger.error(`NFe Validation Error: ${e.message}`);
+        throw e;
+    }
+
     return true;
   }
 
@@ -74,10 +129,17 @@ export class SefazFiscalAdapter implements FiscalProvider {
   }
 
   async transmitInvoice(invoice: any): Promise<void> {
-    this.logger.log(`Transmitting NFe to SEFAZ with mTLS...`);
+    this.logger.log(`Starting NFe transmission to SEFAZ...`);
 
     try {
+        // Enforce structural validation before transmission
+        const isValid = await this.validateInvoice(invoice);
+        if (!isValid) {
+            throw new Error('Invoice failed structural validation prior to transmission.');
+        }
+
         const sefazUrl = process.env['SEFAZ_API_URL'] || 'https://nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx';
+        this.logger.debug(`Target SEFAZ Endpoint: ${sefazUrl}`);
 
         let signedXml = '';
         if (typeof invoice === 'string') {

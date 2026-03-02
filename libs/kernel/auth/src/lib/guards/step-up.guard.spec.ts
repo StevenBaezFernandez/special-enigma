@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { StepUpGuard } from './step-up.guard';
@@ -17,7 +17,7 @@ describe('StepUpGuard', () => {
     } as ExecutionContext);
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     reflector.getAllAndOverride = vi.fn().mockReturnValue({ action: 'billing', maxAgeSeconds: 300 });
   });
 

@@ -3,13 +3,23 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/kernel/exceptions/src",
   "projectType": "library",
+  "prefix": "virteex",
   "tags": [
     "scope:kernel",
-    "type:kernel",
-    "platform:server",
+    "type:util",
+    "platform:agnostic",
     "criticality:medium"
   ],
   "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../coverage/libs/kernel/exceptions"
+      }
+    },
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": [
@@ -24,14 +34,8 @@
         ]
       }
     },
-    "test": {
-      "executor": "@nx/vitest:test",
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
-      "options": {
-        "reportsDirectory": "../../../coverage/libs/kernel/exceptions"
-      }
+    "lint": {
+      "executor": "@nx/eslint:lint"
     }
   }
 }

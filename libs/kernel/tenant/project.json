@@ -14,6 +14,15 @@
     "region:global"
   ],
   "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../coverage/libs/kernel/tenant"
+      }
+    },
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": [
@@ -27,6 +36,9 @@
           "libs/kernel/tenant/*.md"
         ]
       }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
     }
   }
 }

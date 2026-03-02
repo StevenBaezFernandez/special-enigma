@@ -1,17 +1,30 @@
-import { Injectable } from '@nestjs/common';
-
-export interface StatementLine {
-  date: Date;
-  amount: number;
-  description: string;
-  reference?: string;
-}
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import { BankStatementParser, BANK_STATEMENT_PARSER } from '../ports/bank-statement-parser.port';
+import { StatementLine } from '@virteex/domain-treasury-contracts';
 
 @Injectable()
-export class BankStatementParser {
+export class BankStatementParserService {
+  private readonly logger = new Logger(BankStatementParserService.name);
+
+  constructor(
+    @Inject(BANK_STATEMENT_PARSER) private readonly parsers: BankStatementParser[]
+  ) {}
+
+  async parseFile(filename: string, content: Buffer | string): Promise<StatementLine[]> {
+    const parser = this.parsers.find(p => p.supports(filename));
+
+    if (!parser) {
+      this.logger.error(`No suitable parser found for file: ${filename}`);
+      throw new Error(`Unsupported bank statement format: ${filename}`);
+    }
+
+    const result = await parser.parse(content);
+    this.logger.log(`Parsed ${result.lines.length} entries from ${filename} (${result.metadata['format']})`);
+    return result.lines;
+  }
+
   parseCsv(content: string): StatementLine[] {
     const lines = content.split('\n').filter(l => l.trim().length > 0);
-    // Assuming format: date,amount,description,reference
     return lines.map(line => {
       const parts = line.split(',');
       return {
@@ -21,32 +34,5 @@ export class BankStatementParser {
         reference: parts[3]
       };
     });
-  }
-
-  parseOfx(content: string): StatementLine[] {
-     // Simplified OFX parsing logic for POC
-     const regex = /<STMTTRN>([\s\S]*?)<\/STMTTRN>/g;
-     const lines: StatementLine[] = [];
-     let match;
-
-     while ((match = regex.exec(content)) !== null) {
-        const trn = match[1];
-        const dateMatch = trn.match(/<DTPOSTED>(\d{8})/);
-        const amountMatch = trn.match(/<TRNAMT>([-.\d]+)/);
-        const nameMatch = trn.match(/<NAME>([^<]+)/);
-        const refMatch = trn.match(/<FITID>([^<]+)/);
-
-        if (dateMatch && amountMatch) {
-            const dateStr = dateMatch[1];
-            const date = new Date(`${dateStr.substring(0,4)}-${dateStr.substring(4,6)}-${dateStr.substring(6,8)}`);
-            lines.push({
-                date,
-                amount: parseFloat(amountMatch[1]),
-                description: nameMatch ? nameMatch[1].trim() : '',
-                reference: refMatch ? refMatch[1].trim() : undefined
-            });
-        }
-     }
-     return lines;
   }
 }
