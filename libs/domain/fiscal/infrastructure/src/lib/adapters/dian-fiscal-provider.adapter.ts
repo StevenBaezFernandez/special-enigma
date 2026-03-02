@@ -84,7 +84,10 @@ export class DianFiscalAdapter implements FiscalProvider {
           xmlContent = `<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"><cbc:ID>${invoice?.id || 'TEST'}</cbc:ID></Invoice>`;
       }
 
-      const certificate = process.env['FISCAL_CERTIFICATE'] || 'MII...';
+      const certificate = process.env['FISCAL_CERTIFICATE'];
+      if (!certificate) {
+          throw new Error('FISCAL_CERTIFICATE is missing. Required for DIAN signing.');
+      }
       const certBuffer = Buffer.from(certificate, 'base64');
       const certHash = crypto.createHash('sha256').update(certBuffer).digest('base64');
 
@@ -93,6 +96,16 @@ export class DianFiscalAdapter implements FiscalProvider {
       const signedPropertiesId = `SignedProperties-${Math.random().toString(36).substring(7)}`;
 
       const sig = new SignedXml();
+
+      const certSerialNumber = process.env['FISCAL_CERT_SERIAL_NUMBER'];
+      if (!certSerialNumber && process.env['NODE_ENV'] === 'production') {
+          throw new Error('FISCAL_CERT_SERIAL_NUMBER is mandatory in production for DIAN compliance.');
+      }
+
+      const policyHash = process.env['FISCAL_POLICY_HASH'];
+      if (!policyHash && process.env['NODE_ENV'] === 'production') {
+          throw new Error('FISCAL_POLICY_HASH is mandatory in production for DIAN compliance.');
+      }
 
       // XAdES Object
       const xadesObject = `
@@ -107,8 +120,8 @@ export class DianFiscalAdapter implements FiscalProvider {
                     <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">${certHash}</ds:DigestValue>
                   </xades:CertDigest>
                   <xades:IssuerSerial>
-                    <ds:X509IssuerName xmlns:ds="http://www.w3.org/2000/09/xmldsig#">DIAN-AUTORIDAD-SUB-CA</ds:X509IssuerName>
-                    <ds:X509SerialNumber xmlns:ds="http://www.w3.org/2000/09/xmldsig#">123456789</ds:X509SerialNumber>
+                    <ds:X509IssuerName xmlns:ds="http://www.w3.org/2000/09/xmldsig#">${process.env['FISCAL_CERT_ISSUER'] || 'DIAN-AUTORIDAD-SUB-CA'}</ds:X509IssuerName>
+                    <ds:X509SerialNumber xmlns:ds="http://www.w3.org/2000/09/xmldsig#">${certSerialNumber || 'PLACEHOLDER-SERIAL'}</ds:X509SerialNumber>
                   </xades:IssuerSerial>
                 </xades:Cert>
               </xades:SigningCertificate>
@@ -119,7 +132,7 @@ export class DianFiscalAdapter implements FiscalProvider {
                   </xades:SigPolicyId>
                   <xades:SigPolicyHash>
                     <ds:DigestMethod xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                    <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">dMoY+vUqVv8D7/lWv/9A3q9v6lW=</ds:DigestValue>
+                    <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">${policyHash || 'PLACEHOLDER-POLICY-HASH'}</ds:DigestValue>
                   </xades:SigPolicyHash>
                 </xades:SignaturePolicyId>
               </xades:SignaturePolicyIdentifier>

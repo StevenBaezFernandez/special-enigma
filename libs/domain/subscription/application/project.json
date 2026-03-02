@@ -32,6 +32,7 @@
         "{options.reportsDirectory}"
       ],
       "options": {
+        "config": "libs/domain/subscription/application/vitest.config.ts",
         "reportsDirectory": "../../../../coverage/libs/domain/subscription/application"
       }
     }

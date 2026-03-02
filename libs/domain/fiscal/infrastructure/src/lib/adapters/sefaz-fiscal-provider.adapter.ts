@@ -28,13 +28,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
     }
 
     if (!this.privateKey) {
-      this.logger.warn('FISCAL_PRIVATE_KEY not provided. Generating ephemeral RSA key for simulation (SEFAZ).');
-      const { privateKey } = crypto.generateKeyPairSync('rsa', {
-        modulusLength: 2048,
-        publicKeyEncoding: { type: 'spki', format: 'pem' },
-        privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
-      });
-      this.privateKey = privateKey;
+      throw new Error('FISCAL_PRIVATE_KEY not provided. SEFAZ adapter requires a valid persistent private key.');
     }
   }
 

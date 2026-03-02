@@ -32,6 +32,7 @@
         "{options.reportsDirectory}"
       ],
       "options": {
+        "config": "libs/domain/fiscal/application/vitest.config.ts",
         "reportsDirectory": "../../../../coverage/libs/domain/fiscal/application"
       }
     }

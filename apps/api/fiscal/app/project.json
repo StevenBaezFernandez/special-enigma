@@ -87,6 +87,7 @@
         "{options.reportsDirectory}"
       ],
       "options": {
+        "config": "apps/api/fiscal/app/vitest.config.ts",
         "reportsDirectory": "../../coverage/apps/api-fiscal-app"
       }
     }
