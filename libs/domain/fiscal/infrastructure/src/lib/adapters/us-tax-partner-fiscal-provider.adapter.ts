@@ -46,13 +46,8 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
 
   private async callPartner(endpoint: string, payload: unknown): Promise<any> {
     if (!this.partnerUrl || !this.partnerApiKey) {
-      if (this.nodeEnv === 'production') {
-        this.logger.error(`CRITICAL: US tax partner integration is missing in production! Endpoint: ${endpoint}`);
-        throw new Error('US tax partner integration is missing in production. Check US_TAX_PARTNER_URL and US_TAX_PARTNER_API_KEY.');
-      }
-
-      this.logger.warn(`US tax partner not configured, returning development stub for ${endpoint}.`);
-      return { valid: true, signature: `us-partner-dev-signature-${Date.now()}` };
+      this.logger.error(`CRITICAL: US tax partner integration is not configured! Endpoint: ${endpoint}`);
+      throw new Error('US tax partner integration is missing. US fiscal operations are blocked until US_TAX_PARTNER_URL and US_TAX_PARTNER_API_KEY are configured.');
     }
 
     try {

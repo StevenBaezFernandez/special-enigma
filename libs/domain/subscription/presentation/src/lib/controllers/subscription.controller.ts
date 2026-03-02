@@ -11,7 +11,8 @@ import {
   CreateCheckoutSessionUseCase,
   CreateCheckoutSessionDto,
   CreatePortalSessionUseCase,
-  CreatePortalSessionDto
+  CreatePortalSessionDto,
+  GetSubscriptionPlansUseCase
 } from '@virteex/domain-subscription-application';
 
 @ApiTags('Subscription')
@@ -24,7 +25,8 @@ export class SubscriptionController {
     private readonly changeSubscriptionPlanUseCase: ChangeSubscriptionPlanUseCase,
     private readonly getSubscriptionUseCase: GetSubscriptionUseCase,
     private readonly createCheckoutSessionUseCase: CreateCheckoutSessionUseCase,
-    private readonly createPortalSessionUseCase: CreatePortalSessionUseCase
+    private readonly createPortalSessionUseCase: CreatePortalSessionUseCase,
+    private readonly getSubscriptionPlansUseCase: GetSubscriptionPlansUseCase
   ) {}
 
   @Post()
@@ -71,5 +73,11 @@ export class SubscriptionController {
   async findOne(@CurrentTenant() tenantId: string, @Query('tenantId') queryTenantId?: string) {
     const tid = tenantId || queryTenantId || 'default-tenant';
     return await this.getSubscriptionUseCase.execute(tid);
+  }
+
+  @Get('plans')
+  @ApiOperation({ summary: 'Get available subscription plans' })
+  async getPlans() {
+    return await this.getSubscriptionPlansUseCase.execute();
   }
 }

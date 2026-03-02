@@ -36,6 +36,15 @@ export class ProcessStripeWebhookUseCase {
       case 'checkout.session.completed':
         await this.eventEmitter.emitAsync('stripe.checkout.session.completed', event.data.object);
         break;
+      case 'charge.dispute.created':
+        await this.eventEmitter.emitAsync('stripe.charge.dispute.created', event.data.object);
+        break;
+      case 'charge.refunded':
+        await this.eventEmitter.emitAsync('stripe.charge.refunded', event.data.object);
+        break;
+      case 'charge.dispute.closed':
+        await this.eventEmitter.emitAsync('stripe.charge.dispute.closed', event.data.object);
+        break;
       default:
         this.logger.debug(`Unhandled event type: ${event.type}`);
     }
