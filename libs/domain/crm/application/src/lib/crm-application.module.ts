@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CrmInfrastructureModule } from '@virteex/infra-crm-infrastructure';
+import { CrmInfrastructureModule } from '@virteex/domain-crm-infrastructure';
 import { CreateSaleUseCase } from './use-cases/create-sale.use-case';
 import { ListSalesUseCase } from './use-cases/list-sales.use-case';
 import { CreateCustomerUseCase } from './use-cases/create-customer.use-case';

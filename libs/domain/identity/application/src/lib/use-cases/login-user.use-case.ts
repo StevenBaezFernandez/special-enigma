@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { LoginUserDto, LoginResponseDto } from '@virteex/contracts-identity-contracts';
+import { LoginUserDto, LoginResponseDto } from '@virteex/domain-identity-contracts';
 import {
   UserRepository, AuditLogRepository, AuditLog,
   RiskEngineService, AuthService

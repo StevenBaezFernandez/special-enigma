@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CloseFiscalPeriodUseCase } from './close-fiscal-period.use-case';
 import { JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
@@ -10,12 +11,12 @@ describe('CloseFiscalPeriodUseCase', () => {
 
   beforeEach(async () => {
     journalRepo = {
-      getBalancesByAccount: jest.fn(),
-      create: jest.fn(),
+      getBalancesByAccount: vi.fn(),
+      create: vi.fn(),
     };
     accountRepo = {
-      findAll: jest.fn(),
-      findById: jest.fn(),
+      findAll: vi.fn(),
+      findById: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

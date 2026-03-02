@@ -7,7 +7,7 @@ import {
   UpdateWarehouseUseCase,
   DeleteWarehouseUseCase,
   CreateWarehouseDto,
-} from '@virteex/application-inventory-application';
+} from '@virteex/domain-inventory-application';
 import { JwtAuthGuard, CurrentUser, UserPayload } from '@virteex/kernel-auth';
 import { UpdateWarehouseBodyDto } from './dto/update-warehouse-body.dto';
 import { resolveTenantId } from '../security/tenant-context.resolver';

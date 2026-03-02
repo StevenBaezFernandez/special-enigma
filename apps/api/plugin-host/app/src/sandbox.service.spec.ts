@@ -1,7 +1,13 @@
 import { SandboxService } from './sandbox.service';
+import { PluginAdmissionService } from './services/plugin-admission.service';
 
 describe('SandboxService', () => {
   let sandbox: SandboxService;
+
+  beforeAll(() => {
+    process.env.ALLOW_EPHEMERAL_PLUGIN_KEYS = 'true';
+    new PluginAdmissionService(); // Initialize public key
+  });
 
   beforeEach(() => {
     sandbox = new SandboxService();
@@ -11,20 +17,29 @@ describe('SandboxService', () => {
     // SandboxService is stateless and does not expose dispose()
   });
 
-  it('should execute valid code', async () => {
-    const result = await sandbox.run('const a = 1; const b = 2;');
+  it('should execute valid code with valid signature', async () => {
+    const admission = new PluginAdmissionService();
+    const code = 'const a = 1; const b = 2;';
+    const validation = await admission.validatePlugin({ name: 'test', code });
+    const result = await sandbox.run(code, validation.signature);
     expect(result.success).toBe(true);
   });
 
   it('should handle errors gracefully', async () => {
-    const result = await sandbox.run('throw new Error("Boom");');
+    const admission = new PluginAdmissionService();
+    const code = 'throw new Error("Boom");';
+    const validation = await admission.validatePlugin({ name: 'test', code });
+    const result = await sandbox.run(code, validation.signature);
     expect(result.success).toBe(false);
     expect(result.error).toContain('Boom');
     expect(result.forensicData).toBeDefined();
   });
 
   it('should timeout infinite loops', async () => {
-    const result = await sandbox.run('while(true) {}', 50); // Short timeout
+    const admission = new PluginAdmissionService();
+    const code = 'while(true) {}';
+    const validation = await admission.validatePlugin({ name: 'test', code });
+    const result = await sandbox.run(code, validation.signature, 50); // Short timeout
     expect(result.success).toBe(false);
     expect(result.error).toContain('timed out');
     expect(result.forensicData).toBeDefined();

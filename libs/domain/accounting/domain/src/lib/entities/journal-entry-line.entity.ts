@@ -1,6 +1,8 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import type { JournalEntry } from './journal-entry.entity';
 import { Account } from './account.entity';
 
+@Entity()
 export class JournalEntryLine {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
@@ -15,6 +17,7 @@ export class JournalEntryLine {
 
     credit = '0';
 
+  @Property()
     description?: string;
 
     currencyId?: string;

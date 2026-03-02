@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Patch, Body, Param, Query, Logger, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
-import { TenantSupportService } from '@virteex/application-admin-application';
+import { TenantSupportService } from '@virteex/domain-admin-application';
 
 @ApiTags('Admin/Tenants')
 @Controller('admin/tenants')

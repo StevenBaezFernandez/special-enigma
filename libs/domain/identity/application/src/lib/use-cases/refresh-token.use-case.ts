@@ -1,7 +1,7 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
 import * as crypto from 'crypto';
-import { RefreshTokenDto, LoginResponseDto } from '@virteex/contracts-identity-contracts';
+import { RefreshTokenDto, LoginResponseDto } from '@virteex/domain-identity-contracts';
 import {
   SessionRepository,
   AuditLogRepository,

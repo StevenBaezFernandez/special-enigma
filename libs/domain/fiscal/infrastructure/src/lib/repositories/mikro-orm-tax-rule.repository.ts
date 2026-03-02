@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { FiscalTaxRule } from '@virteex/domain-fiscal-domain/entities/fiscal-tax-rule.entity';
-import { TaxRuleRepository } from '@virteex/domain-fiscal-domain/ports/tax-rule.repository';
+import { FiscalTaxRule } from '@virteex/domain-fiscal-domain';
+import { TaxRuleRepository } from '@virteex/domain-fiscal-domain/tax-rule.repository';
 
 @Injectable()
 export class MikroOrmTaxRuleRepository implements TaxRuleRepository {

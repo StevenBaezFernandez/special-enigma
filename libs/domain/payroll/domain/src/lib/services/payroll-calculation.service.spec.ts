@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PayrollCalculationService } from './payroll-calculation.service';
 import { TAX_STRATEGY_FACTORY } from '../ports/tax-strategy.factory';
@@ -5,11 +6,11 @@ import { TAX_STRATEGY_FACTORY } from '../ports/tax-strategy.factory';
 describe('PayrollCalculationService', () => {
   let service: PayrollCalculationService;
   const mockStrategy = {
-      calculateTax: jest.fn(),
-      calculatePayrollTaxes: jest.fn()
+      calculateTax: vi.fn(),
+      calculatePayrollTaxes: vi.fn()
   };
   const mockFactory = {
-      getStrategy: jest.fn().mockReturnValue(mockStrategy)
+      getStrategy: vi.fn().mockReturnValue(mockStrategy)
   };
 
   beforeEach(async () => {

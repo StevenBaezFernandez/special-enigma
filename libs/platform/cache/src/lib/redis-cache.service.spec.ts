@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RedisCacheService } from './redis-cache.service';
 import Redis from 'ioredis';
@@ -9,10 +10,10 @@ describe('RedisCacheService', () => {
   beforeEach(async () => {
     // Mock Redis client
     redisClient = {
-      get: jest.fn(),
-      set: jest.fn(),
-      del: jest.fn(),
-      disconnect: jest.fn(),
+      get: vi.fn(),
+      set: vi.fn(),
+      del: vi.fn(),
+      disconnect: vi.fn(),
     } as unknown as jest.Mocked<Redis>;
 
     const module: TestingModule = await Test.createTestingModule({

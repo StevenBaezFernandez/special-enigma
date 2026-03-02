@@ -1,9 +1,10 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MexicanTaxStrategy } from './mexican-tax.strategy';
 import { TAX_TABLE_REPOSITORY, MissingTaxTableException } from '@virteex/domain-payroll-domain';
 
 const mockTaxTableRepository = {
-  findForYear: jest.fn(),
+  findForYear: vi.fn(),
 };
 
 describe('MexicanTaxStrategy', () => {

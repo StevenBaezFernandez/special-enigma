@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-// import { BiInfrastructureModule } from '@virteex/infra-bi-infrastructure';
+// import { BiInfrastructureModule } from '@virteex/domain-bi-infrastructure';
 import { BI_REPORT_REPOSITORY } from '@virteex/domain-bi-domain';
 import { GenerateReportUseCase } from './use-cases/generate-report.use-case';
 import { GetTopProductsUseCase } from './use-cases/get-top-products.use-case';

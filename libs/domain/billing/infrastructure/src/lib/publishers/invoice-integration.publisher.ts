@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClientKafka } from '@nestjs/microservices';
 import { Invoice, InvoiceStampedEvent } from '@virteex/domain-billing-domain';
-import { InvoiceIntegrationPublisherPort } from '@virteex/application-billing-application';
+import { InvoiceIntegrationPublisherPort } from '@virteex/domain-billing-application';
 
 @Injectable()
 export class InvoiceIntegrationPublisher implements InvoiceIntegrationPublisherPort {

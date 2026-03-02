@@ -1,12 +1,17 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 
 export class ProductionOrder {
   id: string = v4();
+  @Property()
   tenantId!: string;
   productSku!: string;
   warehouseId!: string;
+  @Property()
   quantity!: number;
+  @Property()
   status!: string;
+  @Property()
   dueDate!: Date;
   components: ProductionOrderComponent[] = [];
 
@@ -22,6 +27,7 @@ export class ProductionOrder {
 
 export class ProductionOrderComponent {
   id: string = v4();
+  @Property()
   tenantId!: string;
   productionOrder!: ProductionOrder;
   componentProductSku!: string;

@@ -1,10 +1,13 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 export class Product {
   id!: number;
 
+  @Property()
   tenantId!: string; // Managed by TenantSubscriber, not by user
 
   sku!: string;
 
+  @Property()
   name!: string;
 
   price!: string;

@@ -1,9 +1,10 @@
+import { vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 import { CatalogProductReadGateway } from './catalog-product-read.gateway';
 
 describe('CatalogProductReadGateway', () => {
-  const httpService = { get: jest.fn() } as any;
-  const configService = { get: jest.fn() } as any;
+  const httpService = { get: vi.fn() } as any;
+  const configService = { get: vi.fn() } as any;
 
   beforeEach(() => {
     jest.clearAllMocks();

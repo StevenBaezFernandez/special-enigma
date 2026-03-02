@@ -2,7 +2,7 @@ import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { User, UserRepository, AuthService, UserInvitedEvent } from '@virteex/domain-identity-domain';
-import { InviteUserDto } from '@virteex/contracts-identity-contracts';
+import { InviteUserDto } from '@virteex/domain-identity-contracts';
 import { randomUUID } from 'crypto';
 
 @Injectable()

@@ -1,11 +1,12 @@
+import { vi } from 'vitest';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { StepUpGuard } from './step-up.guard';
 import { TelemetryService } from '@virteex/kernel-telemetry';
 
 describe('StepUpGuard', () => {
-  const reflector = { getAllAndOverride: jest.fn() } as any as Reflector;
-  const telemetry = { recordSecurityEvent: jest.fn() } as any as TelemetryService;
+  const reflector = { getAllAndOverride: vi.fn() } as any as Reflector;
+  const telemetry = { recordSecurityEvent: vi.fn() } as any as TelemetryService;
   const guard = new StepUpGuard(reflector, telemetry);
 
   const mockContext = (user: any): ExecutionContext =>
@@ -17,11 +18,11 @@ describe('StepUpGuard', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    reflector.getAllAndOverride = jest.fn().mockReturnValue({ action: 'billing', maxAgeSeconds: 300 });
+    reflector.getAllAndOverride = vi.fn().mockReturnValue({ action: 'billing', maxAgeSeconds: 300 });
   });
 
   it('allows when no step-up metadata', () => {
-    reflector.getAllAndOverride = jest.fn().mockReturnValue(undefined);
+    reflector.getAllAndOverride = vi.fn().mockReturnValue(undefined);
     expect(guard.canActivate(mockContext({}))).toBe(true);
   });
 

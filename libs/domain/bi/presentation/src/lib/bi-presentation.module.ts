@@ -6,10 +6,10 @@ import {
   GenerateReportUseCase,
   GetTopProductsUseCase,
   GetDashboardStatsUseCase
-} from '@virteex/application-bi-application';
-import { BiInfrastructureModule } from '@virteex/infra-bi-infrastructure'; // Correct import path assumption or relative
-import { AccountingInfrastructureModule } from '@virteex/infra-accounting-infrastructure';
-import { CrmInfrastructureModule } from '@virteex/infra-crm-infrastructure';
+} from '@virteex/domain-bi-application';
+import { BiInfrastructureModule } from '@virteex/domain-bi-infrastructure'; // Correct import path assumption or relative
+import { AccountingInfrastructureModule } from '@virteex/domain-accounting-infrastructure';
+import { CrmInfrastructureModule } from '@virteex/domain-crm-infrastructure';
 
 @Module({
   imports: [BiApplicationModule, BiInfrastructureModule, AccountingInfrastructureModule, CrmInfrastructureModule],

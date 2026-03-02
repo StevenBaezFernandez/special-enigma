@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GenerateFinancialReportUseCase } from './generate-financial-report.use-case';
 import { JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
@@ -10,10 +11,10 @@ describe('GenerateFinancialReportUseCase', () => {
 
   beforeEach(async () => {
     journalRepo = {
-      getBalancesByAccount: jest.fn(),
+      getBalancesByAccount: vi.fn(),
     };
     accountRepo = {
-      findAll: jest.fn(),
+      findAll: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

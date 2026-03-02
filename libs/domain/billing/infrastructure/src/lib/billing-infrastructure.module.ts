@@ -1,7 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from '@virteex/kernel-auth';
-import { FiscalInfrastructureModule } from '@virteex/infra-fiscal-infrastructure';
+import { FiscalInfrastructureModule } from '@virteex/domain-fiscal-infrastructure';
 import {
   PAC_STRATEGY_FACTORY,
   TENANT_CONFIG_REPOSITORY,
@@ -37,8 +37,8 @@ import { InvoiceRecord } from './entities/invoice.record';
 import { InvoiceItemRecord } from './entities/invoice-item.record';
 import { ProductEventsController } from './listeners/product-events.controller';
 
-import { XsltService } from '@virteex/shared-infrastructure-xslt';
-import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/application-billing-application';
+import { XsltService } from '@virteex/platform-xslt';
+import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/domain-billing-application';
 import {
   PaymentMethodSchema,
   TaxLineSchema,

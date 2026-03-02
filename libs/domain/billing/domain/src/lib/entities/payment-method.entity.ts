@@ -1,8 +1,10 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 
 export class PaymentMethod {
     id: string = v4();
 
+  @Property()
     tenantId!: string;
 
     type!: string; // e.g., 'Visa', 'MasterCard'
@@ -13,8 +15,10 @@ export class PaymentMethod {
 
     isDefault = false;
 
+  @Property()
     createdAt: Date = new Date();
 
+  @Property()
     updatedAt: Date = new Date();
 
   constructor(tenantId: string, type: string, last4: string, expiryDate: string) {

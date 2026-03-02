@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { GlobalExceptionFilter } from './global-exception.filter';
 import { ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -18,10 +19,10 @@ describe('GlobalExceptionFilter', () => {
   });
 
   it('should format HttpException correctly', () => {
-    const mockJson = jest.fn();
-    const mockStatus = jest.fn().mockReturnValue({ json: mockJson });
-    const mockGetResponse = jest.fn().mockReturnValue({ status: mockStatus });
-    const mockGetRequest = jest.fn().mockReturnValue({ url: '/test' });
+    const mockJson = vi.fn();
+    const mockStatus = vi.fn().mockReturnValue({ json: mockJson });
+    const mockGetResponse = vi.fn().mockReturnValue({ status: mockStatus });
+    const mockGetRequest = vi.fn().mockReturnValue({ url: '/test' });
     const mockHttpArgumentsHost = {
       getResponse: mockGetResponse,
       getRequest: mockGetRequest,

@@ -9,7 +9,7 @@ import {
 import { Tenant, TenantMode } from '@virteex/kernel-tenant';
 import * as crypto from 'crypto';
 import { TokenGenerationService } from '../services/token-generation.service';
-import { CompleteOnboardingDto } from '@virteex/contracts-identity-contracts';
+import { CompleteOnboardingDto } from '@virteex/domain-identity-contracts';
 
 @Injectable()
 export class CompleteOnboardingUseCase {

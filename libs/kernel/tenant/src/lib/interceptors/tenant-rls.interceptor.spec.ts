@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TenantRlsInterceptor } from './tenant-rls.interceptor';
 import { EntityManager, RequestContext } from '@mikro-orm/core';
@@ -6,14 +7,14 @@ import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { of, lastValueFrom } from 'rxjs';
 import * as AuthModule from '@virteex/kernel-auth';
 
-jest.mock('@virteex/kernel-auth');
+vi.mock('@virteex/kernel-auth');
 
 describe('TenantRlsInterceptor', () => {
   let interceptor: TenantRlsInterceptor;
   let em: EntityManager;
 
   beforeAll(() => {
-    jest.spyOn(RequestContext, 'create').mockImplementation(async (em, cb) => {
+    vi.spyOn(RequestContext, 'create').mockImplementation(async (em, cb) => {
       return cb();
     });
   });
@@ -30,14 +31,14 @@ describe('TenantRlsInterceptor', () => {
         {
           provide: EntityManager,
           useValue: {
-            transactional: jest.fn(),
-            getConnection: jest.fn().mockReturnValue({ execute: jest.fn() }),
+            transactional: vi.fn(),
+            getConnection: vi.fn().mockReturnValue({ execute: vi.fn() }),
           },
         },
         {
           provide: TenantService,
           useValue: {
-            getTenantConfig: jest.fn(),
+            getTenantConfig: vi.fn(),
           },
         },
       ],
@@ -54,7 +55,7 @@ describe('TenantRlsInterceptor', () => {
 
   it('should FAIL if no tenant context (even for GET)', async () => {
     (AuthModule.getTenantContext as jest.Mock).mockReturnValue(null);
-    const next = { handle: jest.fn().mockReturnValue(of('test')) };
+    const next = { handle: vi.fn().mockReturnValue(of('test')) };
     const context = {
       switchToHttp: () => ({ getRequest: () => ({ method: 'GET' }) })
     } as unknown as ExecutionContext;
@@ -66,7 +67,7 @@ describe('TenantRlsInterceptor', () => {
     (AuthModule.getTenantContext as jest.Mock).mockReturnValue({ tenantId: 't1' });
     (tenantService.getTenantConfig as jest.Mock).mockResolvedValue({ mode: 'SHARED' });
 
-    const next = { handle: jest.fn().mockReturnValue(of('result')) };
+    const next = { handle: vi.fn().mockReturnValue(of('result')) };
     const context = {} as ExecutionContext;
 
     // Mock transactional to execute callback
@@ -87,7 +88,7 @@ describe('TenantRlsInterceptor', () => {
     (AuthModule.getTenantContext as jest.Mock).mockReturnValue({ tenantId: 't2' });
     (tenantService.getTenantConfig as jest.Mock).mockResolvedValue({ mode: 'SCHEMA' });
 
-    const next = { handle: jest.fn().mockReturnValue(of('result')) };
+    const next = { handle: vi.fn().mockReturnValue(of('result')) };
     const context = {} as ExecutionContext;
 
     const result = await interceptor.intercept(context, next as unknown as CallHandler);
@@ -101,7 +102,7 @@ describe('TenantRlsInterceptor', () => {
 
   it('should fail closed for write operations without tenant context', async () => {
     (AuthModule.getTenantContext as jest.Mock).mockReturnValue(null);
-    const next = { handle: jest.fn().mockReturnValue(of('test')) };
+    const next = { handle: vi.fn().mockReturnValue(of('test')) };
     const context = {
       switchToHttp: () => ({ getRequest: () => ({ method: 'POST' }) })
     } as unknown as ExecutionContext;

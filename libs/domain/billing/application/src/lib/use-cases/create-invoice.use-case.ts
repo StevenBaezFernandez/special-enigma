@@ -10,7 +10,7 @@ import {
   TENANT_CONFIG_REPOSITORY,
   TenantConfigRepository
 } from '@virteex/domain-billing-domain';
-import { DomainException } from '@virteex/shared-util-server-config';
+import { DomainException } from '@virteex/shared-util-server-server-config';
 import { CreateInvoiceDto } from '../dtos/create-invoice.dto';
 import { Decimal } from 'decimal.js';
 import { SUBSCRIPTION_REPOSITORY, SubscriptionRepository } from '@virteex/domain-subscription-domain';

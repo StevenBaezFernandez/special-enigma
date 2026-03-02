@@ -1,8 +1,10 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 
 export class Requisition {
     id: string = v4();
 
+  @Property()
     tenantId!: string;
 
     reqNumber!: string;
@@ -15,6 +17,7 @@ export class Requisition {
 
     total!: string;
 
+  @Property()
     status: 'Draft' | 'Pending Approval' | 'Approved' | 'Rejected' = 'Draft';
 
     items!: any[]; // Using json for simplicity as per quick implementation, ideally separate entity

@@ -1,8 +1,11 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 
+@Entity()
 export class BiReport {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
+  @Property()
     name!: string;
 
     type!: string;

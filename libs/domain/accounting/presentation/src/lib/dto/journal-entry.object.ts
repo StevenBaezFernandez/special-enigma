@@ -1,5 +1,5 @@
 import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
-import { JournalEntryStatus } from '@virteex/contracts-accounting-contracts';
+import { JournalEntryStatus } from '@virteex/domain-accounting-contracts';
 
 registerEnumType(JournalEntryStatus, { name: 'JournalEntryStatus' });
 

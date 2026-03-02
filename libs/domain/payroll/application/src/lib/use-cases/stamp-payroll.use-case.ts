@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { PayrollStatus, PayrollDetailType } from '@virteex/contracts-payroll-contracts';
+import { PayrollStatus, PayrollDetailType } from '@virteex/domain-payroll-contracts';
 import {
   PayrollRepository,
   PAYROLL_REPOSITORY,
@@ -12,7 +12,7 @@ import {
   Payroll
 } from '@virteex/domain-payroll-domain';
 import { XMLBuilder } from 'fast-xml-parser';
-import { XsltService } from '@virteex/shared-infrastructure-xslt';
+import { XsltService } from '@virteex/platform-xslt';
 import * as crypto from 'crypto';
 import { EntityNotFoundException } from '@virteex/kernel-exceptions';
 

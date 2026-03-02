@@ -5,15 +5,15 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
-import { ServerConfigModule } from '@virteex/shared-util-server-config';
-import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
+import { ServerConfigModule } from '@virteex/shared-util-server-server-config';
+import { KafkaModule } from '@virteex/platform-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
-import * as depthLimit from 'graphql-depth-limit';
-import { createComplexityLimitRule } from 'graphql-query-complexity';
+import depthLimit from 'graphql-depth-limit';
+import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { SubscriptionPresentationModule } from '@virteex/api-subscription-presentation';
-import { SubscriptionInfrastructureModule } from '@virteex/infra-subscription-infrastructure';
-import { SubscriptionApplicationModule } from '@virteex/application-subscription-application';
+import { SubscriptionPresentationModule } from '@virteex/domain-subscription-presentation';
+import { SubscriptionInfrastructureModule } from '@virteex/domain-subscription-infrastructure';
+import { SubscriptionApplicationModule } from '@virteex/domain-subscription-application';
 
 @Module({
   imports: [

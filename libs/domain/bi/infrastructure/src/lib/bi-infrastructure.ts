@@ -5,9 +5,9 @@ import { CrmSalesAdapter } from './adapters/crm-sales.adapter';
 import { BiInvoiceAdapter } from './adapters/bi-invoice.adapter';
 import { BiExpensesAdapter } from './adapters/bi-expenses.adapter';
 import { SqlDashboardGateway } from './adapters/sql-dashboard-gateway.adapter';
-import { CrmInfrastructureModule } from '@virteex/infra-crm-infrastructure';
-import { BillingInfrastructureModule } from '@virteex/infra-billing-infrastructure';
-import { PayrollInfrastructureModule } from '@virteex/infra-payroll-infrastructure';
+import { CrmInfrastructureModule } from '@virteex/domain-crm-infrastructure';
+import { BillingInfrastructureModule } from '@virteex/domain-billing-infrastructure';
+import { PayrollInfrastructureModule } from '@virteex/domain-payroll-infrastructure';
 import { MikroOrmBiReportRepository } from './repositories/mikro-orm-bi-report.repository';
 
 @Global()

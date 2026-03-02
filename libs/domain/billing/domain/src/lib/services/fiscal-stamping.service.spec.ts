@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FiscalStampingService } from './fiscal-stamping.service';
 import { PAC_STRATEGY_FACTORY } from '../ports/pac-strategy.factory';
@@ -9,12 +10,12 @@ import { Invoice } from '../entities/invoice.entity';
 describe('FiscalStampingService', () => {
   let service: FiscalStampingService;
 
-  const mockPacFactory = { getProvider: jest.fn() };
-  const mockTenantConfigRepo = { getFiscalConfig: jest.fn() };
-  const mockCustomerRepo = { findById: jest.fn() };
-  const mockBuilderFactory = { getBuilder: jest.fn() };
-  const mockBuilder = { build: jest.fn() };
-  const mockProvider = { stamp: jest.fn(), cancel: jest.fn() };
+  const mockPacFactory = { getProvider: vi.fn() };
+  const mockTenantConfigRepo = { getFiscalConfig: vi.fn() };
+  const mockCustomerRepo = { findById: vi.fn() };
+  const mockBuilderFactory = { getBuilder: vi.fn() };
+  const mockBuilder = { build: vi.fn() };
+  const mockProvider = { stamp: vi.fn(), cancel: vi.fn() };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

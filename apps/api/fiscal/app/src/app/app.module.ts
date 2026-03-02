@@ -7,15 +7,15 @@ import * as path from 'node:path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { InvoiceConsumer } from './invoice.consumer';
-import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
-import { FiscalPresentationModule } from '@virteex/api-fiscal-presentation';
+import { KafkaModule } from '@virteex/platform-kafka';
+import { FiscalPresentationModule } from '@virteex/domain-fiscal-presentation';
 import {
   FiscalInfrastructureModule,
   DianFiscalAdapter,
   SatFiscalAdapter,
   SefazFiscalAdapter,
   UsTaxPartnerFiscalAdapter,
-} from '@virteex/infra-fiscal-infrastructure';
+} from '@virteex/domain-fiscal-infrastructure';
 import { HttpModule, HttpService } from '@nestjs/axios';
 
 type FiscalCountryStatus = {

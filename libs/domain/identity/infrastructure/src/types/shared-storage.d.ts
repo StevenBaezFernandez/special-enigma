@@ -1,1 +1,1 @@
-declare module '@virteex/shared-infrastructure-storage';
+declare module '@virteex/platform-storage';

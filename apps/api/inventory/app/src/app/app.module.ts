@@ -4,25 +4,25 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ServerConfigModule } from '@virteex/shared-util-server-config';
+import { ServerConfigModule } from '@virteex/shared-util-server-server-config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
 import { TenantRlsInterceptor, TenantModule } from '@virteex/kernel-tenant';
-import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
+import { KafkaModule } from '@virteex/platform-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
-import * as depthLimit from 'graphql-depth-limit';
-import { createComplexityLimitRule } from 'graphql-query-complexity';
+import depthLimit from 'graphql-depth-limit';
+import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 // Domain Modules
-import { InventoryApplicationModule } from '@virteex/application-inventory-application';
-import { InventoryInfrastructureModule } from '@virteex/infra-inventory-infrastructure';
-import { InventoryPresentationModule } from '@virteex/api-inventory-presentation';
+import { InventoryApplicationModule } from '@virteex/domain-inventory-application';
+import { InventoryInfrastructureModule } from '@virteex/domain-inventory-infrastructure';
+import { InventoryPresentationModule } from '@virteex/domain-inventory-presentation';
 
 @Module({
   imports: [

@@ -5,7 +5,7 @@ import {
   HandleInvoicePaidUseCase,
   HandleSubscriptionUpdatedUseCase,
   HandleSubscriptionDeletedUseCase
-} from '@virteex/application-subscription-application';
+} from '@virteex/domain-subscription-application';
 import { StripeMapper } from '../adapters/stripe.mapper';
 
 export interface InvoicePaidPayload {

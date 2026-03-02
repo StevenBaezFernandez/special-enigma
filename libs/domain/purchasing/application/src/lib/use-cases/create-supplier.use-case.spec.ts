@@ -1,7 +1,8 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateSupplierUseCase } from './create-supplier.use-case';
 import { SUPPLIER_REPOSITORY } from '@virteex/domain-purchasing-domain';
-import { CreateSupplierDto, SupplierType as ContractSupplierType } from '@virteex/contracts-purchasing-contracts';
+import { CreateSupplierDto, SupplierType as ContractSupplierType } from '@virteex/domain-purchasing-contracts';
 
 describe('CreateSupplierUseCase', () => {
   let useCase: CreateSupplierUseCase;
@@ -9,8 +10,8 @@ describe('CreateSupplierUseCase', () => {
 
   beforeEach(async () => {
     mockRepo = {
-      findByTaxId: jest.fn(),
-      save: jest.fn(),
+      findByTaxId: vi.fn(),
+      save: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

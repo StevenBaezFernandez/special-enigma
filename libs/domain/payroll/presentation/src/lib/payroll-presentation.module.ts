@@ -3,8 +3,8 @@ import {
   PayrollApplicationModule,
   CalculatePayrollUseCase,
   GetEmployeesUseCase,
-} from '@virteex/application-payroll-application';
-import { PayrollInfrastructureModule } from '@virteex/infra-payroll-infrastructure';
+} from '@virteex/domain-payroll-application';
+import { PayrollInfrastructureModule } from '@virteex/domain-payroll-infrastructure';
 import { PayrollController } from './controllers/payroll.controller';
 import { PayrollResolver } from './resolvers/payroll.resolver';
 

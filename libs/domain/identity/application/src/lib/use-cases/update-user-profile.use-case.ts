@@ -1,7 +1,7 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
 import { User, UserRepository } from '@virteex/domain-identity-domain';
-import { UpdateUserDto } from '@virteex/contracts-identity-contracts';
+import { UpdateUserDto } from '@virteex/domain-identity-contracts';
 
 @Injectable()
 export class UpdateUserProfileUseCase {

@@ -1,3 +1,4 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 import { AssetStatus } from '../enums/asset-status.enum';
 import { DepreciationMethod } from '../enums/depreciation-method.enum';
@@ -19,18 +20,24 @@ export class Asset {
   private _updatedAt: Date;
 
   constructor(params: {
+  @Property()
     tenantId: string;
+  @Property()
     name: string;
+  @Property()
     code: string;
     purchaseDate: Date;
     purchaseCost: number;
     residualValue: number;
     usefulLifeMonths: number;
     id?: string;
+  @Property()
     status?: AssetStatus;
     depreciationMethod?: DepreciationMethod;
     depreciations?: Depreciation[];
+  @Property()
     createdAt?: Date;
+  @Property()
     updatedAt?: Date;
   }) {
     this.id = params.id ?? v4();

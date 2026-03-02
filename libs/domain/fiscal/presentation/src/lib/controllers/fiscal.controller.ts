@@ -5,7 +5,7 @@ import {
   GetFiscalStatsUseCase, GetTaxRulesUseCase,
   CreateTaxRuleUseCase, CreateTaxRuleDto,
   GetTaxRateUseCase
-} from '@virteex/application-fiscal-application';
+} from '@virteex/domain-fiscal-application';
 
 @ApiTags('Fiscal')
 @Controller('fiscal')

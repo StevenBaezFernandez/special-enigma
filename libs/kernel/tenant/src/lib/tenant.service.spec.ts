@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntityManager } from '@mikro-orm/core';
 import { TenantService } from './tenant.service';
@@ -13,7 +14,7 @@ describe('TenantService', () => {
         {
           provide: EntityManager,
           useValue: {
-            findOne: jest.fn(),
+            findOne: vi.fn(),
           },
         },
       ],

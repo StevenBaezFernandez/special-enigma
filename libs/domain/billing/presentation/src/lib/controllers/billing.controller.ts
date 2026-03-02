@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CurrentTenant } from '@virteex/shared-util-server-config';
+import { CurrentTenant } from '@virteex/shared-util-server-server-config';
 import {
   CreateInvoiceUseCase,
   CreateInvoiceDto,
   GetInvoicesUseCase,
   GetPaymentHistoryUseCase,
   GetUsageUseCase
-} from '@virteex/application-billing-application';
-import { GetSubscriptionPlansUseCase } from '@virteex/application-subscription-application';
+} from '@virteex/domain-billing-application';
+import { GetSubscriptionPlansUseCase } from '@virteex/domain-subscription-application';
 
 @ApiTags('Billing')
 @Controller('billing')

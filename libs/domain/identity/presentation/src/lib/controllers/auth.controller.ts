@@ -4,12 +4,12 @@ import {
   RefreshTokenUseCase,
   InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
   CheckSecurityContextUseCase, LogoutUserUseCase
-} from '@virteex/application-identity-application';
+} from '@virteex/domain-identity-application';
 import {
   LoginUserDto, VerifyMfaDto,
   RefreshTokenDto,
   InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto
-} from '@virteex/contracts-identity-contracts';
+} from '@virteex/domain-identity-contracts';
 import { Request, Response } from 'express';
 import { Public, JwtAuthGuard, SecretManagerService } from '@virteex/kernel-auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';

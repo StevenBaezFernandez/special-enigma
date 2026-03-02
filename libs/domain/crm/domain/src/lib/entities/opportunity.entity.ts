@@ -1,14 +1,18 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { OpportunityStage } from '@virteex/shared-contracts';
 import type { Customer } from './customer.entity';
 
+@Entity()
 export class Opportunity {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
+  @Property()
     tenantId!: string;
 
     title!: string;
 
+  @Property()
     amount?: number;
 
   @Enum(() => OpportunityStage)
@@ -19,8 +23,10 @@ export class Opportunity {
   @ManyToOne('Customer')
   customer!: Customer;
 
+  @Property()
     createdAt: Date = new Date();
 
+  @Property()
     updatedAt: Date = new Date();
 
   constructor(tenantId: string, customer: Customer, title: string) {

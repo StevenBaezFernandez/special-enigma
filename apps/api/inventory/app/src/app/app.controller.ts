@@ -7,6 +7,9 @@ export class AppController {
 
   @Get()
   getData() {
+    if (!this.appService) {
+        return { service: 'virteex-inventory-service', status: 'ok', timestamp: new Date().toISOString() };
+    }
     return this.appService.getData();
   }
 }

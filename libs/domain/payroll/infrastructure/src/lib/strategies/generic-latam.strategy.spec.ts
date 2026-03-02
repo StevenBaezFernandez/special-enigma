@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GenericLatamStrategy } from './generic-latam.strategy';
 import { TaxTableRepository, TAX_TABLE_REPOSITORY, TaxTable } from '@virteex/domain-payroll-domain';
@@ -13,7 +14,7 @@ describe('GenericLatamStrategy', () => {
         {
           provide: TAX_TABLE_REPOSITORY,
           useValue: {
-            findForYear: jest.fn(),
+            findForYear: vi.fn(),
           },
         },
       ],

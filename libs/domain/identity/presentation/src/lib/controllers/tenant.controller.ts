@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ListTenantsUseCase } from '@virteex/application-identity-application';
+import { ListTenantsUseCase } from '@virteex/domain-identity-application';
 import { Company } from '@virteex/domain-identity-domain';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { JwtAuthGuard, StepUpGuard, StepUp } from '@virteex/kernel-auth';

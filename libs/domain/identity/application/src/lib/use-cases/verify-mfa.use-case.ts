@@ -1,6 +1,6 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
-import { VerifyMfaDto, LoginResponseDto } from '@virteex/contracts-identity-contracts';
+import { VerifyMfaDto, LoginResponseDto } from '@virteex/domain-identity-contracts';
 import {
   UserRepository, AuditLogRepository, AuditLog,
   AuthService

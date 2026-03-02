@@ -1,5 +1,5 @@
 import { ObjectType, Field, ID, registerEnumType, Int } from '@nestjs/graphql';
-import { AccountType } from '@virteex/contracts-accounting-contracts';
+import { AccountType } from '@virteex/domain-accounting-contracts';
 
 registerEnumType(AccountType, { name: 'AccountType' });
 

@@ -1,11 +1,11 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@virteex/kernel-auth';
-import { CurrentTenant } from '@virteex/shared-util-server-config';
+import { CurrentTenant } from '@virteex/shared-util-server-server-config';
 import {
   CalculatePayrollUseCase,
   GetEmployeesUseCase,
-} from '@virteex/application-payroll-application';
+} from '@virteex/domain-payroll-application';
 import { EmployeeObject } from '../dto/employee.object';
 import { CalculatePayrollInput } from '../dto/calculate-payroll.input';
 

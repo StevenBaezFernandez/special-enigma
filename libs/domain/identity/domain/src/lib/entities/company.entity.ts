@@ -1,8 +1,10 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 as uuidv4 } from 'uuid';
 import type { User } from './user.entity';
 
 export class Company {
   id: string = uuidv4();
+  @Property()
   name!: string;
   taxId!: string; // NIT, RFC, etc.
   country!: string;
@@ -12,7 +14,9 @@ export class Company {
   settings?: Record<string, any>; // For tax configurations
   metadata?: Record<string, any>;
   users: User[] = [];
+  @Property()
   createdAt: Date = new Date();
+  @Property()
   updatedAt: Date = new Date();
 
   constructor(name: string, taxId: string, country: string) {

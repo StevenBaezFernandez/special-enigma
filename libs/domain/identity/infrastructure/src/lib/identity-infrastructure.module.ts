@@ -35,10 +35,10 @@ import {
   GetJobTitlesUseCase,
   CheckSecurityContextUseCase,
   LogoutUserUseCase
-} from '@virteex/application-identity-application';
-import { SharedInfrastructureStorageModule } from '@virteex/shared-infrastructure-storage';
+} from '@virteex/domain-identity-application';
+import { SharedInfrastructureStorageModule } from '@virteex/platform-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
-import { RedisCacheModule } from '@virteex/shared-infrastructure-cache';
+import { RedisCacheModule } from '@virteex/platform-cache';
 import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
 import { AuthModule } from '@virteex/kernel-auth';
 

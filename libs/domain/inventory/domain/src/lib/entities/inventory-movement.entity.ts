@@ -1,3 +1,4 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 
 export enum InventoryMovementType {
@@ -9,23 +10,30 @@ export enum InventoryMovementType {
 
 export class InventoryMovement {
   id: string;
+  @Property()
   tenantId: string;
+  @Property()
   productId: string;
   warehouseId: string;
   locationId?: string;
   type: InventoryMovementType;
+  @Property()
   quantity: string;
   reference: string;
   date: Date;
+  @Property()
   createdAt: Date;
   lotId?: string;
   serialNumber?: string;
 
   constructor(
+  @Property()
     tenantId: string,
+  @Property()
     productId: string,
     warehouseId: string,
     type: InventoryMovementType,
+  @Property()
     quantity: string,
     reference: string,
     locationId?: string,

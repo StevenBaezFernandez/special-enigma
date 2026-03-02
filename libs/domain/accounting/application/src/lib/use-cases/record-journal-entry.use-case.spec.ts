@@ -1,7 +1,8 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecordJournalEntryUseCase } from './record-journal-entry.use-case';
 import { JOURNAL_ENTRY_REPOSITORY, JournalEntryRepository, ACCOUNT_REPOSITORY, AccountRepository, Account, JournalEntry, JournalEntryLine } from '@virteex/domain-accounting-domain';
-import { AccountType } from '@virteex/contracts-accounting-contracts';
+import { AccountType } from '@virteex/domain-accounting-contracts';
 import { MikroORM } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
@@ -33,13 +34,13 @@ describe('RecordJournalEntryUseCase', () => {
         {
           provide: JOURNAL_ENTRY_REPOSITORY,
           useValue: {
-            create: jest.fn(),
+            create: vi.fn(),
           },
         },
         {
           provide: ACCOUNT_REPOSITORY,
           useValue: {
-            findById: jest.fn(),
+            findById: vi.fn(),
           },
         },
       ],

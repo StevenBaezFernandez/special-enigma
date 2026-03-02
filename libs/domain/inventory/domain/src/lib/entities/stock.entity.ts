@@ -1,3 +1,4 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 import Decimal from 'decimal.js';
 import { InsufficientStockException } from '../exceptions/insufficient-stock.exception';
@@ -5,17 +6,24 @@ import { StockDataInconsistencyError } from '../errors/stock-data-inconsistency.
 
 export class Stock {
   id: string;
+  @Property()
   tenantId: string;
+  @Property()
   productId: string;
   warehouseId: string;
   locationId?: string;
+  @Property()
   quantity: string;
   batches: StockBatch[] = [];
+  @Property()
   createdAt: Date;
+  @Property()
   updatedAt: Date;
 
   constructor(
+  @Property()
     tenantId: string,
+  @Property()
     productId: string,
     warehouseId: string,
     quantity = '0',
@@ -96,6 +104,7 @@ export class Stock {
 export class StockBatch {
   id: string;
   stockId: string;
+  @Property()
   quantity: string;
   entryDate: Date;
   expirationDate?: Date;

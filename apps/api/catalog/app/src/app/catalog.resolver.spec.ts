@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CatalogResolver } from './catalog.resolver';
-import { GetSatCatalogsUseCase, GetProductsUseCase } from '@virteex/application-catalog-application';
+import { GetSatCatalogsUseCase, GetProductsUseCase } from '@virteex/domain-catalog-application';
 import { ConfigService } from '@nestjs/config';
 
 describe('CatalogResolver', () => {

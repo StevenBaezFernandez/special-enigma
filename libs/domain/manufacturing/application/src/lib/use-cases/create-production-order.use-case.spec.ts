@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateProductionOrderUseCase, CreateProductionOrderDto } from './create-production-order.use-case';
 import {
@@ -19,16 +20,16 @@ describe('CreateProductionOrderUseCase', () => {
 
   beforeEach(async () => {
     productionOrderRepo = {
-      save: jest.fn(),
-      findAll: jest.fn(),
+      save: vi.fn(),
+      findAll: vi.fn(),
     } as any;
 
     inventoryService = {
-      checkAndReserveStock: jest.fn(),
+      checkAndReserveStock: vi.fn(),
     } as any;
 
     bomRepo = {
-      findByProductSku: jest.fn(),
+      findByProductSku: vi.fn(),
     } as any;
 
     const module: TestingModule = await Test.createTestingModule({

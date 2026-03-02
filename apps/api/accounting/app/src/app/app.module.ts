@@ -3,11 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { GraphQLModule } from '@nestjs/graphql';
-import * as depthLimit from 'graphql-depth-limit';
-import { createComplexityLimitRule } from 'graphql-query-complexity';
+import depthLimit from 'graphql-depth-limit';
+import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { AccountingInfrastructureModule } from '@virteex/infra-accounting-infrastructure';
-import { AccountingPresentationModule } from '@virteex/api-accounting-presentation';
+import { AccountingInfrastructureModule } from '@virteex/domain-accounting-infrastructure';
+import { AccountingPresentationModule } from '@virteex/domain-accounting-presentation';
 
 @Module({
   imports: [

@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { RecordJournalEntryUseCase, GetJournalEntriesUseCase } from '@virteex/application-accounting-application';
+import { RecordJournalEntryUseCase, GetJournalEntriesUseCase } from '@virteex/domain-accounting-application';
 import { JournalEntryObject } from '../dto/journal-entry.object';
 import { RecordJournalEntryInput } from '../dto/record-journal-entry.input';
 

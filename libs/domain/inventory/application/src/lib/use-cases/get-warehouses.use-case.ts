@@ -3,7 +3,7 @@ import {
   WAREHOUSE_REPOSITORY,
   WarehouseRepository,
 } from '@virteex/domain-inventory-domain';
-import { WarehouseDto } from '@virteex/contracts-inventory-contracts';
+import { WarehouseDto } from '@virteex/domain-inventory-contracts';
 
 @Injectable()
 export class GetWarehousesUseCase {

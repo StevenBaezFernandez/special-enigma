@@ -1,7 +1,7 @@
 import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import * as depthLimit from 'graphql-depth-limit';
-import { createComplexityLimitRule } from 'graphql-query-complexity';
+import depthLimit from 'graphql-depth-limit';
+import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
@@ -10,10 +10,10 @@ import { SqliteDriver } from '@mikro-orm/sqlite';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { JwtTenantMiddleware } from '@virteex/kernel-auth';
-import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
-import { CatalogInfrastructureModule } from '@virteex/infra-catalog-infrastructure';
-import { CatalogApplicationModule } from '@virteex/application-catalog-application';
-import { CatalogPresentationModule } from '@virteex/api-catalog-presentation';
+import { KafkaModule } from '@virteex/platform-kafka';
+import { CatalogInfrastructureModule } from '@virteex/domain-catalog-infrastructure';
+import { CatalogApplicationModule } from '@virteex/domain-catalog-application';
+import { CatalogPresentationModule } from '@virteex/domain-catalog-presentation';
 
 @Module({
   imports: [

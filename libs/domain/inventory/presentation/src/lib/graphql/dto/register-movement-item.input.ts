@@ -1,5 +1,5 @@
 import { InputType, Field, ID, registerEnumType } from '@nestjs/graphql';
-import { InventoryMovementType } from '@virteex/application-inventory-application';
+import { InventoryMovementType } from '@virteex/domain-inventory-application';
 
 // Register Enum for GraphQL
 registerEnumType(InventoryMovementType, {

@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards, UseFilters } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { RegisterMovementUseCase } from '@virteex/application-inventory-application';
+import { RegisterMovementUseCase } from '@virteex/domain-inventory-application';
 import { RegisterMovementDto } from '../dto/register-movement.dto';
 import { JwtAuthGuard, CurrentUser, UserPayload } from '@virteex/kernel-auth';
 import { resolveTenantId } from '../security/tenant-context.resolver';

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { CreateSupplierDto } from '@virteex/contracts-purchasing-contracts';
+import { CreateSupplierDto } from '@virteex/domain-purchasing-contracts';
 import { Supplier, ISupplierRepository, SUPPLIER_REPOSITORY, SupplierType } from '@virteex/domain-purchasing-domain';
 
 @Injectable()

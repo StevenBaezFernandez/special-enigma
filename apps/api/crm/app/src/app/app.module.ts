@@ -5,16 +5,16 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
-import { ServerConfigModule } from '@virteex/shared-util-server-config';
-import { KafkaModule } from '@virteex/shared-infrastructure-kafka';
-import { CrmPresentationModule } from '@virteex/api-crm-presentation';
+import { ServerConfigModule } from '@virteex/shared-util-server-server-config';
+import { KafkaModule } from '@virteex/platform-kafka';
+import { CrmPresentationModule } from '@virteex/domain-crm-presentation';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
-import * as depthLimit from 'graphql-depth-limit';
-import { createComplexityLimitRule } from 'graphql-query-complexity';
+import depthLimit from 'graphql-depth-limit';
+import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { FederationSupportModule } from '@virteex/shared-util-server-config';
+import { FederationSupportModule } from '@virteex/shared-util-server-server-config';
 
 @Module({
   imports: [

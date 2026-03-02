@@ -11,7 +11,7 @@ import {
   ApproveSaleUseCase,
   CancelSaleUseCase,
   CompleteSaleUseCase
-} from '@virteex/application-crm-application';
+} from '@virteex/domain-crm-application';
 
 @ApiTags('CRM')
 @Controller('crm')

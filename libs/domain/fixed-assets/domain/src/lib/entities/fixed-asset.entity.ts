@@ -1,3 +1,4 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 import Decimal from 'decimal.js';
 import { AssetStatus } from '../enums/asset-status.enum';
@@ -12,12 +13,15 @@ export class FixedAsset {
   private _status: AssetStatus;
 
   constructor(params: {
+  @Property()
     tenantId: string;
+  @Property()
     name: string;
     acquisitionCost: string;
     depreciationRate: number;
     id?: string;
     acquisitionDate?: Date;
+  @Property()
     status?: AssetStatus;
   }) {
     this.id = params.id ?? v4();

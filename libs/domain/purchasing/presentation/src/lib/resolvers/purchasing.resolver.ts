@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Query, Args, InputType, Field, Float, ObjectType, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { CreateVendorBillUseCase, GetVendorBillUseCase, UpdateVendorBillUseCase } from '@virteex/application-purchasing-application';
-import { CreateVendorBillDto, VendorBillLineItemDto, UpdateVendorBillDto } from '@virteex/contracts-purchasing-contracts';
+import { CreateVendorBillUseCase, GetVendorBillUseCase, UpdateVendorBillUseCase } from '@virteex/domain-purchasing-application';
+import { CreateVendorBillDto, VendorBillLineItemDto, UpdateVendorBillDto } from '@virteex/domain-purchasing-contracts';
 import { CurrentTenant, JwtAuthGuard } from '@virteex/kernel-auth';
 
 @InputType()

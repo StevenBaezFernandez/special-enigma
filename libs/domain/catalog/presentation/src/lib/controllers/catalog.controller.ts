@@ -10,7 +10,7 @@ import {
   DeleteProductUseCase,
   GetSatCatalogsUseCase,
   GetProductBySkuUseCase
-} from '@virteex/application-catalog-application';
+} from '@virteex/domain-catalog-application';
 
 @ApiTags('Catalog')
 @Controller('catalog')

@@ -1,5 +1,5 @@
 import { JournalEntry } from '@virteex/domain-accounting-domain';
-import { JournalEntryDto, JournalEntryLineDto } from '@virteex/contracts-accounting-contracts';
+import { JournalEntryDto, JournalEntryLineDto } from '@virteex/domain-accounting-contracts';
 
 export class JournalEntryMapper {
   static toDto(entity: JournalEntry): JournalEntryDto {

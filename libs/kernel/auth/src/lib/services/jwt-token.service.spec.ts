@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtTokenService, TokenIssueOptions } from './jwt-token.service';
 import { SecretManagerService } from './secret-manager.service';
@@ -5,8 +6,8 @@ import * as jwt from 'jsonwebtoken';
 import { UnauthorizedException } from '@nestjs/common';
 import Redis from 'ioredis';
 
-jest.mock('./secret-manager.service');
-jest.mock('ioredis');
+vi.mock('./secret-manager.service');
+vi.mock('ioredis');
 
 describe('JwtTokenService', () => {
   let service: JwtTokenService;
@@ -46,11 +47,11 @@ describe('JwtTokenService', () => {
         {
           provide: SecretManagerService,
           useValue: {
-            getSecret: jest.fn().mockImplementation((key: string, def?: string) => {
+            getSecret: vi.fn().mockImplementation((key: string, def?: string) => {
               const value = secretValues[key];
               return value ?? def;
             }),
-            getJwtSecret: jest.fn().mockReturnValue('super-secret'),
+            getJwtSecret: vi.fn().mockReturnValue('super-secret'),
           },
         },
       ],
@@ -65,8 +66,8 @@ describe('JwtTokenService', () => {
     process.env['REDIS_URL'] = 'redis://localhost:6379';
 
     redisMock = {
-      get: jest.fn(),
-      set: jest.fn(),
+      get: vi.fn(),
+      set: vi.fn(),
     };
     (Redis as unknown as jest.Mock).mockImplementation(() => redisMock);
 

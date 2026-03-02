@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { CreateProductionOrderUseCase, GetProductionOrdersUseCase } from '@virteex/application-manufacturing-application';
+import { CreateProductionOrderUseCase, GetProductionOrdersUseCase } from '@virteex/domain-manufacturing-application';
 import { CreateProductionOrderDto } from '../dto/create-production-order.dto';
 import { JwtAuthGuard } from '@virteex/kernel-auth';
 

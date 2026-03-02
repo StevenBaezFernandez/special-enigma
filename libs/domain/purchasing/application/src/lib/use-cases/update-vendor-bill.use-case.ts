@@ -1,6 +1,6 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
-import { UpdateVendorBillDto } from '@virteex/contracts-purchasing-contracts';
+import { UpdateVendorBillDto } from '@virteex/domain-purchasing-contracts';
 import { VendorBill, VendorBillRepository, VENDOR_BILL_REPOSITORY } from '@virteex/domain-purchasing-domain';
 
 @Injectable()

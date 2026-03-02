@@ -1,11 +1,15 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { SupplierType } from '../enums/supplier-type.enum';
 
+@Entity()
 export class Supplier {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
+  @Property()
     tenantId!: string;
 
+  @Property()
     name!: string;
 
     taxId!: string;
@@ -19,6 +23,7 @@ export class Supplier {
 
     address?: string;
 
+  @Property()
     createdAt: Date = new Date();
 
   constructor(tenantId: string, name: string, taxId: string, type: SupplierType) {

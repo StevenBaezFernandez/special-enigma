@@ -7,12 +7,13 @@ import { SqliteDriver } from '@mikro-orm/sqlite';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { GraphQLModule } from '@nestjs/graphql';
-import * as depthLimit from 'graphql-depth-limit';
-import { createComplexityLimitRule } from 'graphql-query-complexity';
+import depthLimit from 'graphql-depth-limit';
+import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { JwtTenantMiddleware } from '@virteex/kernel-auth';
-import { IdentityPresentationModule } from '@virteex/api-identity-presentation';
+import { IdentityPresentationModule } from '@virteex/domain-identity-presentation';
+import { IdentityInfrastructureModule } from '@virteex/domain-identity-infrastructure';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -65,6 +66,7 @@ import { AppService } from './app.service';
       },
     }),
     TenantModule,
+    IdentityInfrastructureModule,
     IdentityPresentationModule,
   ],
   controllers: [AppController],

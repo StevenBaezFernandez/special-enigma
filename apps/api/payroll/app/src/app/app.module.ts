@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { PayrollInfrastructureModule } from '@virteex/infra-payroll-infrastructure';
-import { PayrollPresentationModule } from '@virteex/api-payroll-presentation';
+import { PayrollInfrastructureModule } from '@virteex/domain-payroll-infrastructure';
+import { PayrollPresentationModule } from '@virteex/domain-payroll-presentation';
 import { GraphQLModule } from '@nestjs/graphql';
-import * as depthLimit from 'graphql-depth-limit';
-import { createComplexityLimitRule } from 'graphql-query-complexity';
+import depthLimit from 'graphql-depth-limit';
+import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { FederationSupportModule } from '@virteex/shared-util-server-config';
+import { FederationSupportModule } from '@virteex/shared-util-server-server-config';
 
 @Module({
   imports: [

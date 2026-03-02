@@ -8,7 +8,7 @@ import { RejectRequisitionUseCase } from './use-cases/reject-requisition.use-cas
 import { CreateVendorBillUseCase } from './use-cases/create-vendor-bill.use-case';
 import { UpdateVendorBillUseCase } from './use-cases/update-vendor-bill.use-case';
 import { GetVendorBillUseCase } from './use-cases/get-vendor-bill.use-case';
-import { PurchasingInfrastructureModule } from '@virteex/infra-purchasing-infrastructure';
+import { PurchasingInfrastructureModule } from '@virteex/domain-purchasing-infrastructure';
 
 @Module({
   imports: [PurchasingInfrastructureModule],

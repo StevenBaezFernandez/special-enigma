@@ -6,7 +6,7 @@ import { AccountRepository, ACCOUNT_REPOSITORY } from '@virteex/domain-accountin
 // Remove imports to avoid build cycles/rootDir issues
 // import { InvoiceStampedEvent } from '@virteex/domain-billing-domain';
 // import { PayrollStampedEvent } from '@virteex/domain-payroll-domain';
-import { RecordJournalEntryDto } from '@virteex/contracts-accounting-contracts';
+import { RecordJournalEntryDto } from '@virteex/domain-accounting-contracts';
 
 // Local definitions for Duck Typing
 interface InvoiceStampedEvent {

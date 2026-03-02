@@ -7,6 +7,7 @@
     "api-subscription-app": "Stripe webhook replay harness is not production-equivalent yet.",
     "web-shopfloor-app": "Frontline hardware emulation suite is pending for stable CI runs.",
     "web-store-app": "Checkout/payment simulator still under migration to deterministic fixtures.",
-    "web-wms-app": "Warehouse scanner simulation test rig is not yet integrated in CI."
+    "web-wms-app": "Warehouse scanner simulation test rig is not yet integrated in CI.",
+    "web-pos-app": "POS peripheral emulation layer still under development for E2E integration."
   }
 }

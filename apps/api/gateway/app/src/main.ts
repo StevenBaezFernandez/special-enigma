@@ -11,7 +11,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
 import { InitialSeederService } from './app/seeds/initial-seeder.service';
 import { MikroORM } from '@mikro-orm/core';
-import { setupGlobalConfig } from '@virteex/shared-util-server-config';
+import { setupGlobalConfig } from '@virteex/shared-util-server-server-config';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });

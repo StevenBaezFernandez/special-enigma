@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,7 +9,14 @@ describe('AppController', () => {
   beforeAll(async () => {
     app = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [
+        {
+          provide: AppService,
+          useValue: {
+            getData: vi.fn().mockReturnValue({ status: 'ok' }),
+          },
+        },
+      ],
     }).compile();
   });
 

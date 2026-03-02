@@ -1,3 +1,4 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import type { Company } from './company.entity';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -25,7 +26,9 @@ export class User {
   lastLoginAt?: Date;
   failedLoginAttempts = 0;
   lockedUntil?: Date;
+  @Property()
   createdAt: Date = new Date();
+  @Property()
   updatedAt: Date = new Date();
 
   constructor(email: string, passwordHash: string, firstName: string, lastName: string, country: string, company: Company) {

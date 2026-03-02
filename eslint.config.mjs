@@ -195,6 +195,10 @@ export default [
               onlyDependOnLibsWithTags: ['scope:fiscal', 'scope:shared', 'scope:kernel']
             },
             {
+              sourceTag: 'scope:pos',
+              onlyDependOnLibsWithTags: ['scope:pos', 'scope:shared', 'scope:kernel']
+            },
+            {
               sourceTag: 'scope:shared',
               onlyDependOnLibsWithTags: ['scope:shared', 'scope:kernel']
             },

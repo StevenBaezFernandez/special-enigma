@@ -1,3 +1,4 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 
 export interface PlanLimits {
@@ -11,12 +12,14 @@ export class SubscriptionPlan {
 
     slug!: string;
 
+  @Property()
     name!: string;
 
     price!: string;
 
     stripePriceId?: string;
 
+  @Property()
     description!: string;
 
     features: string[] = [];
@@ -25,8 +28,10 @@ export class SubscriptionPlan {
 
     isActive = true;
 
+  @Property()
     createdAt: Date = new Date();
 
+  @Property()
     updatedAt: Date = new Date();
 
   constructor(slug: string, name: string, price: string, description: string, features: string[], limits?: PlanLimits) {

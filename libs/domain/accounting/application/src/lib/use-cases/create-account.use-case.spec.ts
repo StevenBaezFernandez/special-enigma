@@ -1,7 +1,8 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateAccountUseCase } from './create-account.use-case';
 import { ACCOUNT_REPOSITORY, AccountRepository, Account } from '@virteex/domain-accounting-domain';
-import { AccountType } from '@virteex/contracts-accounting-contracts';
+import { AccountType } from '@virteex/domain-accounting-contracts';
 
 describe('CreateAccountUseCase', () => {
   let service: CreateAccountUseCase;
@@ -14,9 +15,9 @@ describe('CreateAccountUseCase', () => {
         {
           provide: ACCOUNT_REPOSITORY,
           useValue: {
-            findByCode: jest.fn(),
-            create: jest.fn(),
-            findById: jest.fn(),
+            findByCode: vi.fn(),
+            create: vi.fn(),
+            findById: vi.fn(),
           },
         },
       ],

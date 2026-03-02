@@ -7,7 +7,7 @@ import { OutboxService } from './outbox.service';
 import { InboxService } from './inbox.service';
 import { OutboxProcessor } from './outbox.processor';
 import { SagaOrchestrator } from './saga/saga-orchestrator';
-import { RedisCacheModule } from '@virteex/shared-infrastructure-cache';
+import { RedisCacheModule } from '@virteex/platform-cache';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { EgressProxyService } from './egress-proxy.service';

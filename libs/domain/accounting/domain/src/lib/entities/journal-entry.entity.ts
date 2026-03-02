@@ -1,17 +1,22 @@
+import { Cascade, Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import type { JournalEntryLine } from './journal-entry-line.entity';
-import { JournalEntryStatus } from '@virteex/contracts-accounting-contracts';
+import { JournalEntryStatus } from '@virteex/domain-accounting-contracts';
 
+@Entity()
 export class JournalEntry {
   @PrimaryKey({ type: 'uuid' })
   id!: string;
 
+  @Property()
     tenantId!: string;
 
     date!: Date;
 
+  @Property()
     description!: string;
 
   @Enum(() => JournalEntryStatus)
+  @Property()
   status: JournalEntryStatus = JournalEntryStatus.DRAFT;
 
   @OneToMany('JournalEntryLine', 'journalEntry', { cascade: [Cascade.ALL] })

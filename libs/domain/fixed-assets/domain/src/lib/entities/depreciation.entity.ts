@@ -1,3 +1,4 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 
 export class Depreciation {
@@ -10,12 +11,15 @@ export class Depreciation {
   readonly createdAt: Date;
 
   constructor(params: {
+  @Property()
     tenantId: string;
     assetId: string;
     date: Date;
+  @Property()
     amount: number;
     accumulatedDepreciation: number;
     id?: string;
+  @Property()
     createdAt?: Date;
   }) {
     this.id = params.id ?? v4();

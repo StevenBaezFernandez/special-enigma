@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { XMLBuilder } from 'fast-xml-parser';
-import { XsltService } from '@virteex/shared-infrastructure-xslt';
+import { XsltService } from '@virteex/platform-xslt';
 import { FiscalDocumentBuilder } from '@virteex/domain-fiscal-domain';
 import { TenantFiscalConfig } from '@virteex/domain-fiscal-domain';
 import { Invoice } from '@virteex/domain-billing-domain';

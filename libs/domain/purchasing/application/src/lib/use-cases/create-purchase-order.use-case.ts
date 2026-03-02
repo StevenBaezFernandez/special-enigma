@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { CreatePurchaseOrderDto } from '@virteex/contracts-purchasing-contracts';
+import { CreatePurchaseOrderDto } from '@virteex/domain-purchasing-contracts';
 import {
   PurchaseOrder,
   PurchaseOrderItem,

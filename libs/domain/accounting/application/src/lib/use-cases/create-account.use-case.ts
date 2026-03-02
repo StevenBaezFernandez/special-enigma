@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Account, ACCOUNT_REPOSITORY, AccountRepository } from '@virteex/domain-accounting-domain';
-import { CreateAccountDto, AccountDto } from '@virteex/contracts-accounting-contracts';
+import { CreateAccountDto, AccountDto } from '@virteex/domain-accounting-contracts';
 import { AccountMapper } from '../mappers/account.mapper';
 
 @Injectable()

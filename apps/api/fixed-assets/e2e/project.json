@@ -13,7 +13,7 @@
   ],
   "targets": {
     "e2e": {
-      "executor": "@nx/jest:jest",
+      "executor": "@nx/vitest:test",
       "outputs": [
         "{workspaceRoot}/coverage/{e2eProjectRoot}"
       ],

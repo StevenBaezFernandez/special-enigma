@@ -2,7 +2,7 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { setupGlobalConfig } from '@virteex/shared-util-server-config';
+import { setupGlobalConfig } from '@virteex/shared-util-server-server-config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

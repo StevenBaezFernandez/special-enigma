@@ -1,11 +1,14 @@
+import { Cascade, Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { CustomerType } from '@virteex/shared-contracts';
 import { v4 as uuidv4 } from 'uuid';
 import type { Opportunity } from './opportunity.entity';
 
+@Entity()
 export class Customer {
   @PrimaryKey({ type: 'uuid' })
   id: string = uuidv4();
 
+  @Property()
     tenantId!: string;
 
   @Enum(() => CustomerType)
@@ -40,8 +43,10 @@ export class Customer {
   @OneToMany('Opportunity', 'customer', { cascade: [Cascade.ALL] })
   opportunities = new Collection<Opportunity>(this);
 
+  @Property()
     createdAt: Date = new Date();
 
+  @Property()
     updatedAt: Date = new Date();
 
   constructor(tenantId: string, type: CustomerType) {

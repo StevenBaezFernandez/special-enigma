@@ -5,7 +5,7 @@ import {
     UsFiscalDocumentBuilder,
     CoFiscalDocumentBuilder,
     BrFiscalDocumentBuilder
-} from '@virteex/infra-fiscal-infrastructure';
+} from '@virteex/domain-fiscal-infrastructure';
 
 @Injectable()
 export class FiscalDocumentBuilderFactoryImpl implements FiscalDocumentBuilderFactory {

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FiscalProvider } from '@virteex/domain-fiscal-domain/ports/fiscal-provider.port';
+import { FiscalProvider } from '@virteex/domain-fiscal-domain/fiscal-provider.port';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, retry, timer } from 'rxjs';
 import { SignedXml } from 'xml-crypto';

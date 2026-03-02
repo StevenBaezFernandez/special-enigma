@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SubscriptionApplicationModule } from '@virteex/application-subscription-application';
+import { SubscriptionApplicationModule } from '@virteex/domain-subscription-application';
 import { SubscriptionController } from './controllers/subscription.controller';
 import { StripeWebhookController } from './controllers/stripe-webhook.controller';
 

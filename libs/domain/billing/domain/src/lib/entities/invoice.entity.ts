@@ -1,3 +1,4 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { v4 } from 'uuid';
 import { Decimal } from 'decimal.js';
 import { InvoiceItem } from './invoice-item.entity';
@@ -6,20 +7,35 @@ export type InvoiceStatus = 'DRAFT' | 'PENDING_STAMP' | 'STAMPED' | 'PAID';
 
 export class Invoice {
   id: string;
+  @Property()
   tenantId: string;
+  @Property()
   customerId: string;
+  @Property()
   issueDate: Date;
+  @Property()
   dueDate!: Date;
+  @Property()
   paymentForm!: string;
+  @Property()
   paymentMethod!: string;
+  @Property()
   usage!: string;
+  @Property()
   totalAmount: string;
+  @Property()
   taxAmount: string;
+  @Property()
   subTotal?: string;
+  @Property()
   notes?: string;
+  @Property()
   status: InvoiceStatus;
+  @Property()
   fiscalUuid?: string;
+  @Property()
   xmlContent?: string;
+  @Property()
   stampedAt?: Date;
   items: InvoiceItem[] = [];
 

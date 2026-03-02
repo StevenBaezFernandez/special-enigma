@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Account, ACCOUNT_REPOSITORY, AccountRepository } from '@virteex/domain-accounting-domain';
-import { AccountType } from '@virteex/contracts-accounting-contracts';
+import { AccountType } from '@virteex/domain-accounting-contracts';
 
 @Injectable()
 export class SetupChartOfAccountsUseCase {

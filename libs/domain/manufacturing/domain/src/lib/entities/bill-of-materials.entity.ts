@@ -1,11 +1,15 @@
+import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 export class BillOfMaterials {
   id!: string;
+  @Property()
   tenantId!: string;
   productSku!: string; // Changed from productId to productSku to align with ProductionOrder
   version!: string;
   isActive = true;
   components: BillOfMaterialsComponent[] = [];
+  @Property()
   createdAt: Date = new Date();
+  @Property()
   updatedAt: Date = new Date();
 
   constructor(tenantId: string, productSku: string, version: string) {
@@ -17,8 +21,10 @@ export class BillOfMaterials {
 
 export class BillOfMaterialsComponent {
   id!: string;
+  @Property()
   tenantId!: string;
   componentProductSku!: string; // Changed from componentProductId
+  @Property()
   quantity!: number;
   unit!: string;
   billOfMaterials!: BillOfMaterials;
