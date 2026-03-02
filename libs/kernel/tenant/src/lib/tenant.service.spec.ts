@@ -30,6 +30,8 @@ describe('TenantService', () => {
     }).compile();
 
     service = module.get<TenantService>(TenantService);
+    // Explicitly set em if DI is failing in Vitest
+    (service as any).em = mockEm;
   });
 
   it('should be defined', () => {

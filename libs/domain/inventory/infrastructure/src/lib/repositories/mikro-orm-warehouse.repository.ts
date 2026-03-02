@@ -23,6 +23,11 @@ export class MikroOrmWarehouseRepository implements WarehouseRepository {
     return orm ? InventoryMapper.toWarehouseDomain(orm) : null;
   }
 
+  async findByIds(ids: string[]): Promise<Warehouse[]> {
+    const orms = await this.em.find(WarehouseOrmEntity, { id: { $in: ids } });
+    return orms.map(orm => InventoryMapper.toWarehouseDomain(orm));
+  }
+
   async findByCode(code: string, tenantId: string): Promise<Warehouse | null> {
     const orm = await this.em.findOne(WarehouseOrmEntity, { code, tenantId });
     return orm ? InventoryMapper.toWarehouseDomain(orm) : null;

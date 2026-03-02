@@ -9,12 +9,18 @@ import * as libxmljs from 'libxmljs';
 import * as fs from 'fs';
 import * as path from 'path';
 
+export interface UFValidationRule {
+  uf: string;
+  validate(xmlDoc: libxmljs.Document): { isValid: boolean; errors: string[] };
+}
+
 @Injectable()
 export class SefazFiscalAdapter implements FiscalProvider {
   private readonly logger = new Logger(SefazFiscalAdapter.name);
   private privateKey: string;
   private certificate: string;
   private xsdSchema: libxmljs.Document;
+  private ufRules: Map<string, UFValidationRule> = new Map();
 
   constructor(private readonly httpService: HttpService) {
     const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
@@ -76,7 +82,22 @@ export class SefazFiscalAdapter implements FiscalProvider {
             this.logger.error('NFe XML Validation Failed', xmlDoc.validationErrors);
             throw new Error(`NFe XML Validation Failed: ${xmlDoc.validationErrors.map(e => e.message).join(', ')}`);
         }
-        this.logger.log('NFe XML Validation Successful');
+
+        // UF-Specific Validation Logic
+        const ufNode = xmlDoc.get("//*[local-name()='cUF']");
+        if (ufNode) {
+            const ufCode = ufNode.text();
+            const rule = this.ufRules.get(ufCode);
+            if (rule) {
+                const ufResult = rule.validate(xmlDoc);
+                if (!ufResult.isValid) {
+                    this.logger.error(`UF Specific Validation Failed for UF ${ufCode}`, ufResult.errors);
+                    throw new Error(`UF ${ufCode} Validation Failed: ${ufResult.errors.join(', ')}`);
+                }
+            }
+        }
+
+        this.logger.log('NFe XML Validation Successful (Base + UF rules)');
         return true;
     } catch (e: any) {
         this.logger.error(`NFe Validation Error: ${e.message}`);
@@ -118,6 +139,10 @@ export class SefazFiscalAdapter implements FiscalProvider {
       this.logger.error(`Failed to sign NFe: ${error.message}`);
       throw new Error(`Signing failed: ${error.message}`);
     }
+  }
+
+  registerUfRule(rule: UFValidationRule) {
+    this.ufRules.set(rule.uf, rule);
   }
 
   async transmitInvoice(invoice: any): Promise<void> {

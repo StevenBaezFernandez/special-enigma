@@ -6,7 +6,6 @@ import { SqliteDriver } from '@mikro-orm/sqlite';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
 import { ServerConfigModule } from '@virteex/shared-util-server-server-config';
-import { KafkaModule } from '@virteex/platform-kafka';
 import { CrmPresentationModule } from '@virteex/domain-crm-presentation';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -40,10 +39,6 @@ import { FederationSupportModule } from '@virteex/shared-util-server-server-conf
     }),
     TerminusModule,
     ServerConfigModule,
-    KafkaModule.forRoot({
-      clientId: 'crm-service',
-      groupId: 'crm-consumer',
-    }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

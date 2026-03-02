@@ -1,17 +1,21 @@
-import { CallHandler, ExecutionContext, ForbiddenException, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, ForbiddenException, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { Observable, from, lastValueFrom } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { getTenantContext } from '@virteex/kernel-auth';
 import { TenantService } from '../tenant.service';
 
 @Injectable()
 export class TenantRlsInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(TenantRlsInterceptor.name);
+
   constructor(
     private readonly em: EntityManager,
     private readonly tenantService: TenantService
   ) {}
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+    const startTime = performance.now();
     const tenantContext = getTenantContext();
     if (!tenantContext) {
       // SECURITY: Closed-by-default. No operation allowed without a valid tenant context.
@@ -32,12 +36,20 @@ export class TenantRlsInterceptor implements NestInterceptor {
 
           // Propagate the transactional EM to the request context
           return await RequestContext.create(txEm, async () => {
-             return await lastValueFrom(next.handle(), { defaultValue: undefined });
+             const result = await lastValueFrom(next.handle(), { defaultValue: undefined });
+             const duration = performance.now() - startTime;
+             this.logger.log(`RLS SHARED query completed for tenant ${tenantContext.tenantId} in ${duration.toFixed(2)}ms`);
+             return result;
           });
         })
       );
     }
 
-    return next.handle();
+    return next.handle().pipe(
+        tap(() => {
+            const duration = performance.now() - startTime;
+            this.logger.log(`RLS NON-SHARED operation completed for tenant ${tenantContext.tenantId} in ${duration.toFixed(2)}ms`);
+        })
+    );
   }
 }

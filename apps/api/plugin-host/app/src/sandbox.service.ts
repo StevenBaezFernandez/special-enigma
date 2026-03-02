@@ -105,7 +105,7 @@ export class SandboxService {
 
       // Create a fresh isolate for every execution (Strict Isolation)
       isolate = new ivm.Isolate({
-        memoryLimit: this.MEMORY_LIMIT_MB,
+        memoryLimit: PLUGIN_POLICY.limits.memoryMb || this.MEMORY_LIMIT_MB,
       });
       context = isolate.createContextSync();
 
@@ -125,8 +125,13 @@ export class SandboxService {
       jail.setSync('_fetch', (url: string) => {
           try {
               const parsedUrl = new URL(url);
-              if (!PLUGIN_POLICY.egress.allowlist.includes(parsedUrl.hostname)) {
-                  throw new Error(`Security Exception: Egress to ${parsedUrl.hostname} is not allowed.`);
+              const isAllowed = PLUGIN_POLICY.egress.allowlist.some(allowed =>
+                  allowed === parsedUrl.hostname || parsedUrl.hostname.endsWith(`.${allowed}`)
+              );
+
+              if (!isAllowed) {
+                  this.logger.error(`Security Exception: Plugin attempted unauthorized egress to ${parsedUrl.hostname}`);
+                  throw new Error(`Security Exception: Egress to ${parsedUrl.hostname} is not allowed by policy.`);
               }
               // In a real implementation, this would call a secure internal proxy
               return `Fetched from ${url} (Simulated in sandbox)`;

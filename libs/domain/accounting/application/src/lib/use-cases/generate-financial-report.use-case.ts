@@ -12,6 +12,7 @@ export interface FinancialReport {
   type: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS';
   generatedAt: Date;
   lines: FinancialReportLine[];
+  dimensions?: Record<string, string>;
 }
 
 export interface FinancialReportLine {
@@ -27,8 +28,13 @@ export class GenerateFinancialReportUseCase {
     @Inject(ACCOUNT_REPOSITORY) private accountRepository: AccountRepository
   ) {}
 
-  async execute(tenantId: string, type: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS', endDate: Date): Promise<FinancialReport> {
-    const balances = await this.journalEntryRepository.getBalancesByAccount(tenantId, undefined, endDate);
+  async execute(
+    tenantId: string,
+    type: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS',
+    endDate: Date,
+    dimensions?: Record<string, string>
+  ): Promise<FinancialReport> {
+    const balances = await this.journalEntryRepository.getBalancesByAccount(tenantId, undefined, endDate, dimensions);
     const reportLines: FinancialReportLine[] = [];
 
     const accounts = await this.accountRepository.findAll(tenantId);
@@ -58,7 +64,8 @@ export class GenerateFinancialReportUseCase {
       tenantId,
       type,
       generatedAt: new Date(),
-      lines: reportLines
+      lines: reportLines,
+      dimensions
     };
   }
 }

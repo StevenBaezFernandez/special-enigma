@@ -6,7 +6,6 @@ import { SqliteDriver } from '@mikro-orm/sqlite';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
 import { ServerConfigModule } from '@virteex/shared-util-server-server-config';
-import { KafkaModule } from '@virteex/platform-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
 import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
@@ -39,10 +38,6 @@ import { SubscriptionApplicationModule } from '@virteex/domain-subscription-appl
         depthLimit(10),
         createComplexityLimitRule(1000)
       ],
-    }),
-    KafkaModule.forRoot({
-      clientId: 'subscription-service',
-      groupId: 'subscription-service-consumer',
     }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
 import { UseGuards, InternalServerErrorException } from '@nestjs/common';
 import { JwtAuthGuard } from '@virteex/kernel-auth';
 import { CurrentTenant } from '@virteex/shared-util-server-server-config';
@@ -12,6 +12,7 @@ import {
 } from '@virteex/domain-inventory-application';
 import { WarehouseObject } from './dto/warehouse.object';
 import { CreateWarehouseInput } from './dto/create-warehouse.input';
+import { WarehouseLoader } from '../loaders/warehouse.loader';
 import { RegisterMovementInput } from './dto/register-movement.input';
 import { UpdateWarehouseInput } from './dto/update-warehouse.input';
 
@@ -23,13 +24,20 @@ export class InventoryResolver {
     private readonly getWarehousesUseCase: GetWarehousesUseCase,
     private readonly registerInventoryMovementBatchUseCase: RegisterInventoryMovementBatchUseCase,
     private readonly updateWarehouseUseCase: UpdateWarehouseUseCase,
-    private readonly deleteWarehouseUseCase: DeleteWarehouseUseCase
+    private readonly deleteWarehouseUseCase: DeleteWarehouseUseCase,
+    private readonly warehouseLoader: WarehouseLoader
   ) {}
 
   @Query(() => [WarehouseObject], { name: 'warehouses' })
   @UseGuards(JwtAuthGuard)
   async getWarehouses(@CurrentTenant() tenantId: string) {
     return this.getWarehousesUseCase.execute(tenantId);
+  }
+
+  @Query(() => WarehouseObject, { name: 'warehouse', nullable: true })
+  @UseGuards(JwtAuthGuard)
+  async getWarehouse(@Args('id', { type: () => ID }) id: string) {
+    return this.warehouseLoader.load(id);
   }
 
   @Mutation(() => WarehouseObject)
