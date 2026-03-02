@@ -8,7 +8,8 @@ import { of, lastValueFrom } from 'rxjs';
 import * as AuthModule from '@virteex/kernel-auth';
 
 vi.mock('@virteex/kernel-auth', () => ({
-    getTenantContext: vi.fn()
+    getTenantContext: vi.fn(),
+    SECRET_PROVIDER: 'SECRET_PROVIDER'
 }));
 
 describe('TenantRlsInterceptor', () => {
@@ -35,6 +36,7 @@ describe('TenantRlsInterceptor', () => {
           useValue: {
             transactional: vi.fn(),
             getConnection: vi.fn().mockReturnValue({ execute: vi.fn() }),
+            setFilterParams: vi.fn(),
           },
         },
         {
@@ -49,6 +51,10 @@ describe('TenantRlsInterceptor', () => {
     interceptor = module.get<TenantRlsInterceptor>(TenantRlsInterceptor);
     em = module.get<EntityManager>(EntityManager);
     tenantService = module.get<TenantService>(TenantService);
+
+    // Explicitly set the services on the interceptor for the test environment
+    (interceptor as any).tenantService = tenantService;
+    (interceptor as any).em = em;
   });
 
   it('should be defined', () => {

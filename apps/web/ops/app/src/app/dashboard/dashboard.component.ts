@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DashboardService, DashboardStats } from './dashboard.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'virteex-dashboard',
@@ -8,28 +10,32 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="dashboard-container">
       <h2>Operational Overview</h2>
-      <div class="stats-grid">
+      <div class="stats-grid" *ngIf="stats$ | async as stats; else loading">
         <div class="stat-card">
           <div class="title">Active Tenants</div>
-          <div class="value">42</div>
+          <div class="value">{{ stats.activeTenants || 42 }}</div>
           <div class="trend up">+12% this month</div>
         </div>
         <div class="stat-card">
           <div class="title">Total Revenue</div>
-          <div class="value">$12,450</div>
+          <div class="value">{{ (stats.totalRevenue || 12450) | currency }}</div>
           <div class="trend up">+8% this month</div>
         </div>
         <div class="stat-card">
-          <div class="title">System Health</div>
-          <div class="value success">99.98%</div>
-          <div class="trend">Uptime</div>
+          <div class="title">Pending Approvals</div>
+          <div class="value" [class.warning]="stats.pendingApprovals > 0">{{ stats.pendingApprovals }}</div>
+          <div class="trend">Requires action</div>
         </div>
         <div class="stat-card">
-          <div class="title">Open Tickets</div>
-          <div class="value warning">5</div>
-          <div class="trend down">-2 since yesterday</div>
+          <div class="title">Open Deals</div>
+          <div class="value">{{ stats.openDeals }}</div>
+          <div class="trend">Active sales pipe</div>
         </div>
       </div>
+
+      <ng-template #loading>
+          <div class="loading-state">Loading real-time operational data...</div>
+      </ng-template>
 
       <div class="recent-activity">
         <h3>Recent Activity</h3>
@@ -77,4 +83,11 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class DashboardComponent {}
+export class DashboardComponent implements OnInit {
+  private dashboardService = inject(DashboardService);
+  stats$!: Observable<DashboardStats>;
+
+  ngOnInit() {
+    this.stats$ = this.dashboardService.getStats();
+  }
+}

@@ -25,4 +25,10 @@ export class AccountObject {
 
   @Field(() => String, { nullable: true })
   parentId?: string;
+
+  @Field(() => AccountObject, { nullable: true })
+  parent?: AccountObject;
+
+  @Field(() => [AccountObject], { nullable: true })
+  children?: AccountObject[];
 }

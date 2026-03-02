@@ -56,10 +56,17 @@ export class ReconciliationService {
         }
 
         if (line.reference) {
-            const refMatches = candidates.filter(c =>
-                c.reference === line.reference ||
-                (c.description && c.description.includes(line.reference))
-            );
+            const normalizedRef = line.reference.toLowerCase().trim();
+            const refMatches = candidates.filter(c => {
+                const cRef = (c.reference || '').toLowerCase().trim();
+                const cDesc = (c.description || '').toLowerCase().trim();
+
+                return cRef === normalizedRef ||
+                       cRef.includes(normalizedRef) ||
+                       normalizedRef.includes(cRef) ||
+                       cDesc.includes(normalizedRef);
+            });
+
             if (refMatches.length > 0) {
                  return {
                     statementLine: line,

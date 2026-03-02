@@ -108,9 +108,22 @@ export class DianFiscalAdapter implements FiscalProvider {
       const certSerialNumber = process.env['FISCAL_CERT_SERIAL_NUMBER'];
       const policyHash = process.env['FISCAL_POLICY_HASH'];
 
-      if (process.env['NODE_ENV'] === 'production') {
-          if (!certSerialNumber) throw new Error('FISCAL_CERT_SERIAL_NUMBER is mandatory in production for DIAN.');
-          if (!policyHash) throw new Error('FISCAL_POLICY_HASH is mandatory in production for DIAN.');
+      const isProduction = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
+
+      if (isProduction) {
+          if (!certSerialNumber || certSerialNumber === 'DEV-SERIAL-12345') {
+              throw new Error('FATAL: Valid FISCAL_CERT_SERIAL_NUMBER is mandatory for DIAN in production.');
+          }
+          if (!policyHash || policyHash === 'DEV-POLICY-HASH') {
+              throw new Error('FATAL: Valid FISCAL_POLICY_HASH is mandatory for DIAN in production.');
+          }
+      }
+
+      if (!certSerialNumber) {
+          this.logger.warn('FISCAL_CERT_SERIAL_NUMBER missing, falling back to development placeholder.');
+      }
+      if (!policyHash) {
+          this.logger.warn('FISCAL_POLICY_HASH missing, falling back to development placeholder.');
       }
 
       const xadesObject = `

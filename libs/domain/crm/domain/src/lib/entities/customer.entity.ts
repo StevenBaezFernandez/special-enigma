@@ -1,4 +1,4 @@
-import { Cascade, Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
+import { Cascade, Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection, BeforeCreate, BeforeUpdate } from "@mikro-orm/core";
 import { CustomerType } from '@virteex/shared-contracts';
 import { v4 as uuidv4 } from 'uuid';
 import type { Opportunity } from './opportunity.entity';
@@ -67,21 +67,21 @@ export class Customer {
           // Regex for Person (4 chars) and Company (3 chars)
           const rfcPattern = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A-Z\d])$/;
           if (!rfcPattern.test(taxId)) {
-              throw new ValidationError(`Invalid RFC format for Mexico: ${this.taxId}`);
+              throw new Error(`Invalid RFC format for Mexico: ${this.taxId}`);
           }
       } else if (country === 'US' || country === 'USA') {
           // EIN Validation (XX-XXXXXXX) or SSN (XXX-XX-XXXX) or simple 9 digits
           // Remove separators for check
           const cleanTaxId = taxId.replace(/[^0-9]/g, '');
           if (cleanTaxId.length !== 9) {
-               throw new ValidationError(`Invalid Tax ID (EIN/SSN) format for US: ${this.taxId}. Must be 9 digits.`);
+               throw new Error(`Invalid Tax ID (EIN/SSN) format for US: ${this.taxId}. Must be 9 digits.`);
           }
       }
       else if (country === 'BR' || country === 'BRAZIL') {
           // CNPJ (14) or CPF (11)
           const cleanTaxId = taxId.replace(/[^0-9]/g, '');
           if (cleanTaxId.length !== 11 && cleanTaxId.length !== 14) {
-               throw new ValidationError(`Invalid Tax ID (CPF/CNPJ) format for Brazil: ${this.taxId}`);
+               throw new Error(`Invalid Tax ID (CPF/CNPJ) format for Brazil: ${this.taxId}`);
           }
       }
   }
