@@ -5,6 +5,7 @@ export interface JournalEntryRepository {
   findById(id: string): Promise<JournalEntry | null>;
   findAll(tenantId: string): Promise<JournalEntry[]>;
   count(tenantId: string): Promise<number>;
+  getBalancesByAccount(tenantId: string, startDate?: Date, endDate?: Date, dimensions?: Record<string, string>): Promise<Map<string, { debit: string; credit: string }>>;
 }
 
 export const JOURNAL_ENTRY_REPOSITORY = 'JOURNAL_ENTRY_REPOSITORY';

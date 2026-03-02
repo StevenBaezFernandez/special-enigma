@@ -1,10 +1,10 @@
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FiscalStampingService } from './fiscal-stamping.service';
 import { PAC_STRATEGY_FACTORY } from '../ports/pac-strategy.factory';
 import { TENANT_CONFIG_REPOSITORY } from '../ports/tenant-config.port';
 import { CUSTOMER_REPOSITORY } from '../ports/customer.repository';
-import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '../ports/fiscal-document-builder.port';
+import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '@virteex/domain-fiscal-domain';
 import { Invoice } from '../entities/invoice.entity';
 
 describe('FiscalStampingService', () => {

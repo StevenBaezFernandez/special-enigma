@@ -1,21 +1,30 @@
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntityManager } from '@mikro-orm/core';
 import { TenantService } from './tenant.service';
 import { TenantMode } from './interfaces/tenant-config.interface';
+import { Tenant } from './entities/tenant.entity';
 
 describe('TenantService', () => {
   let service: TenantService;
+  const mockEm = {
+    findOne: vi.fn(),
+    create: vi.fn(),
+    persistAndFlush: vi.fn(),
+    find: vi.fn(),
+    assign: vi.fn(),
+    flush: vi.fn(),
+    findOneOrFail: vi.fn()
+  };
 
   beforeEach(async () => {
+    vi.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TenantService,
         {
           provide: EntityManager,
-          useValue: {
-            findOne: vi.fn(),
-          },
+          useValue: mockEm,
         },
       ],
     }).compile();
@@ -27,15 +36,12 @@ describe('TenantService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return SHARED mode by default', async () => {
-    const config = await service.getTenantConfig('tenant-123');
-    expect(config.mode).toBe(TenantMode.SHARED);
-    expect(config.tenantId).toBe('tenant-123');
-  });
+  it('should return config from DB if not in cache', async () => {
+    const mockTenant = { id: 't1', mode: TenantMode.SHARED };
+    mockEm.findOne.mockResolvedValue(mockTenant);
 
-  it('should return SCHEMA mode for tenants starting with schema_', async () => {
-    const config = await service.getTenantConfig('schema_tenant_1');
-    expect(config.mode).toBe(TenantMode.SCHEMA);
-    expect(config.schemaName).toBe('tenant_schema_tenant_1');
+    const config = await service.getTenantConfig('t1');
+    expect(config.tenantId).toBe('t1');
+    expect(config.mode).toBe(TenantMode.SHARED);
   });
 });

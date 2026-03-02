@@ -24,7 +24,7 @@ import { catchError, of, forkJoin } from 'rxjs';
         </div>
         <div class="bg-white p-4 rounded shadow">
           <h2 class="font-semibold">Last Closing</h2>
-          <p class="text-3xl">{{ stats.lastClosing || 'Never' }}</p>
+          <p class="text-3xl">{{ stats.lastClosing }}</p>
         </div>
       </div>
 
@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
   stats = {
     totalAccounts: 0,
     pendingEntries: 0,
-    lastClosing: ''
+    lastClosing: 'No closing found'
   };
 
   ngOnInit() {
@@ -50,7 +50,14 @@ export class DashboardComponent implements OnInit {
       next: (data) => {
         this.stats.totalAccounts = data.accounts.length;
         this.stats.pendingEntries = data.entries.filter(e => e.status === 'DRAFT' || e.status === 'Draft').length;
-        this.stats.lastClosing = data.entries.length > 0 ? data.entries[0].date : '2026-03-01';
+
+        // Robust logic for last closing
+        const closingEntry = data.entries.find(e =>
+          e.type === 'CLOSING' ||
+          (e.description && e.description.toLowerCase().includes('closing'))
+        );
+        this.stats.lastClosing = closingEntry ? closingEntry.date : 'No closing found';
+
         this.loading = false;
       },
       error: () => {
