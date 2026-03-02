@@ -11,7 +11,6 @@ import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
 import { TenantRlsInterceptor, TenantModule } from '@virteex/kernel-tenant';
-import { KafkaModule } from '@virteex/platform-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
 import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
@@ -80,11 +79,6 @@ import { InventoryPresentationModule } from '@virteex/domain-inventory-presentat
         };
       },
     }),
-    KafkaModule.forRoot({
-      clientId: 'inventory-service',
-      groupId: 'inventory-consumer',
-    }),
-
     TenantModule,
     InventoryApplicationModule,
     InventoryInfrastructureModule,

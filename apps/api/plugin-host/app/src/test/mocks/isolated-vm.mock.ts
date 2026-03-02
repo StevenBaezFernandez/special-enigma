@@ -1,12 +1,16 @@
 export class Isolate {
-  constructor(options?: any) {}
+  constructor() {
+    // Mock constructor
+  }
   createContextSync() {
     return new Context();
   }
   getHeapStatisticsSync() {
     return { total_heap_size: 100 };
   }
-  dispose() {}
+  dispose() {
+    // Mock dispose
+  }
   get isDisposed() { return false; }
   compileScriptSync(code: string) {
     return new Script(code);
@@ -15,10 +19,12 @@ export class Isolate {
 
 export class Context {
   global = {
-    setSync: jest.fn(),
-    derefInto: jest.fn(),
+    setSync: vi.fn(),
+    derefInto: vi.fn(),
   };
-  release() {}
+  release() {
+    // Mock release
+  }
 }
 
 export class Script {
