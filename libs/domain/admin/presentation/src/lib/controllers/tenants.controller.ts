@@ -1,23 +1,44 @@
-import { Controller, Post, Get, Patch, Body, Param, Query, Logger, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { Controller, Post, Get, Patch, Body, Param, Query, Logger, UseGuards, ForbiddenException } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiHeader } from '@nestjs/swagger';
 import { TenantSupportService } from '@virteex/domain-admin-application';
+import { TenantService } from '@virteex/kernel-tenant';
+import { StepUp, StepUpGuard } from '@virteex/kernel-auth';
 
 @ApiTags('Admin/Tenants')
+@ApiHeader({ name: 'X-MFA-Token', description: 'Mandatory Multi-Factor Authentication Token for Admin access' })
 @Controller('admin/tenants')
+@UseGuards(StepUpGuard) // Mandatory MFA Check for all routes in this controller
+@StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
 export class TenantsController {
   private readonly logger = new Logger(TenantsController.name);
 
-  constructor(private readonly supportService: TenantSupportService) {}
+  constructor(
+      private readonly supportService: TenantSupportService,
+      private readonly tenantService: TenantService
+  ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new tenant' })
-  async createTenant(@Body() body: any) {
-      this.logger.log(`Provisioning new tenant: ${body.name}`);
-      return { id: 'new-tenant-id', ...body, status: 'ACTIVE' };
+  @ApiOperation({ summary: 'Create a new tenant (Automated Provisioning Flow)' })
+  async createTenant(@Body() body: { id: string, mode: any, schemaName?: string }) {
+      this.logger.log(`ADMIN REQUEST: Provisioning new tenant: ${body.id}`);
+
+      const tenant = await this.tenantService.createTenant({
+          id: body.id,
+          mode: body.mode,
+          schemaName: body.schemaName,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+      });
+
+      return {
+          id: tenant.id,
+          status: 'PROVISIONING',
+          message: 'Tenant provisioning initialized successfully. Watch Kafka for completion events.'
+      };
   }
 
   @Get()
-  @ApiOperation({ summary: 'Search for tenants' })
+  @ApiOperation({ summary: 'Search for tenants in the ecosystem' })
   @ApiQuery({ name: 'query', required: false })
   async searchTenants(@Query('query') query: string = '') {
       this.logger.log(`Admin search for tenants: ${query}`);
@@ -40,6 +61,9 @@ export class TenantsController {
       @Body('status') status: 'ACTIVE' | 'SUSPENDED' | 'PROVISIONING',
       @Body('reason') reason: string
   ) {
+      if (!reason) {
+          throw new ForbiddenException('A reason is mandatory for manual status updates in production.');
+      }
       this.logger.warn(`Admin action: Changing tenant ${id} status to ${status}. Reason: ${reason}`);
       await this.supportService.updateTenantStatus(id, status, reason);
       return { message: `Tenant ${id} status updated successfully to ${status}` };

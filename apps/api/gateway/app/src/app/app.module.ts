@@ -1,15 +1,13 @@
-import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, Logger } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServerConfigModule, IdempotencyInterceptor } from '@virteex/shared-util-server-server-config';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import depthLimit from 'graphql-depth-limit';
-import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
 import { TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/kernel-tenant';
 import { KafkaModule } from '@virteex/platform-kafka';
@@ -19,12 +17,7 @@ import { AccountingPresentationModule } from '@virteex/domain-accounting-present
 import { AppController } from './app.controller';
 import { HealthController } from './health.controller';
 import { AppService } from './app.service';
-import { InitialSeederService } from '@virteex/domain-payroll-infrastructure';
-
-// Cross Domain Infrastructure (Application Level)
 import { CrossDomainInfrastructureModule } from './infrastructure/cross-domain.module';
-
-// BFF Modules
 import { StoreApiModule } from '../presentation/store-api/store-api.module';
 import { createServiceProxy } from './middleware/proxy.middleware';
 
@@ -67,20 +60,13 @@ import { createServiceProxy } from './middleware/proxy.middleware';
         };
       },
     }),
-
-    // Core Modules
     TenantModule,
-
-    // Cross Domain Infrastructure
     CrossDomainInfrastructureModule,
-
-    // BFF Modules
     StoreApiModule,
   ],
   controllers: [AppController, HealthController],
   providers: [
     AppService,
-    InitialSeederService,
     {
       provide: APP_GUARD,
       useClass: TenantThrottlerGuard,
@@ -100,30 +86,36 @@ import { createServiceProxy } from './middleware/proxy.middleware';
   ],
 })
 export class AppModule implements NestModule {
+  private readonly logger = new Logger(AppModule.name);
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtTenantMiddleware)
       .forRoutes('*');
 
-    // Proxy Routes for Microservices
-    // consumer.apply(createServiceProxy('http://virteex-accounting-service:3000')).forRoutes('accounting'); // Running in-process
-    // consumer.apply(createServiceProxy('http://virteex-payroll-service:3000')).forRoutes('payroll'); // Migrated to GraphQL Federation
+    // UNIFIED GATEWAY STRATEGY:
+    // Domain services are being migrated to GraphQL Federation (virteex-gateway).
+    // Legacy HTTP proxies are kept only for non-migrated or specialized REST endpoints.
+
+    // Services already in Federation (Preferred route via /graphql)
+    // - Accounting
+    // - Payroll
+    // - Treasury
+    // - Purchasing
+
+    // Services still using Proxy (Pending Federation migration)
+    const federationUrl = process.env['FEDERATION_GATEWAY_URL'] || 'http://virteex-gateway:3000/api';
+
+    consumer.apply(createServiceProxy(federationUrl)).forRoutes('graphql');
+
+    // Legacy/REST Proxies
     consumer.apply(createServiceProxy('http://virteex-crm-service:3000')).forRoutes('crm');
     consumer.apply(createServiceProxy('http://virteex-projects-service:3000')).forRoutes('projects');
     consumer.apply(createServiceProxy('http://virteex-manufacturing-service:3000')).forRoutes('manufacturing');
-    // consumer.apply(createServiceProxy('http://virteex-inventory-service:3000')).forRoutes('inventory'); // Running in-process
-
-    // Proxy for GraphQL Gateway
-    // Assuming virteex-gateway runs on port 3000 and has global prefix 'api', exposing GraphQL at '/api/graphql'
-    // This proxy forwards '/graphql' requests to 'http://virteex-gateway:3000/api/graphql'
-    // Note: createServiceProxy with pathRewrite might be needed if exact mapping fails,
-    // but here we target the base URL. If request is /graphql, and target is .../api, it becomes .../api/graphql
-    consumer.apply(createServiceProxy('http://virteex-gateway:3000/api')).forRoutes('graphql');
-
-    // consumer.apply(createServiceProxy('http://virteex-treasury-service:3000')).forRoutes('treasury'); // Migrated to GraphQL Federation
-    // consumer.apply(createServiceProxy('http://virteex-purchasing-service:3000')).forRoutes('purchasing'); // Migrated to GraphQL Federation
     consumer.apply(createServiceProxy('http://virteex-bi-service:3000')).forRoutes('bi');
     consumer.apply(createServiceProxy('http://virteex-admin-service:3000')).forRoutes('admin');
     consumer.apply(createServiceProxy('http://virteex-fixed-assets-service:3000')).forRoutes('fixed-assets');
+
+    this.logger.log('API Gateway configured with Hybrid Strategy (Federation + Proxy).');
   }
 }

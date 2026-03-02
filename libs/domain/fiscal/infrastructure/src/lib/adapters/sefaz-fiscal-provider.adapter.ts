@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FiscalProvider } from '@virteex/domain-fiscal-domain/fiscal-provider.port';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom, retry, timer } from 'rxjs';
+import { firstValueFrom, timer } from 'rxjs';
+import { retry } from 'rxjs/operators';
 import { SignedXml } from 'xml-crypto';
-import * as crypto from 'crypto';
 import * as https from 'https';
 import * as libxmljs from 'libxmljs';
 import * as fs from 'fs';
@@ -19,24 +19,16 @@ export class SefazFiscalAdapter implements FiscalProvider {
   constructor(private readonly httpService: HttpService) {
     const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
 
-    if (process.env['FISCAL_PRIVATE_KEY']) {
-      this.privateKey = process.env['FISCAL_PRIVATE_KEY'];
-    }
+    this.privateKey = process.env['FISCAL_PRIVATE_KEY'] || '';
+    this.certificate = process.env['FISCAL_CERTIFICATE'] || '';
 
-    if (process.env['FISCAL_CERTIFICATE']) {
-      this.certificate = process.env['FISCAL_CERTIFICATE'];
-    }
-
-    if (!this.privateKey && isProd) {
-      throw new Error('FATAL: FISCAL_PRIVATE_KEY is mandatory for SEFAZ in production.');
-    }
-
-    if (!this.privateKey) {
-      throw new Error('FISCAL_PRIVATE_KEY not provided. SEFAZ adapter requires a valid persistent private key.');
-    }
-
-    if (isProd && !this.certificate) {
-      throw new Error('FATAL: FISCAL_CERTIFICATE is mandatory for SEFAZ in production (mTLS).');
+    if (isProd) {
+      if (!this.privateKey) {
+        throw new Error('FATAL: FISCAL_PRIVATE_KEY is mandatory for SEFAZ in production.');
+      }
+      if (!this.certificate) {
+        throw new Error('FATAL: FISCAL_CERTIFICATE is mandatory for SEFAZ in production (mTLS).');
+      }
     }
 
     try {
@@ -57,7 +49,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
   }
 
   async validateInvoice(invoice: any): Promise<boolean> {
-    this.logger.log(`Validating invoice ${invoice?.id} with SEFAZ (Brazil)...`);
+    this.logger.log(`Validating invoice ${invoice?.id || 'unknown'} with SEFAZ (Brazil)...`);
 
     if (!invoice) {
         throw new Error('Invoice is null or undefined');
@@ -67,13 +59,14 @@ export class SefazFiscalAdapter implements FiscalProvider {
     if (typeof invoice === 'string') {
         xmlContent = invoice;
     } else {
-        this.logger.warn('validateInvoice received an object, structural validation requires XML string. Falling back to basic check.');
-        return !!invoice.id;
+        // REMOVED: Fallback mock. Structural validation is now MANDATORY for production-ready status.
+        this.logger.error('validateInvoice received an object, but structural validation requires an XML string. Blocking.');
+        throw new Error('Structural validation requires XML string. Object input is no longer supported for SEFAZ production flow.');
     }
 
     if (!this.xsdSchema) {
         this.logger.error('XSD Schema not loaded. Structural validation cannot proceed.');
-        return false;
+        throw new Error('SEFAZ XSD Schema is missing. Validation blocked.');
     }
 
     try {
@@ -84,28 +77,30 @@ export class SefazFiscalAdapter implements FiscalProvider {
             throw new Error(`NFe XML Validation Failed: ${xmlDoc.validationErrors.map(e => e.message).join(', ')}`);
         }
         this.logger.log('NFe XML Validation Successful');
+        return true;
     } catch (e: any) {
         this.logger.error(`NFe Validation Error: ${e.message}`);
         throw e;
     }
-
-    return true;
   }
 
   async signInvoice(invoice: any): Promise<string> {
-    this.logger.log(`Signing invoice ${invoice?.id || 'UNKNOWN'} with SEFAZ Digital Certificate (A1/A3)...`);
+    this.logger.log(`Signing invoice ${invoice?.id || 'UNKNOWN'} with SEFAZ Digital Certificate...`);
+
+    if (!this.privateKey) {
+        throw new Error('Cannot sign NFe: Private key is missing.');
+    }
 
     try {
       let xmlContent = '';
       if (typeof invoice === 'string') {
           xmlContent = invoice;
       } else {
-          this.logger.warn('Received object in signInvoice, expecting XML string. Using fallback wrapper.');
-          xmlContent = `<NFe xmlns="http://www.portalfiscal.inf.br/nfe"><infNFe Id="NFe${invoice?.id || 'TEST'}" version="4.00"></infNFe></NFe>`;
+          // In a real system, we would serialize the object to XML here using a production-grade serializer
+          throw new Error('Automatic serialization not implemented. signInvoice requires raw XML string for cryptographic integrity.');
       }
 
       const sig = new SignedXml();
-
       sig.addReference({
           xpath: "//*[local-name(.)='infNFe']",
           transforms: ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']
@@ -115,15 +110,12 @@ export class SefazFiscalAdapter implements FiscalProvider {
       sig.signatureAlgorithm = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
 
       (sig as any).signingKey = this.privateKey;
-
       sig.computeSignature(xmlContent);
 
-      const signedXml = sig.getSignedXml();
-      this.logger.log(`NFe signed successfully.`);
-      return signedXml;
+      return sig.getSignedXml();
 
     } catch (error: any) {
-      this.logger.error(`Failed to sign NFe: ${error.message}`, error.stack);
+      this.logger.error(`Failed to sign NFe: ${error.message}`);
       throw new Error(`Signing failed: ${error.message}`);
     }
   }
@@ -132,21 +124,17 @@ export class SefazFiscalAdapter implements FiscalProvider {
     this.logger.log(`Starting NFe transmission to SEFAZ...`);
 
     try {
-        // Enforce structural validation before transmission
         const isValid = await this.validateInvoice(invoice);
         if (!isValid) {
             throw new Error('Invoice failed structural validation prior to transmission.');
         }
 
-        const sefazUrl = process.env['SEFAZ_API_URL'] || 'https://nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx';
-        this.logger.debug(`Target SEFAZ Endpoint: ${sefazUrl}`);
-
-        let signedXml = '';
-        if (typeof invoice === 'string') {
-            signedXml = invoice;
-        } else {
-             signedXml = await this.signInvoice(invoice);
+        const sefazUrl = process.env['SEFAZ_API_URL'];
+        if (!sefazUrl) {
+            throw new Error('SEFAZ_API_URL is not configured.');
         }
+
+        let signedXml = typeof invoice === 'string' ? invoice : await this.signInvoice(invoice);
 
         const soapEnvelope = `
         <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:nfe="http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4">
@@ -156,7 +144,6 @@ export class SefazFiscalAdapter implements FiscalProvider {
            </soap:Body>
         </soap:Envelope>`;
 
-        // Configure mTLS Agent
         const httpsAgent = new https.Agent({
             cert: this.certificate,
             key: this.privateKey,
@@ -187,7 +174,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
             throw new Error(`SEFAZ HTTP Error: ${response.status}`);
         }
     } catch (error: any) {
-        this.logger.error(`SEFAZ Transmission failed: ${error.message}`, error.response?.data);
+        this.logger.error(`SEFAZ Transmission failed: ${error.message}`);
         throw new Error(`SEFAZ Transmission Error: ${error.message}`);
     }
   }

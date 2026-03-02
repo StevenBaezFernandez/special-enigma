@@ -1,31 +1,13 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecordJournalEntryUseCase } from './record-journal-entry.use-case';
-import { JOURNAL_ENTRY_REPOSITORY, JournalEntryRepository, ACCOUNT_REPOSITORY, AccountRepository, Account, JournalEntry, JournalEntryLine } from '@virteex/domain-accounting-domain';
+import { JOURNAL_ENTRY_REPOSITORY, JournalEntryRepository, ACCOUNT_REPOSITORY, AccountRepository, Account } from '@virteex/domain-accounting-domain';
 import { AccountType } from '@virteex/domain-accounting-contracts';
-import { MikroORM } from '@mikro-orm/core';
-import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 describe('RecordJournalEntryUseCase', () => {
   let service: RecordJournalEntryUseCase;
   let journalRepo: JournalEntryRepository;
   let accountRepo: AccountRepository;
-  let orm: MikroORM;
-
-  beforeAll(async () => {
-    // Initialize MikroORM metadata for the entities to work correctly in tests
-    orm = await MikroORM.init({
-      driver: PostgreSqlDriver,
-      dbName: 'test',
-      connect: false, // Do not connect to DB
-      entities: [Account, JournalEntry, JournalEntryLine],
-      discovery: { disableDynamicFileAccess: true }, // Important for tests
-    });
-  });
-
-  afterAll(async () => {
-    await orm.close();
-  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -67,20 +49,17 @@ describe('RecordJournalEntryUseCase', () => {
     const account2 = new Account('tenant1', '200', 'Revenue', AccountType.REVENUE);
     account2.id = '2';
 
-    (accountRepo.findById as jest.Mock).mockImplementation((id) => {
+    (accountRepo.findById as any).mockImplementation((id: string) => {
         if (id === '1') return Promise.resolve(account1);
         if (id === '2') return Promise.resolve(account2);
         return Promise.resolve(null);
     });
 
-    (journalRepo.create as jest.Mock).mockImplementation((entry) => {
-        // Mock the lines properly for the mapper
-        const mockEntry = {
+    (journalRepo.create as any).mockImplementation((entry: any) => {
+        return Promise.resolve({
             ...entry,
-            id: 'entry1',
-            lines: { getItems: () => entry.lines.getItems() }
-        };
-        return Promise.resolve(mockEntry);
+            id: 'entry1'
+        });
     });
 
     const result = await service.execute(dto);
@@ -105,7 +84,7 @@ describe('RecordJournalEntryUseCase', () => {
     const account2 = new Account('tenant1', '200', 'Revenue', AccountType.REVENUE);
     account2.id = '2';
 
-    (accountRepo.findById as jest.Mock).mockImplementation((id) => {
+    (accountRepo.findById as any).mockImplementation((id: string) => {
         if (id === '1') return Promise.resolve(account1);
         if (id === '2') return Promise.resolve(account2);
         return Promise.resolve(null);
@@ -127,7 +106,7 @@ describe('RecordJournalEntryUseCase', () => {
       const account1 = new Account('tenant2', '100', 'Cash', AccountType.ASSET);
       account1.id = '1';
 
-      (accountRepo.findById as jest.Mock).mockResolvedValue(account1);
+      (accountRepo.findById as any).mockResolvedValue(account1);
 
       await expect(service.execute(dto)).rejects.toThrow('Account 1 belongs to a different tenant');
   });
