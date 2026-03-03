@@ -97,16 +97,14 @@ export class MigrationOrchestratorService {
   private async verifyRecentBackup(tenantId: string): Promise<boolean> {
       this.logger.log(`Verifying latest backup for tenant ${tenantId}`);
       try {
-          // In Virteex, backups are recorded in a dedicated table or via AWS SDK
-          // For the kernel level, we query the presence of a success record in the last 24h
-          const knex = this.em.getKnex();
+          const knex = (this.em as any).getKnex();
           const backup = await knex('tenant_backups')
             .where({ tenant_id: tenantId, status: 'COMPLETED' })
             .where('finished_at', '>', new Date(Date.now() - 24 * 60 * 60 * 1000))
             .first();
 
           return !!backup;
-      } catch (err) {
+      } catch (err: any) {
           this.logger.error(`Failed to verify backup for ${tenantId}: ${err.message}`);
           return false;
       }
@@ -114,10 +112,10 @@ export class MigrationOrchestratorService {
 
   private async getReplicaLag(): Promise<number> {
       try {
-          const knex = this.em.getKnex();
+          const knex = (this.em as any).getKnex();
           const result = await knex.raw("SELECT EXTRACT(EPOCH FROM (now() - reply_time)) * 1000 AS lag_ms FROM pg_stat_replication LIMIT 1");
           return result.rows[0]?.lag_ms || 0;
-      } catch (err) {
+      } catch (err: any) {
           this.logger.warn(`Could not query pg_stat_replication: ${err.message}. Assuming 0 lag for standalone/dev.`);
           return 0;
       }
@@ -125,7 +123,7 @@ export class MigrationOrchestratorService {
 
   private async checkStorageCapacity(tenant: Tenant): Promise<boolean> {
       try {
-          const knex = this.em.getKnex();
+          const knex = (this.em as any).getKnex();
           const dbSizeResult = await knex.raw("SELECT pg_database_size(current_database()) as size");
           const size = parseInt(dbSizeResult.rows[0].size, 10);
 
@@ -134,7 +132,7 @@ export class MigrationOrchestratorService {
           // Here we use a safe constant threshold for the current DB
           const MAX_SIZE_BYTES = 50 * 1024 * 1024 * 1024; // 50GB
           return size < (MAX_SIZE_BYTES * 0.85);
-      } catch (err) {
+      } catch (err: any) {
           this.logger.error(`Failed to check storage capacity: ${err.message}`);
           return false;
       }
@@ -159,7 +157,7 @@ export class MigrationOrchestratorService {
       // Ensure we can still talk to the DB
       try {
           const em = tenant.mode === TenantMode.DATABASE
-              ? this.em.fork({ connectionString: tenant.connectionString })
+              ? (this.em as any).fork({ connectionString: tenant.connectionString })
               : this.em;
           await em.getConnection().execute('SELECT 1');
       } catch (e: any) {
@@ -170,9 +168,9 @@ export class MigrationOrchestratorService {
   private async verifySchemaVersion(tenant: Tenant): Promise<void> {
       // Verify migrator version
       const em = tenant.mode === TenantMode.DATABASE
-          ? this.em.fork({ connectionString: tenant.connectionString })
+          ? (this.em as any).fork({ connectionString: tenant.connectionString })
           : this.em;
-      const migrator = em.getMigrator();
+      const migrator = (em as any).getMigrator();
       const pending = await migrator.getPendingMigrations();
       if (pending.length > 0) {
           throw new Error(`Migration appears incomplete. ${pending.length} migrations still pending.`);
@@ -206,10 +204,10 @@ export class MigrationOrchestratorService {
           // 1. Revert schema changes
           this.logger.log(`Reverting schema changes for ${tenantId}`);
           const em = tenant.mode === TenantMode.DATABASE
-              ? this.em.fork({ connectionString: tenant.connectionString })
+              ? (this.em as any).fork({ connectionString: tenant.connectionString })
               : this.em;
 
-          const migrator = em.getMigrator();
+          const migrator = (em as any).getMigrator();
           // We revert the last migration if we were in the middle of it
           await migrator.down();
 
@@ -238,16 +236,16 @@ export class MigrationOrchestratorService {
   }
 
   private async executeDatabaseMigration(tenant: Tenant): Promise<void> {
-    const tenantEm = this.em.fork({ connectionString: tenant.connectionString });
+    const tenantEm = (this.em as any).fork({ connectionString: tenant.connectionString });
     await tenantEm.getMigrator().up();
   }
 
   private async executeSchemaMigration(tenant: Tenant): Promise<void> {
-    await this.em.getMigrator().up({ schema: tenant.schemaName });
+    await (this.em as any).getMigrator().up({ schema: tenant.schemaName });
   }
 
   private async executeSharedMigration(): Promise<void> {
-    await this.em.getMigrator().up();
+    await (this.em as any).getMigrator().up();
   }
 
   private async calculateDataIntegrityHash(tenantId: string): Promise<string> {
@@ -265,7 +263,7 @@ export class MigrationOrchestratorService {
     this.logger.log(`Starting migration for physical isolated tenant: ${tenantId}`);
 
     try {
-        const tenantEm = this.em.fork({
+        const tenantEm = (this.em as any).fork({
             connectionString: tenant.connectionString,
         });
 
@@ -288,7 +286,7 @@ export class MigrationOrchestratorService {
               await this.migrateDatabasePerTenant(tenant.id);
           } else {
               this.logger.log(`Migrating schema ${tenant.schemaName} for tenant ${tenant.id}`);
-              const migrator = this.em.getMigrator();
+              const migrator = (this.em as any).getMigrator();
               await migrator.up({ schema: tenant.schemaName });
           }
       }

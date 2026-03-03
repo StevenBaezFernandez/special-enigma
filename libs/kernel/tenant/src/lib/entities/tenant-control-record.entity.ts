@@ -19,7 +19,7 @@ export class TenantControlRecord {
   complianceProfile!: string;
 
   @Property({ default: false })
-  isFrozen: boolean = false;
+  isFrozen = false;
 
   @Enum(() => TenantStatus)
   status: TenantStatus = TenantStatus.PROVISIONING;

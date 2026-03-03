@@ -196,7 +196,13 @@ export default [
             },
             {
               sourceTag: 'scope:pos',
-              onlyDependOnLibsWithTags: ['scope:pos', 'scope:shared', 'scope:kernel']
+              onlyDependOnLibsWithTags: [
+                'scope:pos',
+                'scope:shared',
+                'scope:kernel',
+                'scope:billing',
+                'scope:inventory'
+              ]
             },
             {
               sourceTag: 'scope:shared',

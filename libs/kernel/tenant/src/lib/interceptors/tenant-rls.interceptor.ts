@@ -4,6 +4,8 @@ import { Observable, from, lastValueFrom } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { getTenantContext } from '@virteex/kernel-auth';
 import { TenantService } from '../tenant.service';
+import { TenantControlRecord } from '../entities/tenant-control-record.entity';
+import { TenantMode } from '../interfaces/tenant-config.interface';
 import { Counter, Histogram } from '@opentelemetry/api';
 import { metrics } from '@opentelemetry/api';
 
@@ -58,7 +60,7 @@ export class TenantRlsInterceptor implements NestInterceptor {
         }
     }
 
-    if (config.mode === 'SHARED') {
+    if (config.mode === TenantMode.SHARED) {
       return from(
         this.em.transactional(async (txEm) => {
           // ENSURE RLS is active at session level
@@ -84,9 +86,9 @@ export class TenantRlsInterceptor implements NestInterceptor {
           });
         })
       );
-    } else if (config.mode === 'DATABASE') {
+    } else if (config.mode === TenantMode.DATABASE) {
         // For DB-per-tenant, we ensure we use a dedicated EM fork
-        const tenantEm = this.em.fork({ connectionString: config.connectionString });
+        const tenantEm = (this.em as any).fork({ connectionString: config.connectionString });
         return from(
             RequestContext.create(tenantEm, async () => {
                 try {
