@@ -1,0 +1,23 @@
+{
+  "service": "federation-gateway",
+  "slos": [
+    {
+      "name": "availability",
+      "target": 0.9999,
+      "description": "Percentage of successful GraphQL operations (non-5xx errors)",
+      "sli": "sum(rate(http_requests_total{status!~'5..'}[5m])) / sum(rate(http_requests_total[5m]))"
+    },
+    {
+      "name": "latency_p95",
+      "target": "120ms",
+      "description": "p95 latency for all GraphQL operations",
+      "sli": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))"
+    },
+    {
+      "name": "composition_success",
+      "target": 1.0,
+      "description": "Successful supergraph composition in CI",
+      "sli": "pipeline_success_rate{job='compose-supergraph'}"
+    }
+  ]
+}

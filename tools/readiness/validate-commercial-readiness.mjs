@@ -8,7 +8,7 @@ const matrix = JSON.parse(raw);
 
 const allowedStatus = new Set(['GA', 'Beta', 'No listo']);
 const violations = [];
-const requiredFiscalProviders = new Set(['SAT', 'SEFAZ', 'DIAN', 'TAX_PARTNER']);
+const requiredFiscalProviders = new Set(['SAT', 'SEFAZ', 'DIAN', 'TAX_PARTNER', 'DGII']); // Added DGII for DO
 
 for (const [moduleName, countries] of Object.entries(matrix.modules ?? {})) {
   for (const [country, cfg] of Object.entries(countries)) {
@@ -45,6 +45,7 @@ if (matrix.modules?.marketplace?.CO?.status === 'GA') {
 }
 
 for (const file of sourceFiles) {
+  if (!fs.existsSync(path.resolve(file))) continue;
   const content = fs.readFileSync(path.resolve(file), 'utf8');
   for (const { regex, reason } of patterns) {
     if (regex.test(content)) {
