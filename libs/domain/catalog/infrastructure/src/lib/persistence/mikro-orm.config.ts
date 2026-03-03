@@ -1,10 +1,10 @@
 import { defineConfig } from '@mikro-orm/postgresql';
-import { Product } from '@virteex/domain-catalog-domain';
+import { Product, Plugin, PluginVersion, TenantConsent, MeteringRecord } from '@virteex/domain-catalog-domain';
 import { TenantModelSubscriber } from '@virteex/kernel-tenant';
 import { getTenantContext } from '@virteex/kernel-auth';
 
 export default defineConfig({
-  entities: [Product],
+  entities: [Product, Plugin, PluginVersion, TenantConsent, MeteringRecord],
   subscribers: [new TenantModelSubscriber()],
   filters: {
     tenant: {

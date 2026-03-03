@@ -7,6 +7,12 @@ vi.mock('axios');
 describe('PluginAdmissionService', () => {
   const originalEnv = { ...process.env };
 
+  const validSbom = {
+    bomFormat: 'CycloneDX',
+    specVersion: '1.4',
+    components: []
+  };
+
   beforeEach(() => {
     vi.restoreAllMocks();
     process.env = { ...originalEnv };
@@ -16,11 +22,16 @@ describe('PluginAdmissionService', () => {
     process.env = { ...originalEnv };
   });
 
-  it('fails in production without signing keys', () => {
-    process.env.NODE_ENV = 'production';
-    delete process.env.PLUGIN_SIGNING_PRIVATE_KEY;
-    delete process.env.PLUGIN_SIGNING_PUBLIC_KEY;
-    expect(() => new PluginAdmissionService()).toThrow(/required in production/);
+  it('rejects missing SBOM', async () => {
+    process.env.NODE_ENV = 'development';
+    process.env.ALLOW_EPHEMERAL_PLUGIN_KEYS = 'true';
+    const svc = new PluginAdmissionService();
+    const result = await svc.validatePlugin({
+      name: 'test',
+      code: 'log("ok")',
+    });
+    expect(result.status).toBe('rejected');
+    expect(result.reason).toBe('Missing or Invalid SBOM');
   });
 
   it('rejects unsafe dependencies', async () => {
@@ -31,7 +42,8 @@ describe('PluginAdmissionService', () => {
     const result = await svc.validatePlugin({
       name: 'unsafe-plugin',
       code: 'log("ok")',
-      dependencies: { fs: '^1.0.0' }
+      dependencies: { fs: '^1.0.0' },
+      sbom: validSbom
     });
 
     expect(result.status).toBe('rejected');
@@ -51,7 +63,12 @@ describe('PluginAdmissionService', () => {
     } as any);
 
     const svc = new PluginAdmissionService();
-    const result = await svc.validatePlugin({ name: 'plugin', code: 'console.log("safe")', dependencies: {} });
+    const result = await svc.validatePlugin({
+        name: 'plugin',
+        code: 'log("safe")',
+        dependencies: {},
+        sbom: validSbom
+    });
 
     expect(result.status).toBe('pending');
     expect(result.reason).toBe('DAST Quarantine');

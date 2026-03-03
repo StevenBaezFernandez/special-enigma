@@ -1,8 +1,15 @@
 import Fastify, { FastifyRequest } from 'fastify';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as crypto from 'crypto';
+import { MikroORM, RequestContext } from '@mikro-orm/core';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { Plugin, PluginVersion, PluginStatus, PluginChannel, TenantConsent, MeteringRecord } from '@virteex/domain-catalog-domain';
+import ormConfig from '../../../../../libs/domain/catalog/infrastructure/src/lib/persistence/mikro-orm.config';
 import { SandboxService } from './sandbox.service';
 import { PluginAdmissionService } from './services/plugin-admission.service';
+import { MeteringService } from './services/metering.service';
+import { BillingService } from './services/billing.service';
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 const authToken = process.env.PLUGIN_HOST_API_TOKEN;
@@ -10,7 +17,6 @@ const registryPath = process.env.PLUGIN_REGISTRY_FILE ?? path.join(__dirname, 'p
 const sandboxMode = process.env.PLUGIN_SANDBOX_MODE ?? 'standard';
 const admissionMode = process.env.PLUGIN_ADMISSION_MODE ?? 'warn';
 const marketplaceRegion = (process.env.MARKETPLACE_REGION ?? 'MX').toUpperCase();
-const revokedPlugins = new Map<string, { reason: string; revokedAt: string }>();
 
 const marketplaceRegionPolicy: Record<string, { enabled: boolean; requiresHardenedSandbox: boolean }> = {
   MX: { enabled: true, requiresHardenedSandbox: true },
@@ -52,26 +58,12 @@ const server = Fastify({ logger: true });
 const sandbox = new SandboxService();
 const admissionService = new PluginAdmissionService();
 
-let plugins = new Map<string, any>();
+let orm: MikroORM<PostgreSqlDriver>;
 
-if (fs.existsSync(registryPath)) {
-  try {
-    const data = JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
-    plugins = new Map(Object.entries(data));
-  } catch (e) {
-    server.log.error(e, 'Failed to load plugins from storage');
-  }
-}
-
-function savePlugins() {
-  try {
-    fs.mkdirSync(path.dirname(registryPath), { recursive: true });
-    fs.writeFileSync(registryPath, JSON.stringify(Object.fromEntries(plugins), null, 2));
-  } catch (e) {
-    server.log.error(e, 'Failed to save plugins');
-    throw e;
-  }
-}
+// Middleware for MikroORM RequestContext
+server.addHook('onRequest', (request, reply, done) => {
+  RequestContext.create(orm.em, done);
+});
 
 function authorize(request: FastifyRequest) {
   if (!authToken) {
@@ -87,11 +79,14 @@ function authorize(request: FastifyRequest) {
 }
 
 server.get('/plugins', async () => {
-  return Array.from(plugins.values()).map((plugin) => ({
-    name: plugin.name,
-    version: plugin.version,
-    description: plugin.description,
-    author: plugin.author
+  const plugins = await orm.em.find(Plugin, {}, { populate: ['versions'] });
+  return plugins.map((p) => ({
+    id: p.id,
+    name: p.name,
+    status: p.status,
+    description: p.description,
+    author: p.author,
+    versionCount: p.versions.length,
   }));
 });
 
@@ -102,21 +97,54 @@ server.post('/plugins', async (request, reply) => {
     return reply.status(error.statusCode || 401).send({ error: error.message });
   }
 
-  const body = request.body as { name: string; version: string; code: string; description?: string; author?: string };
+  const body = request.body as { name: string; version: string; code: string; description?: string; author?: string, capabilities?: string[], sbom?: any };
 
   if (!body.name || !body.code || !body.version) {
     return reply.status(400).send({ error: 'Name, version, and code are required' });
   }
 
-  plugins.set(body.name, body);
-  savePlugins();
+  let plugin = await orm.em.findOne(Plugin, { name: body.name });
+  if (!plugin) {
+      plugin = new Plugin();
+      plugin.id = crypto.randomUUID();
+      plugin.name = body.name;
+      plugin.description = body.description;
+      plugin.author = body.author;
+      orm.em.persist(plugin);
+  }
 
-  return { status: 'success', message: `Plugin ${body.name} v${body.version} registered.` };
+  const admission = await admissionService.validatePlugin({
+    name: body.name,
+    code: body.code,
+    sbom: body.sbom
+  });
+
+  if (admission.status === 'rejected') {
+    return reply.status(403).send({
+        error: 'Plugin rejected by admission policy during registration',
+        reason: admission.reason
+    });
+  }
+
+  const pVersion = new PluginVersion();
+  pVersion.id = crypto.randomUUID();
+  pVersion.plugin = plugin;
+  pVersion.version = body.version;
+  pVersion.code = body.code;
+  pVersion.capabilities = body.capabilities;
+  pVersion.sbom = body.sbom;
+  pVersion.signature = admission.signature;
+  pVersion.channel = PluginChannel.STABLE;
+
+  orm.em.persist(pVersion);
+  await orm.em.flush();
+
+  return { status: 'success', message: `Plugin ${body.name} v${body.version} registered.`, id: plugin.id };
 });
 
 server.get('/plugins/:name', async (request, reply) => {
   const { name } = request.params as { name: string };
-  const plugin = plugins.get(name);
+  const plugin = await orm.em.findOne(Plugin, { name }, { populate: ['versions'] });
   if (!plugin) {
     return reply.status(404).send({ error: 'Plugin not found' });
   }
@@ -131,18 +159,16 @@ server.post('/plugins/:name/revoke', async (request, reply) => {
   }
 
   const { name } = request.params as { name: string };
-  const body = (request.body ?? {}) as { reason?: string };
+  const plugin = await orm.em.findOne(Plugin, { name });
 
-  if (!plugins.has(name)) {
+  if (!plugin) {
     return reply.status(404).send({ error: 'Plugin not found' });
   }
 
-  revokedPlugins.set(name, {
-    reason: body.reason?.trim() || 'manual-revocation',
-    revokedAt: new Date().toISOString(),
-  });
+  plugin.status = PluginStatus.REVOKED;
+  await orm.em.flush();
 
-  return { status: 'revoked', plugin: name, ...revokedPlugins.get(name) };
+  return { status: 'revoked', plugin: name };
 });
 
 server.post('/execute', async (request, reply) => {
@@ -152,78 +178,139 @@ server.post('/execute', async (request, reply) => {
     return reply.status(error.statusCode || 401).send({ error: error.message });
   }
 
-  const body = request.body as { code?: string; pluginName?: string; name?: string; dependencies?: Record<string, string> };
+  const body = request.body as { code?: string; pluginName?: string; version?: string };
   let codeToRun = body.code;
-  let pluginName = body.name || 'anonymous-plugin';
+  let signature: string | undefined;
 
-  if (!codeToRun && body.pluginName) {
-    const plugin = plugins.get(body.pluginName);
+  if (body.pluginName) {
+    const plugin = await orm.em.findOne(Plugin, { name: body.pluginName }, { populate: ['versions'] });
     if (!plugin) {
       return reply.status(404).send({ error: `Plugin ${body.pluginName} not found` });
     }
-    codeToRun = plugin.code;
-    pluginName = plugin.name;
+
+    if (plugin.status === PluginStatus.REVOKED) {
+        return reply.status(403).send({ error: 'Plugin is revoked' });
+    }
+
+    const v = body.version
+        ? plugin.versions.getItems().find(iv => iv.version === body.version)
+        : plugin.versions.getItems().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
+
+    if (!v) {
+        return reply.status(404).send({ error: 'Version not found' });
+    }
+    codeToRun = v.code;
+    signature = v.signature;
   }
 
   if (!codeToRun) {
     return reply.status(400).send({ error: 'Code or valid pluginName is required' });
   }
 
-  if (body.pluginName && revokedPlugins.has(body.pluginName)) {
-    return reply.status(403).send({
-      error: 'Plugin execution denied by revocation policy',
-      pluginName: body.pluginName,
-      revocation: revokedPlugins.get(body.pluginName),
-    });
+  // Mandatory re-validation if code is passed directly (Level 5)
+  if (body.code) {
+      const admission = await admissionService.validatePlugin({
+        name: 'ephemeral',
+        code: codeToRun,
+        sbom: { bomFormat: 'CycloneDX', specVersion: '1.4', components: [] }
+      });
+      if (admission.status === 'rejected') {
+        return reply.status(403).send({ error: 'Direct code rejected by admission policy' });
+      }
+      signature = admission.signature;
   }
 
-  const admission = await admissionService.validatePlugin({
-    name: pluginName,
-    code: codeToRun,
-    dependencies: body.dependencies
+  // Capability Consent Enforcement (Level 5)
+  const tenantId = request.headers['x-tenant-id'] as string;
+  if (!tenantId) {
+      return reply.status(400).send({ error: 'x-tenant-id header is required for execution' });
+  }
+
+  let authorizedCapabilities: string[] = [];
+  if (body.pluginName) {
+      const plugin = await orm.em.findOne(Plugin, { name: body.pluginName }, { populate: ['versions'] });
+      const version = body.version
+        ? plugin!.versions.getItems().find(v => v.version === body.version)
+        : plugin!.versions.getItems().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
+
+      if (version?.capabilities && version.capabilities.length > 0) {
+          const consent = await orm.em.findOne(TenantConsent, { tenantId, plugin: plugin! });
+          const granted = consent?.grantedCapabilities || [];
+          const missing = version.capabilities.filter(cap => !granted.includes(cap));
+
+          if (missing.length > 0) {
+              return reply.status(403).send({
+                  error: 'Tenant consent missing for required capabilities',
+                  missingCapabilities: missing
+              });
+          }
+          authorizedCapabilities = granted;
+      }
+  }
+
+  const result = await sandbox.run(codeToRun, signature, undefined, authorizedCapabilities);
+
+  // Metering Implementation (Level 5)
+  const meteringId = await new MeteringService(orm.em as any).recordExecution({
+    tenantId,
+    pluginId: body.pluginName || 'ephemeral',
+    version: body.version || '0.0.0-direct',
+    executionTimeMs: result.executionTimeMs || 0,
+    memoryBytes: result.metrics?.memoryBytes || 0,
+    egressCount: result.metrics?.egressCount || 0,
+    success: result.success
   });
-
-  if (admission.status === 'rejected') {
-    return reply.status(403).send({
-      error: 'Plugin rejected by admission policy',
-      reason: admission.reason,
-      details: admission.details,
-      riskScore: admission.riskScore
-    });
-  }
-
-  const result = await sandbox.run(codeToRun, admission.signature);
 
   if (!result.success) {
     return reply.send({
       status: 'execution_failed',
       logs: result.logs,
       error: result.error,
-      executionTimeMs: result.executionTimeMs
+      executionTimeMs: result.executionTimeMs,
+      meteringId
     });
   }
 
   return reply.send({
     status: 'success',
     logs: result.logs,
-    executionTimeMs: result.executionTimeMs
+    executionTimeMs: result.executionTimeMs,
+    meteringId
   });
+});
+
+server.get('/billing/reconciliation/:tenantId', async (request, reply) => {
+    try {
+        authorize(request);
+    } catch (error: any) {
+        return reply.status(error.statusCode || 401).send({ error: error.message });
+    }
+
+    const { tenantId } = request.params as { tenantId: string };
+    const billingService = new BillingService(orm.em as any);
+
+    const report = await billingService.generateReconciliationReport(
+        tenantId,
+        new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+        new Date()
+    );
+
+    return report;
 });
 
 server.get('/health', async () => {
   return {
     status: 'ok',
-    version: '1.3.0',
-    registryPath,
+    version: '1.5.0-hardened',
     sandboxMode,
     admissionMode,
     marketplaceRegion,
-    revokedPluginCount: revokedPlugins.size,
   };
 });
 
 const start = async () => {
   try {
+    orm = await MikroORM.init(ormConfig);
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
     await server.listen({ port, host: '0.0.0.0' });
   } catch (err) {

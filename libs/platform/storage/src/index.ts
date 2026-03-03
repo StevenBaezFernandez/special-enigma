@@ -29,7 +29,9 @@ import { S3StorageAdapter } from './lib/adapters/s3-storage.adapter';
 export class SharedInfrastructureStorageModule {}
 
 export * from './lib/ports/storage.port';
+export * from './lib/ports/secret-manager.port';
 export * from './lib/adapters/filesystem-storage.adapter';
 export * from './lib/adapters/s3-storage.adapter';
+export * from './lib/adapters/aws-secret-manager.adapter';
 // Alias for backward compatibility
 export { StoragePort as StorageService } from './lib/ports/storage.port';

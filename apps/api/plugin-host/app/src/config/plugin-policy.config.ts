@@ -4,6 +4,7 @@ export const PLUGIN_POLICY = {
       'api.virteex.io',
       'auth.virteex.io',
       'trusted-partner.com',
+      'api.taxjar.com',
     ],
     denyByDefault: true,
   },

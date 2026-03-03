@@ -4,6 +4,12 @@ import { PluginAdmissionService } from './services/plugin-admission.service';
 describe('SandboxService', () => {
   let sandbox: SandboxService;
 
+  const validSbom = {
+    bomFormat: 'CycloneDX',
+    specVersion: '1.4',
+    components: []
+  };
+
   beforeAll(() => {
     process.env.ALLOW_EPHEMERAL_PLUGIN_KEYS = 'true';
     new PluginAdmissionService(); // Initialize public key
@@ -20,7 +26,7 @@ describe('SandboxService', () => {
   it('should execute valid code with valid signature', async () => {
     const admission = new PluginAdmissionService();
     const code = 'const a = 1; const b = 2;';
-    const validation = await admission.validatePlugin({ name: 'test', code });
+    const validation = await admission.validatePlugin({ name: 'test', code, sbom: validSbom });
     const result = await sandbox.run(code, validation.signature);
     expect(result.success).toBe(true);
   });
@@ -28,7 +34,7 @@ describe('SandboxService', () => {
   it('should handle errors gracefully', async () => {
     const admission = new PluginAdmissionService();
     const code = 'throw new Error("Boom");';
-    const validation = await admission.validatePlugin({ name: 'test', code });
+    const validation = await admission.validatePlugin({ name: 'test', code, sbom: validSbom });
     const result = await sandbox.run(code, validation.signature);
     expect(result.success).toBe(false);
     expect(result.error).toContain('Boom');
@@ -38,7 +44,7 @@ describe('SandboxService', () => {
   it('should timeout infinite loops', async () => {
     const admission = new PluginAdmissionService();
     const code = 'while(true) {}';
-    const validation = await admission.validatePlugin({ name: 'test', code });
+    const validation = await admission.validatePlugin({ name: 'test', code, sbom: validSbom });
     const result = await sandbox.run(code, validation.signature, 50); // Short timeout
     expect(result.success).toBe(false);
     expect(result.error).toContain('timed out');
