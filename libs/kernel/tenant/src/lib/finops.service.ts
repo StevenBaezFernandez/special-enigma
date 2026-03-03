@@ -45,4 +45,28 @@ export class FinOpsService {
 
     return value * (rates[resource] || 0) * multiplier;
   }
+
+  async recordOperationSlo(
+    tenantId: string,
+    operation: string,
+    duration: number,
+    success: boolean,
+    region: string
+  ) {
+    this.telemetry.recordBusinessMetric('tenant_operation_latency', duration, {
+      tenantId,
+      operation,
+      region,
+    });
+
+    this.telemetry.recordBusinessMetric('tenant_operation_success', success ? 1 : 0, {
+      tenantId,
+      operation,
+      region,
+    });
+
+    if (!success) {
+        this.logger.error(`SLO Breach: Operation ${operation} failed for tenant ${tenantId} in region ${region}`);
+    }
+  }
 }

@@ -21,7 +21,10 @@ describe('Regional Failover Operational Validation', () => {
     mockRoutingPlane = {
       createSnapshot: vi.fn().mockResolvedValue({}),
     };
-    service = new FailoverService(mockEm as any, mockOpService as any, mockRoutingPlane as any);
+    const mockFinOps = {
+      recordOperationSlo: vi.fn().mockResolvedValue(undefined),
+    };
+    service = new FailoverService(mockEm as any, mockOpService as any, mockRoutingPlane as any, mockFinOps as any);
   });
 
   it('SHOULD promote secondary region during failover', async () => {

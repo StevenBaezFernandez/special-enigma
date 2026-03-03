@@ -33,5 +33,7 @@ export interface TenantConfig {
   connectionString?: string;
   schemaName?: string;
   tenantId: string;
+  primaryRegion?: string;
+  secondaryRegion?: string;
   settings?: Record<string, any>;
 }

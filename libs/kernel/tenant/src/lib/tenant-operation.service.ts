@@ -26,7 +26,7 @@ export class TenantOperationService {
       state: OperationState.REQUESTED,
       idempotencyKey,
       startedAt: new Date(),
-    });
+    } as any);
 
     await this.em.persistAndFlush(op);
     return op;

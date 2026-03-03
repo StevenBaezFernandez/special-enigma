@@ -4,6 +4,7 @@ import { TenantRoutingSnapshot } from './entities/tenant-routing-snapshot.entity
 import { TenantService } from './tenant.service';
 import { createHmac } from 'crypto';
 import { ConfigService } from '@nestjs/config';
+import { TenantControlRecord } from './entities/tenant-control-record.entity';
 
 @Injectable()
 export class RoutingPlaneService {
@@ -29,10 +30,15 @@ export class RoutingPlaneService {
     this.logger.warn(`No valid signed snapshot for tenant ${tenantId}. Resolving via TenantService (Slow Path).`);
     const config = await this.tenantService.getTenantConfig(tenantId);
 
+    const control = await this.em.findOne(TenantControlRecord, { tenantId });
+
     const targets = {
       mode: config.mode,
-      region: config.settings?.['allowedRegion'] || 'us-east-1',
+      primaryRegion: control?.primaryRegion || config.settings?.['allowedRegion'] || 'us-east-1',
+      secondaryRegion: control?.secondaryRegion || 'sa-east-1',
       endpoint: config.connectionString || 'shared-pool',
+      status: control?.status || 'ACTIVE',
+      version: control?.version || 1,
     };
 
     await this.createSnapshot(tenantId, targets);

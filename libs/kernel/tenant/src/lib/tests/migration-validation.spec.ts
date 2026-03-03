@@ -10,8 +10,27 @@ describe('Migration Pipeline Operational Validation', () => {
   beforeEach(() => {
     mockEm = {
       findOneOrFail: vi.fn(),
-      getMigrator: vi.fn().mockReturnValue({ up: vi.fn().mockResolvedValue(undefined) }),
+      findOne: vi.fn(),
+      getMigrator: vi.fn().mockReturnValue({
+        up: vi.fn().mockResolvedValue(undefined),
+        down: vi.fn().mockResolvedValue(undefined),
+        getPendingMigrations: vi.fn().mockResolvedValue([])
+      }),
       fork: vi.fn().mockReturnThis(),
+      getConnection: vi.fn().mockReturnValue({
+        execute: vi.fn().mockResolvedValue([])
+      }),
+      getKnex: vi.fn().mockReturnValue(
+          Object.assign(
+            vi.fn().mockReturnValue({
+                where: vi.fn().mockReturnThis(),
+                first: vi.fn().mockResolvedValue({ status: 'COMPLETED' })
+            }),
+            {
+                raw: vi.fn().mockResolvedValue({ rows: [{ lag_ms: 0, size: '1000' }] })
+            }
+          )
+      )
     };
     mockOpService = {
       createOperation: vi.fn().mockResolvedValue({ operationId: 'mig-123' }),
@@ -50,7 +69,11 @@ describe('Migration Pipeline Operational Validation', () => {
 
   it('SHOULD trigger rollback on migration failure', async () => {
     mockEm.findOneOrFail.mockResolvedValue({ id: 't-fail', mode: TenantMode.SHARED });
-    mockEm.getMigrator.mockReturnValue({ up: vi.fn().mockRejectedValue(new Error('Migration Error')) });
+    mockEm.findOne.mockResolvedValue({ id: 't-fail', mode: TenantMode.SHARED });
+    mockEm.getMigrator.mockReturnValue({
+        up: vi.fn().mockRejectedValue(new Error('Migration Error')),
+        down: vi.fn().mockResolvedValue(undefined)
+    });
 
     await expect(service.migrateTenantWithOperation('t-fail', 'key-3')).rejects.toThrow();
 
