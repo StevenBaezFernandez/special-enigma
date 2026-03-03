@@ -9,11 +9,12 @@ import { CrmInfrastructureModule } from '@virteex/domain-crm-infrastructure';
 import { BillingInfrastructureModule } from '@virteex/domain-billing-infrastructure';
 import { PayrollInfrastructureModule } from '@virteex/domain-payroll-infrastructure';
 import { MikroOrmBiReportRepository } from './repositories/mikro-orm-bi-report.repository';
+import { BiReportSchema } from './persistence/bi.schemas';
 
 @Global()
 @Module({
   imports: [
-    MikroOrmModule.forFeature([BiReport]),
+    MikroOrmModule.forFeature([BiReportSchema]),
     CrmInfrastructureModule,
     BillingInfrastructureModule,
     PayrollInfrastructureModule

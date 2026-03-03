@@ -4,6 +4,8 @@ import {
   InventoryRepository,
   InsufficientStockException,
   StockNotFoundError,
+  InventoryMovement,
+  InventoryMovementType,
 } from '@virteex/domain-inventory-domain';
 import Decimal from 'decimal.js';
 
@@ -43,7 +45,19 @@ export class ReserveBatchStockUseCase {
       }
 
       stock.removeQuantity(item.quantity.toString());
+
+      const movement = new InventoryMovement(
+        tenantId,
+        item.productSku,
+        item.warehouseId,
+        InventoryMovementType.OUT,
+        item.quantity.toString(),
+        reference,
+        stock.locationId
+      );
+
       await this.repository.saveStock(stock);
+      await this.repository.saveMovement(movement);
     }
 
     this.logger.log(`Batch stock reservation applied. tenantId=${tenantId} reference=${reference} items=${items.length}`);

@@ -10,7 +10,9 @@ export class CreateBankAccountUseCase {
 
   async execute(dto: CreateBankAccountDto): Promise<BankAccountDto> {
     const bankAccount = new BankAccount(dto.tenantId, dto.name, dto.accountNumber, dto.bankName, dto.currency);
-    const saved = await this.bankAccountRepository.create(bankAccount);
+    await this.bankAccountRepository.save(bankAccount);
+
+    const saved = bankAccount;
 
     // Manual mapping for now
     const response = new BankAccountDto();

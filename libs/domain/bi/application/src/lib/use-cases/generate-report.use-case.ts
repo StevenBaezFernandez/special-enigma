@@ -26,7 +26,7 @@ export class GenerateReportUseCase {
       generatedAt: new Date(),
     };
 
-    const report = new BiReport(dto.name, dto.type, realData);
+    const report = new BiReport(tenantId, dto.name, dto.type, realData);
     await this.repository.save(report);
     return report;
   }

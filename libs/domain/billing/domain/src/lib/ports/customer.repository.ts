@@ -7,6 +7,7 @@ export interface CustomerBillingInfo {
   email: string;
   address?: string;
   taxId: string;
+  country: string;
 }
 
 export interface CustomerRepository {

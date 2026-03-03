@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FiscalProvider } from '@virteex/domain-fiscal-domain/fiscal-provider.port';
+import { FiscalProvider } from '@virteex/domain-fiscal-domain';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, timer } from 'rxjs';
 import { retry } from 'rxjs/operators';
@@ -14,7 +14,7 @@ export class DianFiscalAdapter implements FiscalProvider {
   private readonly logger = new Logger(DianFiscalAdapter.name);
   private privateKey: string;
   private certificate: string;
-  private xsdSchema: libxmljs.Document;
+  private xsdSchema: any;
 
   constructor(private readonly httpService: HttpService) {
       const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
@@ -166,9 +166,9 @@ export class DianFiscalAdapter implements FiscalProvider {
       sig.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
       sig.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
 
-      sig.keyInfoProvider = {
+      (sig as any).keyInfoProvider = {
         getKeyInfo: () => `<X509Data><X509Certificate>${this.certificate}</X509Certificate></X509Data>`
-      } as any;
+      };
 
       (sig as any).signingKey = this.privateKey;
       (sig as any).objects = [xadesObject];

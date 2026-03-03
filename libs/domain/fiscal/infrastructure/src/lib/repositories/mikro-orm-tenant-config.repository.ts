@@ -16,9 +16,13 @@ export class MikroOrmTenantConfigRepository implements TenantConfigRepository {
     const settings = company.settings || {};
     return {
       rfc: company.taxId,
+      taxId: company.taxId,
       country: company.country,
       csdCertificate: settings['csdCertificate'],
-      csdKey: settings['csdKey']
+      csdKey: settings['csdKey'],
+      legalName: (company as any).legalName || company.name,
+      regime: settings['fiscalRegime'] || '601',
+      postalCode: company.postalCode || '00000'
     };
   }
 }

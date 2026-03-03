@@ -1,10 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PaymentProvider } from '@virteex/domain-billing-domain/ports/payment-provider.port';
+import { PaymentProvider, PAYMENT_PROVIDER } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class ProcessPaymentUseCase {
   constructor(
-    @Inject('PaymentProvider') private readonly paymentProvider: PaymentProvider
+    @Inject(PAYMENT_PROVIDER) private readonly paymentProvider: PaymentProvider
   ) {}
 
   async execute(amount: number, currency: string, source: string) {

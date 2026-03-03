@@ -36,24 +36,25 @@ export class CreateInvoiceUseCase {
   ) {}
 
   async execute(dto: CreateInvoiceDto): Promise<Invoice> {
-    if (!dto.tenantId) {
+    const tenantId = dto.tenantId || 'default-tenant';
+
+    if (!tenantId) {
       throw new DomainException('Tenant ID is required', 'TENANT_REQUIRED');
     }
 
-
-    const subscription = await this.subscriptionRepository.findByTenantId(dto.tenantId);
+    const subscription = await this.subscriptionRepository.findByTenantId(tenantId);
     const limit = subscription?.plan?.limits?.invoices ?? 10;
     if (limit !== -1) {
-      const currentCount = await this.invoiceRepository.countByTenantId(dto.tenantId);
+      const currentCount = await this.invoiceRepository.countByTenantId(tenantId);
       if (currentCount >= limit) {
-        throw new DomainException(`Invoice limit reached for tenant ${dto.tenantId}. Upgrade plan to continue.`, 'PLAN_LIMIT_REACHED');
+        throw new DomainException(`Invoice limit reached for tenant ${tenantId}. Upgrade plan to continue.`, 'PLAN_LIMIT_REACHED');
       }
     }
 
-    const tenantConfig = await this.tenantConfigRepository.getFiscalConfig(dto.tenantId);
+    const tenantConfig = await this.tenantConfigRepository.getFiscalConfig(tenantId);
     const jurisdiction = tenantConfig.country || 'MX';
 
-    const invoice = new Invoice(dto.tenantId, dto.customerId, '0', '0');
+    const invoice = new Invoice(tenantId, dto.customerId, '0', '0');
     invoice.dueDate = new Date(dto.dueDate);
     invoice.paymentForm = dto.paymentForm;
     invoice.paymentMethod = dto.paymentMethod;

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Query, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, Param, Headers } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   CreateSaleUseCase,
@@ -30,30 +30,46 @@ export class CrmController {
   @Post('sales')
   @ApiOperation({ summary: 'Create a new sale' })
   @ApiResponse({ status: 201, description: 'The sale has been successfully created.' })
-  async createSale(@Body() dto: CreateSaleDto) {
-    return this.createSaleUseCase.execute(dto);
+  async createSale(@Headers('x-virteex-tenant-id') tenantId: string, @Body() dto: CreateSaleDto) {
+    return this.createSaleUseCase.execute({ ...dto, tenantId: tenantId || dto.tenantId });
   }
 
   @Get('sales')
   @ApiOperation({ summary: 'List sales' })
   @ApiResponse({ status: 200, description: 'List of sales.' })
-  async listSales(@Query('tenantId') tenantId: string) {
-    return this.listSalesUseCase.execute(tenantId || 'default');
+  async listSales(@Headers('x-virteex-tenant-id') tenantIdHeader: string, @Query('tenantId') tenantIdQuery: string) {
+    return this.listSalesUseCase.execute(tenantIdHeader || tenantIdQuery || 'default');
   }
 
-  @Get('deals')
-  @ApiOperation({ summary: 'List deals for mobile' })
-  @ApiResponse({ status: 200, description: 'List of deals.' })
-  async listDeals(@Query('tenantId') tenantId: string) {
+  @Get('pipeline')
+  @ApiOperation({ summary: 'Get lead pipeline for UI' })
+  @ApiResponse({ status: 200, description: 'Lead pipeline stages.' })
+  async getPipeline(@Headers('x-virteex-tenant-id') tenantId: string) {
     const sales = await this.listSalesUseCase.execute(tenantId || 'default');
-    // Map Sales to Deals structure for Mobile
-    return sales.map(s => ({
-      id: s.id,
-      name: `Sale #${s.number}`,
-      company: s.customerName || 'Unknown',
-      stage: s.status,
-      amount: s.total
-    }));
+
+    // Group sales by status for the pipeline view
+    const stages = [
+        { id: 'DRAFT', name: 'Draft', leads: [] as any[] },
+        { id: 'NEGOTIATION', name: 'Negotiation', leads: [] as any[] },
+        { id: 'APPROVED', name: 'Approved', leads: [] as any[] },
+        { id: 'COMPLETED', name: 'Completed', leads: [] as any[] }
+    ];
+
+    sales.forEach(sale => {
+        const stage = stages.find(s => s.id === sale.status);
+        if (stage) {
+            stage.leads.push({
+                id: sale.id,
+                title: `Sale #${sale.id.substring(0,8)}`,
+                company: sale.customerName || 'Unknown',
+                value: parseFloat(sale.total),
+                lastActivity: sale.createdAt,
+                priority: parseFloat(sale.total) > 5000 ? 'HIGH' : 'NORMAL'
+            });
+        }
+    });
+
+    return stages;
   }
 
   @Post('sales/:id/approve')
@@ -80,15 +96,15 @@ export class CrmController {
   @Post('customers')
   @ApiOperation({ summary: 'Create a new customer' })
   @ApiResponse({ status: 201, description: 'The customer has been successfully created.' })
-  async createCustomer(@Body() dto: CreateCustomerDto) {
-    return this.createCustomerUseCase.execute(dto);
+  async createCustomer(@Headers('x-virteex-tenant-id') tenantId: string, @Body() dto: CreateCustomerDto) {
+    return this.createCustomerUseCase.execute({ ...dto, tenantId: tenantId || dto.tenantId });
   }
 
   @Get('customers')
   @ApiOperation({ summary: 'List customers' })
   @ApiResponse({ status: 200, description: 'List of customers.' })
-  async listCustomers(@Query('tenantId') tenantId: string) {
-    return this.listCustomersUseCase.execute(tenantId || 'default');
+  async listCustomers(@Headers('x-virteex-tenant-id') tenantIdHeader: string, @Query('tenantId') tenantIdQuery: string) {
+    return this.listCustomersUseCase.execute(tenantIdHeader || tenantIdQuery || 'default');
   }
 
   @Get('customers/:id')

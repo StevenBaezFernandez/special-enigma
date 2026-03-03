@@ -1,15 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { XMLBuilder } from 'fast-xml-parser';
 import { FiscalDocumentBuilder } from '@virteex/domain-fiscal-domain';
-import { Invoice, CustomerBillingInfo } from '@virteex/domain-billing-domain';
 import { TenantFiscalConfig } from '@virteex/domain-fiscal-domain';
+import { InvoiceContract, CustomerBillingInfoContract } from '@virteex/domain-billing-contracts';
 
 
 @Injectable()
 export class BrFiscalDocumentBuilder implements FiscalDocumentBuilder {
   private readonly logger = new Logger(BrFiscalDocumentBuilder.name);
 
-  async build(invoice: Invoice, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfo): Promise<string> {
+  async build(invoice: InvoiceContract, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfoContract): Promise<string> {
     this.logger.log(`Building SEFAZ NFe for ${invoice.id}`);
 
     const builder = new XMLBuilder({
@@ -18,7 +18,7 @@ export class BrFiscalDocumentBuilder implements FiscalDocumentBuilder {
         suppressEmptyNode: true
     });
 
-    const items = invoice.items;
+    const items = (invoice as any).items || [];
     const totalAmount = invoice.totalAmount;
 
     // NFe Structure (Simplified for robustness in demo)
@@ -82,7 +82,7 @@ export class BrFiscalDocumentBuilder implements FiscalDocumentBuilder {
                     },
                     'indIEDest': '9'
                 },
-                'det': items.map((item, index) => ({
+                'det': items.map((item: any, index: number) => ({
                     '@_nItem': (index + 1).toString(),
                     'prod': {
                         'cProd': item.productId,

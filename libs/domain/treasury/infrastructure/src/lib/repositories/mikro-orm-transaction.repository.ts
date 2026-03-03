@@ -7,10 +7,9 @@ import { TransactionRepository } from '@virteex/domain-treasury-domain/repositor
 export class MikroOrmTransactionRepository implements TransactionRepository {
   constructor(private readonly em: EntityManager) {}
 
-  async create(transaction: Transaction): Promise<Transaction> {
+  async save(transaction: Transaction): Promise<void> {
     this.em.persist(transaction);
     await this.em.flush();
-    return transaction;
   }
 
   async findById(id: string): Promise<Transaction | null> {
@@ -19,6 +18,10 @@ export class MikroOrmTransactionRepository implements TransactionRepository {
 
   async findAll(tenantId: string): Promise<Transaction[]> {
     return this.em.find(Transaction, { tenantId }, { orderBy: { date: 'DESC' } });
+  }
+
+  async findByBankAccountId(bankAccountId: string): Promise<Transaction[]> {
+    return this.em.find(Transaction, { bankAccount: bankAccountId });
   }
 
   async getCashFlowReport(tenantId: string, startDate: Date, endDate: Date): Promise<any[]> {

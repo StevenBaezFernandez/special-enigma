@@ -6,9 +6,8 @@ import { BankAccount, BankAccountRepository } from '@virteex/domain-treasury-dom
 export class MikroOrmBankAccountRepository implements BankAccountRepository {
   constructor(private readonly em: EntityManager) {}
 
-  async create(bankAccount: BankAccount): Promise<BankAccount> {
+  async save(bankAccount: BankAccount): Promise<void> {
     await this.em.persistAndFlush(bankAccount);
-    return bankAccount;
   }
 
   async findById(id: string): Promise<BankAccount | null> {

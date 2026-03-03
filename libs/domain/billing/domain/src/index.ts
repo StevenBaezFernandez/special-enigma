@@ -11,6 +11,7 @@ export * from './lib/strategies/tax-strategy.interface';
 export * from './lib/strategies/tax-strategy.factory';
 
 export * from './lib/ports/pac-provider.port';
+export * from './lib/ports/payment-provider.port';
 export * from './lib/ports/invoice.repository';
 export * from './lib/ports/payment-method.repository';
 export * from './lib/ports/tenant-config.port';

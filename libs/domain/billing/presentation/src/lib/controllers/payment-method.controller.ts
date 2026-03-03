@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { StepUp, StepUpGuard } from '@virteex/kernel-auth';
 import {
   AddPaymentMethodUseCase,
   AddPaymentMethodDto,
@@ -15,6 +16,8 @@ export class PaymentMethodController {
   ) {}
 
   @Post()
+  @UseGuards(StepUpGuard)
+  @StepUp({ action: 'credentials-change', maxAgeSeconds: 300 })
   @ApiOperation({ summary: 'Add a payment method' })
   async create(@Body() dto: AddPaymentMethodDto) {
     return await this.addPaymentMethodUseCase.execute(dto);

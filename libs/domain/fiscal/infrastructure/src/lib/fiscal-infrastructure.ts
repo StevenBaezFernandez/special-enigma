@@ -6,7 +6,8 @@ import {
   TAX_DECLARATION_REPOSITORY,
   FISCAL_DATA_PROVIDER,
   TAX_RULE_REPOSITORY,
-  TENANT_CONFIG_REPOSITORY
+  TENANT_CONFIG_REPOSITORY,
+  HARDWARE_TOKEN_PORT
 } from '@virteex/domain-fiscal-domain';
 import { MikroOrmTaxDeclarationRepository } from './repositories/mikro-orm-tax-declaration.repository';
 import { MikroOrmTaxRuleRepository } from './repositories/mikro-orm-tax-rule.repository';
@@ -16,6 +17,7 @@ import { SatFiscalAdapter } from './adapters/sat-fiscal-provider.adapter';
 import { SefazFiscalAdapter } from './adapters/sefaz-fiscal-provider.adapter';
 import { DianFiscalAdapter } from './adapters/dian-fiscal-provider.adapter';
 import { UsTaxPartnerFiscalAdapter } from './adapters/us-tax-partner-fiscal-provider.adapter';
+import { DesktopHardwareBridge } from './adapters/desktop-hardware-bridge.adapter';
 import { MxFiscalDocumentBuilder } from './builders/mx-fiscal-document.builder';
 import { UsFiscalDocumentBuilder } from './builders/us-fiscal-document.builder';
 import { CoFiscalDocumentBuilder } from './builders/co-fiscal-document.builder';
@@ -48,6 +50,10 @@ import { TaxDeclarationRecord } from './entities/tax-declaration.record';
       useClass: MikroOrmTenantConfigRepository
     },
     {
+        provide: HARDWARE_TOKEN_PORT,
+        useClass: DesktopHardwareBridge
+    },
+    {
       provide: 'FISCAL_PROVIDER',
       useClass: SatFiscalAdapter
     },
@@ -65,6 +71,7 @@ import { TaxDeclarationRecord } from './entities/tax-declaration.record';
     FISCAL_DATA_PROVIDER,
     TAX_RULE_REPOSITORY,
     TENANT_CONFIG_REPOSITORY,
+    HARDWARE_TOKEN_PORT,
     'FISCAL_PROVIDER',
     SefazFiscalAdapter,
     DianFiscalAdapter,

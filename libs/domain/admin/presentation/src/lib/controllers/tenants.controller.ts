@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Patch, Body, Param, Query, Logger, UseGuards, ForbiddenException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiHeader } from '@nestjs/swagger';
-import { TenantSupportService } from '@virteex/domain-admin-application';
+import { TenantSupportService, ProvisioningService } from '@virteex/domain-admin-application';
 import { TenantService } from '@virteex/kernel-tenant';
 import { StepUp, StepUpGuard } from '@virteex/kernel-auth';
 
@@ -14,7 +14,8 @@ export class TenantsController {
 
   constructor(
       private readonly supportService: TenantSupportService,
-      private readonly tenantService: TenantService
+      private readonly tenantService: TenantService,
+      private readonly provisioningService: ProvisioningService
   ) {}
 
   @Post()
@@ -30,11 +31,21 @@ export class TenantsController {
           updatedAt: new Date(),
       });
 
+      // Start actual infrastructure provisioning
+      await this.provisioningService.startProvisioning(tenant.id);
+
       return {
           id: tenant.id,
           status: 'PROVISIONING',
-          message: 'Tenant provisioning initialized successfully. Watch Kafka for completion events.'
+          message: 'Tenant provisioning initialized successfully. Check status endpoint for progress.'
       };
+  }
+
+  @Get(':id/provisioning-status')
+  @ApiOperation({ summary: 'Get infrastructure provisioning status' })
+  @ApiParam({ name: 'id', description: 'Tenant ID' })
+  async getProvisioningStatus(@Param('id') id: string) {
+      return this.provisioningService.getStatus(id);
   }
 
   @Get()

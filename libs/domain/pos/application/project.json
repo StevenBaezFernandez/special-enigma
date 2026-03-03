@@ -1,0 +1,15 @@
+{
+  "name": "domain-pos-application",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/pos/application/src",
+  "projectType": "library",
+  "tags": ["scope:pos", "type:application", "platform:agnostic"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/pos/application"
+      }
+    }
+  }
+}
