@@ -6,6 +6,7 @@ import { HardwareBridgeAdapter } from './adapters/hardware-bridge.adapter';
 import { HARDWARE_BRIDGE_PORT } from '@virteex/domain-pos-domain';
 import { InventoryInfrastructureModule } from '@virteex/domain-inventory-infrastructure';
 import { BillingInfrastructureModule } from '@virteex/domain-billing-infrastructure';
+import { DataQualityModule } from '@virteex/platform-data-quality';
 
 @Global()
 @Module({
@@ -13,6 +14,7 @@ import { BillingInfrastructureModule } from '@virteex/domain-billing-infrastruct
     MikroOrmModule.forFeature([PosSaleSchema, PosSaleItemSchema, PosShiftSchema]),
     InventoryInfrastructureModule,
     BillingInfrastructureModule,
+    DataQualityModule,
   ],
   providers: [
     { provide: 'PosRepository', useClass: MikroOrmPosRepository },

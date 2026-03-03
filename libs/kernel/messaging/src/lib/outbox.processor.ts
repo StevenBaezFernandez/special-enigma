@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, LockMode } from '@mikro-orm/core';
 import { OutboxEvent } from './entities/outbox-event.entity';
 import Redis from 'ioredis';
 import { Kafka, Producer } from 'kafkajs';
@@ -41,13 +41,16 @@ export class OutboxProcessor implements OnModuleInit {
 
   @Cron(CronExpression.EVERY_SECOND)
   async handleOutboxEvents() {
-    // Note: In a real distributed scenario, use FOR UPDATE SKIP LOCKED to avoid race conditions
-    // or use a leader election / dedicated single instance for the poller.
-    const events = await this.em.find(
-      OutboxEvent,
-      { publishedAt: null },
-      { limit: 100 }
-    );
+    // Level 5: Atomic polling using FOR UPDATE SKIP LOCKED to prevent race conditions
+    // across multiple instances of the worker.
+    // Level 5: Use QueryBuilder for strict FOR UPDATE SKIP LOCKED
+    const qb = this.em.createQueryBuilder(OutboxEvent, 'e');
+    const events = await qb
+      .select('*')
+      .where({ publishedAt: null })
+      .limit(100)
+      .setLockMode(LockMode.PESSIMISTIC_WRITE_CAN_SKIP) // SKIP LOCKED
+      .execute();
 
     if (events.length === 0) {
       return;

@@ -39,6 +39,7 @@ import { InvoiceItemRecord } from './entities/invoice-item.record';
 import { ProductEventsController } from './listeners/product-events.controller';
 
 import { XsltService } from '@virteex/platform-xslt';
+import { DataQualityModule } from '@virteex/platform-data-quality';
 import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/domain-billing-application';
 import {
   PaymentMethodSchema,
@@ -52,6 +53,7 @@ import {
     AuthModule,
     FiscalInfrastructureModule,
     BillingDomainModule,
+    DataQualityModule,
     MikroOrmModule.forFeature([
       InvoiceRecord,
       InvoiceItemRecord,

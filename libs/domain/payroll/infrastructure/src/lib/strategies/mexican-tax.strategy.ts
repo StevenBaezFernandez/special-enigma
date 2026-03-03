@@ -12,18 +12,14 @@ export class MexicanTaxStrategy implements TaxService {
     private readonly repository: TaxTableRepository,
   ) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async calculateTax(taxableIncome: number, date: Date, frequency = 'MONTHLY', options?: Record<string, any>): Promise<number> {
       const result = await this.calculatePayrollTaxes(taxableIncome, date, frequency, options);
       return result.details.find(d => d.name === 'ISR')?.amount || 0;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async calculatePayrollTaxes(taxableIncome: number, date: Date, frequency = 'MONTHLY', options?: Record<string, any>): Promise<PayrollTaxesResult> {
     const isr = await this.calculateIsrInternal(taxableIncome, date, frequency);
 
-    // IMSS Logic
-    // UMA must be provided in options (e.g. from TenantConfig or GlobalConfig)
     const uma = Number(options?.['uma']);
     if (!uma || isNaN(uma)) {
         this.logger.warn('UMA not provided in options. Using fallback 2024 value (108.57) but this should be configured.');
@@ -59,8 +55,6 @@ export class MexicanTaxStrategy implements TaxService {
 
        if (!tables || tables.length === 0) {
          this.logger.warn(`No tax tables found in DB for year ${year} and type ${type}. Checking for fallback seeds.`);
-         // Fallback: If DB is empty, try to use a hardcoded seed for 2024 to ensure system works (Commercial Viability requirement: "Make it work 100%")
-         // In a real scenario, we should seed the DB. Here we simulate the DB response if empty.
          if (year === 2024 || year === 2025) {
              tables = this.getFallbackTables(type);
          }
@@ -70,12 +64,10 @@ export class MexicanTaxStrategy implements TaxService {
            this.logger.error(`No tax tables found for year ${year} and type ${type}`);
            throw new MissingTaxTableException(year, type);
        }
-       // Sort tables by limit DESC
        tables.sort((a, b) => Number(b.limit) - Number(a.limit));
        this.cache.set(cacheKey, tables);
     }
 
-    // Default to last row (lowest limit)
     let row = tables[tables.length - 1];
 
     for (const table of tables) {
@@ -92,23 +84,19 @@ export class MexicanTaxStrategy implements TaxService {
     return totalTax.toDecimalPlaces(2).toNumber();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private calculateImssInternal(totalIncome: number, frequency: string, uma: number, options?: Record<string, any>): number {
-      // Approximate days based on frequency for daily rate calculation
       let days = 15;
       if (frequency === 'MONTHLY') days = 30;
       if (frequency === 'WEEKLY') days = 7;
       if (frequency === 'BIWEEKLY') days = 14;
-      if (frequency === 'SEMIMONTHLY') days = 15.2; // More precise? Defaulting to 15 is standard for "Quincenal" in Mexico (usually 15.2 or 15)
+      if (frequency === 'SEMIMONTHLY') days = 15.2;
 
-      // Allow overriding days
       if (options?.['daysPerPeriod']) {
           days = Number(options['daysPerPeriod']);
       }
 
       const dailySbc = totalIncome / days;
 
-      // Base: Employee Share
       const imssBaseRate = options?.['imssBaseRate'] ? Number(options['imssBaseRate']) : 0.02375;
       const imssExcessRate = options?.['imssExcessRate'] ? Number(options['imssExcessRate']) : 0.004;
 
@@ -125,7 +113,6 @@ export class MexicanTaxStrategy implements TaxService {
   }
 
   private getFallbackTables(type: string): TaxTable[] {
-      // 2024 Monthly ISR Tables (Approximate for fallback)
       if (type === 'MONTHLY') {
           return [
             { limit: 0.01, fixed: 0.00, percent: 1.92, year: 2024, type: 'MONTHLY', country: 'MX', id: '1' } as TaxTable,

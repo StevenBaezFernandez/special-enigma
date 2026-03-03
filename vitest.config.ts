@@ -14,6 +14,12 @@ export default defineConfig({
       '@virteex/kernel-tenant': path.resolve(__dirname, './libs/kernel/tenant/src/index.ts'),
       '@virteex/kernel-telemetry': path.resolve(__dirname, './libs/kernel/telemetry/src/index.ts'),
       '@virteex/platform-kafka': path.resolve(__dirname, './libs/platform/kafka/src/index.ts'),
+      '@virteex/platform-data-quality': path.resolve(__dirname, './libs/platform/data-quality/src/index.ts'),
+      '@virteex/platform-audit': path.resolve(__dirname, './libs/platform/audit/src/index.ts'),
+      '@virteex/domain-pos-domain': path.resolve(__dirname, './libs/domain/pos/domain/src/index.ts'),
+      '@virteex/domain-notification-application': path.resolve(__dirname, './libs/domain/notification/application/src/index.ts'),
+      '@virteex/domain-notification-domain': path.resolve(__dirname, './libs/domain/notification/domain/src/index.ts'),
+      '@virteex/kernel-telemetry': path.resolve(__dirname, './libs/kernel/telemetry/src/index.ts'),
     }
   },
 });

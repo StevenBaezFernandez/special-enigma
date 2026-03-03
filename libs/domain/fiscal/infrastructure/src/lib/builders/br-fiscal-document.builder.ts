@@ -21,12 +21,11 @@ export class BrFiscalDocumentBuilder implements FiscalDocumentBuilder {
     const items = (invoice as any).items || [];
     const totalAmount = invoice.totalAmount;
 
-    // NFe Structure (Simplified for robustness in demo)
     const nfeObj = {
         'NFe': {
             '@_xmlns': 'http://www.portalfiscal.inf.br/nfe',
             'infNFe': {
-                '@_Id': `NFe${tenantConfig.taxId}${invoice.id}`, // Chave de Acesso simulated
+                '@_Id': `NFe${tenantConfig.taxId}${invoice.id}`,
                 '@_versao': '4.00',
                 'ide': {
                     'cUF': '35', // SP

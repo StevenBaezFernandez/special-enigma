@@ -5,10 +5,6 @@ import { firstValueFrom, timer, throwError } from 'rxjs';
 import { retry, catchError, timeout } from 'rxjs/operators';
 import { FiscalProvider } from '@virteex/domain-fiscal-domain';
 
-/**
- * US Tax Partner Fiscal Adapter.
- * Integrates with Avalara / TaxJar compatible API.
- */
 @Injectable()
 export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
   private readonly logger = new Logger(UsTaxPartnerFiscalAdapter.name);
@@ -26,19 +22,15 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
 
     const isProduction = this.nodeEnv === 'production' || process.env['RELEASE_STAGE'] === 'production';
 
-    if (isProduction && (!this.partnerUrl || !this.partnerApiKey || this.partnerUrl.includes('mock') || this.partnerApiKey.includes('test'))) {
+    if (isProduction && (!this.partnerUrl || !this.partnerApiKey || this.partnerUrl.includes('placeholder') || this.partnerApiKey.includes('test'))) {
       this.logger.error('FATAL: US Tax Partner is NOT properly configured for production.');
       throw new Error('US fiscal partner is required in production with REAL credentials. Configure US_TAX_PARTNER_URL and US_TAX_PARTNER_API_KEY.');
     }
   }
 
-  /**
-   * Validates if an invoice complies with US tax rules.
-   */
   async validateInvoice(invoice: any): Promise<boolean> {
     const endpoint = this.configService.get<string>('US_TAX_PARTNER_VALIDATE_PATH', '/v1/tax/validate');
 
-    // US Specific: Validate addresses and ZIP codes before tax calculation
     if (!invoice.shippingAddress?.zipCode || !invoice.shippingAddress?.country) {
         this.logger.error('Validation failed: Missing destination ZIP code or country for US tax calculation.');
         return false;
@@ -53,9 +45,6 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
     }
   }
 
-  /**
-   * Calculates taxes and signs the document with a partner-provided fingerprint.
-   */
   async signInvoice(invoice: any): Promise<string> {
     const endpoint = this.configService.get<string>('US_TAX_PARTNER_CALCULATE_PATH', '/v1/tax/calculate');
 
@@ -63,7 +52,7 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
 
     const response = await this.callPartner(endpoint, {
         ...invoice,
-        commit: true, // Avalara style commit
+        commit: true,
     });
 
     if (!response?.transactionId) {
@@ -71,7 +60,6 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
       throw new InternalServerErrorException('US tax partner failed to generate a valid fiscal record.');
     }
 
-    // Returns a JSON-stringified fiscal summary to be stored as the signature
     return JSON.stringify({
         transactionId: response.transactionId,
         totalTax: response.totalTax,
@@ -80,9 +68,6 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
     });
   }
 
-  /**
-   * Submits the calculated transaction to the official US tax record.
-   */
   async transmitInvoice(invoice: any): Promise<void> {
     const endpoint = this.configService.get<string>('US_TAX_PARTNER_TRANSMIT_PATH', '/v1/tax/transmit');
     await this.callPartner(endpoint, invoice);
@@ -109,7 +94,7 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
             'X-Request-ID': crypto.randomUUID(),
           }
         }).pipe(
-          timeout(10000), // 10s timeout for tax calculations
+          timeout(10000),
           retry({
             count: 3,
             delay: (error, retryCount) => {

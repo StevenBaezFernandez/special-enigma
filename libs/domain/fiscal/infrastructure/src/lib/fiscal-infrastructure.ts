@@ -27,6 +27,7 @@ import { BrFiscalDocumentBuilder } from './builders/br-fiscal-document.builder';
 import { DoFiscalDocumentBuilder } from './builders/do-fiscal-document.builder';
 import { FiscalTaxRuleRecord } from './entities/fiscal-tax-rule.record';
 import { TaxDeclarationRecord } from './entities/tax-declaration.record';
+import { FiscalDomainService } from '@virteex/domain-fiscal-domain';
 
 @Global()
 @Module({
@@ -66,7 +67,8 @@ import { TaxDeclarationRecord } from './entities/tax-declaration.record';
     UsFiscalDocumentBuilder,
     CoFiscalDocumentBuilder,
     BrFiscalDocumentBuilder,
-    DoFiscalDocumentBuilder
+    DoFiscalDocumentBuilder,
+    FiscalDomainService
   ],
   exports: [
     MikroOrmModule,
@@ -85,7 +87,8 @@ import { TaxDeclarationRecord } from './entities/tax-declaration.record';
     UsFiscalDocumentBuilder,
     CoFiscalDocumentBuilder,
     BrFiscalDocumentBuilder,
-    DoFiscalDocumentBuilder
+    DoFiscalDocumentBuilder,
+    FiscalDomainService
   ]
 })
 export class FiscalInfrastructureModule {}

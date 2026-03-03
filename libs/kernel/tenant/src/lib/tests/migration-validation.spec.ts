@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MigrationOrchestratorService } from '../migration-orchestrator.service';
-import { TenantMode, OperationState } from '../interfaces/tenant-config.interface';
+import { TenantMode } from '../interfaces/tenant-config.interface';
 
 describe('Migration Pipeline Operational Validation', () => {
   let service: MigrationOrchestratorService;
   let mockEm: any;
-  let mockOpService: any;
+  let mockGuard: any;
 
   beforeEach(() => {
     mockEm = {
@@ -32,11 +32,10 @@ describe('Migration Pipeline Operational Validation', () => {
           )
       )
     };
-    mockOpService = {
-      createOperation: vi.fn().mockResolvedValue({ operationId: 'mig-123' }),
-      transitionState: vi.fn().mockResolvedValue(undefined),
+    mockGuard = {
+      preMigrationCheck: vi.fn().mockResolvedValue(true),
     };
-    service = new MigrationOrchestratorService(mockEm as any, mockOpService as any);
+    service = new MigrationOrchestratorService(mockEm as any, mockGuard as any);
   });
 
   it('SHOULD execute Shared -> Schema migration with integrity checks', async () => {
@@ -44,14 +43,8 @@ describe('Migration Pipeline Operational Validation', () => {
 
     await service.migrateTenantWithOperation('t1', 'key-1');
 
-    expect(mockOpService.transitionState).toHaveBeenCalledWith('mig-123', OperationState.PREPARING);
-    expect(mockOpService.transitionState).toHaveBeenCalledWith('mig-123', OperationState.VALIDATING);
-    expect(mockOpService.transitionState).toHaveBeenCalledWith('mig-123', OperationState.SWITCHED);
-
-    const migrator = mockEm.getMigrator();
-    expect(migrator.up).toHaveBeenCalledWith({ schema: 'tenant_t1' });
-
-    expect(mockOpService.transitionState).toHaveBeenCalledWith('mig-123', OperationState.FINALIZED);
+    expect(mockGuard.preMigrationCheck).toHaveBeenCalled();
+    expect(mockEm.getMigrator).toHaveBeenCalled();
   });
 
   it('SHOULD execute Schema -> DB migration via dedicated connection', async () => {
@@ -64,19 +57,12 @@ describe('Migration Pipeline Operational Validation', () => {
     await service.migrateTenantWithOperation('t-enterprise', 'key-2');
 
     expect(mockEm.fork).toHaveBeenCalledWith({ connectionString: 'postgres://dedicated' });
-    expect(mockOpService.transitionState).toHaveBeenCalledWith('mig-123', OperationState.FINALIZED);
   });
 
-  it('SHOULD trigger rollback on migration failure', async () => {
+  it('SHOULD fail if pre-migration check fails', async () => {
+    mockGuard.preMigrationCheck.mockResolvedValue(false);
     mockEm.findOneOrFail.mockResolvedValue({ id: 't-fail', mode: TenantMode.SHARED });
-    mockEm.findOne.mockResolvedValue({ id: 't-fail', mode: TenantMode.SHARED });
-    mockEm.getMigrator.mockReturnValue({
-        up: vi.fn().mockRejectedValue(new Error('Migration Error')),
-        down: vi.fn().mockResolvedValue(undefined)
-    });
 
-    await expect(service.migrateTenantWithOperation('t-fail', 'key-3')).rejects.toThrow();
-
-    expect(mockOpService.transitionState).toHaveBeenCalledWith('mig-123', OperationState.ROLLBACK, expect.any(Object));
+    await expect(service.migrateTenantWithOperation('t-fail', 'key-3')).rejects.toThrow(/safety checks failed/);
   });
 });

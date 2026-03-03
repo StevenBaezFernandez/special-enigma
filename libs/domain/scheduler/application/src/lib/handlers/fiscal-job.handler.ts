@@ -3,6 +3,7 @@ import { Job } from '../domain/entities/job.entity';
 import { NotificationService } from '@virteex/domain-notification-application';
 import { NotificationChannel } from '@virteex/domain-notification-domain';
 import { EntityManager } from '@mikro-orm/core';
+import { FiscalDomainService } from '@virteex/domain-fiscal-domain';
 
 @Injectable()
 export class FiscalJobHandler {
@@ -10,7 +11,8 @@ export class FiscalJobHandler {
 
   constructor(
     private readonly em: EntityManager,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private readonly fiscalDomainService: FiscalDomainService
   ) {}
 
   async handleInvoiceIssued(job: Job): Promise<void> {
@@ -18,11 +20,10 @@ export class FiscalJobHandler {
 
     this.logger.log(`Processing fiscal job for invoice ${invoiceId}`);
 
-    // Level 5: Explicitly verify real legal status before proceeding
-    // This assumes an internal FiscalDomainService or DB check
-    const isLegallyConfirmed = await this.verifyLegalStatus(invoiceId, tenantId, status);
-    if (!isLegallyConfirmed) {
-      throw new Error(`Inconsistent legal status for invoice ${invoiceId}: Expected ${status}`);
+    const realStatus = await this.fiscalDomainService.verifyInvoiceLegalStatus(invoiceId, tenantId);
+
+    if (realStatus !== status) {
+      throw new Error(`Inconsistent legal status for invoice ${invoiceId}: Expected ${status}, but found ${realStatus}`);
     }
 
     await this.notificationService.createNotification({
@@ -37,12 +38,5 @@ export class FiscalJobHandler {
     });
 
     this.logger.log(`Fiscal notification triggered for invoice ${invoiceId}`);
-  }
-
-  private async verifyLegalStatus(invoiceId: string, tenantId: string, expectedStatus: string): Promise<boolean> {
-    // In a real Level 5 scenario, we would query the 'fiscal' domain DB or service
-    // For this implementation, we simulate the confirmed state check
-    this.logger.debug(`Verifying legal status for invoice ${invoiceId} in tenant ${tenantId}`);
-    return expectedStatus === 'authorized' || expectedStatus === 'confirmed';
   }
 }

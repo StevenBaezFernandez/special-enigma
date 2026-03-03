@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Simplified UBL 2.1 Schema for Validation Purposes
-  This schema enforces the presence of critical UBL invoice fields,
-  replacing the previous wildcard mock.
+  This schema enforces the presence of critical UBL invoice fields.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
@@ -14,7 +13,6 @@
   <xs:element name="Invoice">
     <xs:complexType>
       <xs:sequence>
-        <!-- Standard UBL Headers -->
         <xs:element name="UBLVersionID" type="xs:string" fixed="UBL 2.1" minOccurs="1"/>
         <xs:element name="CustomizationID" type="xs:string" minOccurs="1"/>
         <xs:element name="ProfileID" type="xs:string" minOccurs="1"/>
@@ -26,7 +24,6 @@
         <xs:element name="Note" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
         <xs:element name="DocumentCurrencyCode" type="xs:string" minOccurs="1"/>
 
-        <!-- Parties -->
         <xs:element name="AccountingSupplierParty" minOccurs="1">
            <xs:complexType>
              <xs:sequence>
@@ -71,7 +68,6 @@
            </xs:complexType>
         </xs:element>
 
-        <!-- Totals -->
         <xs:element name="TaxTotal" minOccurs="1" maxOccurs="unbounded">
             <xs:complexType>
                 <xs:sequence>
@@ -92,7 +88,6 @@
             </xs:complexType>
         </xs:element>
 
-        <!-- Lines -->
         <xs:element name="InvoiceLine" minOccurs="1" maxOccurs="unbounded">
             <xs:complexType>
                 <xs:sequence>

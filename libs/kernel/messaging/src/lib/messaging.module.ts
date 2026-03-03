@@ -6,6 +6,7 @@ import { InboxMessage } from './entities/inbox-message.entity';
 import { OutboxService } from './outbox.service';
 import { InboxService } from './inbox.service';
 import { OutboxProcessor } from './outbox.processor';
+import { OutboxReconciliationService } from './outbox-reconciliation.service';
 import { SagaOrchestrator } from './saga/saga-orchestrator';
 import { RedisCacheModule } from '@virteex/platform-cache';
 import { HttpModule } from '@nestjs/axios';
@@ -37,6 +38,7 @@ import { EgressProxyService } from './egress-proxy.service';
     OutboxService,
     InboxService,
     OutboxProcessor,
+    OutboxReconciliationService,
     SagaOrchestrator,
     EgressProxyService,
   ],
