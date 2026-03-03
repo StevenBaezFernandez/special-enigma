@@ -10,8 +10,27 @@ describe('Migration Pipeline Operational Validation', () => {
   beforeEach(() => {
     mockEm = {
       findOneOrFail: vi.fn(),
-      getMigrator: vi.fn().mockReturnValue({ up: vi.fn().mockResolvedValue(undefined) }),
+      findOne: vi.fn(),
+      getMigrator: vi.fn().mockReturnValue({
+        up: vi.fn().mockResolvedValue(undefined),
+        down: vi.fn().mockResolvedValue(undefined),
+        getPendingMigrations: vi.fn().mockResolvedValue([])
+      }),
       fork: vi.fn().mockReturnThis(),
+      getConnection: vi.fn().mockReturnValue({
+        execute: vi.fn().mockResolvedValue([])
+      }),
+      getKnex: vi.fn().mockReturnValue(
+          Object.assign(
+            vi.fn().mockReturnValue({
+                where: vi.fn().mockReturnThis(),
+                first: vi.fn().mockResolvedValue({ status: 'COMPLETED' })
+            }),
+            {
+                raw: vi.fn().mockResolvedValue({ rows: [{ lag_ms: 0, size: '1000' }] })
+            }
+          )
+      )
     };
     mockGuard = {
       preMigrationCheck: vi.fn().mockResolvedValue(true),

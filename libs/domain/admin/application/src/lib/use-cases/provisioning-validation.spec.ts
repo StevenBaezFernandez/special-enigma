@@ -20,7 +20,14 @@ describe('Provisioning Operational Validation', () => {
         getMigrator: vi.fn().mockReturnValue({
             up: vi.fn().mockResolvedValue(undefined),
         }),
-        em: { fork: vi.fn().mockReturnThis(), getSchemaGenerator: vi.fn().mockReturnThis() }
+        em: {
+          fork: vi.fn().mockReturnValue({
+            getSchemaGenerator: vi.fn().mockReturnValue({
+              createSchema: vi.fn().mockResolvedValue(undefined)
+            })
+          }),
+          getSchemaGenerator: vi.fn().mockReturnThis()
+        }
     };
     mockTenantService = { getTenantConfig: vi.fn() };
     mockOpService = {

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ConflictException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { Tenant } from './entities/tenant.entity';
 import { TenantMode } from './interfaces/tenant-config.interface';
@@ -57,7 +57,7 @@ export class MigrationOrchestratorService {
               await this.migrateDatabasePerTenant(tenant.id);
           } else {
               this.logger.log(`Migrating schema ${tenant.schemaName} for tenant ${tenant.id}`);
-              const migrator = this.em.getMigrator();
+              const migrator = (this.em as any).getMigrator();
               await migrator.up({ schema: tenant.schemaName });
           }
       }
