@@ -1,8 +1,6 @@
 import { Module, Global, forwardRef } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
-  Subscription,
-  SubscriptionPlan,
   SUBSCRIPTION_REPOSITORY,
   SUBSCRIPTION_PLAN_REPOSITORY,
   CUSTOMER_REGISTRY_GATEWAY,
@@ -16,6 +14,7 @@ import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscri
 import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';
 import { StripeSubscriptionAdapter } from './adapters/stripe-subscription.adapter';
 import { StripeSubscriptionListener } from './listeners/stripe-subscription.listener';
+import { SubscriptionSchema, SubscriptionPlanSchema } from './persistence/subscription.schemas';
 
 @Global()
 @Module({
@@ -23,8 +22,8 @@ import { StripeSubscriptionListener } from './listeners/stripe-subscription.list
     SubscriptionDomainModule,
     forwardRef(() => SubscriptionApplicationModule),
     MikroOrmModule.forFeature([
-      Subscription,
-      SubscriptionPlan
+      SubscriptionSchema,
+      SubscriptionPlanSchema
     ])
   ],
   providers: [

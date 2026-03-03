@@ -701,6 +701,15 @@
       ],
       "@virteex/domain-finops-application/*": [
         "libs/domain/finops/application/src/*"
+      ],
+      "@virteex/domain-pos-domain": [
+        "libs/domain/pos/domain/src/index.ts"
+      ],
+      "@virteex/domain-pos-application": [
+        "libs/domain/pos/application/src/index.ts"
+      ],
+      "@virteex/domain-pos-infrastructure": [
+        "libs/domain/pos/infrastructure/src/index.ts"
       ]
     }
   },

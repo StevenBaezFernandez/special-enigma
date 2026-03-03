@@ -1,15 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { XMLBuilder } from 'fast-xml-parser';
 import { FiscalDocumentBuilder } from '@virteex/domain-fiscal-domain';
-import { Invoice, CustomerBillingInfo } from '@virteex/domain-billing-domain';
 import { TenantFiscalConfig } from '@virteex/domain-fiscal-domain';
+import { InvoiceContract, CustomerBillingInfoContract } from '@virteex/domain-billing-contracts';
 
 
 @Injectable()
 export class CoFiscalDocumentBuilder implements FiscalDocumentBuilder {
   private readonly logger = new Logger(CoFiscalDocumentBuilder.name);
 
-  async build(invoice: Invoice, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfo): Promise<string> {
+  async build(invoice: InvoiceContract, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfoContract): Promise<string> {
     this.logger.log(`Building DIAN UBL 2.1 Invoice for ${invoice.id}`);
 
     const builder = new XMLBuilder({
@@ -18,9 +18,9 @@ export class CoFiscalDocumentBuilder implements FiscalDocumentBuilder {
         suppressEmptyNode: true
     });
 
-    const items = invoice.items;
-    const taxTotalAmount = items.reduce((acc, item) => acc + Number(item.taxAmount), 0);
-    const subTotalAmount = items.reduce((acc, item) => acc + Number(item.amount), 0);
+    const items = (invoice as any).items || [];
+    const taxTotalAmount = items.reduce((acc: number, item: any) => acc + Number(item.taxAmount), 0);
+    const subTotalAmount = items.reduce((acc: number, item: any) => acc + Number(item.amount), 0);
     const totalAmount = subTotalAmount + taxTotalAmount;
 
     // Simplified UBL 2.1 Structure for Colombia
@@ -41,7 +41,7 @@ export class CoFiscalDocumentBuilder implements FiscalDocumentBuilder {
                     'ext:ExtensionContent': {
                         'sts:DianExtensions': {
                             'sts:InvoiceControl': {
-                                'sts:InvoiceAuthorization': tenantConfig.resolutionNumber || '18760000001',
+                                'sts:InvoiceAuthorization': (tenantConfig as any).resolutionNumber || '18760000001',
                                 'sts:AuthorizationPeriod': {
                                     'cbc:StartDate': '2023-01-01',
                                     'cbc:EndDate': '2024-01-01'
@@ -101,7 +101,7 @@ export class CoFiscalDocumentBuilder implements FiscalDocumentBuilder {
             },
             'cac:PaymentMeans': {
                 'cbc:ID': '1',
-                'cbc:PaymentMeansCode': invoice.paymentMethod || '10', // Cash
+                'cbc:PaymentMeansCode': (invoice as any).paymentMethod || '10', // Cash
                 'cbc:PaymentDueDate': new Date().toISOString().split('T')[0]
             },
             'cac:TaxTotal': {
@@ -144,7 +144,7 @@ export class CoFiscalDocumentBuilder implements FiscalDocumentBuilder {
                     '#text': totalAmount.toFixed(2)
                 }
             },
-            'cac:InvoiceLine': items.map((item, index) => ({
+            'cac:InvoiceLine': items.map((item: any, index: number) => ({
                 'cbc:ID': (index + 1).toString(),
                 'cbc:InvoicedQuantity': {
                     '@_unitCode': '94', // Unit

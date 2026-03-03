@@ -1,0 +1,15 @@
+{
+  "name": "domain-pos-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/pos/infrastructure/src",
+  "projectType": "library",
+  "tags": ["scope:pos", "type:infrastructure", "platform:node"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/pos/infrastructure"
+      }
+    }
+  }
+}

@@ -1,14 +1,14 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PaymentMethod, IPaymentMethodRepository, PAYMENT_METHOD_REPOSITORY } from '@virteex/domain-billing-domain';
+import { PaymentMethod, PaymentMethodRepository, PAYMENT_METHOD_REPOSITORY } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class GetPaymentMethodUseCase {
   constructor(
     @Inject(PAYMENT_METHOD_REPOSITORY)
-    private readonly paymentMethodRepository: IPaymentMethodRepository
+    private readonly repository: PaymentMethodRepository
   ) {}
 
-  async execute(tenantId: string): Promise<PaymentMethod[]> {
-    return this.paymentMethodRepository.findByTenantId(tenantId);
+  async execute(id: string): Promise<PaymentMethod | null> {
+    return this.repository.findById(id);
   }
 }

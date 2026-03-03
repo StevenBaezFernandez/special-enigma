@@ -10,10 +10,7 @@ import {
 import { MikroOrmInventoryRepository } from './repositories/mikro-orm-inventory.repository';
 import { MikroOrmWarehouseRepository } from './repositories/mikro-orm-warehouse.repository';
 import { CatalogProductReadGateway } from './adapters/catalog-product-read.gateway';
-import { StockOrmEntity, StockBatchOrmEntity } from './persistence/entities/stock.orm-entity';
-import { WarehouseOrmEntity } from './persistence/entities/warehouse.orm-entity';
-import { LocationOrmEntity } from './persistence/entities/location.orm-entity';
-import { InventoryMovementOrmEntity } from './persistence/entities/inventory-movement.orm-entity';
+import { WarehouseSchema, LocationSchema, StockSchema, StockBatchSchema, InventoryMovementSchema } from './persistence/inventory.schemas';
 
 @Global()
 @Module({
@@ -21,11 +18,11 @@ import { InventoryMovementOrmEntity } from './persistence/entities/inventory-mov
     ConfigModule,
     HttpModule,
     MikroOrmModule.forFeature([
-      InventoryMovementOrmEntity,
-      StockOrmEntity,
-      StockBatchOrmEntity,
-      WarehouseOrmEntity,
-      LocationOrmEntity,
+      InventoryMovementSchema,
+      StockSchema,
+      StockBatchSchema,
+      WarehouseSchema,
+      LocationSchema,
     ]),
   ],
   providers: [

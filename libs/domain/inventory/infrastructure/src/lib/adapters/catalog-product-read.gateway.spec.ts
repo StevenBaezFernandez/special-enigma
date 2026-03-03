@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { of, throwError } from 'rxjs';
 import { CatalogProductReadGateway } from './catalog-product-read.gateway';
 
@@ -7,7 +7,7 @@ describe('CatalogProductReadGateway', () => {
   const configService = { get: vi.fn() } as any;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     configService.get.mockImplementation((key: string) => {
       if (key === 'CATALOG_SERVICE_URL') return 'http://catalog.local';
       return undefined;

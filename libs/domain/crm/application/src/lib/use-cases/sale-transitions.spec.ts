@@ -2,7 +2,6 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { ApproveSaleUseCase } from './approve-sale.use-case';
 import { CancelSaleUseCase } from './cancel-sale.use-case';
 import { CompleteSaleUseCase } from './complete-sale.use-case';
-import { SaleStatus } from '@virteex/domain-crm-domain';
 
 vi.mock('@virteex/shared-util-server-server-config', () => ({
   DomainException: class extends Error {
@@ -29,34 +28,44 @@ describe('CRM Sale Transitions', () => {
 
   it('should persist approval', async () => {
     const useCase = new ApproveSaleUseCase(repository);
-    repository.findById.mockResolvedValue({ id: 's1', status: SaleStatus.DRAFT });
+    repository.findById.mockResolvedValue({ id: 's1', status: 'DRAFT' });
 
     await useCase.execute('s1');
 
     expect(repository.update).toHaveBeenCalledWith(expect.objectContaining({
-        status: SaleStatus.APPROVED
+        status: 'APPROVED'
     }));
   });
 
   it('should persist cancellation', async () => {
     const useCase = new CancelSaleUseCase(repository);
-    repository.findById.mockResolvedValue({ id: 's1', status: SaleStatus.NEGOTIATION });
+    repository.findById.mockResolvedValue({ id: 's1', status: 'NEGOTIATION' });
 
     await useCase.execute('s1');
 
     expect(repository.update).toHaveBeenCalledWith(expect.objectContaining({
-        status: SaleStatus.CANCELLED
+        status: 'CANCELLED'
     }));
   });
 
   it('should persist completion', async () => {
     const useCase = new CompleteSaleUseCase(repository);
-    repository.findById.mockResolvedValue({ id: 's1', status: SaleStatus.APPROVED });
+    repository.findById.mockResolvedValue({ id: 's1', status: 'APPROVED' });
 
     await useCase.execute('s1');
 
     expect(repository.update).toHaveBeenCalledWith(expect.objectContaining({
-        status: SaleStatus.COMPLETED
+        status: 'COMPLETED'
     }));
   });
 });
+
+vi.mock('@virteex/domain-crm-domain', () => ({
+  SaleStatus: {
+    DRAFT: 'DRAFT',
+    NEGOTIATION: 'NEGOTIATION',
+    APPROVED: 'APPROVED',
+    COMPLETED: 'COMPLETED',
+    CANCELLED: 'CANCELLED'
+  }
+}));

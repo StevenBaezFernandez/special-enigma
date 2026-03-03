@@ -5,6 +5,10 @@ import { firstValueFrom, timer, throwError } from 'rxjs';
 import { retry, catchError, timeout } from 'rxjs/operators';
 import { FiscalProvider } from '@virteex/domain-fiscal-domain';
 
+/**
+ * US Tax Partner Fiscal Adapter.
+ * Integrates with Avalara / TaxJar compatible API.
+ */
 @Injectable()
 export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
   private readonly logger = new Logger(UsTaxPartnerFiscalAdapter.name);
@@ -28,30 +32,61 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
     }
   }
 
-  async validateInvoice(invoice: unknown): Promise<boolean> {
-    const endpoint = this.configService.get<string>('US_TAX_PARTNER_VALIDATE_PATH', '/v1/validate');
+  /**
+   * Validates if an invoice complies with US tax rules.
+   */
+  async validateInvoice(invoice: any): Promise<boolean> {
+    const endpoint = this.configService.get<string>('US_TAX_PARTNER_VALIDATE_PATH', '/v1/tax/validate');
+
+    // US Specific: Validate addresses and ZIP codes before tax calculation
+    if (!invoice.shippingAddress?.zipCode || !invoice.shippingAddress?.country) {
+        this.logger.error('Validation failed: Missing destination ZIP code or country for US tax calculation.');
+        return false;
+    }
+
     try {
       const response = await this.callPartner(endpoint, invoice);
       return response?.valid === true;
-    } catch (error) {
-      this.logger.error(`Validation failed for invoice: ${error.message}`);
-      return false; // Fail safe for validation
+    } catch (error: any) {
+      this.logger.error(`Validation failed for US invoice: ${error.message}`);
+      return false;
     }
   }
 
-  async signInvoice(invoice: unknown): Promise<string> {
-    const endpoint = this.configService.get<string>('US_TAX_PARTNER_SIGN_PATH', '/v1/sign');
-    const response = await this.callPartner(endpoint, invoice);
-    if (!response?.signature) {
-      this.logger.error('US tax partner returned no signature in successful response.');
-      throw new InternalServerErrorException('US tax partner returned no signature.');
+  /**
+   * Calculates taxes and signs the document with a partner-provided fingerprint.
+   */
+  async signInvoice(invoice: any): Promise<string> {
+    const endpoint = this.configService.get<string>('US_TAX_PARTNER_CALCULATE_PATH', '/v1/tax/calculate');
+
+    this.logger.log(`Requesting tax calculation for US invoice ${invoice.id || 'N/A'}`);
+
+    const response = await this.callPartner(endpoint, {
+        ...invoice,
+        commit: true, // Avalara style commit
+    });
+
+    if (!response?.transactionId) {
+      this.logger.error('US tax partner returned no transactionId/signature.');
+      throw new InternalServerErrorException('US tax partner failed to generate a valid fiscal record.');
     }
-    return String(response.signature);
+
+    // Returns a JSON-stringified fiscal summary to be stored as the signature
+    return JSON.stringify({
+        transactionId: response.transactionId,
+        totalTax: response.totalTax,
+        summary: response.summary,
+        stampedAt: new Date().toISOString()
+    });
   }
 
-  async transmitInvoice(invoice: unknown): Promise<void> {
-    const endpoint = this.configService.get<string>('US_TAX_PARTNER_TRANSMIT_PATH', '/v1/transmit');
+  /**
+   * Submits the calculated transaction to the official US tax record.
+   */
+  async transmitInvoice(invoice: any): Promise<void> {
+    const endpoint = this.configService.get<string>('US_TAX_PARTNER_TRANSMIT_PATH', '/v1/tax/transmit');
     await this.callPartner(endpoint, invoice);
+    this.logger.log(`US fiscal transaction successfully transmitted for invoice ${invoice.id}`);
   }
 
   private async callPartner(endpoint: string, payload: unknown): Promise<any> {
@@ -63,27 +98,27 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
     const fullUrl = `${this.partnerUrl.replace(/\/$/, '')}${endpoint}`;
 
     try {
-      this.logger.log(`Calling US tax partner endpoint: ${endpoint}`);
+      this.logger.debug(`Calling US tax partner endpoint: ${endpoint}`);
       const response = await firstValueFrom(
         this.httpService.post(fullUrl, payload, {
           headers: {
-            Authorization: `Bearer ${this.partnerApiKey}`,
+            'Authorization': `Bearer ${this.partnerApiKey}`,
             'Content-Type': 'application/json',
             'X-Virteex-Region': 'US',
-            'X-Virteex-Trace-Id': crypto.randomUUID(),
+            'X-Virteex-Tenant': payload && (payload as any).tenantId ? (payload as any).tenantId : 'unknown',
+            'X-Request-ID': crypto.randomUUID(),
           }
         }).pipe(
-          timeout(8000), // 8s timeout
+          timeout(10000), // 10s timeout for tax calculations
           retry({
-            count: 2,
+            count: 3,
             delay: (error, retryCount) => {
-              this.logger.warn(`Retrying US tax partner call (${retryCount}/2) due to: ${error.message}`);
-              return timer(retryCount * 1000);
+              this.logger.warn(`Retrying US tax partner call (${retryCount}/3) due to: ${error.message}`);
+              return timer(retryCount * 2000);
             },
             resetOnSuccess: true
           }),
           catchError(err => {
-            this.logger.error(`Request to ${fullUrl} failed: ${err.message}`);
             return throwError(() => err);
           })
         )
@@ -92,12 +127,13 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
       return response.data;
     } catch (error: any) {
       this.logger.error(`Partner communication error at ${endpoint}: ${error.message}`);
-      if (error.response) {
-        this.logger.error(`Partner status: ${error.response.status} - Data: ${JSON.stringify(error.response.data)}`);
+
+      if (error.response?.status === 401 || error.response?.status === 403) {
+          throw new ServiceUnavailableException('US tax partner authentication failed. Check credentials.');
       }
 
       if (error.code === 'ECONNABORTED' || error.name === 'TimeoutError') {
-         throw new ServiceUnavailableException('US tax partner timed out. Please try again later.');
+         throw new ServiceUnavailableException('US tax partner timed out. Fiscal consistency cannot be guaranteed.');
       }
 
       throw new InternalServerErrorException(`US tax partner communication failed: ${error.message}`);

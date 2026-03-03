@@ -2,11 +2,6 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from '@virteex/kernel-auth';
 import {
-  TaxTable,
-  Employee,
-  Payroll,
-  Attendance,
-  PayrollDetail,
   EMPLOYEE_REPOSITORY,
   PAYROLL_REPOSITORY,
   TAX_TABLE_REPOSITORY,
@@ -15,6 +10,13 @@ import {
   PAC_PROVIDER,
   TENANT_CONFIG_REPOSITORY
 } from '@virteex/domain-payroll-domain';
+import {
+  TaxTableSchema,
+  EmployeeSchema,
+  PayrollSchema,
+  AttendanceSchema,
+  PayrollDetailSchema
+} from './persistence/payroll.schemas';
 import { MikroOrmEmployeeRepository } from './repositories/mikro-orm-employee.repository';
 import { MikroOrmPayrollRepository } from './repositories/mikro-orm-payroll.repository';
 import { MikroOrmTaxTableRepository } from './repositories/mikro-orm-tax-table.repository';
@@ -30,7 +32,13 @@ import { MikroOrmTenantConfigRepository } from './repositories/mikro-orm-tenant-
 @Module({
   imports: [
     AuthModule,
-    MikroOrmModule.forFeature([TaxTable, Employee, Payroll, Attendance, PayrollDetail])
+    MikroOrmModule.forFeature([
+      TaxTableSchema,
+      EmployeeSchema,
+      PayrollSchema,
+      AttendanceSchema,
+      PayrollDetailSchema
+    ])
   ],
   providers: [
     { provide: EMPLOYEE_REPOSITORY, useClass: MikroOrmEmployeeRepository },

@@ -1,7 +1,5 @@
 import { EntitySchema } from '@mikro-orm/core';
-import { TaxRule } from '@virteex/domain-billing-domain';
-import { PaymentMethod } from '@virteex/domain-billing-domain';
-import { TaxLine } from '@virteex/domain-billing-domain';
+import { TaxRule, PaymentMethod, TaxLine } from '@virteex/domain-billing-domain';
 
 export const TaxRuleSchema = new EntitySchema<TaxRule>({
   class: TaxRule,
@@ -21,10 +19,12 @@ export const PaymentMethodSchema = new EntitySchema<PaymentMethod>({
   properties: {
     id: { primary: true, type: 'uuid' },
     tenantId: { type: 'string' },
-    name: { type: 'string' },
-    code: { type: 'string' },
-    provider: { type: 'string' },
-    isActive: { type: 'boolean', default: true },
+    type: { type: 'string' },
+    last4: { type: 'string' },
+    expiryDate: { type: 'string' },
+    isDefault: { type: 'boolean', default: false },
+    createdAt: { type: 'Date', onCreate: () => new Date() },
+    updatedAt: { type: 'Date', onCreate: () => new Date(), onUpdate: () => new Date() },
   },
 });
 
@@ -32,9 +32,8 @@ export const TaxLineSchema = new EntitySchema<TaxLine>({
   class: TaxLine,
   properties: {
     id: { primary: true, type: 'uuid' },
-    taxType: { type: 'string' },
+    taxName: { type: 'string' },
     rate: { type: 'string' },
     amount: { type: 'string' },
-    base: { type: 'string' },
   },
 });

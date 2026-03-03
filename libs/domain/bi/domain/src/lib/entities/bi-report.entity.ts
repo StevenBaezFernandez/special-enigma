@@ -1,20 +1,25 @@
-import { Entity, PrimaryKey, Property, Enum, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 
-@Entity()
+
+
+import { v4 } from 'uuid';
+
 export class BiReport {
-  @PrimaryKey({ type: 'uuid' })
-  id!: string;
 
-  @Property()
+  id: string = v4();
+
+  tenantId!: string;
+
+
     name!: string;
 
     type!: string;
 
     data!: any;
 
-    generatedAt!: Date;
+    generatedAt: Date = new Date();
 
-  constructor(name: string, type: string, data: any) {
+  constructor(tenantId: string, name: string, type: string, data: any) {
+    this.tenantId = tenantId;
     this.name = name;
     this.type = type;
     this.data = data;

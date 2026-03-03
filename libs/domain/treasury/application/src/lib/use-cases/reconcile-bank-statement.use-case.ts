@@ -1,5 +1,5 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { TransactionRepository, BankAccountRepository } from '@virteex/domain-treasury-domain';
+import { TransactionRepository, TRANSACTION_REPOSITORY, BankAccountRepository, BANK_ACCOUNT_REPOSITORY } from '@virteex/domain-treasury-domain';
 import { BankStatementParser, StatementLine } from '../services/bank-statement-parser.service';
 
 export interface ReconciliationResult {
@@ -13,8 +13,8 @@ export class ReconcileBankStatementUseCase {
   private readonly logger = new Logger(ReconcileBankStatementUseCase.name);
 
   constructor(
-    @Inject('TransactionRepository') private readonly transactionRepo: TransactionRepository,
-    @Inject('BankAccountRepository') private readonly bankAccountRepo: BankAccountRepository,
+    @Inject(TRANSACTION_REPOSITORY) private readonly transactionRepo: TransactionRepository,
+    @Inject(BANK_ACCOUNT_REPOSITORY) private readonly bankAccountRepo: BankAccountRepository,
     private readonly parser: BankStatementParser
   ) {}
 
@@ -31,12 +31,27 @@ export class ReconcileBankStatementUseCase {
     const unmatched: StatementLine[] = [];
 
     for (const line of lines) {
-       // Simple matching logic: same day, same amount (ignoring description for now)
-       const match = transactions.find(t =>
-         new Date(t.date).toDateString() === line.date.toDateString() &&
-         Math.abs(t.amount - line.amount) < 0.01 &&
-         !matched.some(m => m.transactionId === t.id)
-       );
+       // Improved matching logic:
+       // 1. Exact reference match (Highest priority)
+       // 2. Same day + same amount
+       // 3. Amount match within 3-day window (Common in banking)
+
+       const match = transactions.find(t => {
+         const alreadyMatched = matched.some(m => m.transactionId === t.id);
+         if (alreadyMatched) return false;
+
+         const sameReference = t.reference && line.reference && t.reference.trim() === line.reference.trim();
+         if (sameReference) return true;
+
+         const sameAmount = Math.abs(t.amount - line.amount) < 0.01;
+         if (!sameAmount) return false;
+
+         const tDate = new Date(t.date);
+         const lDate = new Date(line.date);
+         const dayDiff = Math.abs((tDate.getTime() - lDate.getTime()) / (1000 * 60 * 60 * 24));
+
+         return dayDiff <= 3; // 3-day tolerance window
+       });
 
        if (match) {
           matched.push({ line, transactionId: match.id });

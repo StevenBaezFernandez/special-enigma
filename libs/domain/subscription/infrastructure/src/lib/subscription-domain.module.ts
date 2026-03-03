@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Subscription, SubscriptionPlan, CustomerIdentityService } from '@virteex/domain-subscription-domain';
+import { CustomerIdentityService } from '@virteex/domain-subscription-domain';
+import { SubscriptionSchema, SubscriptionPlanSchema } from './persistence/subscription.schemas';
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature([Subscription, SubscriptionPlan])
+    MikroOrmModule.forFeature([SubscriptionSchema, SubscriptionPlanSchema])
   ],
   providers: [CustomerIdentityService],
   exports: [

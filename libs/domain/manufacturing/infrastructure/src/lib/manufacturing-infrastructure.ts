@@ -3,21 +3,19 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
-  ProductionOrder,
   PRODUCTION_ORDER_REPOSITORY,
   INVENTORY_SERVICE,
-  BillOfMaterials,
-  BillOfMaterialsComponent,
   BILL_OF_MATERIALS_REPOSITORY
 } from '@virteex/domain-manufacturing-domain';
 import { MikroOrmProductionOrderRepository } from './repositories/mikro-orm-production-order.repository';
 import { MikroOrmBillOfMaterialsRepository } from './repositories/mikro-orm-bill-of-materials.repository';
 import { HttpInventoryAdapter } from './adapters/http-inventory.adapter';
+import { ProductionOrderSchema, BillOfMaterialsSchema, BillOfMaterialsComponentSchema } from './persistence/manufacturing.schemas';
 
 @Global()
 @Module({
   imports: [
-    MikroOrmModule.forFeature([ProductionOrder, BillOfMaterials, BillOfMaterialsComponent]),
+    MikroOrmModule.forFeature([ProductionOrderSchema, BillOfMaterialsSchema, BillOfMaterialsComponentSchema]),
     HttpModule,
     ConfigModule
   ],

@@ -21,9 +21,9 @@ export class MikroOrmTenantConfigRepository implements TenantConfigRepository {
       csdCertificate: settings['csdCertificate'],
       csdKey: settings['csdKey'],
       legalName: company.name,
-      regime: company.regime || '601', // Default to General de Ley Personas Morales if missing, but should be set.
+      regime: company.regime || '601',
       postalCode: company.postalCode || '00000',
       resolutionNumber: settings['resolutionNumber']
-    };
+    } as TenantFiscalConfig;
   }
 }

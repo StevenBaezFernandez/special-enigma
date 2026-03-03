@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { FiscalTaxRule } from '@virteex/domain-fiscal-domain';
-import { TaxRuleRepository } from '@virteex/domain-fiscal-domain/tax-rule.repository';
+import { FiscalTaxRule, TaxRuleRepository } from '@virteex/domain-fiscal-domain';
 import { FiscalTaxRuleRecord } from '../entities/fiscal-tax-rule.record';
 
 @Injectable()
 export class MikroOrmTaxRuleRepository implements TaxRuleRepository {
   constructor(private readonly em: EntityManager) {}
+
+  async findByJurisdiction(country: string, taxType?: string): Promise<FiscalTaxRule[]> {
+    const where: any = { country, isActive: true };
+    if (taxType) {
+      where.type = taxType;
+    }
+    return this.em.find(FiscalTaxRuleRecord, where);
+  }
 
   async findByTenant(tenantId: string): Promise<FiscalTaxRule[]> {
     return this.em.find(FiscalTaxRuleRecord, { tenantId, isActive: true });

@@ -9,3 +9,5 @@ export interface InvoiceRepository {
   findByTenantId(tenantId: string): Promise<Invoice[]>;
   countByTenantId(tenantId: string): Promise<number>;
 }
+
+export { InvoiceRepository as IInvoiceRepository };

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TenantsController } from './tenants.controller';
+import { AdminPresentationModule } from '@virteex/domain-admin-presentation';
 
 @Module({
-  imports: [],
-  controllers: [TenantsController],
+  imports: [AdminPresentationModule],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

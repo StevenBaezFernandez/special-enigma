@@ -11,7 +11,7 @@ import {
   Company
 } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
-import { UnauthorizedException } from '@nestjs/common';
+import { DomainException } from '@virteex/shared-util-server-server-config';
 import * as crypto from 'crypto';
 import { vi, Mock } from 'vitest';
 
@@ -80,7 +80,7 @@ describe('RefreshTokenUseCase', () => {
   it('should throw if token format is invalid', async () => {
       // Mock base64 failure implicitly by passing garbage that might fail split
     await expect(useCase.execute({ refreshToken: 'invalid' }, { ip: '1.2.3.4', userAgent: 'test' }))
-      .rejects.toThrow(UnauthorizedException);
+      .rejects.toThrow(DomainException);
   });
 
   it('should throw if session not found', async () => {
@@ -91,7 +91,7 @@ describe('RefreshTokenUseCase', () => {
     (mockSessionRepository.findById as Mock).mockResolvedValue(null);
 
     await expect(useCase.execute({ refreshToken: token }, { ip: '1.2.3.4', userAgent: 'test' }))
-      .rejects.toThrow(UnauthorizedException);
+      .rejects.toThrow(DomainException);
   });
 
   it('should revoke session if hash mismatch (reuse)', async () => {
@@ -113,7 +113,7 @@ describe('RefreshTokenUseCase', () => {
     (mockSessionRepository.findById as Mock).mockResolvedValue(session);
 
     await expect(useCase.execute({ refreshToken: token }, { ip: '1.2.3.4', userAgent: 'test' }))
-      .rejects.toThrow(UnauthorizedException);
+      .rejects.toThrow(DomainException);
 
     expect(session.isActive).toBe(false);
     expect(mockSessionRepository.save).toHaveBeenCalledWith(session);

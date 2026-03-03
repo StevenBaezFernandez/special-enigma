@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FiscalProvider } from '@virteex/domain-fiscal-domain/fiscal-provider.port';
+import { FiscalProvider } from '@virteex/domain-fiscal-domain';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, timer } from 'rxjs';
 import { retry } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import * as path from 'path';
 
 export interface UFValidationRule {
   uf: string;
-  validate(xmlDoc: libxmljs.Document): { isValid: boolean; errors: string[] };
+  validate(xmlDoc: any): { isValid: boolean; errors: string[] };
 }
 
 @Injectable()
@@ -19,7 +19,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
   private readonly logger = new Logger(SefazFiscalAdapter.name);
   private privateKey: string;
   private certificate: string;
-  private xsdSchema: libxmljs.Document;
+  private xsdSchema: any;
   private ufRules: Map<string, UFValidationRule> = new Map();
 
   constructor(private readonly httpService: HttpService) {
@@ -86,7 +86,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
         // UF-Specific Validation Logic
         const ufNode = xmlDoc.get("//*[local-name()='cUF']");
         if (ufNode) {
-            const ufCode = ufNode.text();
+            const ufCode = (ufNode as any).text();
             const rule = this.ufRules.get(ufCode);
             if (rule) {
                 const ufResult = rule.validate(xmlDoc);

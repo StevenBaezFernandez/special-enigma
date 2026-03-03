@@ -1,39 +1,43 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { firstValueFrom } from 'rxjs';
 import { CustomerRepository, CustomerBillingInfo } from '@virteex/domain-billing-domain';
-import axios from 'axios';
 
 @Injectable()
 export class HttpCustomerRepository implements CustomerRepository {
-  private readonly logger = new Logger(HttpCustomerRepository.name);
-  private readonly baseUrl: string;
+  private readonly crmServiceUrl: string;
 
-  constructor(private readonly configService: ConfigService) {
-    this.baseUrl = this.configService.get<string>('API_GATEWAY_URL') || 'http://localhost:3000/api';
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService
+  ) {
+    this.crmServiceUrl = this.configService.get<string>('CRM_SERVICE_URL', 'http://api-crm-app:3000');
   }
 
   async findById(id: string): Promise<CustomerBillingInfo | null> {
     try {
-      const response = await axios.get(`${this.baseUrl}/crm/customers/${id}`);
-      const customer = response.data;
+      const { data: customer } = await firstValueFrom(
+        this.httpService.get(`${this.crmServiceUrl}/api/crm/customers/${id}`)
+      );
+
+      if (!customer) return null;
 
       // Map CRM customer to Billing Info
       return {
         id: customer.id,
         rfc: customer.taxId || 'XAXX010101000',
         taxId: customer.taxId || 'XAXX010101000',
-        legalName: customer.companyName || `${customer.firstName} ${customer.lastName}`.trim(),
-        taxRegimen: customer.taxRegimen || '616',
+        legalName: customer.companyName || `${customer.firstName} ${customer.lastName}`,
+        taxRegimen: customer.taxRegimen || '601',
         postalCode: customer.postalCode || '00000',
-        email: customer.email || '',
-        address: customer.address
+        email: customer.email,
+        address: customer.address,
+        country: customer.country || 'MX'
       };
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        return null;
-      }
-      this.logger.error(`Error fetching customer ${id}: ${error}`);
-      return null; // Fail safe or throw? Returning null is safer for "not found" semantics.
+    } catch (error: any) {
+      if (error.response?.status === 404) return null;
+      throw error;
     }
   }
 }

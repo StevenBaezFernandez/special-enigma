@@ -1,0 +1,21 @@
+{
+  "name": "api-pos",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api/pos/app/src",
+  "projectType": "application",
+  "tags": ["scope:pos", "type:api", "platform:node"],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/api/pos",
+        "main": "apps/api/pos/app/src/main.ts",
+        "tsConfig": "apps/api/pos/app/tsconfig.app.json",
+        "compiler": "tsc",
+        "target": "node",
+        "webpackConfig": "apps/api/pos/app/webpack.config.js"
+      }
+    }
+  }
+}

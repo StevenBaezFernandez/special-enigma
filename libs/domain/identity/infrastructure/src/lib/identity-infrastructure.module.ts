@@ -5,11 +5,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import {
   UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository,
   AuthService, NotificationService, RiskEngineService, CachePort,
-  User, Company, AuditLog, Session, JobTitle, RiskEvaluatorService
+  RiskEvaluatorService
 } from '@virteex/domain-identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
-import { UserOrmEntity } from './persistence/entities/user.orm-entity';
+import { UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema } from './persistence/identity.schemas';
 import { MikroOrmCompanyRepository } from './persistence/mikro-orm-company.repository';
 import { MikroOrmAuditLogRepository } from './persistence/mikro-orm-audit-log.repository';
 import { MikroOrmSessionRepository } from './persistence/mikro-orm-session.repository';
@@ -29,7 +29,7 @@ import {
   GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
   ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase,
   InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
-  UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase, // Added
+  UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase,
   GetAuditLogsUseCase,
   TokenGenerationService,
   GetJobTitlesUseCase,
@@ -48,7 +48,7 @@ import { AuthModule } from '@virteex/kernel-auth';
     ConfigModule,
     EventEmitterModule,
     AuthModule,
-    MikroOrmModule.forFeature([UserOrmEntity, Company, AuditLog, Session, JobTitle]),
+    MikroOrmModule.forFeature([UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema]),
     SharedInfrastructureStorageModule,
     RedisCacheModule.forRootAsync({
       inject: [ConfigService],
@@ -66,20 +66,14 @@ import { AuthModule } from '@virteex/kernel-auth';
     }),
   ],
   providers: [
-    // Queue Services
     MailQueueProducer,
     MailProcessor,
-
-    // Application Listeners
     UserInvitedListener,
-
-    // Ports Implementations
     { provide: UserRepository, useClass: MikroOrmUserRepository },
     { provide: CompanyRepository, useClass: MikroOrmCompanyRepository },
     { provide: AuditLogRepository, useClass: MikroOrmAuditLogRepository },
     { provide: SessionRepository, useClass: MikroOrmSessionRepository },
     { provide: JobTitleRepository, useClass: MikroOrmJobTitleRepository },
-
     Argon2AuthService,
     KeycloakAuthService,
     {
@@ -96,12 +90,9 @@ import { AuthModule } from '@virteex/kernel-auth';
     { provide: StoragePort, useClass: StorageAdapter },
     { provide: GEO_IP_PORT, useClass: GeoIpLiteAdapter },
     { provide: CachePort, useClass: RedisCacheAdapter },
-
-    // Application Use Cases
     InitiateSignupUseCase,
     VerifySignupUseCase,
     CompleteOnboardingUseCase,
-
     LoginUserUseCase,
     VerifyMfaUseCase,
     GetUserProfileUseCase,
@@ -122,7 +113,6 @@ import { AuthModule } from '@virteex/kernel-auth';
     InitiateSignupUseCase,
     VerifySignupUseCase,
     CompleteOnboardingUseCase,
-
     LoginUserUseCase,
     VerifyMfaUseCase,
     GetUserProfileUseCase,

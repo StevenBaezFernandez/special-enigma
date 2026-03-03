@@ -29,6 +29,7 @@ export class RegisterTransactionUseCase {
       dto.description
     );
 
-    return this.transactionRepository.create(transaction);
+    await this.transactionRepository.save(transaction);
+    return transaction;
   }
 }

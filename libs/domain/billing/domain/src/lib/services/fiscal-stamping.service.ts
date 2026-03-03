@@ -1,10 +1,10 @@
-import * as crypto from 'crypto';
+import { BadRequestException, EntityNotFoundException } from '@virteex/kernel-exceptions';
 import { Invoice } from '../entities/invoice.entity';
 import { FiscalStamp } from '../ports/pac-provider.port';
-import { TenantConfigRepository, TENANT_CONFIG_REPOSITORY, TenantFiscalConfig } from '../ports/tenant-config.port';
-import { CustomerRepository, CUSTOMER_REPOSITORY, CustomerBillingInfo } from '../ports/customer.repository';
-import { PacStrategyFactory, PAC_STRATEGY_FACTORY } from '../ports/pac-strategy.factory';
-import { FiscalDocumentBuilderFactory, FISCAL_DOCUMENT_BUILDER_FACTORY } from '@virteex/domain-fiscal-domain';
+import { TenantConfigRepository, TenantFiscalConfig } from '../ports/tenant-config.port';
+import { CustomerRepository, CustomerBillingInfo } from '../ports/customer.repository';
+import { PacStrategyFactory } from '../ports/pac-strategy.factory';
+import { FiscalDocumentBuilderFactory } from '@virteex/domain-fiscal-domain';
 
 export class FiscalStampingService {
   constructor(
@@ -20,7 +20,6 @@ export class FiscalStampingService {
          if (tenantConfig.country === 'MX' && !tenantConfig.regime) {
              throw new BadRequestException('Tenant fiscal configuration is incomplete (RFC, Postal Code, Regime are required for MX)');
          }
-         // For US, minimal requirement?
          if (tenantConfig.country === 'US' && !tenantConfig.legalName) {
              throw new BadRequestException('Tenant fiscal configuration is incomplete (Legal Name required for US)');
          }
@@ -28,7 +27,7 @@ export class FiscalStampingService {
 
     const customer = await this.customerRepo.findById(invoice.customerId);
     if (!customer) {
-        throw new NotFoundException(`Customer with ID ${invoice.customerId} not found`);
+        throw new EntityNotFoundException('Customer', invoice.customerId);
     }
 
     const builder = this.documentBuilderFactory.getBuilder(tenantConfig.country);

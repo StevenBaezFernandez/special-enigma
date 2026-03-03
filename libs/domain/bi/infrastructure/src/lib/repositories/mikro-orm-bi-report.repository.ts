@@ -15,7 +15,11 @@ export class MikroOrmBiReportRepository implements BiReportRepository {
     await this.repository.getEntityManager().persistAndFlush(report);
   }
 
-  async findAll(): Promise<BiReport[]> {
-    return this.repository.findAll();
+  async findAll(tenantId: string): Promise<BiReport[]> {
+    return this.repository.find({ tenantId });
+  }
+
+  async findById(id: string): Promise<BiReport | null> {
+    return this.repository.findOne({ id });
   }
 }

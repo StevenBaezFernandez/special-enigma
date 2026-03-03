@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { FiscalDataProvider, FiscalStats } from '@virteex/domain-fiscal-domain/fiscal-data-provider.port';
+import { FiscalDataProvider, FiscalStats } from '@virteex/domain-fiscal-domain';
 import { Invoice } from '@virteex/domain-billing-domain';
 
 @Injectable()
