@@ -1,0 +1,30 @@
+{
+  "name": "domain-notification-infrastructure",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/notification/infrastructure/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:notification",
+    "type:infrastructure",
+    "platform:agnostic",
+    "criticality:high"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/notification/infrastructure",
+        "main": "libs/domain/notification/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/notification/infrastructure/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/notification/infrastructure/*.md"
+        ],
+        "rootDir": "."
+      }
+    }
+  }
+}

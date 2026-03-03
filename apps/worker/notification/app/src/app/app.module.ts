@@ -3,7 +3,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NotificationConsumer } from './notification.consumer';
-import { NotificationInfrastructureModule } from '../../../../libs/domains/notification/infrastructure/src/lib/notification-infrastructure.module';
+import { NotificationInfrastructureModule } from '@virteex/domain-notification-infrastructure';
 import { KafkaModule } from '@virteex/platform-kafka';
 
 @Module({
