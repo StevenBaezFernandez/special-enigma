@@ -710,6 +710,24 @@
       ],
       "@virteex/domain-pos-infrastructure": [
         "libs/domain/pos/infrastructure/src/index.ts"
+      ],
+      "@virteex/domain-notification-infrastructure": [
+        "libs/domain/notification/infrastructure/src/index.ts"
+      ],
+      "@virteex/domain-notification-application": [
+        "libs/domain/notification/application/src/index.ts"
+      ],
+      "@virteex/domain-notification-domain": [
+        "libs/domain/notification/domain/src/index.ts"
+      ],
+      "@virteex/domain-scheduler-infrastructure": [
+        "libs/domain/scheduler/infrastructure/src/index.ts"
+      ],
+      "@virteex/domain-scheduler-application": [
+        "libs/domain/scheduler/application/src/index.ts"
+      ],
+      "@virteex/domain-scheduler-domain": [
+        "libs/domain/scheduler/domain/src/index.ts"
       ]
     }
   },

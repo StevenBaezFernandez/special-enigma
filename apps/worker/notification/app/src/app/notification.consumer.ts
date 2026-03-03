@@ -1,8 +1,6 @@
 import { Controller, Logger } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { EmailService } from '../../../../libs/domains/notification/infrastructure/src/lib/services/email.service';
-import { SmsService } from '../../../../libs/domains/notification/infrastructure/src/lib/services/sms.service';
-import { PushNotificationService } from '../../../../libs/domains/notification/infrastructure/src/lib/services/push-notification.service';
+import { EmailService, SmsService, PushNotificationService } from '@virteex/domain-notification-infrastructure';
 
 @Controller()
 export class NotificationConsumer {
