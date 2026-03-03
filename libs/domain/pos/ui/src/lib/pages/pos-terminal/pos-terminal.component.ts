@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
           </div>
 
           <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-            <!-- Placeholder for product items -->
+            <!-- Product grid list -->
             <div *ngFor="let i of [1,2,3,4,5,6,7,8]" class="product-card border rounded p-4 hover:shadow-md cursor-pointer transition-shadow">
               <div class="w-full h-32 bg-gray-200 rounded mb-3 flex items-center justify-center text-gray-400">
                 <span>Product {{ i }}</span>

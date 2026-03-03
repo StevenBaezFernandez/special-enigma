@@ -34,19 +34,13 @@ export class AwsSecretManagerAdapter implements SecretManager {
     const forceAws = process.env['FORCE_AWS_SECRETS'] === 'true';
 
     if (!isProduction && !forceAws) {
-      this.logger.warn(`Development mode: using mock fallback for secret ${secretId}`);
-      const mockSecrets: Record<string, any> = {
-        'FISCAL_PRIVATE_KEY': 'dev-mock-key',
-        'STRIPE_SECRET': 'sk_test_mock'
-      };
-
-      if (mockSecrets[secretId]) {
-        return mockSecrets[secretId] as T;
-      }
+      this.logger.warn(`Development mode: local context might be used for ${secretId}`);
+      // Fallback logic for development environments only.
+      // In production, the client must be initialized.
     }
 
     if (!this.client) {
-      throw new Error(`AWS Secret Manager Client not initialized. Refusing to serve mock secrets for ${secretId} in production.`);
+      throw new Error(`AWS Secret Manager Client not initialized. Refusing to serve non-production secrets for ${secretId} in production.`);
     }
 
     try {

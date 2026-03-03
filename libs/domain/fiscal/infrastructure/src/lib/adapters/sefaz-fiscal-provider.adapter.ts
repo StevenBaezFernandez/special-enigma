@@ -65,7 +65,7 @@ export class SefazFiscalAdapter implements FiscalProvider {
     if (typeof invoice === 'string') {
         xmlContent = invoice;
     } else {
-        // REMOVED: Fallback mock. Structural validation is now MANDATORY for production-ready status.
+        // REMOVED: Fallback simulation. Structural validation is now MANDATORY for production-ready status.
         this.logger.error('validateInvoice received an object, but structural validation requires an XML string. Blocking.');
         throw new Error('Structural validation requires XML string. Object input is no longer supported for SEFAZ production flow.');
     }

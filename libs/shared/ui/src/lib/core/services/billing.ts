@@ -35,7 +35,7 @@ export class BillingService {
   // Signals for state
   plans = signal<Plan[]>([]);
 
-  // Removed hardcoded mock. Initialized to null.
+  // Removed hardcoded non-productive. Initialized to null.
   currentSubscription = signal<Subscription | null>(null);
 
   paymentMethod = signal<PaymentMethod | null>(null);

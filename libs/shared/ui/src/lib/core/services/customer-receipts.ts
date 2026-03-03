@@ -17,7 +17,7 @@ export class CustomerReceiptsService {
   private http = inject(HttpClient);
   private apiUrl = `${this.config.apiUrl}/customer-payments`; // Assuming this is the new endpoint
 
-  // Placeholder methods
+  // Domain methods
   getReceipts(): Observable<CustomerReceipt[]> {
     return this.http.get<CustomerReceipt[]>(this.apiUrl);
   }

@@ -28,13 +28,14 @@
     "readiness:report": "node tools/readiness/generate-release-report.mjs",
     "governance:consistency": "node tools/quality-gates/validate-operational-consistency.mjs",
     "governance:scorecard": "node tools/quality-gates/report-governance-scorecard.mjs",
-    "governance:check": "npm run governance:consistency && npm run arch:validate-tags && npm run arch:validate-naming && npm run test:validate-backend && npm run quality:e2e-coverage",
+    "governance:check": "npm run governance:consistency && npm run arch:validate-tags && npm run arch:validate-naming && npm run test:validate-backend && npm run quality:e2e-coverage && npm run quality:block-simulations",
     "doctor": "npm run governance:check",
     "dev:frontend": "nx serve web-portal-app",
     "dev:backend": "nx serve api-gateway-app",
     "build:frontend": "nx build web-portal-app",
     "build:backend": "nx build api-gateway-app",
-    "quality:plugin-isolation": "node tools/quality-gates/validate-plugin-isolation.mjs"
+    "quality:plugin-isolation": "node tools/quality-gates/validate-plugin-isolation.mjs",
+    "quality:block-simulations": "./tools/quality-gates/block-simulations.sh"
   },
   "private": true,
   "devDependencies": {

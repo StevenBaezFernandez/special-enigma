@@ -18,7 +18,10 @@ export class JwtTenantMiddleware implements NestMiddleware {
     }
 
     try {
-      const decoded: any = jwt.decode(token);
+      // ENFORCEMENT: JWT signature MUST be verified to establish trust
+      const jwtSecret = process.env['JWT_SECRET'] || 'dev-secret';
+      const decoded: any = jwt.verify(token, jwtSecret);
+
       if (decoded && decoded.tenantId) {
         const context: TenantContext = {
           tenantId: decoded.tenantId,

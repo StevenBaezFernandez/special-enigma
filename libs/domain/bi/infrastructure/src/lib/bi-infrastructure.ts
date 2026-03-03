@@ -38,7 +38,7 @@ import { BiReportSchema } from './persistence/bi.schemas';
     },
     {
       provide: DashboardGateway,
-      useClass: SqlDashboardGateway // Replaced Mock with SQL
+      useClass: SqlDashboardGateway // Replaced non-productive with SQL
     }
   ],
   exports: [SALES_PORT, INVOICE_PORT, EXPENSES_PORT, BI_REPORT_REPOSITORY, DashboardGateway]

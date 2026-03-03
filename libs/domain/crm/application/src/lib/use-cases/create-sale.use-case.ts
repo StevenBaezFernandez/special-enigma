@@ -134,11 +134,11 @@ export class CreateSaleUseCase {
 
         // Compensating action: Cancel the sale
         sale.status = SaleStatus.CANCELLED;
-        // Best effort to save the cancellation state
+        // Mandatorily persist the cancellation state to avoid zombie records
         try {
             await this.saleRepository.create(sale);
         } catch (e: any) {
-            this.logger.error(`Failed to cancel sale ${sale.id} after reservation failure: ${e.message}`);
+            this.logger.error(`CRITICAL: Failed to cancel sale ${sale.id} after reservation failure: ${e.message}. Manual reconciliation required.`);
             // Critical: We have a zombie state (Draft but failed).
             // Alerting/Monitoring would pick this up via logs.
         }

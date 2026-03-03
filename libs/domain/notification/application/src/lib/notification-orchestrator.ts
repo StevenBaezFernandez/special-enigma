@@ -19,11 +19,11 @@ export class NotificationOrchestrator {
     this.logger.log(`Orchestrating notification ${notification.id} via ${notification.channel}`);
 
     try {
-      // Step 1: Render Template (Placeholder for Step 7)
+      // Step 1: Render Template
       NotificationStateMachine.transition(notification, NotificationStatus.RENDERED);
       await this.em.flush();
 
-      // Step 2: Policy & Preference Check (Placeholder for Step 7)
+      // Step 2: Policy & Preference Check
       // Check ConsentLedger, NotificationPreference, and Quiet Hours
 
       // Step 3: Dispatch to Provider

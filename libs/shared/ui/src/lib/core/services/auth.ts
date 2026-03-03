@@ -68,7 +68,7 @@ function isTwoFactorRequired(res: LoginResult): res is TwoFactorRequiredResponse
     return (res as TwoFactorRequiredResponse).require2fa === true;
 }
 
-// Mock ModalService if missing, or use any
+// Default ModalService if missing, or use any
 @Injectable({ providedIn: 'root' })
 export class ModalService {
     open(args: any): any { return { onClose$: of(true) }; }

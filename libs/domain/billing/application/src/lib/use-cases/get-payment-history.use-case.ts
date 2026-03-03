@@ -22,7 +22,7 @@ export class GetPaymentHistoryUseCase {
       id: inv.id,
       amount: parseFloat(inv.totalAmount),
       date: inv.issueDate.toISOString(),
-      description: `Invoice #${inv.id}`, // Placeholder description
+      description: inv.description || `Invoice #${inv.id}`,
       status: inv.status
     }));
   }

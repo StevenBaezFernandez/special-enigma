@@ -7,9 +7,14 @@ export class SmsService {
   private client: Twilio;
 
   constructor() {
-    const accountSid = process.env.TWILIO_ACCOUNT_SID;
-    const authToken = process.env.TWILIO_AUTH_TOKEN;
-    this.client = new Twilio(accountSid || 'dummy', authToken || 'dummy');
+    const accountSid = process.env['TWILIO_ACCOUNT_SID'];
+    const authToken = process.env['TWILIO_AUTH_TOKEN'];
+
+    if (!accountSid || !authToken) {
+        throw new Error('CRITICAL: Twilio credentials missing. SMS service cannot start.');
+    }
+
+    this.client = new Twilio(accountSid, authToken);
   }
 
   async sendSms(to: string, body: string): Promise<void> {

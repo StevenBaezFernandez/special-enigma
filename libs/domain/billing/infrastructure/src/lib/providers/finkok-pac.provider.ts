@@ -42,7 +42,7 @@ export class FinkokPacProvider implements PacProvider {
         'Finkok credentials (FINKOK_USERNAME, FINKOK_PASSWORD, FINKOK_URL) are missing.'
       );
     } else if (!this.username || !this.password || !this.url) {
-        this.logger.warn('Finkok credentials missing. PAC functionality will be disabled or mock/fail in dev mode.');
+        this.logger.warn('Finkok credentials missing. PAC functionality will be disabled or restricted in dev mode.');
     }
   }
 

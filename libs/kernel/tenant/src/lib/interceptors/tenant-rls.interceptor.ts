@@ -59,8 +59,14 @@ export class TenantRlsInterceptor implements NestInterceptor {
     if (config.mode === 'SHARED') {
       return from(
         this.em.transactional(async (txEm) => {
-          await txEm.getConnection().execute('SET LOCAL app.current_tenant = ?', [tenantId]);
-          await txEm.getConnection().execute('SET LOCAL app.tenant_enforced = ?', ['true']);
+          // ENSURE RLS is active at session level
+          try {
+              await txEm.getConnection().execute('SET LOCAL app.current_tenant = ?', [tenantId]);
+              await txEm.getConnection().execute('SET LOCAL app.tenant_enforced = ?', ['true']);
+          } catch (err: any) {
+              this.logger.error(`Failed to set RLS session context for tenant ${tenantId}: ${err.message}`);
+              throw new ForbiddenException('Could not establish secure tenant context');
+          }
 
           txEm.setFilterParams('tenant', { tenantId });
 
@@ -76,6 +82,21 @@ export class TenantRlsInterceptor implements NestInterceptor {
           });
         })
       );
+    } else if (config.mode === 'DATABASE') {
+        // For DB-per-tenant, we ensure we use a dedicated EM fork
+        const tenantEm = this.em.fork({ connectionString: config.connectionString });
+        return from(
+            RequestContext.create(tenantEm, async () => {
+                try {
+                    const result = await lastValueFrom(next.handle(), { defaultValue: undefined });
+                    this.recordMetrics(tenantId, startTime);
+                    return result;
+                } catch (error) {
+                    this.recordError(tenantId, error);
+                    throw error;
+                }
+            })
+        );
     }
 
     return next.handle().pipe(

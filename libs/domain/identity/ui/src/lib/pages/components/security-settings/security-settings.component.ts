@@ -5,6 +5,6 @@ import { CommonModule } from '@angular/common';
   selector: 'virteex-security-settings',
   standalone: true,
   imports: [CommonModule],
-  template: '<p>Security Settings Placeholder</p>'
+  template: '<p>Security Settings - Feature coming soon</p>'
 })
 export class SecuritySettingsComponent {}

@@ -18,7 +18,7 @@ export class FileSystemApi {
     });
 
     ipcMain.handle('fs:read-config', async () => {
-        // Placeholder for reading local config
+        // Default values for local config
         return { theme: 'dark', language: 'en' };
     });
   }

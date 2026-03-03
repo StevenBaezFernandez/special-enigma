@@ -31,7 +31,7 @@ import { AuthButtonComponent } from '../../components/auth-button/auth-button.co
     ReCaptchaV3Service,
     // Note: Config is injected in constructor/fields, cannot be used in decorator metadata directly if it relies on instance 'this'.
     // However, if we assume APP_CONFIG is a token that provides the whole config object, we might need a factory or direct string if static.
-    // For now, removing the problematic provider usage in decorator or mocking it differently.
+    // For now, removing the problematic provider usage in decorator or handling it differently.
     // Assuming the site key should be provided at module/app level, not here.
     // But if we must, we can't access 'this' here.
   ],

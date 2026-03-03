@@ -4,6 +4,30 @@ export enum TenantMode {
   DATABASE = 'DATABASE',
 }
 
+export enum TenantStatus {
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  PROVISIONING = 'PROVISIONING',
+  DEGRADED = 'DEGRADED',
+}
+
+export enum OperationType {
+  PROVISION = 'PROVISION',
+  MIGRATE = 'MIGRATE',
+  FAILOVER = 'FAILOVER',
+  ROLLBACK = 'ROLLBACK',
+}
+
+export enum OperationState {
+  REQUESTED = 'requested',
+  PREPARING = 'preparing',
+  VALIDATING = 'validating',
+  SWITCHED = 'switched',
+  MONITORING = 'monitoring',
+  FINALIZED = 'finalized',
+  ROLLBACK = 'rollback',
+}
+
 export interface TenantConfig {
   mode: TenantMode;
   connectionString?: string;

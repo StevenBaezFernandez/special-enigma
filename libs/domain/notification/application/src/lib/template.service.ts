@@ -26,8 +26,8 @@ export class TemplateService {
       if (key in variables) {
         return variables[key];
       }
-      this.logger.warn(`Missing variable ${key} in template`);
-      return match; // Level 5: Should probably fail terminal if placeholders are mandatory
+      this.logger.error(`CRITICAL: Missing variable ${key} in template`);
+      throw new Error(`Template rendering failed: mandatory variable '${key}' is missing.`);
     });
   }
 

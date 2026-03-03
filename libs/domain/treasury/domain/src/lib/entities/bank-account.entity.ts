@@ -38,4 +38,3 @@ export class BankAccount {
     this.currency = currency;
   }
 }
-export const dummy = 'dummy';
