@@ -21,6 +21,12 @@ export class TenantControlRecord {
   @Property({ default: false })
   isFrozen = false;
 
+  @Property({ nullable: true })
+  writeFenceToken?: string;
+
+  @Property({ default: 0 })
+  fenceGeneration = 0;
+
   @Enum(() => TenantStatus)
   status: TenantStatus = TenantStatus.PROVISIONING;
 

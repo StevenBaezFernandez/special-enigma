@@ -9,6 +9,8 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import { createHmac } from 'crypto';
+import { ResidencyComplianceService } from './residency-compliance.service';
+import { createHmac, randomUUID } from 'crypto';
 
 type ProbeLayer = 'lb' | 'api' | 'data';
 
@@ -84,7 +86,8 @@ export class FailoverService {
     private readonly em: EntityManager,
     private readonly operationService: TenantOperationService,
     private readonly routingPlane: RoutingPlaneService,
-    private readonly finops: FinOpsService
+    private readonly finops: FinOpsService,
+    private readonly residencyComplianceService: ResidencyComplianceService
   ) {}
 
   async executeDrill(tenantId: string): Promise<string> {
@@ -136,17 +139,24 @@ export class FailoverService {
         timeline.push({ step: 'SWITCHING', at: new Date().toISOString(), status: 'started' });
         await this.freezeTenantWrites(tenantId);
 
+        const expectedGeneration = control.fenceGeneration || control.version || 0;
+        const writeFenceToken = `wf-${tenantId}-${randomUUID()}`;
+        control.writeFenceToken = writeFenceToken;
+        control.fenceGeneration = expectedGeneration + 1;
+
         const newTargets = {
             primaryRegion: control.secondaryRegion,
             secondaryRegion: control.primaryRegion,
             failoverActive: true,
             switchedAt: new Date(),
+            generationFence: control.fenceGeneration,
+            writeFenceToken,
             rto_observed_ms: 0,
             rpo_observed_ms: 0
         };
 
-        // 4. Atomic Routing Switch
-        await this.routingPlane.createSnapshot(tenantId, newTargets);
+        // 4. Atomic Routing Switch with generation fencing
+        await this.routingPlane.createSnapshot(tenantId, newTargets, { expectedGeneration });
 
         // 5. Update Persistent Control State
         control.status = TenantStatus.DEGRADED;
@@ -278,8 +288,18 @@ export class FailoverService {
   private async recoverEventPlane(tenantId: string, region: string): Promise<void> {
       this.logger.log(`Recovering event-plane (Kafka/Outbox) for tenant ${tenantId} in ${region}`);
 
-      // Level 5: Transactional recovery of regional outbox
-      // Ensures no events are lost during the regional cutover
+      // Level 5+: Cross-region replication authorization + mandatory audit + PII masking evidence
+      const authorization = await this.residencyComplianceService.authorizeReplication({
+          tenantId,
+          sourceRegion: process.env['AWS_REGION'] || 'us-east-1',
+          targetRegion: region,
+          resource: 'replication',
+          actorId: 'failover-service',
+          actorRoles: ['platform-sre'],
+          reason: 'dr-failover-event-plane-recovery',
+          payload: { operation: 'outbox_events.reroute', tenantId, targetRegion: region }
+      });
+
       try {
           await this.em.getConnection().execute(`
               UPDATE outbox_events
@@ -290,7 +310,24 @@ export class FailoverService {
               WHERE tenant_id = ? AND status = 'PROCESSING'
           `, [region, new Date(), tenantId]);
 
-          this.logger.log(`[DR] Outbox events re-routed to ${region} for tenant ${tenantId}`);
+          await this.em.getConnection().execute(
+            `INSERT INTO security_audit_journal (tenant_id, event_type, severity, payload, created_at)
+             VALUES (?, ?, ?, ?, ?)`,
+            [
+              tenantId,
+              'REPLICATION_MASKING_EVIDENCE',
+              'INFO',
+              JSON.stringify({
+                targetRegion: region,
+                evidenceId: authorization.evidenceId,
+                maskingApplied: authorization.maskingApplied,
+                replicatedPayload: authorization.replicatedPayload,
+              }),
+              new Date(),
+            ]
+          );
+
+          this.logger.log(`[DR] Outbox events re-routed to ${region} for tenant ${tenantId} with evidence ${authorization.evidenceId}`);
       } catch (err) {
           this.logger.error(`[DR] Event-plane recovery FAILED for ${tenantId}: ${err instanceof Error ? err.message : String(err)}`);
           throw new Error(`Event-plane recovery failed for tenant ${tenantId}`);
@@ -395,6 +432,7 @@ export class FailoverService {
   private async unfreezeTenantWrites(tenantId: string): Promise<void> {
       const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
       control.isFrozen = false;
+      control.writeFenceToken = undefined;
       await this.em.flush();
       this.logger.log(`Tenant ${tenantId} WRITES RESUMED in failover region`);
   }

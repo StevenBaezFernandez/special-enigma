@@ -82,6 +82,7 @@ jobs:
       - run: npm run readiness:commercial
       - run: npm run quality:docs
       - run: npm run quality:plugin-isolation
+      - run: npm run quality:verify-rollback-evidence
       - run: npm run readiness:check
 
   security:

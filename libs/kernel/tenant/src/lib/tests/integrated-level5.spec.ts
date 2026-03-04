@@ -19,6 +19,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
   let mockRoutingPlane: any;
   let mockFinOps: any;
   let mockGuard: any;
+  let mockResidencyCompliance: any;
 
   beforeAll(() => {
     vi.spyOn(RequestContext, 'create').mockImplementation((em: any, cb: any) => cb());
@@ -27,6 +28,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
   beforeEach(() => {
     vi.clearAllMocks();
     process.env['EVIDENCE_SIGNING_SECRET'] = 'test-secret';
+    process.env['EVIDENCE_SIGNING_SECRET'] = 'test-evidence-secret';
     (axios.get as any).mockResolvedValue({ status: 200 });
 
     mockEm = {
@@ -82,11 +84,21 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
     mockGuard = {
         preMigrationCheck: vi.fn().mockResolvedValue(true),
     };
+    mockResidencyCompliance = {
+      assertRegionAllowed: vi.fn().mockResolvedValue(undefined),
+      authorizeReplication: vi.fn().mockResolvedValue({
+        authorized: true,
+        evidenceId: 'evidence-1',
+        maskingApplied: true,
+        replicatedPayload: { sample: '[MASKED_FOR_CROSS_REGION_REPLICATION]' }
+      }),
+    };
+
   });
 
   describe('Flujo A — Context Context + Isolation (HTTP to DB)', () => {
     it('SHOULD strictly isolate writes and enforce status', async () => {
-      const interceptor = new TenantRlsInterceptor(mockEm as any, mockTenantService as any);
+      const interceptor = new TenantRlsInterceptor(mockEm as any, mockTenantService as any, mockResidencyCompliance as any);
       const subscriber = new TenantModelSubscriber();
 
       vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 'tenant-alpha' } as any);
@@ -115,7 +127,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
     });
 
     it('SHOULD fail-closed if tenant is SUSPENDED or context is invalid', async () => {
-      const interceptor = new TenantRlsInterceptor(mockEm as any, mockTenantService as any);
+      const interceptor = new TenantRlsInterceptor(mockEm as any, mockTenantService as any, mockResidencyCompliance as any);
       vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 'suspended-tenant' } as any);
       mockEm.findOne.mockResolvedValue({ status: 'SUSPENDED' });
       mockTenantService.getTenantConfig.mockResolvedValue({ mode: 'SHARED', primaryRegion: 'us-east-1' });
@@ -148,14 +160,16 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
 
   describe('Flujo C — Regional Failover (Signed Snapshots & Freeze)', () => {
     it('SHOULD freeze writes, promote region, and sign snapshot', async () => {
-      const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps);
+      const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance);
 
       mockEm.findOneOrFail.mockResolvedValue({
           tenantId: 't1',
           primaryRegion: 'us-east-1',
           secondaryRegion: 'sa-east-1',
           status: 'ACTIVE',
-          isFrozen: false
+          isFrozen: false,
+          version: 2,
+          fenceGeneration: 2
       });
 
       await service.triggerRegionalFailover('t1', 'fail-key');
@@ -163,11 +177,11 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
       expect(mockEm.flush).toHaveBeenCalled(); // For isFrozen = true
       expect(mockRoutingPlane.createSnapshot).toHaveBeenCalledWith('t1', expect.objectContaining({
           primaryRegion: 'sa-east-1'
-      }));
+      }), { expectedGeneration: 2 });
     });
 
     it('SHOULD failover if target region health probes are successful', async () => {
-        const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps);
+        const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance);
         mockEm.findOneOrFail.mockResolvedValue({ tenantId: 't1', secondaryRegion: 'sa-east-1', status: 'ACTIVE' });
 
         // Simulate healthy probes
@@ -181,11 +195,12 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
 
   describe('Flujo D — Sovereignty (Sync + Async)', () => {
     it('SHOULD block async execution in unauthorized region', async () => {
-      const guard = new RegionalResidencyGuard(mockTenantService as any);
+      const guard = new RegionalResidencyGuard(mockTenantService as any, mockResidencyCompliance as any);
 
       vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 't1' } as any);
       mockTenantService.getTenantConfig.mockResolvedValue({ primaryRegion: 'us-east-1' });
       process.env['AWS_REGION'] = 'sa-east-1'; // Violation
+      mockResidencyCompliance.assertRegionAllowed.mockRejectedValue(new Error('residency policy violation'));
       mockEm.findOne.mockResolvedValue({ status: 'ACTIVE', isFrozen: false });
 
       const mockContext: any = {

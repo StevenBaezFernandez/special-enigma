@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FailoverService } from '../failover.service';
-import { RoutingPlaneService } from '../routing-plane.service';
 import { OperationState, TenantStatus } from '../interfaces/tenant-config.interface';
 import axios from 'axios';
 
@@ -11,10 +10,12 @@ describe('Regional Failover Operational Validation', () => {
   let mockEm: any;
   let mockOpService: any;
   let mockRoutingPlane: any;
+  let mockResidencyCompliance: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
     process.env['EVIDENCE_SIGNING_SECRET'] = 'test-secret';
+    process.env['EVIDENCE_SIGNING_SECRET'] = 'test-evidence-secret';
     (axios.get as any).mockResolvedValue({ status: 200 });
 
     mockEm = {
@@ -47,7 +48,17 @@ describe('Regional Failover Operational Validation', () => {
     const mockFinOps = {
       recordOperationSlo: vi.fn().mockResolvedValue(undefined),
     };
-    service = new FailoverService(mockEm as any, mockOpService as any, mockRoutingPlane as any, mockFinOps as any);
+    mockResidencyCompliance = {
+      assertRegionAllowed: vi.fn().mockResolvedValue(undefined),
+      authorizeReplication: vi.fn().mockResolvedValue({
+        authorized: true,
+        evidenceId: 'evidence-1',
+        maskingApplied: true,
+        replicatedPayload: { sample: '[MASKED_FOR_CROSS_REGION_REPLICATION]' }
+      }),
+    };
+
+    service = new FailoverService(mockEm as any, mockOpService as any, mockRoutingPlane as any, mockFinOps as any, mockResidencyCompliance as any);
   });
 
   it('SHOULD promote secondary region during failover', async () => {
@@ -56,6 +67,8 @@ describe('Regional Failover Operational Validation', () => {
       primaryRegion: 'us-east-1',
       secondaryRegion: 'sa-east-1',
       status: TenantStatus.ACTIVE,
+      version: 3,
+      fenceGeneration: 3,
     });
 
     await service.triggerRegionalFailover('t1', 'key-1');
@@ -66,7 +79,7 @@ describe('Regional Failover Operational Validation', () => {
     expect(mockRoutingPlane.createSnapshot).toHaveBeenCalledWith('t1', expect.objectContaining({
       primaryRegion: 'sa-east-1',
       failoverActive: true
-    }));
+    }), { expectedGeneration: 3 });
     expect(mockOpService.transitionState).toHaveBeenCalledWith('fail-123', OperationState.FINALIZED, expect.any(Object));
     expect(axios.get).toHaveBeenCalledWith('https://lb.sa-east-1.virteex.erp/v1/health/check', expect.any(Object));
   });
@@ -86,6 +99,8 @@ describe('Regional Failover Operational Validation', () => {
       primaryRegion: 'us-east-1',
       secondaryRegion: 'sa-east-1',
       status: TenantStatus.ACTIVE,
+      version: 3,
+      fenceGeneration: 3,
     });
     mockRoutingPlane.createSnapshot.mockRejectedValue(new Error('KMS Failure'));
 
