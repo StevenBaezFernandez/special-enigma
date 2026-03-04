@@ -1,18 +1,22 @@
 {
   "releaseVersion": "DEV-SNAPSHOT",
-  "generatedAt": "2026-03-04T04:04:34.824Z",
+  "generatedAt": "2026-03-04T22:06:01.411Z",
   "artifacts": [
     {
       "path": "evidence/releases/DEV-SNAPSHOT/summary.json",
-      "sha256": "2e1036d063d2c9725eec46fbc93397d1b225427e5e40c3f1494f7dff3ee84f65"
+      "sha256": "dbbcdc2e051d81829c444369c7aaeab46938a7e9722b0c3c7843467023d73c81"
     },
     {
       "path": "evidence/releases/DEV-SNAPSHOT/manifest.json",
-      "sha256": "4c6573535ee7134564e89c05860c89f9b687ad510c4008daa583f92d807d6a6f"
+      "sha256": "7d7091f17ec3743bcd242944c504d5508ae2984b21dacbcc87c52d66806dc5e2"
     },
     {
       "path": "evidence/releases/DEV-SNAPSHOT/README.md",
-      "sha256": "a50c8a541391deac1b56595e48c27cdb4cefccaf1b370269aea6afd03605da9d"
+      "sha256": "c04e389fd36808d357ce7ac912b23a03fee1a6dab53835d365d5fbe46a156d60"
+    },
+    {
+      "path": "evidence/reports/RELEASE_READINESS_REPORT.md",
+      "sha256": "c58b8b7dd5720ffba2e37076324cfefea4d20bbd3b0cb65f3728b831d5afb515"
     }
   ]
 }

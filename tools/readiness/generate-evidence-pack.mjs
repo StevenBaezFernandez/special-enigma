@@ -25,6 +25,10 @@ const gates = [
     cmd: 'node tools/readiness/validate-commercial-readiness.mjs',
   },
   {
+    id: 'consistency',
+    cmd: 'node tools/readiness/validate-readiness-consistency.mjs',
+  },
+  {
     id: 'docs-consistency',
     cmd: 'node tools/quality-gates/validate-docs-consistency.mjs',
   },
@@ -74,7 +78,7 @@ function runGate(cmd) {
 
 function loadCommercialSummary() {
   const matrixPath = path.resolve(
-    'config/readiness/commercial-eligibility.matrix.json',
+    'config/readiness/operational-readiness.sot.json',
   );
   if (!fs.existsSync(matrixPath)) {
       return { status: 'missing' };
@@ -156,6 +160,8 @@ const gateLines = gateResults
   .map((gate) => `| ${gate.id} | ${gate.status.toUpperCase()} | ${gate.cmd} |`)
   .join('\n');
 
+const reportPath = path.resolve('evidence/reports/RELEASE_READINESS_REPORT.md');
+
 const markdown = `# Release Evidence Pack - ${releaseVersion}\n\n- Generated at: ${timestamp}\n- Readiness state: **${readinessState}**\n- Maturity Score: **${summary.maturityScore}**\n\n## Gate results\n\n| Gate | Status | Command |\n| --- | --- | --- |\n${gateLines}\n\n## Evidence snapshot\n\n- Commercial matrix version: ${summary.evidence.commercialReadiness.version || 'N/A'}\n- SBOM present: ${summary.evidence.sbomPresent ? '✅' : '❌'}\n- SBOM signature present: ${summary.evidence.signaturePresent ? '✅' : '❌'}\n- POC result folder present: ${summary.evidence.pocResultsPresent ? '✅' : '❌'}\n\n## Artifacts\n\n- summary.json\n- manifest.json\n`;
 
 fs.writeFileSync(markdownPath, markdown);
@@ -170,6 +176,13 @@ manifest.artifacts.push(
     sha256: sha256File(markdownPath),
   },
 );
+
+if (fs.existsSync(reportPath)) {
+  manifest.artifacts.push({
+    path: path.relative(process.cwd(), reportPath),
+    sha256: sha256File(reportPath),
+  });
+}
 fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
 console.log(`Evidence pack generated at ${outputDir}`);

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
@@ -18,9 +18,12 @@ import { InitialSeederService } from './seeds/initial-seeder.service';
 import { OpsController } from './ops.controller';
 import { OpsReadinessService } from './ops-readiness.service';
 import { FinopsCostService } from './finops-cost.service';
+import { TenantModule } from '@virteex/kernel-tenant';
+import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 
 @Module({
   imports: [
+    TenantModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -91,4 +94,8 @@ import { FinopsCostService } from './finops-cost.service';
   controllers: [OpsController],
   providers: [InitialSeederService, OpsReadinessService, FinopsCostService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CanonicalTenantMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

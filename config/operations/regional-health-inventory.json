@@ -1,0 +1,20 @@
+{
+  "defaultTimeoutMs": 5000,
+  "regions": {
+    "us-east-1": {
+      "lbEndpoint": "https://lb.us-east-1.virteex.erp/v1/health/check",
+      "apiEndpoint": "https://api.us-east-1.virteex.erp/v1/health",
+      "timeoutMs": 3000
+    },
+    "sa-east-1": {
+      "lbEndpoint": "https://lb.sa-east-1.virteex.erp/v1/health/check",
+      "apiEndpoint": "https://api.sa-east-1.virteex.erp/v1/health",
+      "timeoutMs": 5000
+    },
+    "mx-central-1": {
+      "lbEndpoint": "https://lb.mx-central-1.virteex.erp/v1/health/check",
+      "apiEndpoint": "https://api.mx-central-1.virteex.erp/v1/health",
+      "timeoutMs": 5000
+    }
+  }
+}

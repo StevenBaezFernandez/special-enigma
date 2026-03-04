@@ -11,12 +11,12 @@ import { TenantModelSubscriber } from './subscribers/tenant-model.subscriber';
 import { EntityManager } from '@mikro-orm/core';
 import { MigrationGuard } from './migration-guard';
 import { DualWriteManager } from './dual-write-manager';
-import { FailoverService } from './failover.service';
-import { RoutingPlaneService } from './routing-plane.service';
-import { FinOpsService } from './finops.service';
+import { ResidencyComplianceService } from './residency-compliance.service';
+import { ResidencyAuditorController } from './controllers/residency-auditor.controller';
 
 @Global()
 @Module({
+  controllers: [ResidencyAuditorController],
   providers: [
     TenantService,
     TenantOperationService,
@@ -26,16 +26,23 @@ import { FinOpsService } from './finops.service';
     MigrationOrchestratorService,
     MigrationGuard,
     DualWriteManager,
-    FailoverService,
-    RoutingPlaneService,
-    FinOpsService,
+    ResidencyComplianceService,
     TenantModelSubscriber,
     {
       provide: APP_INTERCEPTOR,
       useClass: TenantRlsInterceptor,
     },
   ],
-  exports: [TenantService, MigrationOrchestratorService, MigrationGuard, DualWriteManager, FailoverService, RoutingPlaneService, FinOpsService],
+  exports: [
+    TenantService,
+    MigrationOrchestratorService,
+    MigrationGuard,
+    DualWriteManager,
+    FailoverService,
+    RoutingPlaneService,
+    FinOpsService,
+    ResidencyComplianceService,
+  ],
 })
 export class TenantModule implements OnModuleInit {
   constructor(

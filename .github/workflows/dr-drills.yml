@@ -1,0 +1,29 @@
+name: Scheduled DR Drills
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+
+jobs:
+  drill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - name: Execute scheduled drills against real environment
+        run: npm run dr:scheduled
+        env:
+          DR_SCHEDULE_FILE: config/operations/dr-schedule.enterprise.json
+          DR_DRILL_TRIGGER_ENDPOINT: ${{ secrets.DR_DRILL_TRIGGER_ENDPOINT }}
+          DR_DRILL_AUTH_TOKEN: ${{ secrets.DR_DRILL_AUTH_TOKEN }}
+          EVIDENCE_SIGNING_SECRET: ${{ secrets.EVIDENCE_SIGNING_SECRET }}
+      - name: Upload signed drill evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: dr-drill-evidence-${{ github.run_id }}
+          path: evidence/drills
