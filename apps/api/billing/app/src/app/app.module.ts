@@ -17,6 +17,7 @@ import { BillingApplicationModule } from '@virteex/domain-billing-application';
 import { InitialSeederService } from './seeds/initial-seeder.service';
 import { OpsController } from './ops.controller';
 import { OpsReadinessService } from './ops-readiness.service';
+import { FinopsCostService } from './finops-cost.service';
 
 @Module({
   imports: [
@@ -88,6 +89,6 @@ import { OpsReadinessService } from './ops-readiness.service';
     BillingApplicationModule,
   ],
   controllers: [OpsController],
-  providers: [InitialSeederService, OpsReadinessService],
+  providers: [InitialSeederService, OpsReadinessService, FinopsCostService],
 })
 export class AppModule {}
