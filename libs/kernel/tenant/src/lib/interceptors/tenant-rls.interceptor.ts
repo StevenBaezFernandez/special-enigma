@@ -3,12 +3,12 @@ import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { Observable, from, lastValueFrom } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { getTenantContext } from '@virteex/kernel-auth';
-import { createHmac, timingSafeEqual } from 'crypto';
 import { TenantService } from '../tenant.service';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
 import { TenantMode, TenantStatus } from '../interfaces/tenant-config.interface';
 import { Counter, Histogram } from '@opentelemetry/api';
 import { metrics } from '@opentelemetry/api';
+import { ResidencyComplianceService } from '../residency-compliance.service';
 
 @Injectable()
 export class TenantRlsInterceptor implements NestInterceptor {
@@ -21,7 +21,8 @@ export class TenantRlsInterceptor implements NestInterceptor {
 
   constructor(
     private readonly em: EntityManager,
-    private readonly tenantService: TenantService
+    private readonly tenantService: TenantService,
+    private readonly residencyComplianceService: ResidencyComplianceService
   ) {
     this.requestCounter = this.meter.createCounter('tenant_requests_total', {
       description: 'Total number of requests per tenant',
@@ -44,12 +45,16 @@ export class TenantRlsInterceptor implements NestInterceptor {
       throw new ForbiddenException('Tenant context is required for all operations');
     }
 
-    // Level 5: Tamper resistance check for context signature
-    if (tenantContext.signature) {
-        this.validateContextSignature(tenantContext);
-    } else if (process.env['NODE_ENV'] === 'production') {
-        this.logger.error(`[SECURITY CRITICAL] Unsigned tenant context for ${tenantContext.tenantId} in production!`);
-        throw new ForbiddenException('Tenant context integrity cannot be verified');
+    // Level 5: Fail-closed contract checks (signature + expiry validated at ingress).
+    if (!tenantContext.contextVersion || !tenantContext.exp) {
+      this.logger.error(`[SECURITY CRITICAL] Missing canonical tenant claims for ${tenantContext.tenantId}`);
+      throw new ForbiddenException('Tenant context integrity cannot be verified');
+    }
+
+    const nowEpochSeconds = Math.floor(Date.now() / 1000);
+    if (tenantContext.exp <= nowEpochSeconds) {
+      this.logger.error(`[SECURITY] Expired tenant context for ${tenantContext.tenantId}`);
+      throw new ForbiddenException('Tenant context expired');
     }
 
     const tenantId = tenantContext.tenantId;
@@ -72,6 +77,14 @@ export class TenantRlsInterceptor implements NestInterceptor {
         if (control?.isFrozen) {
             this.logger.error(`[SECURITY] Write attempt blocked for frozen tenant ${tenantId}`);
             throw new ForbiddenException(`Tenant is currently frozen due to maintenance or failover. Writes are disabled.`);
+        }
+
+        if (control?.writeFenceToken) {
+            const request = context.switchToHttp().getRequest();
+            const writeFence = request?.headers?.['x-write-fence-token'];
+            if (!writeFence || writeFence !== control.writeFenceToken) {
+              throw new ForbiddenException('Write fencing token validation failed');
+            }
         }
     }
 
@@ -138,32 +151,13 @@ export class TenantRlsInterceptor implements NestInterceptor {
     this.logger.error(`Tenant ${tenantId} operation failed: ${error.message}`);
   }
 
-  private validateContextSignature(context: any): void {
-      const secret = process.env['TENANT_CONTEXT_SECRET'];
-      if (!secret || secret === 'dev-secret-change-in-prod') {
-          this.logger.error('[SECURITY CRITICAL] TENANT_CONTEXT_SECRET missing or insecure');
-          throw new ForbiddenException('Secure context validation unavailable');
-      }
-
-      const payload = `${context.tenantId}:${context.region}:${context.mode}`;
-      const expected = createHmac('sha256', secret).update(payload).digest('hex');
-
-      const signatureBuffer = Buffer.from(context.signature);
-      const expectedBuffer = Buffer.from(expected);
-
-      if (signatureBuffer.length !== expectedBuffer.length || !timingSafeEqual(signatureBuffer, expectedBuffer)) {
-          this.logger.error(`[SECURITY] Tampered tenant context detected for tenant ${context.tenantId}`);
-          throw new ForbiddenException('Tenant context integrity violation');
-      }
-  }
-
   private isWriteOperation(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const method = request?.method;
     return ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
   }
 
-  private async enforceRegionalResidency(tenantId: string, config: any): Promise<void> {
+  private async enforceRegionalResidency(tenantId: string, _config: any): Promise<void> {
     const currentRegion = process.env['AWS_REGION'];
 
     if (!currentRegion && process.env['NODE_ENV'] === 'production') {
@@ -172,26 +166,6 @@ export class TenantRlsInterceptor implements NestInterceptor {
     }
 
     const effectiveCurrentRegion = currentRegion || 'us-east-1';
-    const allowedRegion = config.settings?.['allowedRegion'] || config.primaryRegion;
-
-    if (!allowedRegion) {
-        this.logger.error(`[SECURITY] No residency policy defined for tenant ${tenantId}. Fail-closed.`);
-        throw new ForbiddenException('Data residency policy not established for this tenant.');
-    }
-
-    if (allowedRegion !== effectiveCurrentRegion) {
-        // Critical Violation: Fail-closed
-        this.logger.error(`[SECURITY] Data Sovereignty Violation: Tenant ${tenantId} is restricted to ${allowedRegion} but request reached ${effectiveCurrentRegion}`);
-        this.errorCounter.add(1, { tenantId, type: 'sovereignty_violation' });
-
-        // Audit log entry for compliance (Immutable Journal)
-        await this.em.getConnection().execute(
-            `INSERT INTO security_audit_journal (tenant_id, event_type, severity, payload, created_at)
-             VALUES (?, ?, ?, ?, ?)`,
-            [tenantId, 'REGION_BYPASS_ATTEMPT', 'CRITICAL', JSON.stringify({ expected: allowedRegion, actual: effectiveCurrentRegion }), new Date()]
-        );
-
-        throw new ForbiddenException(`Data residency policy violation. Access denied for region: ${effectiveCurrentRegion}`);
-    }
+    await this.residencyComplianceService.assertRegionAllowed(tenantId, effectiveCurrentRegion, 'database', 'sync');
   }
 }

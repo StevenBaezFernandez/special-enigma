@@ -4,6 +4,7 @@ import { TenantOperation } from './entities/tenant-operation.entity';
 import { OperationState, OperationType } from './interfaces/tenant-config.interface';
 import Redis from 'ioredis';
 import { createHmac } from 'crypto';
+import { TelemetryService } from '@virteex/kernel-telemetry';
 
 @Injectable()
 export class TenantOperationService implements OnModuleInit {
@@ -14,7 +15,7 @@ export class TenantOperationService implements OnModuleInit {
     OperationType.FAILOVER,
   ]);
 
-  constructor(private readonly em: EntityManager) {}
+  constructor(private readonly em: EntityManager, private readonly telemetry: TelemetryService) {}
 
   onModuleInit() {
     if (process.env['REDIS_URL']) {
@@ -61,6 +62,13 @@ export class TenantOperationService implements OnModuleInit {
     } as any);
 
     await this.em.persistAndFlush(op);
+    this.telemetry.recordSecurityEvent('CONTROL_PLANE_OPERATION_CREATED', {
+      tenantId,
+      operationId: op.operationId,
+      operationType: type,
+      idempotencyKey,
+      timestamp: new Date().toISOString(),
+    });
     return op;
   }
 
@@ -89,6 +97,13 @@ export class TenantOperationService implements OnModuleInit {
 
     // Level 5: Append to Immutable Operation Journal
     await this.appendToJournal(op, newState, result);
+    this.telemetry.recordSecurityEvent('CONTROL_PLANE_OPERATION_TRANSITION', {
+      tenantId: op.tenantId,
+      operationId: op.operationId,
+      operationType: op.type,
+      state: newState,
+      timestamp: new Date().toISOString(),
+    });
 
     return op;
   }

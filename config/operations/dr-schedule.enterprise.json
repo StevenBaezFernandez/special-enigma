@@ -1,0 +1,21 @@
+{
+  "scheduleId": "enterprise-dr-weekly",
+  "releaseTier": "enterprise",
+  "cadence": "0 4 * * 1",
+  "drills": [
+    {
+      "tenantId": "enterprise-us",
+      "sourceRegion": "us-east-1",
+      "targetRegion": "sa-east-1",
+      "expectedRtoMs": 30000,
+      "expectedRpoMs": 2000
+    },
+    {
+      "tenantId": "enterprise-mx",
+      "sourceRegion": "mx-central-1",
+      "targetRegion": "us-east-1",
+      "expectedRtoMs": 30000,
+      "expectedRpoMs": 2000
+    }
+  ]
+}

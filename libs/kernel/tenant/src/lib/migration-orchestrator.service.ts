@@ -1,5 +1,8 @@
 import { Injectable, Logger, ConflictException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
+import { createHmac, createHash } from 'crypto';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Tenant } from './entities/tenant.entity';
 import { TenantMode, OperationType, OperationState } from './interfaces/tenant-config.interface';
 import { MigrationGuard } from './migration-guard';
@@ -47,14 +50,25 @@ export class MigrationOrchestratorService {
           await this.dryRun(op.operationId, tenant);
           await this.executeMigration(op.operationId, tenant);
           await this.executeSwitch(op.operationId, tenantId);
-          await this.reconcile(op.operationId, tenantId, preMigrationStats);
+          const operationRefs = {
+            tenantId,
+            operationId: op.operationId,
+            requestedAt: op.startedAt?.toISOString?.() ?? new Date().toISOString(),
+            idempotencyKey,
+          };
+          const evidenceUri = await this.reconcile(op.operationId, tenantId, preMigrationStats, operationRefs);
 
-          await this.operationService.transitionState(op.operationId, OperationState.FINALIZED);
+          await this.operationService.transitionState(op.operationId, OperationState.FINALIZED, undefined, evidenceUri);
           this.logger.log(`Migration SUCCESS for tenant ${tenantId}`);
       } catch (error: any) {
           this.logger.error(`Migration CRITICAL FAILURE for tenant ${tenantId}: ${error.message}`);
           await this.operationService.transitionState(op.operationId, OperationState.ROLLBACK, { error: error.message });
-          await this.executeRollback(op.operationId, tenantId, op.result?.preMigrationStats || {});
+          try {
+            const rollbackEvidenceUri = await this.executeRollback(op.operationId, tenantId, op.result?.preMigrationStats || {});
+            await this.operationService.transitionState(op.operationId, OperationState.ROLLBACK, undefined, rollbackEvidenceUri);
+          } catch (rollbackError: any) {
+            this.logger.error(`Rollback evidence generation failed for tenant ${tenantId}: ${rollbackError.message}`);
+          }
           throw error;
       }
     } finally {
@@ -106,7 +120,12 @@ export class MigrationOrchestratorService {
       await this.routingPlane.createSnapshot(tenantId, { ...config, version: (config.version || 0) + 1 });
   }
 
-  private async reconcile(operationId: string, tenantId: string, preMigrationStats: any): Promise<void> {
+  private async reconcile(
+    operationId: string,
+    tenantId: string,
+    preMigrationStats: any,
+    operationRefs: Record<string, string>
+  ): Promise<string> {
       await this.operationService.transitionState(operationId, OperationState.RECONCILING);
       this.logger.log(`Executing INDUSTRIAL reconciliation for ${tenantId}`);
 
@@ -128,9 +147,19 @@ export class MigrationOrchestratorService {
           integrity: 'checksum-verified'
       });
 
+      const evidenceUri = await this.persistChecksumEvidence({
+        operationId,
+        tenantId,
+        phase: 'post-migration',
+        preMigrationStats,
+        postMigrationStats,
+        operationRefs,
+      });
+
       // Shadow monitoring phase
       await this.operationService.transitionState(operationId, OperationState.MONITORING);
       await this.shadowCheck(tenantId);
+      return evidenceUri;
   }
 
   private calculateDataDiff(pre: any, post: any): string[] {
@@ -164,36 +193,59 @@ export class MigrationOrchestratorService {
 
       const qb = em.getConnection();
 
-      // Level 5: Declarative table discovery for reconciliation
-      const tablesWithTenantIdResult = await qb.execute(`
-          SELECT table_name
-          FROM information_schema.columns
-          WHERE column_name = 'tenant_id'
-          AND table_schema = ?
-      `, [tenant.mode === TenantMode.SCHEMA ? schema : 'public']);
+      const discoveredSchema = tenant.mode === TenantMode.SCHEMA ? schema : 'public';
+      const tablesResult = await qb.execute(
+        `
+          SELECT t.table_name
+          FROM information_schema.tables t
+          WHERE t.table_schema = ?
+            AND t.table_type = 'BASE TABLE'
+            AND t.table_name NOT LIKE 'pg_%'
+          ORDER BY t.table_name
+      `,
+        [discoveredSchema]
+      );
 
-      const tables = tablesWithTenantIdResult.map((r: any) => r.table_name);
+      const tables = tablesResult.map((r: any) => r.table_name);
       const stats: Record<string, any> = {};
 
       for (const table of tables) {
           const tableName = schema ? `"${schema}"."${table}"` : `"${table}"`;
           const tableOnly = table;
+          const columnsResult = await qb.execute(
+            `
+              SELECT column_name
+              FROM information_schema.columns
+              WHERE table_name = ?
+                AND table_schema = ?
+              ORDER BY ordinal_position
+            `,
+            [table, discoveredSchema]
+          );
+
+          const columns = columnsResult.map((column: any) => column.column_name);
+          const hasTenantFilter = columns.includes('tenant_id');
+
+          if (columns.length === 0) {
+            continue;
+          }
+
+          const rowExpression = columns
+            .map((column) => `COALESCE("${column}"::text, '<null>')`)
+            .join(` || '|' || `);
 
           try {
-              // Level 5: Industrial structural hash and content checksum
-              // Uses MD5(string_agg(...)) for data-integrity and schema-diff for structural integrity
-              // Checksum includes both id and updated_at to detect even silent data drifts
               const query = `
                   SELECT
                     COUNT(*) as count,
-                    COALESCE(md5(string_agg(id::text || '|' || updated_at::text, ',' ORDER BY id)), '0') as checksum,
+                    COALESCE(md5(string_agg(${rowExpression}, ',' ORDER BY ${rowExpression})), '0') as checksum,
                     (SELECT md5(string_agg(column_name || data_type, ',' ORDER BY ordinal_position))
                      FROM information_schema.columns
                      WHERE table_name = ? AND table_schema = ?) as structural_hash
                   FROM ${tableName}
-                  ${tenant.mode === TenantMode.SHARED ? ` WHERE tenant_id = ?` : ''}
+                  ${tenant.mode === TenantMode.SHARED && hasTenantFilter ? ` WHERE tenant_id = ?` : ''}
               `;
-              const params = tenant.mode === TenantMode.SHARED
+              const params = tenant.mode === TenantMode.SHARED && hasTenantFilter
                 ? [tableOnly, schema || 'public', tenant.id]
                 : [tableOnly, schema || 'public'];
 
@@ -225,7 +277,7 @@ export class MigrationOrchestratorService {
       }
   }
 
-  private async executeRollback(operationId: string, tenantId: string, preMigrationStats: Record<string, any>): Promise<void> {
+  private async executeRollback(operationId: string, tenantId: string, preMigrationStats: Record<string, any>): Promise<string> {
       this.logger.warn(`CRITICAL: Deterministic ROLLBACK initiated for tenant ${tenantId}`);
 
       try {
@@ -245,6 +297,13 @@ export class MigrationOrchestratorService {
               throw new Error(`Rollback integrity verification failed: ${rollbackDiffs.join('; ')}`);
           }
 
+          const evidenceUri = await this.persistRollbackEvidence({
+            operationId,
+            tenantId,
+            rollbackStats,
+            preMigrationStats,
+          });
+
           // 2. Rollback Routing snapshot
           const config = await this.routingPlane.resolveRoute(tenantId);
           if (config.version > 1) {
@@ -252,8 +311,79 @@ export class MigrationOrchestratorService {
           }
 
           this.logger.log(`Rollback migration and routing executed successfully for ${tenantId}`);
+          return evidenceUri;
       } catch (err: any) {
           this.logger.error(`Rollback FAILED for ${tenantId}: ${err.message}. Manual recovery required.`);
+          throw err;
       }
+  }
+
+  private async persistChecksumEvidence(payload: {
+    operationId: string;
+    tenantId: string;
+    phase: string;
+    preMigrationStats: Record<string, any>;
+    postMigrationStats: Record<string, any>;
+    operationRefs: Record<string, string>;
+  }): Promise<string> {
+    const secret = process.env['EVIDENCE_SIGNING_SECRET'] || process.env['AUDIT_HMAC_SECRET'];
+    if (!secret) {
+      throw new Error('EVIDENCE_SIGNING_SECRET or AUDIT_HMAC_SECRET is required for migration evidence signing.');
+    }
+
+    const rootDir = path.join(process.cwd(), 'evidence', 'migrations', payload.operationId);
+    fs.mkdirSync(rootDir, { recursive: true });
+
+    const digest = createHash('sha256')
+      .update(JSON.stringify({ pre: payload.preMigrationStats, post: payload.postMigrationStats }))
+      .digest('hex');
+
+    const body = {
+      tenantId: payload.tenantId,
+      operationId: payload.operationId,
+      phase: payload.phase,
+      operationRefs: payload.operationRefs,
+      generatedAt: new Date().toISOString(),
+      checksums: {
+        pre: payload.preMigrationStats,
+        post: payload.postMigrationStats,
+      },
+      integrityDigest: digest,
+    };
+
+    const signature = createHmac('sha256', secret).update(JSON.stringify(body)).digest('hex');
+    const manifest = { ...body, signature, signatureAlgorithm: 'HMAC-SHA256' };
+    const manifestPath = path.join(rootDir, 'checksum-manifest.json');
+    fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+    return path.relative(process.cwd(), manifestPath);
+  }
+
+  private async persistRollbackEvidence(payload: {
+    operationId: string;
+    tenantId: string;
+    rollbackStats: Record<string, any>;
+    preMigrationStats: Record<string, any>;
+  }): Promise<string> {
+    const secret = process.env['EVIDENCE_SIGNING_SECRET'] || process.env['AUDIT_HMAC_SECRET'];
+    if (!secret) {
+      throw new Error('EVIDENCE_SIGNING_SECRET or AUDIT_HMAC_SECRET is required for rollback evidence signing.');
+    }
+
+    const rollbackDir = path.join(process.cwd(), 'evidence', 'reports', 'rollback');
+    fs.mkdirSync(rollbackDir, { recursive: true });
+    const report = {
+      tenantId: payload.tenantId,
+      operationId: payload.operationId,
+      verifiedAt: new Date().toISOString(),
+      verified: true,
+      preMigrationStats: payload.preMigrationStats,
+      rollbackStats: payload.rollbackStats,
+    };
+    const signature = createHmac('sha256', secret).update(JSON.stringify(report)).digest('hex');
+    const signedReport = { ...report, signature, signatureAlgorithm: 'HMAC-SHA256' };
+    const reportPath = path.join(rollbackDir, `${payload.tenantId}-${payload.operationId}.json`);
+    fs.writeFileSync(reportPath, `${JSON.stringify(signedReport, null, 2)}\n`);
+    return path.relative(process.cwd(), reportPath);
   }
 }

@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { SecretManagerService } from './secret-manager.service';
+import { TelemetryService } from '@virteex/kernel-telemetry';
 import Redis from 'ioredis';
 
 export type SupportedTokenType = 'access' | 'refresh' | 'service' | 'plugin' | 'stepup';
@@ -37,7 +38,7 @@ export class JwtTokenService {
   private readonly logger = new Logger(JwtTokenService.name);
   private readonly isProduction: boolean;
 
-  constructor(private readonly secretManager: SecretManagerService) {
+  constructor(private readonly secretManager: SecretManagerService, private readonly telemetry: TelemetryService) {
     this.isProduction = process.env['NODE_ENV'] === 'production';
 
     const algs = this.secretManager
@@ -335,6 +336,14 @@ export class JwtTokenService {
       `Audited override enabled for HMAC JWT algorithms in production (${insecureAlgs.join(',')}). ` +
         `audit_ref=${overrideAuditRef}`,
     );
+
+    this.telemetry.recordSecurityEvent('BREAK_GLASS_JWT_ALGORITHM_OVERRIDE', {
+      algorithms: insecureAlgs.join(','),
+      auditReference: overrideAuditRef,
+      service: 'kernel-auth',
+      environment: process.env['NODE_ENV'] || 'unknown',
+      timestamp: new Date().toISOString(),
+    });
   }
 }
 

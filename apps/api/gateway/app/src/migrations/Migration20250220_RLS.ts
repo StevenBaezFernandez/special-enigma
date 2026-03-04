@@ -22,13 +22,20 @@ export class Migration20250220_RLS extends Migration {
       DO $$
       DECLARE
           t text;
+          tenant_col_type text;
+          tenant_predicate text;
       BEGIN
-          FOR t IN
-              SELECT table_name
+          FOR t, tenant_col_type IN
+              SELECT table_name, udt_name
               FROM information_schema.columns
               WHERE column_name = 'tenant_id'
               AND table_schema = 'public'
           LOOP
+              tenant_predicate := CASE
+                WHEN tenant_col_type = 'uuid' THEN 'tenant_id = app.current_tenant_id()'
+                ELSE 'tenant_id::text = app.current_tenant_id()::text'
+              END;
+
               -- Enable RLS
               EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY;', t);
 
@@ -38,7 +45,12 @@ export class Migration20250220_RLS extends Migration {
               -- Create new policy
               -- Users can only see rows where tenant_id matches the session variable
               -- WITH CHECK ensures that any INSERT or UPDATE must also satisfy the tenant isolation
-              EXECUTE format('CREATE POLICY tenant_isolation ON %I USING (tenant_id = app.current_tenant_id()) WITH CHECK (tenant_id = app.current_tenant_id());', t);
+              EXECUTE format(
+                'CREATE POLICY tenant_isolation ON %I USING (%s) WITH CHECK (%s);',
+                t,
+                tenant_predicate,
+                tenant_predicate
+              );
 
               -- Force RLS even for owners
               EXECUTE format('ALTER TABLE %I FORCE ROW LEVEL SECURITY;', t);

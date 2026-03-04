@@ -1,4 +1,4 @@
-import { Module, MiddlewareConsumer, NestModule, Logger } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, Logger, RequestMethod } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
@@ -9,7 +9,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtAuthGuard, CanonicalTenantMiddleware } from '@virteex/kernel-auth';
-import { TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/kernel-tenant';
+import { RoutingPlaneService, TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/kernel-tenant';
 import { KafkaModule } from '@virteex/platform-kafka';
 import { AuditModule } from '@virteex/kernel-audit';
 import { InventoryPresentationModule } from '@virteex/domain-inventory-presentation';
@@ -23,6 +23,7 @@ import { createServiceProxy } from './middleware/proxy.middleware';
 
 @Module({
   imports: [
+    TenantModule,
     InventoryPresentationModule,
     AccountingPresentationModule,
     TerminusModule,
@@ -88,6 +89,8 @@ import { createServiceProxy } from './middleware/proxy.middleware';
 export class AppModule implements NestModule {
   private readonly logger = new Logger(AppModule.name);
 
+  constructor(private readonly routingPlane: RoutingPlaneService) {}
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(CanonicalTenantMiddleware)
@@ -106,15 +109,15 @@ export class AppModule implements NestModule {
     // Services still using Proxy (Pending Federation migration)
     const federationUrl = process.env['FEDERATION_GATEWAY_URL'] || 'http://virteex-gateway:3000/api';
 
-    consumer.apply(createServiceProxy(federationUrl)).forRoutes('graphql');
+    consumer.apply(createServiceProxy({ service: 'graphql', target: federationUrl, routingPlane: this.routingPlane })).forRoutes('graphql');
 
     // Legacy/REST Proxies
-    consumer.apply(createServiceProxy('http://virteex-crm-service:3000')).forRoutes('crm');
-    consumer.apply(createServiceProxy('http://virteex-projects-service:3000')).forRoutes('projects');
-    consumer.apply(createServiceProxy('http://virteex-manufacturing-service:3000')).forRoutes('manufacturing');
-    consumer.apply(createServiceProxy('http://virteex-bi-service:3000')).forRoutes('bi');
-    consumer.apply(createServiceProxy('http://virteex-admin-service:3000')).forRoutes('admin');
-    consumer.apply(createServiceProxy('http://virteex-fixed-assets-service:3000')).forRoutes('fixed-assets');
+    consumer.apply(createServiceProxy({ service: 'crm', target: 'http://virteex-crm-service:3000', routingPlane: this.routingPlane })).forRoutes('crm');
+    consumer.apply(createServiceProxy({ service: 'projects', target: 'http://virteex-projects-service:3000', routingPlane: this.routingPlane })).forRoutes('projects');
+    consumer.apply(createServiceProxy({ service: 'manufacturing', target: 'http://virteex-manufacturing-service:3000', routingPlane: this.routingPlane })).forRoutes('manufacturing');
+    consumer.apply(createServiceProxy({ service: 'bi', target: 'http://virteex-bi-service:3000', routingPlane: this.routingPlane })).forRoutes('bi');
+    consumer.apply(createServiceProxy({ service: 'admin', target: 'http://virteex-admin-service:3000', routingPlane: this.routingPlane })).forRoutes('admin');
+    consumer.apply(createServiceProxy({ service: 'fixed-assets', target: 'http://virteex-fixed-assets-service:3000', routingPlane: this.routingPlane })).forRoutes('fixed-assets');
 
     this.logger.log('API Gateway configured with Hybrid Strategy (Federation + Proxy).');
   }

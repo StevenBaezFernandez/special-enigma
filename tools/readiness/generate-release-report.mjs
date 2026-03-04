@@ -1,28 +1,30 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 
 const releaseVersion = process.env.RELEASE_VERSION || 'DEV-SNAPSHOT';
 const date = new Date().toISOString();
 const reportPath = path.resolve('evidence/reports/RELEASE_READINESS_REPORT.md');
 const evidenceDir = path.resolve(`evidence/releases/${releaseVersion}`);
 const evidenceSummaryPath = path.join(evidenceDir, 'summary.json');
+const sotPath = path.resolve('config/readiness/operational-readiness.sot.json');
 
 console.log('Generating Release Readiness Report...');
 
+const sotRaw = fs.readFileSync(sotPath, 'utf8');
+const sot = JSON.parse(sotRaw);
+const sotHash = crypto.createHash('sha256').update(sotRaw).digest('hex');
+
 let reportContent = `# Virteex ERP Release Readiness Report\n\n`;
 reportContent += `**Date:** ${date}\n`;
-reportContent += `**Version:** ${releaseVersion}\n\n`;
+reportContent += `**Version:** ${releaseVersion}\n`;
+reportContent += `**Single source of truth:** ${path.relative(process.cwd(), sotPath)}\n`;
+reportContent += `**Source hash (sha256):** ${sotHash}\n\n`;
 
 reportContent += `## 1. Commercial Readiness\n\n`;
-const matrix = JSON.parse(
-  fs.readFileSync(
-    'config/readiness/commercial-eligibility.matrix.json',
-    'utf8',
-  ),
-);
 reportContent += `| Module | MX | BR | CO | US |\n`;
 reportContent += `| --- | --- | --- | --- | --- |\n`;
-for (const [mod, countries] of Object.entries(matrix.modules ?? {})) {
+for (const [mod, countries] of Object.entries(sot.modules ?? {})) {
   reportContent += `| ${mod} | ${countries.MX?.status || '-'} | ${countries.BR?.status || '-'} | ${countries.CO?.status || '-'} | ${countries.US?.status || '-'} |\n`;
 }
 reportContent += '\n';
@@ -80,6 +82,13 @@ if (fs.existsSync(evidenceSummaryPath)) {
 } else {
   reportContent +=
     '> Evidence pack missing. Run `npm run readiness:evidence` first.\n';
+}
+
+reportContent += `\n## 5. SLA by Tenant Mode / Region\n\n`;
+reportContent += `| Tenant mode | Region | Availability SLA | p95 latency | Historical window | Samples | Gates |\n`;
+reportContent += `| --- | --- | --- | --- | --- | --- | --- |\n`;
+for (const item of sot.slaByTenantModeRegion ?? []) {
+  reportContent += `| ${item.tenantMode} | ${item.region} | ${item.availabilitySla}% | ${item.p95LatencyMs}ms | ${item.historicalWindowDays}d | ${item.historicalSamples} | ${(item.gateIds ?? []).join(', ')} |\n`;
 }
 
 reportContent += `\n---\n*Report generated automatically by Virteex readiness tooling*\n`;

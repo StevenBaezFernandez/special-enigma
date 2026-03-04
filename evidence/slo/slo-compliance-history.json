@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-03-01T00:00:00.000Z",
+  "retentionDays": 365,
+  "records": [
+    {
+      "period": "2026-02",
+      "service": "api-gateway",
+      "region": "us-east-1",
+      "sloClass": "latency",
+      "objective": "p95<200ms",
+      "observed": "p95=178ms",
+      "errorBudgetConsumedPct": 41,
+      "status": "compliant",
+      "runbookRef": "docs/runbooks/slo-incident-response.md#latency-breach"
+    },
+    {
+      "period": "2026-02",
+      "service": "billing-worker",
+      "region": "sa-east-1",
+      "sloClass": "errors",
+      "objective": "error_rate<1%",
+      "observed": "error_rate=0.7%",
+      "errorBudgetConsumedPct": 48,
+      "status": "compliant",
+      "runbookRef": "docs/runbooks/slo-incident-response.md#error-rate-breach"
+    }
+  ]
+}

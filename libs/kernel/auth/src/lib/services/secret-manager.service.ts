@@ -1,6 +1,7 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { randomBytes } from 'node:crypto';
 import { SecretProvider } from '../interfaces/secret-provider.interface';
+import { TelemetryService } from '@virteex/kernel-telemetry';
 
 export const SECRET_PROVIDER = 'SECRET_PROVIDER';
 
@@ -11,7 +12,8 @@ export class SecretManagerService {
   private previousSecrets: string[] = [];
 
   constructor(
-    @Inject(SECRET_PROVIDER) private readonly provider: SecretProvider
+    @Inject(SECRET_PROVIDER) private readonly provider: SecretProvider,
+    private readonly telemetry: TelemetryService
   ) {
     this.initSecrets();
   }
@@ -75,5 +77,11 @@ export class SecretManagerService {
   async rotateSecret(): Promise<void> {
       this.logger.log('Rotating secrets...');
       this.initSecrets();
+      this.telemetry.recordSecurityEvent('KEY_ROTATION_EXECUTED', {
+        secretType: 'JWT',
+        service: 'kernel-auth',
+        environment: process.env['NODE_ENV'] || 'unknown',
+        timestamp: new Date().toISOString(),
+      });
   }
 }
