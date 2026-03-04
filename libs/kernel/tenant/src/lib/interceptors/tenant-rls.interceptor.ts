@@ -3,7 +3,6 @@ import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { Observable, from, lastValueFrom } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { getTenantContext } from '@virteex/kernel-auth';
-import { createHmac, timingSafeEqual } from 'crypto';
 import { TenantService } from '../tenant.service';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
 import { TenantMode, TenantStatus } from '../interfaces/tenant-config.interface';
@@ -44,12 +43,16 @@ export class TenantRlsInterceptor implements NestInterceptor {
       throw new ForbiddenException('Tenant context is required for all operations');
     }
 
-    // Level 5: Tamper resistance check for context signature
-    if (tenantContext.signature) {
-        this.validateContextSignature(tenantContext);
-    } else if (process.env['NODE_ENV'] === 'production') {
-        this.logger.error(`[SECURITY CRITICAL] Unsigned tenant context for ${tenantContext.tenantId} in production!`);
-        throw new ForbiddenException('Tenant context integrity cannot be verified');
+    // Level 5: Fail-closed contract checks (signature + expiry validated at ingress).
+    if (!tenantContext.contextVersion || !tenantContext.exp) {
+      this.logger.error(`[SECURITY CRITICAL] Missing canonical tenant claims for ${tenantContext.tenantId}`);
+      throw new ForbiddenException('Tenant context integrity cannot be verified');
+    }
+
+    const nowEpochSeconds = Math.floor(Date.now() / 1000);
+    if (tenantContext.exp <= nowEpochSeconds) {
+      this.logger.error(`[SECURITY] Expired tenant context for ${tenantContext.tenantId}`);
+      throw new ForbiddenException('Tenant context expired');
     }
 
     const tenantId = tenantContext.tenantId;
@@ -136,25 +139,6 @@ export class TenantRlsInterceptor implements NestInterceptor {
   private recordError(tenantId: string, error: any) {
     this.errorCounter.add(1, { tenantId, status: error.status || 500 });
     this.logger.error(`Tenant ${tenantId} operation failed: ${error.message}`);
-  }
-
-  private validateContextSignature(context: any): void {
-      const secret = process.env['TENANT_CONTEXT_SECRET'];
-      if (!secret || secret === 'dev-secret-change-in-prod') {
-          this.logger.error('[SECURITY CRITICAL] TENANT_CONTEXT_SECRET missing or insecure');
-          throw new ForbiddenException('Secure context validation unavailable');
-      }
-
-      const payload = `${context.tenantId}:${context.region}:${context.mode}`;
-      const expected = createHmac('sha256', secret).update(payload).digest('hex');
-
-      const signatureBuffer = Buffer.from(context.signature);
-      const expectedBuffer = Buffer.from(expected);
-
-      if (signatureBuffer.length !== expectedBuffer.length || !timingSafeEqual(signatureBuffer, expectedBuffer)) {
-          this.logger.error(`[SECURITY] Tampered tenant context detected for tenant ${context.tenantId}`);
-          throw new ForbiddenException('Tenant context integrity violation');
-      }
   }
 
   private isWriteOperation(context: ExecutionContext): boolean {
