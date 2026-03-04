@@ -54,8 +54,8 @@ if (!fs.existsSync(latestEvidencePath)) {
   const requiredGates = ['rls-audit', 'isolation-adversarial', 'migration-integrity', 'failover-drill'];
 
   for (const gate of requiredGates) {
-    const gateEvidence = summary.gates?.[gate] || summary.results?.find(r => r.id === gate);
-    if (!gateEvidence || gateEvidence.status !== 'PASSED') {
+    const gateEvidence = summary.gateResults?.find((r) => r.id === gate);
+    if (!gateEvidence || gateEvidence.status !== 'passed') {
       violations.push(`Level 5 Certification FAILED: Missing or failed evidence for gate '${gate}'.`);
     }
   }

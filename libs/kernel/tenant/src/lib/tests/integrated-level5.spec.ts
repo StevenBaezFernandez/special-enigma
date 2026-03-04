@@ -110,6 +110,21 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
       expect(entity.tenantId).toBe('tenant-alpha'); // Enforced isolation
       expect(mockEm.setFilterParams).toHaveBeenCalledWith('tenant', { tenantId: 'tenant-alpha' });
     });
+
+    it('SHOULD fail-closed if tenant is SUSPENDED or context is invalid', async () => {
+      const interceptor = new TenantRlsInterceptor(mockEm as any, mockTenantService as any);
+      vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 'suspended-tenant' } as any);
+      mockEm.findOne.mockResolvedValue({ status: 'SUSPENDED' });
+
+      const mockContext: any = {
+          switchToHttp: () => ({ getRequest: () => ({ method: 'GET' }) }),
+          getHandler: () => ({}),
+          getClass: () => ({})
+      };
+      const mockHandler = { handle: vi.fn() };
+
+      await expect(interceptor.intercept(mockContext, mockHandler)).rejects.toThrow(/tenant is not active/i);
+    });
   });
 
   describe('Flujo B — Migration Lifecycle (Pre-checks to Rollback)', () => {
@@ -145,6 +160,18 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
       expect(mockRoutingPlane.createSnapshot).toHaveBeenCalledWith('t1', expect.objectContaining({
           primaryRegion: 'sa-east-1'
       }));
+    });
+
+    it('SHOULD failover if target region health probes are successful', async () => {
+        const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps);
+        mockEm.findOneOrFail.mockResolvedValue({ tenantId: 't1', secondaryRegion: 'sa-east-1', status: 'ACTIVE' });
+
+        // Simulate healthy probes
+        (axios.get as any).mockResolvedValueOnce({ status: 200 }); // LB
+        (axios.get as any).mockResolvedValueOnce({ status: 200 }); // API
+
+        await service.triggerRegionalFailover('t1', 'health-key');
+        expect(mockOpService.transitionState).toHaveBeenCalledWith(expect.anything(), OperationState.VALIDATING);
     });
   });
 

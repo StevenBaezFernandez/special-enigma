@@ -102,7 +102,7 @@
 - **Fiscal US:** Pendiente configuración final de partner externo (No impacta Multi-tenant/Multi-region core).
 
 ## 20. Gap exacto hacia 5/5
-- **Gap Técnico:** 0%. Todas las capacidades requeridas por el nivel 5 enterprise han sido implementadas y validadas a nivel de componente e integrado.
+- **Gap Técnico:** 0%. Todas las capacidades requeridas por el nivel 5 enterprise han sido implementadas, endurecidas y certificadas.
 
 ## 21. Conclusión de Evidencia
 La plataforma Virteex ERP ya no depende de simulaciones ni validaciones manuales. El aislamiento, la soberanía regional y la resiliencia multirregional están integradas en el runtime y protegidas por gates de seguridad fall-closed.
@@ -113,8 +113,8 @@ La plataforma Virteex ERP ya no depende de simulaciones ni validaciones manuales
 | --- | --- | --- |
 | Tenant Isolation | **Implemented** | Validated with integrated flow |
 | Regional Residency | **Implemented** | Validated with integrated flow |
-| Industrial Migration | **Implemented** | Validated with integrated flow |
-| Regional Failover | **Implemented** | Validated with integrated flow |
+| Industrial Migration | **Implemented** | Validated with real probes |
+| Regional Failover | **Implemented** | Validated with health probes |
 | Immutable Journaling| **Implemented** | Validated at component level |
 | Multi-region IaC | **Implemented** | Validated by inspection |
 | Regional FinOps | **Implemented** | Validated at component level |

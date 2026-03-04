@@ -37,9 +37,21 @@ const gates = [
     cmd: 'bash ./tools/enforce-production-readiness.sh',
   },
   {
-      id: 'rls-audit',
-      cmd: 'node tools/quality-gates/check-rls.js'
-  }
+    id: 'rls-audit',
+    cmd: 'node tools/quality-gates/check-rls.js',
+  },
+  {
+    id: 'isolation-adversarial',
+    cmd: 'npx vitest run libs/kernel/tenant/src/lib/tests/adversarial-isolation.spec.ts',
+  },
+  {
+    id: 'migration-integrity',
+    cmd: 'npx vitest run libs/kernel/tenant/src/lib/tests/migration-validation.spec.ts',
+  },
+  {
+    id: 'failover-drill',
+    cmd: 'npx vitest run libs/kernel/tenant/src/lib/tests/failover-validation.spec.ts',
+  },
 ];
 
 function sha256File(filePath) {

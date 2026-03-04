@@ -19,7 +19,7 @@
       "MX": { "status": "GA", "provider": "SAT", "allowSimulation": false },
       "BR": { "status": "GA", "provider": "SEFAZ", "allowSimulation": false },
       "CO": { "status": "GA", "provider": "DIAN", "allowSimulation": false },
-      "US": { "status": "GA", "provider": "STRIPE_TAX", "allowSimulation": false }
+      "US": { "status": "Beta", "provider": "STRIPE_TAX", "allowSimulation": false }
     },
     "billing": {
       "DO": { "status": "GA", "allowSimulation": false },

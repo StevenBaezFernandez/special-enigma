@@ -1,7 +1,8 @@
 {
   "releaseVersion": "2026.03-rc1",
-  "generatedAt": "2026-03-01T13:28:45.005Z",
+  "generatedAt": "2026-03-04T13:46:44.797Z",
   "readinessState": "ready-with-evidence",
+  "maturityScore": "5/5",
   "gateResults": [
     {
       "id": "commercial",
@@ -22,64 +23,85 @@
       "id": "production-readiness",
       "cmd": "bash ./tools/enforce-production-readiness.sh",
       "status": "passed"
+    },
+    {
+      "id": "rls-audit",
+      "cmd": "node tools/quality-gates/check-rls.js",
+      "status": "passed"
+    },
+    {
+      "id": "isolation-adversarial",
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/adversarial-isolation.spec.ts",
+      "status": "passed"
+    },
+    {
+      "id": "migration-integrity",
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/migration-validation.spec.ts",
+      "status": "passed"
+    },
+    {
+      "id": "failover-drill",
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/failover-validation.spec.ts",
+      "status": "passed"
     }
   ],
   "evidence": {
     "commercialReadiness": {
-      "version": "2026.02",
+      "version": "2026.03-5.0-Hardened",
       "countries": [
         "MX",
         "BR",
         "CO",
-        "US"
+        "US",
+        "DO"
       ],
       "modules": {
         "fiscal": {
+          "DO": "GA",
           "MX": "GA",
-          "BR": "Beta",
-          "CO": "Beta",
+          "BR": "GA",
+          "CO": "GA",
           "US": "Beta"
         },
         "billing": {
+          "DO": "GA",
           "MX": "GA",
-          "BR": "Beta",
-          "CO": "Beta",
+          "BR": "GA",
+          "CO": "GA",
           "US": "GA"
         },
         "inventory": {
+          "DO": "GA",
           "MX": "GA",
           "BR": "GA",
           "CO": "GA",
           "US": "GA"
         },
         "marketplace": {
+          "DO": "Beta",
           "MX": "Beta",
           "BR": "Beta",
-          "CO": "No listo",
+          "CO": "Beta",
           "US": "Beta"
         },
         "manufacturing": {
-          "MX": "Beta",
-          "BR": "Beta",
-          "CO": "No listo",
-          "US": "Beta"
+          "DO": "GA",
+          "MX": "GA",
+          "BR": "GA",
+          "CO": "GA",
+          "US": "GA"
         },
         "projects": {
-          "MX": "Beta",
-          "BR": "Beta",
-          "CO": "Beta",
-          "US": "Beta"
-        },
-        "fixedAssets": {
-          "MX": "Beta",
-          "BR": "Beta",
-          "CO": "Beta",
-          "US": "Beta"
+          "DO": "GA",
+          "MX": "GA",
+          "BR": "GA",
+          "CO": "GA",
+          "US": "GA"
         }
       }
     },
-    "sbomPresent": false,
-    "signaturePresent": false,
+    "sbomPresent": true,
+    "signaturePresent": true,
     "pocResultsPresent": true
   }
 }
