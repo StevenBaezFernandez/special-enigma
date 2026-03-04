@@ -1,6 +1,6 @@
 import { Injectable, OnModuleDestroy, OnModuleInit, NotFoundException, Logger, ConflictException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { TenantConfig, TenantMode } from './interfaces/tenant-config.interface';
+import { TenantConfig, TenantMode, TenantStatus } from './interfaces/tenant-config.interface';
 import { Tenant } from './entities/tenant.entity';
 import Redis from 'ioredis';
 
@@ -44,14 +44,50 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
       updatedAt: tenantData.updatedAt ?? new Date(),
       ...tenantData,
     });
+
     await this.em.persistAndFlush(tenant);
 
-    // Invalidate cache immediately just in case
+    // Level 5: Initialize Control Record with proper lifecycle state
+    const control = this.em.create('TenantControlRecord', {
+        tenantId: tenant.id,
+        status: TenantStatus.PROVISIONING,
+        version: 1,
+        isFrozen: false,
+        primaryRegion: tenantData.settings?.['allowedRegion'] || process.env['AWS_REGION'] || 'us-east-1'
+    } as any);
+    await this.em.persistAndFlush(control);
+
     if (this.redis) {
         await this.redis.del(`tenant:${tenant.id}`);
     }
 
     return tenant;
+  }
+
+  async activateTenant(tenantId: string): Promise<void> {
+    await this.updateTenantStatus(tenantId, TenantStatus.ACTIVE);
+  }
+
+  async suspendTenant(tenantId: string): Promise<void> {
+    await this.updateTenantStatus(tenantId, TenantStatus.SUSPENDED);
+  }
+
+  async terminateTenant(tenantId: string): Promise<void> {
+    // Termination is a final state in some flows, or could trigger deletion logic
+    await this.updateTenantStatus(tenantId, TenantStatus.SUSPENDED); // Map to SUSPENDED for immediate block
+    this.logger.warn(`Tenant ${tenantId} marked for termination.`);
+  }
+
+  private async updateTenantStatus(tenantId: string, status: TenantStatus): Promise<void> {
+    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
+    (control as any).status = status;
+    (control as any).updatedAt = new Date();
+    await this.em.flush();
+
+    if (this.redis) {
+        await this.redis.del(`tenant:${tenantId}`);
+    }
+    this.logger.log(`Tenant ${tenantId} status updated to ${status}`);
   }
 
   async updateTenant(id: string, updates: Partial<Tenant>): Promise<Tenant> {

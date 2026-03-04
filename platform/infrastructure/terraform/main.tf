@@ -73,16 +73,49 @@ module "rds_secondary" {
   db_password = var.db_password
 }
 
-module "elasticache" {
+module "elasticache_primary" {
+  providers = { aws = aws.primary }
   source      = "./modules/elasticache"
   environment = var.environment
-  vpc_id      = module.vpc.vpc_id
-  subnet_ids  = module.vpc.private_subnets
+  vpc_id      = module.vpc_primary.vpc_id
+  subnet_ids  = module.vpc_primary.private_subnets
 }
 
-module "msk" {
+module "elasticache_secondary" {
+  providers = { aws = aws.secondary }
+  source      = "./modules/elasticache"
+  environment = var.environment
+  vpc_id      = module.vpc_secondary.vpc_id
+  subnet_ids  = module.vpc_secondary.private_subnets
+}
+
+module "msk_primary" {
+  providers = { aws = aws.primary }
   source      = "./modules/msk"
   environment = var.environment
-  vpc_id      = module.vpc.vpc_id
-  subnet_ids  = module.vpc.private_subnets
+  vpc_id      = module.vpc_primary.vpc_id
+  subnet_ids  = module.vpc_primary.private_subnets
+}
+
+module "msk_secondary" {
+  providers = { aws = aws.secondary }
+  source      = "./modules/msk"
+  environment = var.environment
+  vpc_id      = module.vpc_secondary.vpc_id
+  subnet_ids  = module.vpc_secondary.private_subnets
+}
+
+# Cross-Region Peering (Level 5)
+resource "aws_vpc_peering_connection" "primary_secondary" {
+  provider = aws.primary
+  peer_vpc_id = module.vpc_secondary.vpc_id
+  vpc_id      = module.vpc_primary.vpc_id
+  peer_region = var.secondary_region
+  auto_accept = false
+}
+
+resource "aws_vpc_peering_connection_accepter" "secondary" {
+  provider = aws.secondary
+  vpc_peering_connection_id = aws_vpc_peering_connection.primary_secondary.id
+  auto_accept               = true
 }

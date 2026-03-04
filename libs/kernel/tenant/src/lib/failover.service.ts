@@ -18,77 +18,80 @@ export class FailoverService {
   ) {}
 
   async triggerRegionalFailover(tenantId: string, idempotencyKey: string): Promise<void> {
-    const op = await this.operationService.createOperation(tenantId, OperationType.FAILOVER, idempotencyKey);
-    const startTime = performance.now();
-
-    if (op.state === OperationState.FINALIZED) {
-        this.logger.log(`Failover operation ${op.operationId} already finalized.`);
-        return;
+    const locked = await this.operationService.acquireLock(tenantId);
+    if (!locked) {
+        throw new ConflictException(`Another control-plane operation is in progress for tenant ${tenantId}`);
     }
 
-    this.logger.warn(`EMERGENCY: Triggering regional failover for tenant: ${tenantId} (Op: ${op.operationId})`);
-
     try {
-      await this.operationService.transitionState(op.operationId, OperationState.PREPARING);
-      const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
+      const op = await this.operationService.createOperation(tenantId, OperationType.FAILOVER, idempotencyKey);
+      const startTime = performance.now();
 
-      if (control.status === TenantStatus.DEGRADED) {
-          throw new ConflictException(`Tenant ${tenantId} is already in a degraded or failover state.`);
+      if (op.state === OperationState.FINALIZED) {
+          this.logger.log(`Failover operation ${op.operationId} already finalized.`);
+          return;
       }
 
-      await this.operationService.transitionState(op.operationId, OperationState.VALIDATING);
-      await this.validateRegionalHealth(control.secondaryRegion);
-      await this.checkDataConsistency(tenantId, control.primaryRegion, control.secondaryRegion);
+      this.logger.warn(`EMERGENCY: Triggering regional failover for tenant: ${tenantId} (Op: ${op.operationId})`);
 
-      await this.operationService.transitionState(op.operationId, OperationState.SWITCHED);
+      try {
+        await this.operationService.transitionState(op.operationId, OperationState.PREPARING);
+        const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
 
-      // FREEZE WRITES: In a real system, this would involve a global lock or read-only mode for the tenant
-      await this.freezeTenantWrites(tenantId);
+        if (control.status === TenantStatus.DEGRADED) {
+            throw new ConflictException(`Tenant ${tenantId} is already in a degraded or failover state.`);
+        }
 
-      // Promote secondary region to active for this tenant
-      const newTargets = {
-          primaryRegion: control.secondaryRegion,
-          secondaryRegion: control.primaryRegion,
-          failoverActive: true,
-          switchedAt: new Date(),
-          rto_target: '30s',
-          rpo_target: '0s'
-      };
+        await this.operationService.transitionState(op.operationId, OperationState.VALIDATING);
+        await this.validateRegionalHealth(control.secondaryRegion);
+        await this.checkDataConsistency(tenantId, control.primaryRegion, control.secondaryRegion);
 
-      await this.routingPlane.createSnapshot(tenantId, newTargets);
+        await this.operationService.transitionState(op.operationId, OperationState.SWITCHED);
 
-      // Update Control Record
-      control.status = TenantStatus.DEGRADED;
-      control.updatedAt = new Date();
-      await this.em.flush();
+        await this.freezeTenantWrites(tenantId);
 
-      await this.operationService.transitionState(op.operationId, OperationState.MONITORING);
-      this.logger.log(`Monitoring traffic in failover region for tenant: ${tenantId}`);
+        const newTargets = {
+            primaryRegion: control.secondaryRegion,
+            secondaryRegion: control.primaryRegion,
+            failoverActive: true,
+            switchedAt: new Date(),
+            rto_target: '30s',
+            rpo_target: '0s'
+        };
 
-      // UNFREEZE WRITES: Re-open for the new region
-      await this.unfreezeTenantWrites(tenantId);
+        await this.routingPlane.createSnapshot(tenantId, newTargets);
 
-      await this.operationService.transitionState(op.operationId, OperationState.FINALIZED);
-      this.logger.log(`Failover finalized for tenant: ${tenantId}. RTO/RPO targets met.`);
+        control.status = TenantStatus.DEGRADED;
+        control.updatedAt = new Date();
+        await this.em.flush();
 
-      await this.finops.recordOperationSlo(tenantId, 'failover', performance.now() - startTime, true, 'multi-region');
+        await this.operationService.transitionState(op.operationId, OperationState.MONITORING);
+        this.logger.log(`Monitoring traffic in failover region for tenant: ${tenantId}`);
 
-    } catch (error: any) {
-      await this.finops.recordOperationSlo(tenantId, 'failover', performance.now() - startTime, false, 'multi-region');
-      this.logger.error(`Failover failed for tenant ${tenantId}: ${error.message}`);
-      await this.executeFailoverRollback(tenantId, op.operationId, error);
-      throw error;
+        await this.unfreezeTenantWrites(tenantId);
+
+        await this.operationService.transitionState(op.operationId, OperationState.FINALIZED);
+        this.logger.log(`Failover finalized for tenant: ${tenantId}. RTO/RPO targets met.`);
+
+        await this.finops.recordOperationSlo(tenantId, 'failover', performance.now() - startTime, true, 'multi-region');
+
+      } catch (error: any) {
+        await this.finops.recordOperationSlo(tenantId, 'failover', performance.now() - startTime, false, 'multi-region');
+        this.logger.error(`Failover failed for tenant ${tenantId}: ${error.message}`);
+        await this.executeFailoverRollback(tenantId, op.operationId, error);
+        throw error;
+      }
+    } finally {
+      await this.operationService.releaseLock(tenantId);
     }
   }
 
   private async validateRegionalHealth(region: string): Promise<void> {
       this.logger.log(`Validating health of target region: ${region}`);
 
-      // Real Signal Evaluation: Regional Endpoint Reachability
       const isReachable = await this.pingRegionalEndpoint(region);
       if (!isReachable) throw new Error(`Target region ${region} is unreachable.`);
 
-      // Real Signal Evaluation: Data Plane Health
       const isDataPlaneHealthy = await this.checkRegionalDataPlane(region);
       if (!isDataPlaneHealthy) throw new Error(`Data plane in ${region} is degraded.`);
 
@@ -98,9 +101,8 @@ export class FailoverService {
   private async checkDataConsistency(tenantId: string, from: string, to: string): Promise<void> {
       this.logger.log(`Verifying data consistency between ${from} and ${to} for tenant ${tenantId}`);
 
-      // Real Signal Evaluation: Replication Lag
       const lag = await this.getRegionalReplicaLag(from, to);
-      if (lag > 1000) { // 1s threshold for failover
+      if (lag > 1000) {
           throw new Error(`Replication lag too high (${lag}ms) for safe failover of ${tenantId}.`);
       }
 
@@ -110,7 +112,6 @@ export class FailoverService {
   private async pingRegionalEndpoint(region: string): Promise<boolean> {
       this.logger.debug(`Evaluating regional reachability for ${region}`);
       try {
-          // Perform a real health check against the regional endpoint
           const result = await this.em.getConnection().execute(`SELECT 1`);
           return result.length > 0;
       } catch (err) {
@@ -122,7 +123,6 @@ export class FailoverService {
   private async checkRegionalDataPlane(region: string): Promise<boolean> {
       this.logger.debug(`Auditing data plane health for ${region}`);
       try {
-          // Verify that the database is not in recovery and is accepting writes
           const result = await this.em.getConnection().execute(`SELECT pg_is_in_recovery() as is_recovery`);
           return result[0]?.is_recovery === false;
       } catch (err) {
@@ -133,14 +133,13 @@ export class FailoverService {
   private async getRegionalReplicaLag(from: string, to: string): Promise<number> {
       this.logger.debug(`Measuring cross-region replication lag between ${from} and ${to}`);
       try {
-          // Query cross-region replication lag from RDS/Postgres stats
           const result = await this.em.getConnection().execute(`
             SELECT
               COALESCE(EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp())), 0) * 1000 AS lag_ms
           `);
           return parseFloat(result[0]?.lag_ms || '0');
       } catch (err) {
-          return 9999; // Assume catastrophic lag if query fails
+          return 9999;
       }
   }
 
@@ -161,6 +160,30 @@ export class FailoverService {
   private async executeFailoverRollback(tenantId: string, operationId: string, error: Error): Promise<void> {
       this.logger.error(`Executing failover rollback for tenant ${tenantId}: ${error.message}`);
       await this.operationService.transitionState(operationId, OperationState.ROLLBACK, { error: error.message });
-      // Logic to revert routing snapshot to previous version and unfreeze writes in original region
+
+      try {
+          const current = await this.routingPlane.resolveRoute(tenantId);
+          if (current.version > 1) {
+             const previousTargets = {
+                ...current,
+                primaryRegion: current.secondaryRegion,
+                secondaryRegion: current.primaryRegion,
+                failoverActive: false,
+                version: current.version + 1,
+                rollback: true
+             };
+             await this.routingPlane.createSnapshot(tenantId, previousTargets);
+          }
+
+          await this.unfreezeTenantWrites(tenantId);
+
+          const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
+          control.status = TenantStatus.ACTIVE;
+          await this.em.flush();
+
+          this.logger.log(`Failover rollback COMPLETED for tenant ${tenantId}`);
+      } catch (rollbackErr: any) {
+          this.logger.error(`FATAL: Failover rollback FAILED for ${tenantId}: ${rollbackErr.message}`);
+      }
   }
 }

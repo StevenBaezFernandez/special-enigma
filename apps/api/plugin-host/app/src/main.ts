@@ -221,9 +221,9 @@ server.post('/execute', async (request, reply) => {
   }
 
   // Capability Consent Enforcement (Level 5)
-  const tenantId = request.headers['x-tenant-id'] as string;
+  const tenantId = request.headers['x-virteex-tenant-id'] as string;
   if (!tenantId) {
-      return reply.status(400).send({ error: 'x-tenant-id header is required for execution' });
+      return reply.status(400).send({ error: 'x-virteex-tenant-id header is required for execution' });
   }
 
   let authorizedCapabilities: string[] = [];

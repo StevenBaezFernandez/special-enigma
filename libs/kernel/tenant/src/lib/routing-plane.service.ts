@@ -16,18 +16,30 @@ export class RoutingPlaneService {
     private readonly tenantService: TenantService,
     private readonly configService: ConfigService
   ) {
-    this.hmacSecret = this.configService.get<string>('ROUTING_SNAPSHOT_SECRET') || 'dev-secret-change-in-prod';
+    const secret = this.configService.get<string>('ROUTING_SNAPSHOT_SECRET');
+    const isProduction = process.env['NODE_ENV'] === 'production';
+
+    if (isProduction && (!secret || secret === 'dev-secret-change-in-prod')) {
+        this.logger.error('[SECURITY CRITICAL] Insecure ROUTING_SNAPSHOT_SECRET in production');
+        throw new Error('Insecure routing configuration');
+    }
+    this.hmacSecret = secret || 'dev-secret-change-in-prod';
   }
 
   async resolveRoute(tenantId: string): Promise<any> {
     const snapshot = await this.em.findOne(TenantRoutingSnapshot, { tenantId });
 
-    if (snapshot && this.verifySnapshot(snapshot)) {
-      this.logger.log(`Routing tenant ${tenantId} via signed snapshot generation ${snapshot.generation}`);
-      return snapshot.routeTargets;
+    if (snapshot) {
+      if (this.verifySnapshot(snapshot)) {
+        this.logger.log(`Routing tenant ${tenantId} via signed snapshot generation ${snapshot.generation}`);
+        return snapshot.routeTargets;
+      } else {
+        this.logger.error(`[SECURITY] Tampered routing snapshot detected for tenant ${tenantId}`);
+        throw new Error('Routing snapshot integrity violation');
+      }
     }
 
-    this.logger.warn(`No valid signed snapshot for tenant ${tenantId}. Resolving via TenantService (Slow Path).`);
+    this.logger.warn(`No routing snapshot for tenant ${tenantId}. Resolving via TenantService (Slow Path).`);
     const config = await this.tenantService.getTenantConfig(tenantId);
 
     const control = await this.em.findOne(TenantControlRecord, { tenantId });

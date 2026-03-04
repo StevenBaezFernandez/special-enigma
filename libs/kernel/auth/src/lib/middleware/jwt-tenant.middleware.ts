@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware, UnauthorizedException, Logger } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { runWithTenantContext } from '../storage/tenant-context.storage';
@@ -6,46 +6,66 @@ import { TenantContext } from '../interfaces/tenant-context.interface';
 
 @Injectable()
 export class JwtTenantMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(JwtTenantMiddleware.name);
+
   use(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    const tenantIdHeader = req.headers['x-virteex-tenant-id'];
+
+    if (!authHeader && !tenantIdHeader) {
       return next();
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader?.split(' ')[1];
+
     if (!token) {
+      if (tenantIdHeader) {
+        this.logger.error('Attempted tenant access via header without signed context');
+        throw new UnauthorizedException('Signed tenant context required');
+      }
       return next();
     }
 
     try {
-      // ENFORCEMENT: JWT signature MUST be verified to establish trust
-      const jwtSecret = process.env['JWT_SECRET'] || 'dev-secret';
-      const decoded: any = jwt.verify(token, jwtSecret);
+      const jwtSecret = process.env['JWT_SECRET'];
+      const isProduction = process.env['NODE_ENV'] === 'production';
+
+      if (isProduction && (!jwtSecret || jwtSecret === 'dev-secret')) {
+        this.logger.error('[SECURITY CRITICAL] Insecure JWT_SECRET in production');
+        throw new Error('Insecure JWT_SECRET configuration');
+      }
+
+      const secret = jwtSecret || 'dev-secret';
+      const decoded: any = jwt.verify(token, secret);
 
       if (decoded && decoded.tenantId) {
+        if (tenantIdHeader && tenantIdHeader !== decoded.tenantId) {
+          this.logger.error(`Tenant mismatch: Header=${tenantIdHeader}, Token=${decoded.tenantId}`);
+          throw new UnauthorizedException('Tenant context mismatch');
+        }
+
         const context: TenantContext = {
           tenantId: decoded.tenantId,
-          userId: decoded.sub, // 'sub' is standard for user ID in JWT
+          userId: decoded.sub,
           role: decoded.roles || [],
-          // Populate optional fields if available in token or let them be undefined
           permissions: decoded.permissions || [],
           region: decoded.region || 'US',
           currency: decoded.currency || 'USD',
           language: decoded.language || 'en',
         };
 
-        // Attach to request for logging/other guards if needed
         (req as any).tenantContext = context;
 
         runWithTenantContext(context, () => {
           next();
         });
       } else {
-        next();
+        this.logger.error('Invalid JWT payload: missing tenantId');
+        throw new UnauthorizedException('Missing tenant identification in token');
       }
-    } catch (err) {
-      // If decode fails, just continue, Guard will handle auth failure
-      next();
+    } catch (err: any) {
+      this.logger.error(`Tenant context verification failed: ${err.message}`);
+      throw new UnauthorizedException(err.name === 'TokenExpiredError' ? 'Tenant session expired' : 'Invalid tenant context');
     }
   }
 }

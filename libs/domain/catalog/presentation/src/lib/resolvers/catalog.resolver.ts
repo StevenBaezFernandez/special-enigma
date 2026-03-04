@@ -31,7 +31,7 @@ export class CatalogResolver {
   @UseGuards(JwtAuthGuard)
   async products(@Context() context: any) {
     const req = context.req;
-    const tenantId = req.user?.tenantId || req.headers['x-tenant-id'];
+    const tenantId = req.user?.tenantId || req.headers['x-virteex-tenant-id'];
 
     if (!tenantId) {
       throw new UnauthorizedException('Tenant context is missing');

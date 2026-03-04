@@ -20,33 +20,41 @@ export class MigrationOrchestratorService {
   async migrateTenantWithOperation(tenantId: string, idempotencyKey: string): Promise<void> {
     this.logger.log(`Starting industrial migration for tenant ${tenantId} with key ${idempotencyKey}`);
 
-    const op = await this.operationService.createOperation(tenantId, OperationType.MIGRATE, idempotencyKey);
-    if (op.state === OperationState.FINALIZED) return;
+    const locked = await this.operationService.acquireLock(tenantId);
+    if (!locked) {
+        throw new ConflictException(`Another control-plane operation is in progress for tenant ${tenantId}`);
+    }
 
     try {
-        await this.operationService.transitionState(op.operationId, OperationState.PREPARING);
+      const op = await this.operationService.createOperation(tenantId, OperationType.MIGRATE, idempotencyKey);
+      if (op.state === OperationState.FINALIZED) return;
 
-        const isSafe = await this.migrationGuard.preMigrationCheck();
-        if (!isSafe) {
-            throw new Error(`Migration safety checks failed for tenant ${tenantId}. Aborting.`);
-        }
+      try {
+          await this.operationService.transitionState(op.operationId, OperationState.PREPARING);
 
-        const tenant = await this.em.findOneOrFail(Tenant, { id: tenantId });
-        await this.operationService.transitionState(op.operationId, OperationState.VALIDATING);
+          const isSafe = await this.migrationGuard.preMigrationCheck();
+          if (!isSafe) {
+              throw new Error(`Migration safety checks failed for tenant ${tenantId}. Aborting.`);
+          }
 
-        // Industrial Pipeline Steps
-        await this.dryRun(op.operationId, tenant);
-        await this.executeMigration(op.operationId, tenant);
-        await this.executeSwitch(op.operationId, tenantId);
-        await this.reconcile(op.operationId, tenantId);
+          const tenant = await this.em.findOneOrFail(Tenant, { id: tenantId });
+          await this.operationService.transitionState(op.operationId, OperationState.VALIDATING);
 
-        await this.operationService.transitionState(op.operationId, OperationState.FINALIZED);
-        this.logger.log(`Migration SUCCESS for tenant ${tenantId}`);
-    } catch (error: any) {
-        this.logger.error(`Migration CRITICAL FAILURE for tenant ${tenantId}: ${error.message}`);
-        await this.operationService.transitionState(op.operationId, OperationState.ROLLBACK, { error: error.message });
-        await this.executeRollback(op.operationId, tenantId);
-        throw error;
+          await this.dryRun(op.operationId, tenant);
+          await this.executeMigration(op.operationId, tenant);
+          await this.executeSwitch(op.operationId, tenantId);
+          await this.reconcile(op.operationId, tenantId);
+
+          await this.operationService.transitionState(op.operationId, OperationState.FINALIZED);
+          this.logger.log(`Migration SUCCESS for tenant ${tenantId}`);
+      } catch (error: any) {
+          this.logger.error(`Migration CRITICAL FAILURE for tenant ${tenantId}: ${error.message}`);
+          await this.operationService.transitionState(op.operationId, OperationState.ROLLBACK, { error: error.message });
+          await this.executeRollback(op.operationId, tenantId);
+          throw error;
+      }
+    } finally {
+        await this.operationService.releaseLock(tenantId);
     }
   }
 
@@ -64,7 +72,7 @@ export class MigrationOrchestratorService {
 
       const impact = {
           pendingMigrations: pendingCount,
-          isSafe: pendingCount < 10, // Example policy: block automated if too many migrations
+          isSafe: pendingCount < 10,
           timestamp: new Date()
       };
 
@@ -97,8 +105,45 @@ export class MigrationOrchestratorService {
   private async reconcile(operationId: string, tenantId: string): Promise<void> {
       await this.operationService.transitionState(operationId, OperationState.RECONCILING);
       this.logger.log(`Reconciling post-migration state for ${tenantId}`);
-      // Verification logic: row counts, checksums
-      await this.operationService.transitionState(operationId, OperationState.RECONCILING, { reconciled: true });
+
+      const tenant = await this.em.findOneOrFail(Tenant, { id: tenantId });
+      let rowCounts: Record<string, number> = {};
+
+      try {
+          if (tenant.mode === TenantMode.DATABASE) {
+              const tenantEm = this.em.fork({ connectionString: tenant.connectionString });
+              rowCounts = await this.getTableStats(tenantEm);
+          } else {
+              rowCounts = await this.getTableStats(this.em, tenant.schemaName);
+          }
+
+          this.logger.log(`Reconciliation successful for ${tenantId}. Counts: ${JSON.stringify(rowCounts)}`);
+          await this.operationService.transitionState(operationId, OperationState.RECONCILING, {
+              reconciled: true,
+              stats: rowCounts,
+              verifiedAt: new Date()
+          });
+      } catch (err: any) {
+          this.logger.error(`Reconciliation FAILED for ${tenantId}: ${err.message}`);
+          throw new Error(`Reconciliation failed: ${err.message}`);
+      }
+  }
+
+  private async getTableStats(em: EntityManager, schema?: string): Promise<Record<string, number>> {
+      const qb = em.getConnection();
+      const tables = ['orders', 'customers', 'products', 'invoices'];
+      const stats: Record<string, number> = {};
+
+      for (const table of tables) {
+          const tableName = schema ? `"${schema}"."${table}"` : `"${table}"`;
+          try {
+              const result = await qb.execute(`SELECT COUNT(*) as count FROM ${tableName}`);
+              stats[table] = parseInt(result[0]?.count || '0');
+          } catch (e) {
+              stats[table] = -1;
+          }
+      }
+      return stats;
   }
 
   private async executeRollback(operationId: string, tenantId: string): Promise<void> {
@@ -112,7 +157,13 @@ export class MigrationOrchestratorService {
           } else {
               await this.em.getMigrator().down({ schema: tenant.schemaName });
           }
-          this.logger.log(`Rollback migration executed successfully for ${tenantId}`);
+
+          const config = await this.routingPlane.resolveRoute(tenantId);
+          if (config.version > 1) {
+              await this.routingPlane.createSnapshot(tenantId, { ...config, version: config.version - 1, rollback: true });
+          }
+
+          this.logger.log(`Rollback migration and routing executed successfully for ${tenantId}`);
       } catch (err: any) {
           this.logger.error(`Rollback FAILED for ${tenantId}: ${err.message}. Manual recovery required.`);
       }

@@ -44,15 +44,32 @@ export class MigrationGuard {
   }
 
   private async getReplicationLag(): Promise<number> {
+    const isProduction = process.env['NODE_ENV'] === 'production';
     try {
         // Precise lag calculation from pg_stat_replication for production clusters
         const result = await this.em.getConnection().execute(`
           SELECT
             COALESCE(EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp())) * 1000, 0) AS lag_ms
         `);
-        return parseFloat(result[0]?.lag_ms || '0');
+
+        const lag = parseFloat(result[0]?.lag_ms || '0');
+
+        // If query returns null/zero in production, it might mean we're on a replica or stats are missing
+        if (isProduction && lag === 0) {
+            this.logger.warn('Replication lag reported as 0 in production. Verifying if standalone or replica.');
+            const recovery = await this.em.getConnection().execute('SELECT pg_is_in_recovery()');
+            if (recovery[0]?.pg_is_in_recovery) {
+                 this.logger.log('Running on replica, lag of 0 is acceptable if synchronous.');
+            }
+        }
+
+        return lag;
     } catch (err) {
-        this.logger.warn('Could not determine replication lag from postgres stats. Checking for standalone instance.');
+        if (isProduction) {
+            this.logger.error('CRITICAL: Could not determine replication lag in production. Failing closed.');
+            return 999999; // Force block
+        }
+        this.logger.warn('Could not determine replication lag. Defaulting to 0 for non-prod.');
         return 0;
     }
   }

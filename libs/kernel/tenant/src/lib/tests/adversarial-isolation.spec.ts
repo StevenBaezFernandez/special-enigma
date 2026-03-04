@@ -27,7 +27,7 @@ describe('Adversarial Isolation Tests (Tenant Escape)', () => {
       }),
       setFilterParams: vi.fn(),
       fork: vi.fn().mockImplementation(() => mockEm),
-      findOne: vi.fn().mockResolvedValue({ isFrozen: false }),
+      findOne: vi.fn().mockResolvedValue({ isFrozen: false, status: 'ACTIVE' }),
       create: vi.fn().mockImplementation((_entity, data) => data),
       persist: vi.fn(),
       flush: vi.fn(),
@@ -119,8 +119,6 @@ describe('Adversarial Isolation Tests (Tenant Escape)', () => {
       };
 
       // Level 5 check: Routing snapshots must be cryptographically signed.
-      // If signature check fails (simulated here by the Resolve logic), it must reject or audit.
-      // Real resolved logic would be in RoutingPlaneService.
       await expect(routingService.createSnapshot('t1', snapshot)).resolves.toBeDefined();
   });
 
@@ -131,7 +129,7 @@ describe('Adversarial Isolation Tests (Tenant Escape)', () => {
     const entity = { tenantId: 'tenant-target', constructor: { name: 'Order' } };
     const args: any = {
         entity,
-        em: { findOne: vi.fn().mockResolvedValue({ isFrozen: false }) }
+        em: { findOne: vi.fn().mockResolvedValue({ isFrozen: false, status: 'ACTIVE' }) }
     };
 
     await subscriber.beforeCreate(args);
@@ -164,7 +162,7 @@ describe('Adversarial Isolation Tests (Tenant Escape)', () => {
     vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 't-frozen' } as any);
 
     mockTenantService.getTenantConfig.mockResolvedValue({ primaryRegion: 'us-east-1' });
-    mockEm.findOne.mockResolvedValue({ isFrozen: true });
+    mockEm.findOne.mockResolvedValue({ isFrozen: true, status: 'ACTIVE' });
     process.env['AWS_REGION'] = 'us-east-1';
 
     const mockContext: any = {
@@ -191,7 +189,7 @@ describe('Adversarial Isolation Tests (Tenant Escape)', () => {
       const entity = { tenantId: 't-frozen', constructor: { name: 'Order' } };
       const args: any = {
           entity,
-          em: { findOne: vi.fn().mockResolvedValue({ isFrozen: true }) }
+          em: { findOne: vi.fn().mockResolvedValue({ isFrozen: true, status: 'ACTIVE' }) }
       };
 
       await expect(subscriber.beforeCreate(args)).rejects.toThrow(/is currently frozen/);
@@ -204,7 +202,7 @@ describe('Adversarial Isolation Tests (Tenant Escape)', () => {
       const entity = { tenantId: 't-frozen', constructor: { name: 'TenantOperation' } };
       const args: any = {
           entity,
-          em: { findOne: vi.fn().mockResolvedValue({ isFrozen: true }) }
+          em: { findOne: vi.fn().mockResolvedValue({ isFrozen: true, status: 'ACTIVE' }) }
       };
 
       await expect(subscriber.beforeCreate(args)).resolves.not.toThrow();

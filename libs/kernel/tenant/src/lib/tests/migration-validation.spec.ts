@@ -1,55 +1,46 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import { MigrationOrchestratorService } from '../migration-orchestrator.service';
-import { TenantMode } from '../interfaces/tenant-config.interface';
+import { TenantMode, OperationState } from '../interfaces/tenant-config.interface';
 
 describe('Migration Pipeline Operational Validation', () => {
   let service: MigrationOrchestratorService;
   let mockEm: any;
   let mockGuard: any;
   let mockOpService: any;
-  let mockRouting: any;
+  let mockRoutingPlane: any;
 
   beforeEach(() => {
     mockEm = {
       findOneOrFail: vi.fn(),
-      findOne: vi.fn(),
+      fork: vi.fn().mockImplementation(() => mockEm),
       getMigrator: vi.fn().mockReturnValue({
+        getPendingMigrations: vi.fn().mockResolvedValue([]),
         up: vi.fn().mockResolvedValue(undefined),
         down: vi.fn().mockResolvedValue(undefined),
-        getPendingMigrations: vi.fn().mockResolvedValue([])
       }),
-      fork: vi.fn().mockReturnThis(),
       getConnection: vi.fn().mockReturnValue({
-        execute: vi.fn().mockResolvedValue([])
-      }),
-      getKnex: vi.fn().mockReturnValue(
-          Object.assign(
-            vi.fn().mockReturnValue({
-                where: vi.fn().mockReturnThis(),
-                first: vi.fn().mockResolvedValue({ status: 'COMPLETED' })
-            }),
-            {
-                raw: vi.fn().mockResolvedValue({ rows: [{ lag_ms: 0, size: '1000' }] })
-            }
-          )
-      )
+          execute: vi.fn().mockResolvedValue([{ count: '10' }])
+      })
     };
     mockGuard = {
       preMigrationCheck: vi.fn().mockResolvedValue(true),
     };
     mockOpService = {
-        createOperation: vi.fn().mockResolvedValue({ operationId: 'op-1', state: 'requested' }),
-        transitionState: vi.fn().mockResolvedValue({}),
+      createOperation: vi.fn().mockResolvedValue({ operationId: 'op-123' }),
+      transitionState: vi.fn().mockResolvedValue(undefined),
+      acquireLock: vi.fn().mockResolvedValue(true),
+      releaseLock: vi.fn().mockResolvedValue(undefined),
     };
-    mockRouting = {
-        resolveRoute: vi.fn().mockResolvedValue({ version: 1 }),
-        createSnapshot: vi.fn().mockResolvedValue({}),
+    mockRoutingPlane = {
+      resolveRoute: vi.fn().mockResolvedValue({ version: 1 }),
+      createSnapshot: vi.fn().mockResolvedValue({}),
     };
+
     service = new MigrationOrchestratorService(
-        mockEm as any,
-        mockGuard as any,
-        mockOpService as any,
-        mockRouting as any
+      mockEm as any,
+      mockGuard as any,
+      mockOpService as any,
+      mockRoutingPlane as any
     );
   });
 
@@ -59,25 +50,28 @@ describe('Migration Pipeline Operational Validation', () => {
     await service.migrateTenantWithOperation('t1', 'key-1');
 
     expect(mockGuard.preMigrationCheck).toHaveBeenCalled();
-    expect(mockEm.getMigrator).toHaveBeenCalled();
+    expect(mockOpService.transitionState).toHaveBeenCalledWith('op-123', OperationState.DRY_RUN, expect.any(Object));
+    expect(mockEm.getMigrator().up).toHaveBeenCalledWith({ schema: 'tenant_t1' });
+    expect(mockOpService.transitionState).toHaveBeenCalledWith('op-123', OperationState.RECONCILING, expect.objectContaining({ reconciled: true }));
   });
 
   it('SHOULD execute Schema -> DB migration via dedicated connection', async () => {
     mockEm.findOneOrFail.mockResolvedValue({
         id: 't-enterprise',
         mode: TenantMode.DATABASE,
-        connectionString: 'postgres://dedicated'
+        connectionString: 'postgresql://db:5432/tenant'
     });
 
     await service.migrateTenantWithOperation('t-enterprise', 'key-2');
 
-    expect(mockEm.fork).toHaveBeenCalledWith({ connectionString: 'postgres://dedicated' });
+    expect(mockEm.fork).toHaveBeenCalledWith({ connectionString: 'postgresql://db:5432/tenant' });
+    expect(mockEm.getMigrator().up).toHaveBeenCalled();
   });
 
   it('SHOULD fail if pre-migration check fails', async () => {
     mockGuard.preMigrationCheck.mockResolvedValue(false);
-    mockEm.findOneOrFail.mockResolvedValue({ id: 't-fail', mode: TenantMode.SHARED });
 
     await expect(service.migrateTenantWithOperation('t-fail', 'key-3')).rejects.toThrow(/safety checks failed/);
+    expect(mockOpService.transitionState).toHaveBeenCalledWith('op-123', OperationState.ROLLBACK, expect.any(Object));
   });
 });

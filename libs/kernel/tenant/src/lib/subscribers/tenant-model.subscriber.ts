@@ -2,6 +2,7 @@ import { EventSubscriber, EventArgs } from '@mikro-orm/core';
 import { Injectable, Logger } from '@nestjs/common';
 import { getTenantContext } from '@virteex/kernel-auth';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
+import { TenantStatus } from '../interfaces/tenant-config.interface';
 
 @Injectable()
 export class TenantModelSubscriber implements EventSubscriber {
@@ -42,8 +43,8 @@ export class TenantModelSubscriber implements EventSubscriber {
         return;
     }
 
-    // 4. Persistence-level "isFrozen" Enforcement (Second layer of defense)
-    await this.checkWriteFreeze(args, tenantId, operation);
+    // 4. Persistence-level "isFrozen" and Status Enforcement (Second layer of defense)
+    await this.checkWriteAvailability(args, tenantId, operation);
 
     // 5. Enforce tenant isolation (prevent tenant-escape on writes)
     if (operation === 'create') {
@@ -59,13 +60,23 @@ export class TenantModelSubscriber implements EventSubscriber {
     return controlPlaneEntities.includes(args.entity.constructor.name);
   }
 
-  private async checkWriteFreeze(args: EventArgs<any>, tenantId: string, operation: string): Promise<void> {
+  private async checkWriteAvailability(args: EventArgs<any>, tenantId: string, operation: string): Promise<void> {
     // We query the control record directly to ensure we have the latest truth
     // Use the EM from EventArgs to participate in the same transaction if applicable
     // We use findOne with filters: false to ensure we can read the control record regardless of RLS
     const control = await args.em.findOne(TenantControlRecord, { tenantId }, { filters: false });
 
-    if (control?.isFrozen) {
+    if (!control) {
+        this.logger.error(`[SECURITY] Control record missing for tenant ${tenantId}`);
+        throw new Error(`Tenant ${tenantId} control configuration is missing. Operations blocked.`);
+    }
+
+    if (control.status !== TenantStatus.ACTIVE && control.status !== TenantStatus.DEGRADED) {
+        this.logger.error(`[SECURITY] Write blocked for tenant ${tenantId} in status ${control.status}`);
+        throw new Error(`Tenant ${tenantId} is ${control.status.toLowerCase()}. Writes are disabled.`);
+    }
+
+    if (control.isFrozen) {
         this.logger.error(`[SECURITY] Write persistence blocked for frozen tenant ${tenantId} during ${operation}`);
         this.logger.warn(`AUDIT: PERSISTENCE Region/Maintenance Freeze Violation: Tenant=${tenantId}, Op=${operation}, Entity=${args.entity.constructor.name}`);
         throw new Error(`Tenant ${tenantId} is currently frozen. Persistent writes are disabled.`);

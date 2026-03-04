@@ -5,7 +5,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { getTenantContext } from '@virteex/kernel-auth';
 import { TenantService } from '../tenant.service';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
-import { TenantMode } from '../interfaces/tenant-config.interface';
+import { TenantMode, TenantStatus } from '../interfaces/tenant-config.interface';
 import { Counter, Histogram } from '@opentelemetry/api';
 import { metrics } from '@opentelemetry/api';
 
@@ -51,9 +51,15 @@ export class TenantRlsInterceptor implements NestInterceptor {
     // Centralized Data Sovereignty & Regional Residency Enforcement
     await this.enforceRegionalResidency(tenantId, config);
 
+    // Tenant Status Enforcement
+    const control = await this.em.findOne(TenantControlRecord, { tenantId });
+    if (control && control.status !== TenantStatus.ACTIVE && control.status !== TenantStatus.DEGRADED) {
+        this.logger.warn(`Access attempt for tenant ${tenantId} in non-active state: ${control.status}`);
+        throw new ForbiddenException(`Tenant is ${control.status.toLowerCase()}. Access denied.`);
+    }
+
     // Write-Freezing Enforcement (Fail-closed)
     if (this.isWriteOperation(context)) {
-        const control = await this.em.findOne(TenantControlRecord, { tenantId });
         if (control?.isFrozen) {
             this.logger.error(`[SECURITY] Write attempt blocked for frozen tenant ${tenantId}`);
             throw new ForbiddenException(`Tenant is currently frozen due to maintenance or failover. Writes are disabled.`);
@@ -130,23 +136,30 @@ export class TenantRlsInterceptor implements NestInterceptor {
   }
 
   private async enforceRegionalResidency(tenantId: string, config: any): Promise<void> {
-    const currentRegion = process.env['AWS_REGION'] || 'us-east-1'; // fallback only for dev
+    const currentRegion = process.env['AWS_REGION'];
+
+    if (!currentRegion && process.env['NODE_ENV'] === 'production') {
+        this.logger.error('[SECURITY CRITICAL] AWS_REGION is not defined in production');
+        throw new Error('Regional context missing');
+    }
+
+    const effectiveCurrentRegion = currentRegion || 'us-east-1';
     const allowedRegion = config.settings?.['allowedRegion'] || config.primaryRegion;
 
     if (!allowedRegion) {
-        this.logger.warn(`No residency policy defined for tenant ${tenantId}. Defaulting to fail-closed.`);
+        this.logger.error(`[SECURITY] No residency policy defined for tenant ${tenantId}. Fail-closed.`);
         throw new ForbiddenException('Data residency policy not established for this tenant.');
     }
 
-    if (allowedRegion !== currentRegion) {
+    if (allowedRegion !== effectiveCurrentRegion) {
         // Critical Violation: Fail-closed
-        this.logger.error(`[SECURITY] Data Sovereignty Violation: Tenant ${tenantId} is restricted to ${allowedRegion} but request reached ${currentRegion}`);
+        this.logger.error(`[SECURITY] Data Sovereignty Violation: Tenant ${tenantId} is restricted to ${allowedRegion} but request reached ${effectiveCurrentRegion}`);
         this.errorCounter.add(1, { tenantId, type: 'sovereignty_violation' });
 
         // Audit log entry for compliance
-        this.logger.warn(`AUDIT: Region Bypass Attempted: Tenant=${tenantId}, Expected=${allowedRegion}, Actual=${currentRegion}`);
+        this.logger.warn(`AUDIT: Region Bypass Attempted: Tenant=${tenantId}, Expected=${allowedRegion}, Actual=${effectiveCurrentRegion}`);
 
-        throw new ForbiddenException(`Data residency policy violation. Access denied for region: ${currentRegion}`);
+        throw new ForbiddenException(`Data residency policy violation. Access denied for region: ${effectiveCurrentRegion}`);
     }
   }
 }

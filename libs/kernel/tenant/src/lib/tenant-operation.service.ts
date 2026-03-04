@@ -1,13 +1,33 @@
-import { Injectable, Logger, ConflictException } from '@nestjs/common';
+import { Injectable, Logger, ConflictException, OnModuleInit } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { TenantOperation } from './entities/tenant-operation.entity';
 import { OperationState, OperationType } from './interfaces/tenant-config.interface';
+import Redis from 'ioredis';
 
 @Injectable()
-export class TenantOperationService {
+export class TenantOperationService implements OnModuleInit {
   private readonly logger = new Logger(TenantOperationService.name);
+  private redis: Redis | null = null;
 
   constructor(private readonly em: EntityManager) {}
+
+  onModuleInit() {
+    if (process.env['REDIS_URL']) {
+        this.redis = new Redis(process.env['REDIS_URL']);
+    }
+  }
+
+  async acquireLock(tenantId: string, ttl = 30000): Promise<boolean> {
+      if (!this.redis) return true; // Fallback to DB-only or no-lock if redis not available
+      const key = `lock:tenant:ops:${tenantId}`;
+      const result = await this.redis.set(key, 'locked', 'PX', ttl, 'NX');
+      return result === 'OK';
+  }
+
+  async releaseLock(tenantId: string): Promise<void> {
+      if (!this.redis) return;
+      await this.redis.del(`lock:tenant:ops:${tenantId}`);
+  }
 
   async createOperation(
     tenantId: string,
@@ -54,7 +74,27 @@ export class TenantOperationService {
 
     await this.em.flush();
     this.logger.log(`Operation ${operationId} transitioned to ${newState}`);
+
+    // Level 5: Append to Immutable Operation Journal
+    await this.appendToJournal(op, newState, result);
+
     return op;
+  }
+
+  private async appendToJournal(op: TenantOperation, state: OperationState, payload?: any): Promise<void> {
+    try {
+        // Level 5: Transactional Journaling to Immutable Audit Trail
+        this.logger.log(`[JOURNAL] Tenant=${op.tenantId}, Op=${op.type}, State=${state}, Key=${op.idempotencyKey}`);
+
+        await this.em.getConnection().execute(
+            `INSERT INTO tenant_operation_journal (tenant_id, operation_id, type, state, payload, created_at)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [op.tenantId, op.operationId, op.type, state, JSON.stringify(payload || {}), new Date()]
+        );
+    } catch (err) {
+        // Do not fail the operation if journaling fails, but log a CRITICAL error
+        this.logger.error(`[CRITICAL] Failed to append to immutable journal: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   private isInvalidTransition(current: OperationState, next: OperationState): boolean {

@@ -24,10 +24,10 @@ describe('Critical ERP cross-domain flows', () => {
       items: [{ description: uniqueRef('item'), quantity: 1, unitPrice: 100, productId: 'prod-1' }]
     };
 
-    const createRes = await axios.post('/api/billing/invoices', invoicePayload, { headers: { 'x-tenant-id': tenantId } });
+    const createRes = await axios.post('/api/billing/invoices', invoicePayload, { headers: { 'x-virteex-tenant-id': tenantId } });
     expect(createRes.status).toBeLessThan(300);
 
-    const usageRes = await axios.get('/api/billing/usage', { headers: { 'x-tenant-id': tenantId } });
+    const usageRes = await axios.get('/api/billing/usage', { headers: { 'x-virteex-tenant-id': tenantId } });
     expect(usageRes.status).toBe(200);
     expect(Array.isArray(usageRes.data)).toBe(true);
   });
@@ -40,7 +40,7 @@ describe('Critical ERP cross-domain flows', () => {
       email: 'supplier-e2e@example.com'
     };
 
-    const supplierRes = await axios.post('/api/purchasing/suppliers', supplier, { headers: { 'x-tenant-id': tenantId } });
+    const supplierRes = await axios.post('/api/purchasing/suppliers', supplier, { headers: { 'x-virteex-tenant-id': tenantId } });
     expect(supplierRes.status).toBeLessThan(300);
   });
 
@@ -57,11 +57,11 @@ describe('Critical ERP cross-domain flows', () => {
           { accountCode: '401.01', debit: 0, credit: 100 }
         ]
       },
-      { headers: { 'x-tenant-id': tenantId } }
+      { headers: { 'x-virteex-tenant-id': tenantId } }
     );
     expect(entryRes.status).toBeLessThan(300);
 
-    const balanceRes = await axios.get('/api/accounting/trial-balance', { headers: { 'x-tenant-id': tenantId } });
+    const balanceRes = await axios.get('/api/accounting/trial-balance', { headers: { 'x-virteex-tenant-id': tenantId } });
     expect(balanceRes.status).toBe(200);
   });
 
@@ -71,14 +71,14 @@ describe('Critical ERP cross-domain flows', () => {
     const stampRes = await axios.post(
       '/api/fiscal/stamp',
       { invoiceId: uniqueRef('invoice') },
-      { headers: { 'x-tenant-id': tenantId } }
+      { headers: { 'x-virteex-tenant-id': tenantId } }
     );
     expect(stampRes.status).toBeLessThan(300);
 
     const cancelRes = await axios.post(
       '/api/fiscal/cancel',
       { uuid: stampRes.data?.uuid ?? uniqueRef('uuid'), rfc: 'XAXX010101000' },
-      { headers: { 'x-tenant-id': tenantId } }
+      { headers: { 'x-virteex-tenant-id': tenantId } }
     );
     expect(cancelRes.status).toBeLessThan(300);
   });

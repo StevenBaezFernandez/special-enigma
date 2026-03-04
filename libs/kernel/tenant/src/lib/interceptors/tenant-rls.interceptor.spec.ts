@@ -37,6 +37,7 @@ describe('TenantRlsInterceptor', () => {
             transactional: vi.fn(),
             getConnection: vi.fn().mockReturnValue({ execute: vi.fn() }),
             setFilterParams: vi.fn(),
+            findOne: vi.fn().mockResolvedValue({ status: 'ACTIVE', isFrozen: false }),
           },
         },
         {
@@ -52,7 +53,6 @@ describe('TenantRlsInterceptor', () => {
     em = module.get<EntityManager>(EntityManager);
     tenantService = module.get<TenantService>(TenantService);
 
-    // Explicitly set the services on the interceptor for the test environment
     (interceptor as any).tenantService = tenantService;
     (interceptor as any).em = em;
   });
@@ -63,7 +63,12 @@ describe('TenantRlsInterceptor', () => {
 
   it('should use transaction for SHARED mode', async () => {
     (AuthModule.getTenantContext as any).mockReturnValue({ tenantId: 't1' });
-    (tenantService.getTenantConfig as any).mockResolvedValue({ mode: 'SHARED', tenantId: 't1' });
+    (tenantService.getTenantConfig as any).mockResolvedValue({
+        mode: 'SHARED',
+        tenantId: 't1',
+        primaryRegion: 'us-east-1'
+    });
+    process.env['AWS_REGION'] = 'us-east-1';
 
     const next = { handle: vi.fn().mockReturnValue(of('result')) };
     const context = {
