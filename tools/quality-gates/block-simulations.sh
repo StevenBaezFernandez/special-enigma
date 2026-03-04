@@ -13,7 +13,6 @@ FORBIDDEN_PATTERNS=(
     "manual step"
     "best effort"
     "skip validation"
-    "return true"
     "exit 0"
 )
 

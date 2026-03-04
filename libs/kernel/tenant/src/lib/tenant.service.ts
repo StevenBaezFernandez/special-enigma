@@ -66,20 +66,26 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
 
   async activateTenant(tenantId: string): Promise<void> {
     await this.updateTenantStatus(tenantId, TenantStatus.ACTIVE);
+    this.logger.log(`[LIFECYCLE] Tenant ${tenantId} ACTIVATED.`);
   }
 
   async suspendTenant(tenantId: string): Promise<void> {
     await this.updateTenantStatus(tenantId, TenantStatus.SUSPENDED);
+    this.logger.warn(`[LIFECYCLE] Tenant ${tenantId} SUSPENDED.`);
   }
 
   async terminateTenant(tenantId: string): Promise<void> {
+    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
+    (control as any).isFrozen = true;
     await this.updateTenantStatus(tenantId, TenantStatus.ARCHIVED);
-    this.logger.warn(`Tenant ${tenantId} marked for termination and archived.`);
+    this.logger.warn(`[LIFECYCLE] Tenant ${tenantId} marked for termination and ARCHIVED. Writes frozen.`);
   }
 
   async legalHoldTenant(tenantId: string): Promise<void> {
+    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
+    (control as any).isFrozen = true;
     await this.updateTenantStatus(tenantId, TenantStatus.LEGAL_HOLD);
-    this.logger.warn(`Tenant ${tenantId} placed on LEGAL HOLD.`);
+    this.logger.warn(`[LIFECYCLE] Tenant ${tenantId} placed on LEGAL HOLD. Writes frozen.`);
   }
 
   async purgeTenant(tenantId: string): Promise<void> {

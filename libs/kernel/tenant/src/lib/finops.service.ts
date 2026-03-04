@@ -69,8 +69,18 @@ export class FinOpsService {
           tenantId,
           operation,
           success: success.toString(),
-          tier
+          tier,
+          region: process.env['AWS_REGION'] || 'unknown'
       });
+
+      // Level 5: Direct SLI calculation and error budget burn rate
+      if (!success) {
+          this.telemetry.recordBusinessMetric('tenant_error_budget_burn', 1, {
+              tenantId,
+              operation,
+              severity: 'high'
+          });
+      }
   }
 
   private async recordCostInAnalyticalStore(tenantId: string, resource: string, usage: number, cost: number, region: string, mode: string): Promise<void> {
@@ -106,9 +116,15 @@ export class FinOpsService {
       this.logger.log(`Executing global cost reconciliation for ${month}`);
 
       try {
-          // 1. Fetch AWS Cost & Usage Report (CUR) from S3
-          // In real production, this uses AWS SDK
-          // const cur = await this.s3.getObject({ Bucket: 'virteex-cur', Key: `reconciliation/${month}.csv` });
+          // 1. Load cloud truth from ingestion table (populated by AWS CUR processor)
+          const cloudTruth = await this.em.getConnection().execute(`
+              SELECT tenant_id, SUM(amount_usd) as cloud_cost
+              FROM cloud_billing_reports
+              WHERE report_month = ?
+              GROUP BY tenant_id
+          `, [month]);
+
+          const cloudTruthMap = new Map(cloudTruth.map((r: any) => [r.tenant_id, parseFloat(r.cloud_cost)]));
 
           // 2. Load observed costs from analytical journal
           const observations = await this.em.getConnection().execute(`
@@ -120,21 +136,30 @@ export class FinOpsService {
 
           // 3. Perform strong data-diff between Cloud Truth and Local Attribution
           let globalVariance = 0;
+          let count = 0;
+
           for (const obs of observations) {
-              const cloudCost = obs.total_observed * 1.02; // Simulated cloud truth (2% variance)
+              const cloudCost = cloudTruthMap.get(obs.tenant_id);
+              if (cloudCost === undefined) {
+                  this.logger.warn(`[FINOPS] No cloud truth found for tenant ${obs.tenant_id} in ${month}`);
+                  continue;
+              }
+
               const variance = Math.abs(obs.total_observed - cloudCost) / cloudCost;
 
               if (variance > 0.05) {
-                  this.logger.error(`[FINOPS CRITICAL] Reconciliation variance > 5% for tenant ${obs.tenant_id} in ${month}`);
+                  this.logger.error(`[FINOPS CRITICAL] Reconciliation variance > 5% for tenant ${obs.tenant_id} in ${month}: Observed=${obs.total_observed}, Cloud=${cloudCost}`);
               }
               globalVariance += variance;
+              count++;
           }
 
           const result = {
               status: 'reconciled',
               month,
-              globalVariance: globalVariance / (observations.length || 1),
-              reconciledAt: new Date()
+              globalVariance: globalVariance / (count || 1),
+              reconciledAt: new Date(),
+              tenantsProcessed: count
           };
 
           this.logger.log(`[FINOPS] Reconciliation COMPLETE for ${month}. Global Variance: ${(result.globalVariance * 100).toFixed(2)}%`);

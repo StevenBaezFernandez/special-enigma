@@ -3,6 +3,7 @@ import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { Observable, from, lastValueFrom } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { getTenantContext } from '@virteex/kernel-auth';
+import { createHmac, timingSafeEqual } from 'crypto';
 import { TenantService } from '../tenant.service';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
 import { TenantMode, TenantStatus } from '../interfaces/tenant-config.interface';
@@ -41,6 +42,14 @@ export class TenantRlsInterceptor implements NestInterceptor {
     if (!tenantContext) {
       this.logger.warn('Access attempt without tenant context');
       throw new ForbiddenException('Tenant context is required for all operations');
+    }
+
+    // Level 5: Tamper resistance check for context signature
+    if (tenantContext.signature) {
+        this.validateContextSignature(tenantContext);
+    } else if (process.env['NODE_ENV'] === 'production') {
+        this.logger.error(`[SECURITY CRITICAL] Unsigned tenant context for ${tenantContext.tenantId} in production!`);
+        throw new ForbiddenException('Tenant context integrity cannot be verified');
     }
 
     const tenantId = tenantContext.tenantId;
@@ -127,6 +136,26 @@ export class TenantRlsInterceptor implements NestInterceptor {
   private recordError(tenantId: string, error: any) {
     this.errorCounter.add(1, { tenantId, status: error.status || 500 });
     this.logger.error(`Tenant ${tenantId} operation failed: ${error.message}`);
+  }
+
+  private validateContextSignature(context: any): void {
+      const secret = process.env['TENANT_CONTEXT_SECRET'];
+      if (!secret && process.env['NODE_ENV'] === 'production') {
+          this.logger.error('[SECURITY CRITICAL] TENANT_CONTEXT_SECRET missing in production');
+          throw new ForbiddenException('Secure context validation unavailable');
+      }
+
+      const effectiveSecret = secret || 'dev-secret-change-in-prod';
+      const payload = `${context.tenantId}:${context.region}:${context.mode}`;
+      const expected = createHmac('sha256', effectiveSecret).update(payload).digest('hex');
+
+      const signatureBuffer = Buffer.from(context.signature);
+      const expectedBuffer = Buffer.from(expected);
+
+      if (signatureBuffer.length !== expectedBuffer.length || !timingSafeEqual(signatureBuffer, expectedBuffer)) {
+          this.logger.error(`[SECURITY] Tampered tenant context detected for tenant ${context.tenantId}`);
+          throw new ForbiddenException('Tenant context integrity violation');
+      }
   }
 
   private isWriteOperation(context: ExecutionContext): boolean {

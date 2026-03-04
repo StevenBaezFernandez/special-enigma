@@ -106,19 +106,23 @@ export class FailoverService {
   private async validateRegionalHealth(region: string): Promise<void> {
       this.logger.log(`Executing independent health probe for region: ${region}`);
 
-      // Level 5: Independent probe using external service or regional health endpoint
+      // Level 5: Independent probe using regional health endpoint
       // Avoids dependency on the same DB connection as the primary region
       try {
           const healthEndpoint = `https://health.${region}.virteex.erp/v1/health`;
-          // In real infra, this would be a real axios call to a regional load balancer
-          // const response = await axios.get(healthEndpoint, { timeout: 2000 });
-          // if (response.status !== 200) throw new Error('Regional health check failed');
 
-          // Simulated independent probe for the purpose of this environment
+          // Real axios call to regional load balancer health check
+          const response = await axios.get(healthEndpoint, { timeout: 5000 });
+          if (response.status !== 200) {
+              throw new Error(`Regional health check failed with status: ${response.status}`);
+          }
+
+          // Verify regional data-plane availability independently
           const dbCheck = await this.em.fork().getConnection().execute('SELECT 1');
           if (!dbCheck) throw new Error(`Regional data-plane in ${region} is unresponsive.`);
 
-      } catch (err) {
+      } catch (err: any) {
+          this.logger.error(`[DR] Independent probe for ${region} FAILED: ${err.message}`);
           throw new Error(`Target region ${region} is unhealthy or unreachable.`);
       }
   }

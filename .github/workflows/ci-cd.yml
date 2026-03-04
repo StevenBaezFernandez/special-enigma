@@ -75,6 +75,10 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
+      - name: Enforcement: Block Simulations
+        run: ./tools/quality-gates/block-simulations.sh
+      - name: Enforcement: Verify RLS Real Data Isolation
+        run: node ./tools/quality-gates/check-rls.js
       - run: npm run readiness:commercial
       - run: npm run quality:docs
       - run: npm run quality:plugin-isolation

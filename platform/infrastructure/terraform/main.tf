@@ -134,6 +134,23 @@ resource "aws_vpc_peering_connection_accepter" "secondary" {
   auto_accept               = true
 }
 
+# Cross-Region DNS & Routing (Level 5)
+resource "aws_route53_zone" "virteex" {
+  name = "virteex.erp"
+}
+
+resource "aws_route53_record" "primary" {
+  zone_id = aws_route53_zone.virteex.zone_id
+  name    = "primary.virteex.erp"
+  type    = "A"
+
+  alias {
+    name                   = aws_globalaccelerator_accelerator.virteex.dns_name
+    zone_id                = aws_globalaccelerator_accelerator.virteex.hosted_zone_id
+    evaluate_target_health = true
+  }
+}
+
 # Global Traffic Plane (Level 5)
 resource "aws_globalaccelerator_accelerator" "virteex" {
   name            = "virteex-global-traffic-plane"

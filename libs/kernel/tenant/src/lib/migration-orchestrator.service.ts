@@ -145,6 +145,9 @@ export class MigrationOrchestratorService {
           if (pre[table].checksum !== post[table].checksum) {
               violations.push(`Checksum violation in ${table}: data content has changed unexpectedly.`);
           }
+          if (pre[table].structuralHash !== post[table].structuralHash) {
+              violations.push(`Structural integrity violation in ${table}: Schema or meta-data mismatch.`);
+          }
       }
       return violations;
   }
@@ -164,21 +167,28 @@ export class MigrationOrchestratorService {
 
       for (const table of tables) {
           const tableName = schema ? `"${schema}"."${table}"` : `"${table}"`;
+          const tableOnly = schema ? table : tableName.replace(/"/g, '');
+
           try {
-              // Level 5: Industrial structural hash using MD5 and aggregated content
+              // Level 5: Industrial structural hash and content checksum
               const result = await qb.execute(`
                   SELECT
                     COUNT(*) as count,
-                    COALESCE(md5(string_agg(id::text || updated_at::text, ',' ORDER BY id)), '0') as checksum
+                    COALESCE(md5(string_agg(id::text || updated_at::text, ',' ORDER BY id)), '0') as checksum,
+                    (SELECT md5(string_agg(column_name || data_type, ',' ORDER BY ordinal_position))
+                     FROM information_schema.columns
+                     WHERE table_name = ? AND table_schema = ?) as structural_hash
                   FROM ${tableName}
-              `);
+              `, [tableOnly, schema || 'public']);
+
               stats[table] = {
                   count: parseInt(result[0]?.count || '0'),
-                  checksum: result[0]?.checksum || '0'
+                  checksum: result[0]?.checksum || '0',
+                  structuralHash: result[0]?.structural_hash || '0'
               };
           } catch (e) {
               this.logger.warn(`Could not get strong stats for ${tableName}: ${e instanceof Error ? e.message : String(e)}`);
-              stats[table] = { count: 0, checksum: '0' };
+              stats[table] = { count: 0, checksum: '0', structuralHash: '0' };
           }
       }
       return stats;
