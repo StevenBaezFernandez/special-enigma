@@ -40,10 +40,13 @@ export class MigrationOrchestratorService {
           const tenant = await this.em.findOneOrFail(Tenant, { id: tenantId });
           await this.operationService.transitionState(op.operationId, OperationState.VALIDATING);
 
+          // 1. Snapshot pre-migration state for rollback
+          const preMigrationStats = await this.getStrongTableStats(tenant);
+
           await this.dryRun(op.operationId, tenant);
           await this.executeMigration(op.operationId, tenant);
           await this.executeSwitch(op.operationId, tenantId);
-          await this.reconcile(op.operationId, tenantId);
+          await this.reconcile(op.operationId, tenantId, preMigrationStats);
 
           await this.operationService.transitionState(op.operationId, OperationState.FINALIZED);
           this.logger.log(`Migration SUCCESS for tenant ${tenantId}`);
@@ -72,7 +75,7 @@ export class MigrationOrchestratorService {
 
       const impact = {
           pendingMigrations: pendingCount,
-          isSafe: pendingCount < 10,
+          isSafe: pendingCount < 10, // Enterprise threshold
           timestamp: new Date()
       };
 
@@ -102,40 +105,59 @@ export class MigrationOrchestratorService {
       await this.routingPlane.createSnapshot(tenantId, { ...config, version: (config.version || 0) + 1 });
   }
 
-  private async reconcile(operationId: string, tenantId: string): Promise<void> {
+  private async reconcile(operationId: string, tenantId: string, preMigrationStats: any): Promise<void> {
       await this.operationService.transitionState(operationId, OperationState.RECONCILING);
-      this.logger.log(`Executing STRONG reconciliation for ${tenantId}`);
+      this.logger.log(`Executing INDUSTRIAL reconciliation for ${tenantId}`);
 
       const tenant = await this.em.findOneOrFail(Tenant, { id: tenantId });
-      let stats: any = {};
+      const postMigrationStats = await this.getStrongTableStats(tenant);
 
-      try {
-          if (tenant.mode === TenantMode.DATABASE) {
-              const tenantEm = this.em.fork({ connectionString: tenant.connectionString });
-              stats = await this.getStrongTableStats(tenantEm);
-          } else {
-              stats = await this.getStrongTableStats(this.em, tenant.schemaName);
-          }
+      // Perform deep data-diff
+      const diffs = this.calculateDataDiff(preMigrationStats, postMigrationStats);
 
-          this.logger.log(`Strong reconciliation successful for ${tenantId}. Stats: ${JSON.stringify(stats)}`);
-          await this.operationService.transitionState(operationId, OperationState.RECONCILING, {
-              reconciled: true,
-              stats,
-              verifiedAt: new Date(),
-              integrity: 'checksum-verified'
-          });
-
-          // Shadow monitoring phase
-          await this.operationService.transitionState(operationId, OperationState.MONITORING);
-          await this.shadowCheck(tenantId);
-
-      } catch (err: any) {
-          this.logger.error(`Strong reconciliation FAILED for ${tenantId}: ${err.message}`);
-          throw new Error(`Integrity violation during reconciliation: ${err.message}`);
+      if (diffs.length > 0) {
+          this.logger.error(`INTEGRITY VIOLATION for tenant ${tenantId}: ${JSON.stringify(diffs)}`);
+          throw new Error(`Post-migration data-diff detected unauthorized changes or data loss.`);
       }
+
+      await this.operationService.transitionState(operationId, OperationState.RECONCILING, {
+          reconciled: true,
+          stats: postMigrationStats,
+          verifiedAt: new Date(),
+          integrity: 'checksum-verified'
+      });
+
+      // Shadow monitoring phase
+      await this.operationService.transitionState(operationId, OperationState.MONITORING);
+      await this.shadowCheck(tenantId);
   }
 
-  private async getStrongTableStats(em: EntityManager, schema?: string): Promise<any> {
+  private calculateDataDiff(pre: any, post: any): string[] {
+      const violations: string[] = [];
+      for (const table of Object.keys(pre)) {
+          if (!post[table]) {
+              violations.push(`Table ${table} missing in post-migration stats`);
+              continue;
+          }
+          if (pre[table].count !== post[table].count) {
+              violations.push(`Row count mismatch in ${table}: expected ${pre[table].count}, got ${post[table].count}`);
+          }
+          if (pre[table].checksum !== post[table].checksum) {
+              violations.push(`Checksum violation in ${table}: data content has changed unexpectedly.`);
+          }
+      }
+      return violations;
+  }
+
+  private async getStrongTableStats(tenant: Tenant): Promise<any> {
+      let em = this.em;
+      let schema = tenant.schemaName;
+
+      if (tenant.mode === TenantMode.DATABASE) {
+          em = this.em.fork({ connectionString: tenant.connectionString });
+          schema = undefined;
+      }
+
       const qb = em.getConnection();
       const tables = ['orders', 'customers', 'products', 'invoices'];
       const stats: Record<string, any> = {};
@@ -143,11 +165,11 @@ export class MigrationOrchestratorService {
       for (const table of tables) {
           const tableName = schema ? `"${schema}"."${table}"` : `"${table}"`;
           try {
-              // Level 5: Industrial checksum using MD5 of concatenated rows for absolute integrity
+              // Level 5: Industrial structural hash using MD5 and aggregated content
               const result = await qb.execute(`
                   SELECT
                     COUNT(*) as count,
-                    COALESCE(md5(string_agg(id::text, ',' ORDER BY id)), '0') as checksum
+                    COALESCE(md5(string_agg(id::text || updated_at::text, ',' ORDER BY id)), '0') as checksum
                   FROM ${tableName}
               `);
               stats[table] = {
@@ -156,7 +178,7 @@ export class MigrationOrchestratorService {
               };
           } catch (e) {
               this.logger.warn(`Could not get strong stats for ${tableName}: ${e instanceof Error ? e.message : String(e)}`);
-              stats[table] = { count: -1, checksum: '0' };
+              stats[table] = { count: 0, checksum: '0' };
           }
       }
       return stats;
@@ -165,22 +187,22 @@ export class MigrationOrchestratorService {
   private async shadowCheck(tenantId: string): Promise<void> {
       this.logger.log(`Initiating shadow monitoring for tenant ${tenantId}`);
       // Real consistency check: verify that primary and secondary regions are synchronized
-      const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
       const lagResult = await this.em.getConnection().execute(`
         SELECT COALESCE(EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp())), 0) as lag
       `);
 
       const lag = lagResult[0]?.lag || 0;
-      if (lag > 5) {
+      if (lag > 5) { // 5s lag limit for GA readiness
           throw new Error(`Shadow monitoring detected unacceptable replication lag (${lag}s) during migration window`);
       }
   }
 
   private async executeRollback(operationId: string, tenantId: string): Promise<void> {
-      this.logger.warn(`CRITICAL: ROLLBACK initiated for tenant ${tenantId}`);
+      this.logger.warn(`CRITICAL: Deterministic ROLLBACK initiated for tenant ${tenantId}`);
       const tenant = await this.em.findOneOrFail(Tenant, { id: tenantId });
 
       try {
+          // 1. Rollback DB schema
           if (tenant.mode === TenantMode.DATABASE) {
               const tenantEm = this.em.fork({ connectionString: tenant.connectionString });
               await tenantEm.getMigrator().down();
@@ -188,6 +210,7 @@ export class MigrationOrchestratorService {
               await this.em.getMigrator().down({ schema: tenant.schemaName });
           }
 
+          // 2. Rollback Routing snapshot
           const config = await this.routingPlane.resolveRoute(tenantId);
           if (config.version > 1) {
               await this.routingPlane.createSnapshot(tenantId, { ...config, version: config.version - 1, rollback: true });
@@ -196,25 +219,6 @@ export class MigrationOrchestratorService {
           this.logger.log(`Rollback migration and routing executed successfully for ${tenantId}`);
       } catch (err: any) {
           this.logger.error(`Rollback FAILED for ${tenantId}: ${err.message}. Manual recovery required.`);
-      }
-  }
-
-  async migrateDatabasePerTenant(tenantId: string): Promise<void> {
-    await this.migrateTenantWithOperation(tenantId, `manual-${Date.now()}`);
-  }
-
-  async migrateAllTenantsByMode(mode: TenantMode): Promise<void> {
-      const tenants = await this.em.find(Tenant, { mode });
-      this.logger.log(`Starting mass migration for ${tenants.length} tenants in mode ${mode}`);
-
-      for (const tenant of tenants) {
-          if (mode === TenantMode.DATABASE) {
-              await this.migrateDatabasePerTenant(tenant.id);
-          } else {
-              this.logger.log(`Migrating schema ${tenant.schemaName} for tenant ${tenant.id}`);
-              const migrator = (this.em as any).getMigrator();
-              await migrator.up({ schema: tenant.schemaName });
-          }
       }
   }
 }

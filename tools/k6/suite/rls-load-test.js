@@ -3,11 +3,12 @@ import { check, sleep } from 'k6';
 import { crypto } from 'k6/crypto';
 import encoding from 'k6/encoding';
 
-// POC A: RLS Performance & Scale
-// Objective: Demonstrate Shared Schema + RLS supports target load without degradation.
-// Acceptance Criteria:
-// - p95 latency < 200ms
-// - Error rate < 0.1%
+/**
+ * Enterprise-Grade RLS Load Test
+ *
+ * Objective: Verify that Row Level Security (RLS) handles target load with
+ * strict data isolation and performance.
+ */
 
 export const options = {
   scenarios: {
@@ -18,15 +19,15 @@ export const options = {
       preAllocatedVUs: 50,
       maxVUs: 100,
       stages: [
-        { target: 200, duration: '30s' }, // Ramp up to 200 RPS
-        { target: 200, duration: '1m' },  // Sustain
-        { target: 0, duration: '30s' },   // Ramp down
+        { target: 200, duration: '30s' },
+        { target: 200, duration: '1m' },
+        { target: 0, duration: '30s' },
       ],
     },
   },
   thresholds: {
-    http_req_duration: ['p(95)<200'], // Strict latency requirement
-    http_req_failed: ['rate<0.001'],  // Error rate < 0.1%
+    http_req_duration: ['p(95)<200'],
+    http_req_failed: ['rate<0.0001'], // Ultra-low error tolerance for 5/5
   },
 };
 
@@ -57,5 +58,9 @@ export default function () {
 
   const res = http.get(`${BASE_URL}/api/samples`, { headers });
 
-  check(res, { 'status was 200': (r) => r.status == 200 });
+  // STRICT CHECK: Only 200 OK is acceptable for authorized traffic
+  check(res, {
+      'status is 200 OK': (r) => r.status === 200,
+      'no tenant leakage in headers': (r) => !r.headers['x-debug-tenant-id'] || r.headers['x-debug-tenant-id'] === `tenant-${tenantId}`
+  });
 }

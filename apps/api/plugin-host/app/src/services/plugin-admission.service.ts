@@ -196,8 +196,8 @@ export class PluginAdmissionService {
             }
         };
 
-        const opaBin = path.resolve(process.cwd(), 'tools/opa');
-        const policyPath = path.resolve(process.cwd(), 'platform/policies/security/plugin_admission.rego');
+            const opaBin = path.join('.', 'tools/opa');
+            const policyPath = path.join('.', 'platform/policies/security/plugin_admission.rego');
         const inputPath = path.join(os.tmpdir(), `virteex-opa-input-${crypto.randomBytes(8).toString('hex')}.json`);
 
         try {

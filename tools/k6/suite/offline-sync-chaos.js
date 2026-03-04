@@ -1,11 +1,17 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
+/**
+ * Enterprise-Grade Offline Sync Chaos Test
+ *
+ * Objective: Verify data durability under network instability.
+ */
+
 export const options = {
   vus: 5,
   iterations: 30,
   thresholds: {
-    http_req_failed: ['rate<0.05'],
+    http_req_failed: ['rate<0.001'],
     http_req_duration: ['p(95)<2500'],
   },
 };
@@ -22,7 +28,7 @@ export default function () {
   );
 
   check(queueResponse, {
-    'queue endpoint accepts payload': (r) => [200, 201, 202, 404].includes(r.status),
+    'queue endpoint accepted': (r) => r.status === 201 || r.status === 202,
   });
 
   sleep(Math.random() * 0.6);
@@ -34,7 +40,7 @@ export default function () {
   );
 
   check(replayResponse, {
-    'replay endpoint responds': (r) => [200, 202, 404, 503].includes(r.status),
-    'no server crash': (r) => r.status !== 500,
+    'replay successful': (r) => r.status === 200 || r.status === 202,
+    'no internal server error': (r) => r.status < 500,
   });
 }

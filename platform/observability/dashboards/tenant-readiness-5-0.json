@@ -1,0 +1,47 @@
+{
+  "panels": [
+    {
+      "title": "Regional Failover RTO (Historical)",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "tenant_operation_slo_ms{operation=\"failover\", success=\"true\"}",
+          "legendFormat": "{{tenantId}} - {{region}}"
+        }
+      ],
+      "thresholds": [
+        { "value": 30000, "color": "red", "op": ">" }
+      ]
+    },
+    {
+      "title": "Tenant Isolation Violations (Adversarial)",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(security_events_total{event=~\"CROSS_TENANT_.*\"})",
+          "legendFormat": "Critical Violations"
+        }
+      ]
+    },
+    {
+        "title": "Provisioning Success Rate",
+        "type": "gauge",
+        "targets": [
+            {
+                "expr": "sum(rate(tenant_operation_slo_ms{operation=\"provision\", success=\"true\"}[1h])) / sum(rate(tenant_operation_slo_ms{operation=\"provision\"}[1h]))",
+                "legendFormat": "Global Success Rate"
+            }
+        ]
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "name": "DR Drills",
+        "datasource": "Prometheus",
+        "expr": "tenant_operation_slo_ms{operation=\"failover\"}",
+        "text": "Scheduled Drill Executed"
+      }
+    ]
+  }
+}

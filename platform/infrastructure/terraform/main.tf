@@ -16,6 +16,16 @@ variable "secondary_region" {
   default = "sa-east-1"
 }
 
+variable "primary_az" {
+    type = list(string)
+    default = ["us-east-1a", "us-east-1b"]
+}
+
+variable "secondary_az" {
+    type = list(string)
+    default = ["sa-east-1a", "sa-east-1b"]
+}
+
 variable "environment" {
   default = "staging"
 }
@@ -57,20 +67,24 @@ module "eks_secondary" {
 
 module "rds_primary" {
   providers = { aws = aws.primary }
-  source      = "./modules/rds"
-  environment = var.environment
-  vpc_id      = module.vpc_primary.vpc_id
-  subnet_ids  = module.vpc_primary.private_subnets
-  db_password = var.db_password
+  source             = "./modules/rds"
+  environment        = var.environment
+  region             = var.primary_region
+  vpc_id             = module.vpc_primary.vpc_id
+  subnet_ids         = module.vpc_primary.private_subnets
+  availability_zones = var.primary_az
+  db_password        = var.db_password
 }
 
 module "rds_secondary" {
   providers = { aws = aws.secondary }
-  source      = "./modules/rds"
-  environment = var.environment
-  vpc_id      = module.vpc_secondary.vpc_id
-  subnet_ids  = module.vpc_secondary.private_subnets
-  db_password = var.db_password
+  source             = "./modules/rds"
+  environment        = var.environment
+  region             = var.secondary_region
+  vpc_id             = module.vpc_secondary.vpc_id
+  subnet_ids         = module.vpc_secondary.private_subnets
+  availability_zones = var.secondary_az
+  db_password        = var.db_password
 }
 
 module "elasticache_primary" {

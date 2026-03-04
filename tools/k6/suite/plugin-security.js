@@ -3,12 +3,18 @@ import { check, sleep } from 'k6';
 import { crypto } from 'k6/crypto';
 import encoding from 'k6/encoding';
 
+/**
+ * Enterprise-Grade Plugin Security Audit
+ *
+ * Objective: Verify sandbox isolation and revocation efficiency.
+ */
+
 export const options = {
   vus: 1,
   duration: '10s',
   thresholds: {
-    'http_req_failed': ['rate<0.01'],
-    'http_req_duration': ['p(95)<2000'],
+    'http_req_failed': ['rate<0.0001'],
+    'http_req_duration': ['p(95)<1000'],
   },
 };
 
@@ -38,7 +44,7 @@ export default function () {
   }), { headers: { ...getHeaders(), 'x-plugin-host-token': __ENV.PLUGIN_HOST_API_TOKEN || '' } });
 
   check(register, {
-    'plugin register accepted or auth constrained': (r) => [200, 401, 403].includes(r.status),
+    'plugin register accepted': (r) => r.status === 201 || r.status === 200,
   });
 
   const revoke = http.post(`${BASE_URL}/plugins/k6-revocation-check/revoke`, JSON.stringify({ reason: 'security-test' }), {
@@ -46,7 +52,7 @@ export default function () {
   });
 
   check(revoke, {
-    'plugin revoke endpoint available': (r) => [200, 401, 403, 404].includes(r.status),
+    'plugin revoke successful': (r) => r.status === 200 || r.status === 204,
   });
 
   const executeRevoked = http.post(`${BASE_URL}/execute`, JSON.stringify({ pluginName: 'k6-revocation-check' }), {
@@ -54,7 +60,7 @@ export default function () {
   });
 
   check(executeRevoked, {
-    'revoked plugin blocked when endpoint is enabled': (r) => [403, 404, 401, 400, 200].includes(r.status),
+    'revoked plugin BLOCKED': (r) => r.status === 403 || r.status === 410,
   });
 
   const maliciousPayloads = [
@@ -80,8 +86,8 @@ export default function () {
     const res = http.post(`${BASE_URL}/api/plugins/execute`, JSON.stringify({ code: test.code }), { headers: getHeaders() });
 
     check(res, {
-      [`${test.name} handled gracefully`]: (r) => r.status === 200 || r.status === 400 || r.status === 422,
-      [`${test.name} no server error`]: (r) => r.status !== 500,
+      [`${test.name} BLOCKED/HANDLED`]: (r) => r.status === 400 || r.status === 422 || r.status === 403,
+      [`${test.name} NO CRASH`]: (r) => r.status !== 500,
     });
 
     sleep(1);

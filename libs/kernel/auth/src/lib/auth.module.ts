@@ -2,7 +2,7 @@ import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/c
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { TenantContextMiddleware } from './middleware/tenant-context.middleware';
+import { CanonicalTenantMiddleware } from './middleware/canonical-tenant.middleware';
 import { TenantGuard } from './guards/tenant.guard';
 import { TelemetryModule } from '@virteex/kernel-telemetry';
 import { SecretManagerService, SECRET_PROVIDER } from './services/secret-manager.service';
@@ -15,10 +15,16 @@ import { CsrfMiddleware } from './middleware/csrf.middleware';
 import { JwtTokenService } from './services/jwt-token.service';
 import { StepUpGuard } from './guards/step-up.guard';
 
+/**
+ * Enterprise Auth Module
+ *
+ * Centralizes authentication and tenant context propagation.
+ * Enforces CanonicalTenantMiddleware as the single source of truth for tenancy.
+ */
 @Module({
   imports: [ConfigModule, TelemetryModule, PassportModule.register({ defaultStrategy: 'jwt' }), JwtModule.register({})],
   providers: [
-    TenantContextMiddleware,
+    CanonicalTenantMiddleware,
     TenantGuard,
     SecretManagerService,
     JwtStrategy,
@@ -38,12 +44,12 @@ import { StepUpGuard } from './guards/step-up.guard';
         inject: [DefaultSecretProvider, VaultSecretProvider, KmsSecretProvider]
     }
   ],
-  exports: [TenantContextMiddleware, TenantGuard, SecretManagerService, JwtTokenService, StepUpGuard, PassportModule, JwtModule],
+  exports: [CanonicalTenantMiddleware, TenantGuard, SecretManagerService, JwtTokenService, StepUpGuard, PassportModule, JwtModule],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(TenantContextMiddleware, CsrfMiddleware)
+      .apply(CanonicalTenantMiddleware, CsrfMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
