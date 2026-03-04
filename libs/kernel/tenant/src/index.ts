@@ -12,3 +12,5 @@ export * from './lib/finops.service';
 export * from './lib/migration-orchestrator.service';
 export * from './lib/interceptors/tenant-rls.interceptor';
 export * from './lib/tenant-security-baseline.module';
+export * from './lib/residency-policy.util';
+export * from './lib/residency-compliance.service';

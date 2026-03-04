@@ -82,6 +82,7 @@ jobs:
       - run: npm run readiness:commercial
       - run: npm run quality:docs
       - run: npm run quality:plugin-isolation
+      - run: npm run quality:verify-rollback-evidence
       - run: npm run readiness:check
 
   security:
@@ -132,6 +133,12 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
+      - name: Gate: Require recent DR evidence for enterprise release
+        run: npm run readiness:dr-evidence
+        env:
+          RELEASE_TIER: ${{ vars.RELEASE_TIER || 'standard' }}
+          DR_EVIDENCE_MAX_AGE_DAYS: ${{ vars.DR_EVIDENCE_MAX_AGE_DAYS || '30' }}
+          EVIDENCE_SIGNING_SECRET: ${{ secrets.EVIDENCE_SIGNING_SECRET }}
       - run: npm run readiness:evidence
       - run: npm run readiness:report
       - run: ./tools/run-pocs.sh artifacts/poc-results

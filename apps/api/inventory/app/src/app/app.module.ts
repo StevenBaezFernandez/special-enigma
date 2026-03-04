@@ -25,6 +25,7 @@ import { InventoryPresentationModule } from '@virteex/domain-inventory-presentat
 
 @Module({
   imports: [
+    TenantModule,
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.LOG_LEVEL || 'info',

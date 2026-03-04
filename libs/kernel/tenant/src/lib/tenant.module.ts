@@ -12,9 +12,12 @@ import { TenantModelSubscriber } from './subscribers/tenant-model.subscriber';
 import { MigrationGuard } from './migration-guard';
 import { DualWriteManager } from './dual-write-manager';
 import { TenantCriticalConfigService } from './tenant-critical-config.service';
+import { ResidencyComplianceService } from './residency-compliance.service';
+import { ResidencyAuditorController } from './controllers/residency-auditor.controller';
 
 @Global()
 @Module({
+  controllers: [ResidencyAuditorController],
   providers: [
     TenantService,
     TenantOperationService,
@@ -24,6 +27,7 @@ import { TenantCriticalConfigService } from './tenant-critical-config.service';
     MigrationOrchestratorService,
     MigrationGuard,
     DualWriteManager,
+    ResidencyComplianceService,
     TenantModelSubscriber,
     TenantCriticalConfigService,
     {
@@ -40,6 +44,7 @@ import { TenantCriticalConfigService } from './tenant-critical-config.service';
     RoutingPlaneService,
     FinOpsService,
     TenantCriticalConfigService,
+    ResidencyComplianceService,
   ],
 })
 export class TenantModule implements OnModuleInit {

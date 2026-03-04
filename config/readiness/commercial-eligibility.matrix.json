@@ -1,7 +1,15 @@
 {
   "version": "2026.03-5.0-Hardened",
+  "generatedFrom": {
+    "source": "config/readiness/operational-readiness.sot.json",
+    "sha256": "6fe150916a41a5db41d28bbb3faf1222c7b69cd19a66be137db3087a40c77860"
+  },
   "countries": [
-    "MX", "BR", "CO", "US", "DO"
+    "MX",
+    "BR",
+    "CO",
+    "US",
+    "DO"
   ],
   "multi_tenant_tier_readiness": {
     "SHARED": "GA",
@@ -15,47 +23,158 @@
   },
   "modules": {
     "fiscal": {
-      "DO": { "status": "GA", "provider": "DGII", "allowSimulation": false },
-      "MX": { "status": "GA", "provider": "SAT", "allowSimulation": false },
-      "BR": { "status": "GA", "provider": "SEFAZ", "allowSimulation": false },
-      "CO": { "status": "GA", "provider": "DIAN", "allowSimulation": false },
-      "US": { "status": "Beta", "provider": "STRIPE_TAX", "allowSimulation": false }
+      "DO": {
+        "status": "GA",
+        "provider": "DGII",
+        "allowSimulation": false
+      },
+      "MX": {
+        "status": "GA",
+        "provider": "SAT",
+        "allowSimulation": false
+      },
+      "BR": {
+        "status": "GA",
+        "provider": "SEFAZ",
+        "allowSimulation": false
+      },
+      "CO": {
+        "status": "GA",
+        "provider": "DIAN",
+        "allowSimulation": false
+      },
+      "US": {
+        "status": "Beta",
+        "provider": "STRIPE_TAX",
+        "allowSimulation": false
+      }
     },
     "billing": {
-      "DO": { "status": "GA", "allowSimulation": false },
-      "MX": { "status": "GA", "allowSimulation": false },
-      "BR": { "status": "GA", "allowSimulation": false },
-      "CO": { "status": "GA", "allowSimulation": false },
-      "US": { "status": "GA", "allowSimulation": false }
+      "DO": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "MX": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "BR": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "CO": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "US": {
+        "status": "GA",
+        "allowSimulation": false
+      }
     },
     "inventory": {
-      "DO": { "status": "GA", "allowSimulation": false },
-      "MX": { "status": "GA", "allowSimulation": false },
-      "BR": { "status": "GA", "allowSimulation": false },
-      "CO": { "status": "GA", "allowSimulation": false },
-      "US": { "status": "GA", "allowSimulation": false }
+      "DO": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "MX": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "BR": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "CO": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "US": {
+        "status": "GA",
+        "allowSimulation": false
+      }
     },
     "marketplace": {
-      "DO": { "status": "Beta", "requiresHardenedSandbox": true },
-      "MX": { "status": "Beta", "requiresHardenedSandbox": true },
-      "BR": { "status": "Beta", "requiresHardenedSandbox": true },
-      "CO": { "status": "Beta", "requiresHardenedSandbox": true },
-      "US": { "status": "Beta", "requiresHardenedSandbox": true }
+      "DO": {
+        "status": "Beta",
+        "requiresHardenedSandbox": true
+      },
+      "MX": {
+        "status": "Beta",
+        "requiresHardenedSandbox": true
+      },
+      "BR": {
+        "status": "Beta",
+        "requiresHardenedSandbox": true
+      },
+      "CO": {
+        "status": "Beta",
+        "requiresHardenedSandbox": true
+      },
+      "US": {
+        "status": "Beta",
+        "requiresHardenedSandbox": true
+      }
     },
     "manufacturing": {
-      "DO": { "status": "GA", "allowSimulation": false },
-      "MX": { "status": "GA", "allowSimulation": false },
-      "BR": { "status": "GA", "allowSimulation": false },
-      "CO": { "status": "GA", "allowSimulation": false },
-      "US": { "status": "GA", "allowSimulation": false }
+      "DO": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "MX": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "BR": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "CO": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "US": {
+        "status": "GA",
+        "allowSimulation": false
+      }
     },
     "projects": {
-      "DO": { "status": "GA", "allowSimulation": false },
-      "MX": { "status": "GA", "allowSimulation": false },
-      "BR": { "status": "GA", "allowSimulation": false },
-      "CO": { "status": "GA", "allowSimulation": false },
-      "US": { "status": "GA", "allowSimulation": false }
+      "DO": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "MX": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "BR": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "CO": {
+        "status": "GA",
+        "allowSimulation": false
+      },
+      "US": {
+        "status": "GA",
+        "allowSimulation": false
+      }
     }
+  },
+  "commercializationPolicy": {
+    "minimumOperationalEvidence": [
+      "commercial",
+      "rls-audit",
+      "isolation-adversarial",
+      "migration-integrity",
+      "failover-drill"
+    ],
+    "requireSignedArtifacts": true,
+    "minimumEvidenceArtifacts": [
+      "sbom.json",
+      "sbom.json.sig",
+      "evidence/releases/<release>/manifest.json"
+    ],
+    "blockWithoutEvidence": true
   },
   "compliance_certification": {
     "tenancy_isolation": "5/5",

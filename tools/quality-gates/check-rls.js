@@ -18,16 +18,36 @@ const CRITICAL_TABLES = [
   'audit_logs'
 ];
 
+const REQUIRED_ADVERSARIAL_TESTS = [
+  'libs/kernel/tenant/src/lib/tests/adversarial-isolation.spec.ts',
+  'apps/worker/notification/app/src/app/notification.consumer.spec.ts',
+  'libs/domain/scheduler/application/src/lib/job-processor.service.spec.ts',
+];
+
 async function checkRls() {
   console.log('🔍 Executing ADVERSARIAL RLS validation...');
 
   // 1. Verify Migration Integrity
   const migrationPath = path.join(process.cwd(), 'apps/api/gateway/app/src/migrations');
   const rlsMigrationFile = path.join(migrationPath, 'Migration20250220_RLS.ts');
+  const baselineSql = path.join(process.cwd(), 'platform/infrastructure/docker/init-scripts/010_tenant_rls_baseline.sql');
 
   if (!fs.existsSync(rlsMigrationFile)) {
     console.error('❌ CRITICAL: RLS migration script missing.');
     process.exit(1);
+  }
+
+  if (!fs.existsSync(baselineSql)) {
+    console.error('❌ CRITICAL: Standardized RLS baseline SQL is missing.');
+    process.exit(1);
+  }
+
+  for (const testFile of REQUIRED_ADVERSARIAL_TESTS) {
+    const fullPath = path.join(process.cwd(), testFile);
+    if (!fs.existsSync(fullPath)) {
+      console.error(`❌ CRITICAL: Missing adversarial tenant test coverage: ${testFile}`);
+      process.exit(1);
+    }
   }
 
   // 2. Adversarial Probe (Real Execution)
@@ -42,6 +62,11 @@ async function checkRls() {
 
   if (!migrationContent.includes('FORCE ROW LEVEL SECURITY')) {
       console.error('❌ CRITICAL: RLS is enabled but NOT forced for table owners. Risk of bypass!');
+      process.exit(1);
+  }
+
+  if (!migrationContent.includes("tenant_id::text = app.current_tenant_id()::text") && !migrationContent.includes('tenant_col_type')) {
+      console.error('❌ CRITICAL: RLS migration does not validate tenant_id type compatibility against app.current_tenant_id().');
       process.exit(1);
   }
 

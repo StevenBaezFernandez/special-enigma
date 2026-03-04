@@ -2,12 +2,16 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Logger }
 import { TenantService } from '../tenant.service';
 import { getTenantContext } from '@virteex/kernel-auth';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
+import { ResidencyComplianceService } from '../residency-compliance.service';
 
 @Injectable()
 export class RegionalResidencyGuard implements CanActivate {
   private readonly logger = new Logger(RegionalResidencyGuard.name);
 
-  constructor(private readonly tenantService: TenantService) {}
+  constructor(
+    private readonly tenantService: TenantService,
+    private readonly residencyComplianceService: ResidencyComplianceService
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const tenantContext = getTenantContext();
@@ -17,7 +21,7 @@ export class RegionalResidencyGuard implements CanActivate {
     }
 
     const tenantId = tenantContext.tenantId;
-    const config = await this.tenantService.getTenantConfig(tenantId);
+    await this.tenantService.getTenantConfig(tenantId);
 
     const currentRegion = process.env['AWS_REGION'];
     const isProduction = process.env['NODE_ENV'] === 'production';
@@ -28,28 +32,7 @@ export class RegionalResidencyGuard implements CanActivate {
     }
 
     const effectiveCurrentRegion = currentRegion || 'us-east-1';
-    const allowedRegion = config.settings?.['allowedRegion'] || config.primaryRegion;
-
-    if (!allowedRegion) {
-        this.logger.error(`[ASYNC SECURITY] No residency policy for tenant ${tenantId}. Fail-closed.`);
-        throw new ForbiddenException('Data residency policy not established.');
-    }
-
-    if (allowedRegion !== effectiveCurrentRegion) {
-        this.logger.error(`[ASYNC SECURITY] Data Sovereignty Violation: Tenant ${tenantId} is restricted to ${allowedRegion} but async task reached ${effectiveCurrentRegion}`);
-
-        // Level 5: Audit Log for Async bypass
-        const em = (this.tenantService as any).em;
-        if (em) {
-             await em.getConnection().execute(
-                `INSERT INTO security_audit_journal (tenant_id, event_type, severity, payload, created_at)
-                 VALUES (?, ?, ?, ?, ?)`,
-                [tenantId, 'ASYNC_REGION_BYPASS_ATTEMPT', 'CRITICAL', JSON.stringify({ expected: allowedRegion, actual: effectiveCurrentRegion }), new Date()]
-            );
-        }
-
-        throw new ForbiddenException(`Data residency policy violation in async channel. Access denied for region: ${effectiveCurrentRegion}`);
-    }
+    await this.residencyComplianceService.assertRegionAllowed(tenantId, effectiveCurrentRegion, 'queue', 'async');
 
     // 2. Write-Freezing and Status Enforcement for Async Tasks
     const em = (this.tenantService as any).em;

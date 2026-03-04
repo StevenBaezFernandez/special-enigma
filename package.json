@@ -26,9 +26,9 @@
     "readiness:commercial": "node tools/readiness/validate-commercial-readiness.mjs",
     "readiness:evidence": "node tools/readiness/generate-evidence-pack.mjs",
     "readiness:report": "node tools/readiness/generate-release-report.mjs",
-    "governance:consistency": "node tools/quality-gates/validate-operational-consistency.mjs",
+    "governance:consistency": "node tools/quality-gates/validate-operational-consistency.mjs && npm run readiness:consistency",
     "governance:scorecard": "node tools/quality-gates/report-governance-scorecard.mjs",
-    "governance:check": "npm run governance:consistency && npm run arch:validate-tags && npm run arch:validate-naming && npm run test:validate-backend && npm run quality:e2e-coverage && npm run quality:block-simulations && npm run federation:validate-contracts && npm run federation:check-diff",
+    "governance:check": "npm run governance:consistency && npm run governance:error-budget && npm run arch:validate-tags && npm run arch:validate-naming && npm run test:validate-backend && npm run quality:e2e-coverage && npm run quality:block-simulations && npm run federation:validate-contracts && npm run federation:check-diff",
     "federation:validate-contracts": "npx ts-node tools/quality-gates/validate-federation-contracts.ts apps/api/gateway-legacy/app/src/assets/supergraph.graphql",
     "federation:check-diff": "npx ts-node tools/quality-gates/schema-diff.ts apps/api/gateway-legacy/app/src/assets/supergraph.graphql.bak apps/api/gateway-legacy/app/src/assets/supergraph.graphql",
     "doctor": "npm run governance:check",
@@ -37,7 +37,12 @@
     "build:frontend": "nx build web-portal-app",
     "build:backend": "nx build api-gateway-app",
     "quality:plugin-isolation": "node tools/quality-gates/validate-plugin-isolation.mjs",
-    "quality:block-simulations": "./tools/quality-gates/block-simulations.sh"
+    "quality:block-simulations": "./tools/quality-gates/block-simulations.sh",
+    "governance:error-budget": "node tools/quality-gates/validate-error-budget-policy.mjs"
+    "readiness:consistency": "node tools/readiness/validate-readiness-consistency.mjs"
+    "dr:scheduled": "node tools/dr/run-scheduled-drill.mjs",
+    "readiness:dr-evidence": "node tools/readiness/validate-dr-evidence.mjs"
+    "quality:verify-rollback-evidence": "node tools/quality-gates/verify-rollback-evidence.mjs"
   },
   "private": true,
   "devDependencies": {
