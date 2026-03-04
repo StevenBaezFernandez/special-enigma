@@ -2,7 +2,23 @@ import { Injectable, OnModuleDestroy, OnModuleInit, NotFoundException, Logger, C
 import { EntityManager } from '@mikro-orm/core';
 import { TenantConfig, TenantMode, TenantStatus } from './interfaces/tenant-config.interface';
 import { Tenant } from './entities/tenant.entity';
+import { TenantControlRecord } from './entities/tenant-control-record.entity';
 import Redis from 'ioredis';
+
+export interface CreateTenantInput {
+  id: string;
+  mode: TenantMode;
+  primaryRegion: string;
+  secondaryRegion: string;
+  complianceProfile: string;
+  connectionString?: string;
+  schemaName?: string;
+  settings?: Record<string, unknown>;
+  keys: {
+    kmsKeyId: string;
+    signingKeyId: string;
+  };
+}
 
 @Injectable()
 export class TenantService implements OnModuleInit, OnModuleDestroy {
@@ -32,29 +48,43 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
     this.redis?.disconnect();
   }
 
-  async createTenant(tenantData: Partial<Tenant>): Promise<Tenant> {
+  async createTenant(tenantData: CreateTenantInput): Promise<Tenant> {
+    this.validateCreateTenantInput(tenantData);
+
     const exists = await this.em.findOne(Tenant, { id: tenantData.id });
     if (exists) {
         throw new ConflictException(`Tenant ${tenantData.id} already exists`);
     }
 
     const tenant = this.em.create(Tenant, {
-      mode: tenantData.mode ?? TenantMode.SHARED,
-      createdAt: tenantData.createdAt ?? new Date(),
-      updatedAt: tenantData.updatedAt ?? new Date(),
-      ...tenantData,
+      id: tenantData.id,
+      mode: tenantData.mode,
+      connectionString: tenantData.connectionString,
+      schemaName: tenantData.schemaName,
+      settings: {
+        ...(tenantData.settings ?? {}),
+        primaryRegion: tenantData.primaryRegion,
+        secondaryRegion: tenantData.secondaryRegion,
+        complianceProfile: tenantData.complianceProfile,
+        keys: tenantData.keys,
+      },
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     await this.em.persistAndFlush(tenant);
 
     // Level 5: Initialize Control Record with proper lifecycle state
-    const control = this.em.create('TenantControlRecord', {
+    const control = this.em.create(TenantControlRecord, {
         tenantId: tenant.id,
+        mode: tenantData.mode,
+        primaryRegion: tenantData.primaryRegion,
+        secondaryRegion: tenantData.secondaryRegion,
+        complianceProfile: tenantData.complianceProfile,
         status: TenantStatus.PROVISIONING,
         version: 1,
         isFrozen: false,
-        primaryRegion: tenantData.settings?.['allowedRegion'] || process.env['AWS_REGION'] || 'us-east-1'
-    } as any);
+    });
     await this.em.persistAndFlush(control);
 
     if (this.redis) {
@@ -75,22 +105,22 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
   }
 
   async terminateTenant(tenantId: string): Promise<void> {
-    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
-    (control as any).isFrozen = true;
+    const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
+    control.isFrozen = true;
     await this.updateTenantStatus(tenantId, TenantStatus.ARCHIVED);
     this.logger.warn(`[LIFECYCLE] Tenant ${tenantId} marked for termination and ARCHIVED. Writes frozen.`);
   }
 
   async legalHoldTenant(tenantId: string): Promise<void> {
-    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
-    (control as any).isFrozen = true;
+    const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
+    control.isFrozen = true;
     await this.updateTenantStatus(tenantId, TenantStatus.LEGAL_HOLD);
     this.logger.warn(`[LIFECYCLE] Tenant ${tenantId} placed on LEGAL HOLD. Writes frozen.`);
   }
 
   async purgeTenant(tenantId: string): Promise<void> {
-    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
-    if ((control as any).status !== TenantStatus.ARCHIVED) {
+    const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
+    if (control.status !== TenantStatus.ARCHIVED) {
         throw new ConflictException(`Tenant ${tenantId} must be ARCHIVED before purging.`);
     }
 
@@ -147,17 +177,17 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
   }
 
   async reopenTenant(tenantId: string): Promise<void> {
-    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
-    if ((control as any).status === TenantStatus.PURGED) {
+    const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
+    if (control.status === TenantStatus.PURGED) {
         throw new ConflictException(`Cannot reopen PURGED tenant ${tenantId}.`);
     }
     await this.updateTenantStatus(tenantId, TenantStatus.ACTIVE);
   }
 
   private async updateTenantStatus(tenantId: string, status: TenantStatus): Promise<void> {
-    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
-    (control as any).status = status;
-    (control as any).updatedAt = new Date();
+    const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
+    control.status = status;
+    control.updatedAt = new Date();
     await this.em.flush();
 
     if (this.redis) {
@@ -220,5 +250,23 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
       }
     }
     return config;
+  }
+
+  private validateCreateTenantInput(input: CreateTenantInput): void {
+    if (!input.id || !input.mode || !input.primaryRegion || !input.secondaryRegion || !input.complianceProfile) {
+      throw new ConflictException('createTenant requires id, mode, primaryRegion, secondaryRegion and complianceProfile');
+    }
+
+    if (!input.keys?.kmsKeyId || !input.keys?.signingKeyId) {
+      throw new ConflictException('createTenant requires keys.kmsKeyId and keys.signingKeyId');
+    }
+
+    if (input.mode === TenantMode.SCHEMA && !input.schemaName) {
+      throw new ConflictException('schemaName is required for SCHEMA mode');
+    }
+
+    if (input.mode === TenantMode.DATABASE && !input.connectionString) {
+      throw new ConflictException('connectionString is required for DATABASE mode');
+    }
   }
 }
