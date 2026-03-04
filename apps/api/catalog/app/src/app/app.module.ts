@@ -1,4 +1,4 @@
-import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
 import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
@@ -17,6 +17,7 @@ import { CatalogPresentationModule } from '@virteex/domain-catalog-presentation'
 
 @Module({
   imports: [
+    TenantModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -79,7 +80,7 @@ import { CatalogPresentationModule } from '@virteex/domain-catalog-presentation'
   ],
   providers: [],
 })
-export class AppModule {
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CanonicalTenantMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
   }

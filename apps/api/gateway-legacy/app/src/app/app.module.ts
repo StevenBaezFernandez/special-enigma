@@ -1,4 +1,4 @@
-import { Module, Logger } from '@nestjs/common';
+import { Module, Logger, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -13,9 +13,12 @@ import {
 } from 'graphql-query-complexity';
 import { createTenantAwareComplexityEstimator, complexityBudgets } from '@virteex/platform-contract-governance';
 import { GraphQLError } from 'graphql';
+import { TenantModule } from '@virteex/kernel-tenant';
+import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 
 @Module({
   imports: [
+    TenantModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -150,4 +153,8 @@ import { GraphQLError } from 'graphql';
     }),
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CanonicalTenantMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

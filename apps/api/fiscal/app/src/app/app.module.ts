@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
@@ -31,9 +31,12 @@ function loadFiscalCommercialEligibility(): Record<string, FiscalCountryStatus> 
   const matrix = JSON.parse(raw);
   return matrix.modules.fiscal;
 }
+import { TenantModule } from '@virteex/kernel-tenant';
+import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 
 @Module({
   imports: [
+    TenantModule,
     ConfigModule.forRoot({ isGlobal: true }),
     HttpModule,
     MikroOrmModule.forRootAsync({
@@ -107,4 +110,8 @@ function loadFiscalCommercialEligibility(): Record<string, FiscalCountryStatus> 
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CanonicalTenantMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
