@@ -79,6 +79,10 @@ jobs:
         run: ./tools/quality-gates/block-simulations.sh
       - name: Enforcement: Verify RLS Real Data Isolation
         run: node ./tools/quality-gates/check-rls.js
+      - name: Enforcement: Validate Regional Topology
+        run: node ./tools/quality-gates/validate-regional-topology.mjs
+      - name: Enforcement: Terraform Topology + Drift
+        run: ./tools/quality-gates/check-terraform-drift.sh
       - run: npm run readiness:commercial
       - run: npm run quality:docs
       - run: npm run quality:plugin-isolation
@@ -142,6 +146,7 @@ jobs:
       - run: npm run readiness:evidence
       - run: npm run readiness:report
       - run: ./tools/run-pocs.sh artifacts/poc-results
+      - run: npm run readiness:infra-evidence
       - name: Upload release evidence pack
         uses: actions/upload-artifact@v4
         with:

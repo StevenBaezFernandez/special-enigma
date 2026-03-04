@@ -1,0 +1,10 @@
+{
+  "region": "sa-east-1",
+  "generatedAt": "2026-03-04T22:06:28.223Z",
+  "source": {
+    "topology": "platform/infrastructure/terraform/regions/v1/main.tf",
+    "deployment": "platform/helm/virteex/templates/all-apps.yaml",
+    "pipeline": ".github/workflows/ci-cd.yml"
+  },
+  "traceability": "See changes.log for git commit trace"
+}

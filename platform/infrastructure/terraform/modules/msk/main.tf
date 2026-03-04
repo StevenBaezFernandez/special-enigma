@@ -31,3 +31,8 @@ resource "aws_security_group" "msk" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 }
+
+
+output "bootstrap_brokers" {
+  value = aws_msk_cluster.main.bootstrap_brokers
+}
