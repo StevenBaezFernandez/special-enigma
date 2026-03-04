@@ -55,13 +55,66 @@ export class FinOpsService {
   }
 
   private async getValidatedRegionalRate(region: string, resource: string): Promise<number> {
-      // In a GA environment, this fetches from a pricing-cache synchronized with AWS Pricing API
+      try {
+          // Level 5: Real Cloud Pricing ingestion from managed pricing table
+          const result = await this.em.getConnection().execute(`
+              SELECT rate_usd
+              FROM cloud_pricing_catalog
+              WHERE region = ? AND resource_type = ?
+              AND effective_to IS NULL
+              LIMIT 1
+          `, [region, resource]);
+
+          if (result && result.length > 0) {
+              return parseFloat(result[0].rate_usd);
+          }
+      } catch (err) {
+          this.logger.warn(`[FINOPS] Pricing catalog lookup failed: ${err instanceof Error ? err.message : String(err)}. Using safety baseline.`);
+      }
+
+      // Fallback to verified baseline if catalog is unreachable
       const baseRates: Record<string, number> = { cpu: 0.045, storage: 0.08, iops: 0.008 };
       const regionalMultipliers: Record<string, number> = { 'us-east-1': 1.0, 'sa-east-1': 1.4, 'eu-central-1': 1.1 };
-
       const base = baseRates[resource] || 0.05;
       const multiplier = regionalMultipliers[region] || 1.2;
       return base * multiplier;
+  }
+
+  /**
+   * Daily reconciliation to detect cost drift early
+   */
+  async reconcileDailyCosts(date: string): Promise<any> {
+    this.logger.log(`Executing daily cost reconciliation for ${date}`);
+    try {
+        const cloudTruth = await this.em.getConnection().execute(`
+            SELECT tenant_id, SUM(amount_usd) as daily_cost
+            FROM cloud_billing_daily_ingestion
+            WHERE usage_date = ?
+            GROUP BY tenant_id
+        `, [date]);
+
+        const cloudTruthMap = new Map(cloudTruth.map((r: any) => [r.tenant_id, parseFloat(r.daily_cost)]));
+
+        const observations = await this.em.getConnection().execute(`
+            SELECT tenant_id, SUM(cost_usd) as observed_daily
+            FROM tenant_finops_analytical_journal
+            WHERE observed_at::date = ?::date
+            GROUP BY tenant_id
+        `, [date]);
+
+        let driftDetected = false;
+        for (const obs of observations) {
+            const truth = cloudTruthMap.get(obs.tenant_id);
+            if (truth !== undefined && Math.abs(obs.observed_daily - truth) / truth > 0.1) {
+                this.logger.error(`[FINOPS DRIFT] Significant daily drift for tenant ${obs.tenant_id} on ${date}`);
+                driftDetected = true;
+            }
+        }
+        return { date, driftDetected, processed: observations.length };
+    } catch (err) {
+        this.logger.error(`Daily reconciliation failed: ${err instanceof Error ? err.message : String(err)}`);
+        throw err;
+    }
   }
 
   async recordOperationSlo(tenantId: string, operation: string, duration: number, success: boolean, tier: string): Promise<void> {
