@@ -1,0 +1,9 @@
+{
+  "windowDays": 28,
+  "warnThresholdPct": 50,
+  "blockThresholdPct": 70,
+  "criticalThresholdPct": 90,
+  "nonCriticalDeployAction": "block",
+  "criticalDeployRequires": ["sre-approval", "security-approval"],
+  "dimensions": ["service", "region"]
+}
