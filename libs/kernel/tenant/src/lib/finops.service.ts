@@ -69,10 +69,13 @@ export class FinOpsService {
               return parseFloat(result[0].rate_usd);
           }
       } catch (err) {
-          this.logger.warn(`[FINOPS] Pricing catalog lookup failed: ${err instanceof Error ? err.message : String(err)}. Using safety baseline.`);
+          this.logger.error(`[FINOPS] Pricing catalog lookup failed: ${err instanceof Error ? err.message : String(err)}`);
+          if (process.env['NODE_ENV'] === 'production') {
+              throw new Error(`CRITICAL FINOPS FAILURE: Pricing catalog unreachable in production. Resource: ${resource}, Region: ${region}`);
+          }
       }
 
-      // Fallback to verified baseline if catalog is unreachable
+      // Fallback to verified baseline ONLY in non-production environments
       const baseRates: Record<string, number> = { cpu: 0.045, storage: 0.08, iops: 0.008 };
       const regionalMultipliers: Record<string, number> = { 'us-east-1': 1.0, 'sa-east-1': 1.4, 'eu-central-1': 1.1 };
       const base = baseRates[resource] || 0.05;

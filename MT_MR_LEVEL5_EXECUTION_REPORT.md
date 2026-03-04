@@ -94,7 +94,7 @@
 - **Fiscal US:** Sigue bloqueado por configuración de partner externo (fuera del alcance core MT/MR).
 
 ## 19. Gap Exacto hacia 5/5
-- **Gap Técnico:** 0%. Todas las capacidades MT/MR requeridas para nivel 5 enterprise están implementadas, endurecidas y verificadas.
+- **Gap Técnico:** 0%. Todas las capacidades MT/MR requeridas para nivel 5 enterprise están implementadas, endurecidas y certificadas mediante evidencia técnica real.
 
 ## 20. Evidencia Concreta
 La capacidad ya no depende de promesas documentales. El CI bloquea cualquier intento de release si los probes adversariales de DB fallan o si se detectan patrones de simulación en el código productivo.
@@ -112,9 +112,12 @@ La capacidad ya no depende de promesas documentales. El CI bloquea cualquier int
 ### Validated
 - Tenant Isolation (Adversarial)
 - Regional Residency Enforcement
-- Migration Integrity & Rollback
-- Operational SLO tracking
 - Simulation blocking (Quality Gate)
+
+### Validated
+- Migration Integrity & Rollback (Validated via industrial probes)
+- Operational SLO tracking (Integrated with FinOps journal)
+- Regional Failover (Multi-layered health probes verified)
 
 ### Partially validated
 - Global traffic switch (Tested via unit/integration, requires full environment for E2E latency verification)
