@@ -4,6 +4,7 @@ import { EntityManager } from '@mikro-orm/core';
 import { ConflictException } from '@nestjs/common';
 import { TenantService } from './tenant.service';
 import { TenantMode, TenantStatus } from './interfaces/tenant-config.interface';
+import { TenantControlRecord } from './entities/tenant-control-record.entity';
 
 describe('TenantService', () => {
   let service: TenantService;
@@ -15,7 +16,7 @@ describe('TenantService', () => {
 
   const mockEm: any = {
     findOne: vi.fn(),
-    create: vi.fn(),
+    create: vi.fn((_: unknown, payload: unknown) => payload),
     persistAndFlush: vi.fn(),
     find: vi.fn(),
     assign: vi.fn(),
@@ -46,6 +47,15 @@ describe('TenantService', () => {
     expect(service).toBeDefined();
   });
 
+  it('rejects incomplete tenant creation contracts', async () => {
+    await expect(
+      service.createTenant({
+        id: 'tenant-missing-contract',
+        mode: TenantMode.SHARED,
+      } as any),
+    ).rejects.toBeInstanceOf(ConflictException);
+  });
+
   it('should return config from DB if not in cache', async () => {
     const mockTenant = { id: 't1', mode: TenantMode.SHARED };
     mockEm.findOne.mockResolvedValue(mockTenant);
@@ -63,6 +73,7 @@ describe('TenantService', () => {
 
     await service.purgeTenant('t1');
 
+    expect(mockEm.findOneOrFail).toHaveBeenCalledWith(TenantControlRecord, { tenantId: 't1' });
     expect(txExecute).toHaveBeenCalledWith('DELETE FROM "orders" WHERE tenant_id = ?', ['t1']);
   });
 

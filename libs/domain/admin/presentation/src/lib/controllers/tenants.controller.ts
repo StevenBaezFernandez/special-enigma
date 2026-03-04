@@ -20,15 +20,18 @@ export class TenantsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new tenant (Automated Provisioning Flow)' })
-  async createTenant(@Body() body: { id: string, mode: any, schemaName?: string }) {
+  async createTenant(@Body() body: { id: string; mode: any; schemaName?: string; connectionString?: string; primaryRegion?: string; secondaryRegion?: string; complianceProfile?: string; keys?: { kmsKeyId?: string; signingKeyId?: string } }) {
       this.logger.log(`ADMIN REQUEST: Provisioning new tenant: ${body.id}`);
 
       const tenant = await this.tenantService.createTenant({
           id: body.id,
           mode: body.mode,
           schemaName: body.schemaName,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          connectionString: body.connectionString,
+          primaryRegion: body.primaryRegion as string,
+          secondaryRegion: body.secondaryRegion as string,
+          complianceProfile: body.complianceProfile as string,
+          keys: body.keys as { kmsKeyId: string; signingKeyId: string },
       });
 
       // Start actual infrastructure provisioning
