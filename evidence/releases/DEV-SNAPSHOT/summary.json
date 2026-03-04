@@ -1,13 +1,20 @@
 {
   "releaseVersion": "DEV-SNAPSHOT",
-  "generatedAt": "2026-03-04T04:04:34.824Z",
-  "readinessState": "ready-with-evidence",
-  "maturityScore": "5/5",
+  "generatedAt": "2026-03-04T22:06:01.411Z",
+  "readinessState": "blocked",
+  "maturityScore": "2.9/5",
   "gateResults": [
     {
       "id": "commercial",
       "cmd": "node tools/readiness/validate-commercial-readiness.mjs",
-      "status": "passed"
+      "status": "failed",
+      "stderr": "Commercial/readiness validation failed:\n - Commercialization blocked: missing/failed minimum operational evidence gate 'isolation-adversarial'.\n - Commercialization blocked: missing/failed minimum operational evidence gate 'migration-integrity'.\n - Commercialization blocked: missing/failed minimum operational evidence gate 'failover-drill'.\n"
+    },
+    {
+      "id": "consistency",
+      "cmd": "node tools/readiness/validate-readiness-consistency.mjs",
+      "status": "failed",
+      "stderr": "❌ Readiness consistency validation failed:\n - Evidence summary commercial matrix is inconsistent with source-of-truth statuses.\n - SLA SHARED/us-east-1 references gate 'failover-drill' without passing evidence.\n - SLA SCHEMA/sa-east-1 references gate 'migration-integrity' without passing evidence.\n - SLA SCHEMA/sa-east-1 references gate 'failover-drill' without passing evidence.\n - SLA DATABASE/eu-central-1 references gate 'isolation-adversarial' without passing evidence.\n - SLA DATABASE/eu-central-1 references gate 'failover-drill' without passing evidence.\n"
     },
     {
       "id": "docs-consistency",
@@ -22,12 +29,30 @@
     {
       "id": "production-readiness",
       "cmd": "bash ./tools/enforce-production-readiness.sh",
-      "status": "passed"
+      "status": "failed",
+      "stderr": "Commercial/readiness validation failed:\n - Commercialization blocked: missing/failed minimum operational evidence gate 'isolation-adversarial'.\n - Commercialization blocked: missing/failed minimum operational evidence gate 'migration-integrity'.\n - Commercialization blocked: missing/failed minimum operational evidence gate 'failover-drill'.\n"
     },
     {
       "id": "rls-audit",
       "cmd": "node tools/quality-gates/check-rls.js",
+      "status": "failed",
+      "stderr": "❌ CRITICAL: Database probe could not be executed (no connectivity). Real DB validation is MANDATORY for Level 5.\n"
+    },
+    {
+      "id": "isolation-adversarial",
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/adversarial-isolation.spec.ts",
       "status": "passed"
+    },
+    {
+      "id": "migration-integrity",
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/migration-validation.spec.ts",
+      "status": "passed"
+    },
+    {
+      "id": "failover-drill",
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/failover-validation.spec.ts",
+      "status": "failed",
+      "stderr": "npm warn Unknown env config \"http-proxy\". This will stop working in the next major version of npm.\n[Nest] 7393  - 03/04/2026, 10:06:10 PM   ERROR [FailoverService] [DR] Failover CRITICAL FAILURE for tenant t1: EVIDENCE_SIGNING_SECRET is required to persist DR drill evidence.\n[Nest] 7393  - 03/04/2026, 10:06:10 PM   ERROR [FailoverService] [DR] Failover CRITICAL FAILURE for tenant t1: Tenant t1 is already in failover state.\n[Nest] 7393  - 03/04/2026, 10:06:10 PM   ERROR [FailoverService] [DR] Failover CRITICAL FAILURE for tenant t-fail: KMS Failure\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  libs/kernel/tenant/src/lib/tests/failover-validation.spec.ts > Regional Failover Operational Validation > SHOULD promote secondary region during failover\nError: EVIDENCE_SIGNING_SECRET is required to persist DR drill evidence.\n ❯ FailoverService.recordDrillResult libs/kernel/tenant/src/lib/failover.service.ts:213:17\n    211|       const secret = process.env['EVIDENCE_SIGNING_SECRET'];\n    212|       if (!secret) {\n    213|           throw new Error('EVIDENCE_SIGNING_SECRET is required to pers…\n       |                 ^\n    214|       }\n    215|       const payload = JSON.stringify(result);\n ❯ FailoverService.triggerRegionalFailover libs/kernel/tenant/src/lib/failover.service.ts:106:20\n ❯ libs/kernel/tenant/src/lib/tests/failover-validation.spec.ts:55:5\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n"
     }
   ],
   "evidence": {
@@ -46,7 +71,7 @@
           "MX": "GA",
           "BR": "GA",
           "CO": "GA",
-          "US": "GA"
+          "US": "Beta"
         },
         "billing": {
           "DO": "GA",
