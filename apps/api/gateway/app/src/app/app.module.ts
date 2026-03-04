@@ -1,4 +1,4 @@
-import { Module, MiddlewareConsumer, NestModule, Logger } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, Logger, RequestMethod } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
@@ -23,6 +23,7 @@ import { createServiceProxy } from './middleware/proxy.middleware';
 
 @Module({
   imports: [
+    TenantModule,
     InventoryPresentationModule,
     AccountingPresentationModule,
     TerminusModule,

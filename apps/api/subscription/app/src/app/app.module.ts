@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
@@ -13,9 +13,12 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/ap
 import { SubscriptionPresentationModule } from '@virteex/domain-subscription-presentation';
 import { SubscriptionInfrastructureModule } from '@virteex/domain-subscription-infrastructure';
 import { SubscriptionApplicationModule } from '@virteex/domain-subscription-application';
+import { TenantModule } from '@virteex/kernel-tenant';
+import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 
 @Module({
   imports: [
+    TenantModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -69,4 +72,8 @@ import { SubscriptionApplicationModule } from '@virteex/domain-subscription-appl
   ],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CanonicalTenantMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

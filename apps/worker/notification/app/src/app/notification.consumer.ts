@@ -8,6 +8,9 @@ import {
   TenantContextValidationError,
 } from '@virteex/kernel-auth';
 import { EmailService, SmsService, PushNotificationService } from '@virteex/domain-notification-infrastructure';
+import { runWithRequiredTenantContext } from '@virteex/kernel-auth';
+
+type TenantPayload = { tenantId: string; region?: string; currency?: string; language?: string };
 
 interface SignedEventPayload<T> {
   context?: string;
@@ -36,6 +39,14 @@ export class NotificationConsumer {
         return;
       }
       throw new UnauthorizedException('Invalid notification payload');
+  async handleNotification(@Payload() data: TenantPayload & { to: string; subject: string; body: string }) {
+    await this.enforceTenantPayload(data, async () => {
+      this.logger.log(`Received notification request for tenant ${data.tenantId}`);
+      if (data.to && data.subject && data.body) {
+        await this.emailService.sendEmail(data.to, data.subject, data.body);
+      } else {
+        this.logger.warn('Invalid notification payload');
+      }
     });
   }
 
@@ -48,6 +59,14 @@ export class NotificationConsumer {
         return;
       }
       throw new UnauthorizedException('Invalid SMS notification payload');
+  async handleSmsNotification(@Payload() data: TenantPayload & { to: string; body: string }) {
+    await this.enforceTenantPayload(data, async () => {
+      this.logger.log(`Received SMS notification request for tenant ${data.tenantId}`);
+      if (data.to && data.body) {
+        await this.smsService.sendSms(data.to, data.body);
+      } else {
+        this.logger.warn('Invalid SMS notification payload');
+      }
     });
   }
 
@@ -60,12 +79,22 @@ export class NotificationConsumer {
         return;
       }
       throw new UnauthorizedException('Invalid Push notification payload');
+  async handlePushNotification(@Payload() data: TenantPayload & { token: string; title: string; body: string; data?: any }) {
+    await this.enforceTenantPayload(data, async () => {
+      this.logger.log(`Received Push notification request for tenant ${data.tenantId}`);
+      if (data.token && data.title && data.body) {
+        await this.pushService.sendPushNotification(data.token, data.title, data.body, data.data);
+      } else {
+        this.logger.warn('Invalid Push notification payload');
+      }
     });
   }
 
   @EventPattern('user.registered')
   async handleUserRegistered(@Payload() event: SignedEventPayload<{ email: string; name: string }>) {
     return this.handleWithTenantContext(event, 'user.registered', async (data) => {
+  async handleUserRegistered(@Payload() data: TenantPayload & { email: string; name: string }) {
+      await this.enforceTenantPayload(data, async () => {
       this.logger.log(`User registered: ${data.email}`);
       await this.emailService.sendEmail(
         data.email,
@@ -104,5 +133,22 @@ export class NotificationConsumer {
     const payload = { channel: 'worker-event', eventName, violationType, reason };
     this.logger.warn(JSON.stringify({ event: 'tenant_context_rejected', ...payload }));
     this.violationCounter.add(1, { channel: 'worker-event', eventName, violationType });
+      });
+  }
+
+  private async enforceTenantPayload(data: TenantPayload, callback: () => Promise<void>) {
+    if (!data?.tenantId) {
+      throw new Error('Tenant context is required for notification consumers.');
+    }
+
+    await runWithRequiredTenantContext({
+      tenantId: data.tenantId,
+      userId: 'notification-consumer',
+      role: ['worker'],
+      permissions: ['notification:send'],
+      region: data.region || process.env['AWS_REGION'] || 'us-east-1',
+      currency: data.currency || 'USD',
+      language: data.language || 'en',
+    }, callback);
   }
 }
