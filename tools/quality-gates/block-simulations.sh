@@ -57,7 +57,8 @@ if [ ! -z "$NOOP_MISUSE" ]; then
 fi
 
 # - HTML should only allow 'placeholder' as an attribute (regular or binding)
-PLACEHOLDER_MISUSE=$(grep -r "placeholder" . --include="*.html" | grep -vE "(placeholder=|\[placeholder\]=)" || true)
+# We exclude node_modules and dist
+PLACEHOLDER_MISUSE=$(grep -r "placeholder" apps libs --include="*.html" | grep -vE "(placeholder=|\[placeholder\]=)" || true)
 if [ ! -z "$PLACEHOLDER_MISUSE" ]; then
     echo "CRITICAL: 'placeholder' keyword used outside of HTML attribute:"
     echo "$PLACEHOLDER_MISUSE"

@@ -4,12 +4,18 @@ import { FinOpsService } from '../finops.service';
 describe('FinOps Precision Quantification', () => {
   let service: FinOpsService;
   let mockTelemetry: any;
+  let mockEm: any;
 
   beforeEach(() => {
     mockTelemetry = {
       recordBusinessMetric: vi.fn(),
     };
-    service = new FinOpsService(mockTelemetry);
+    mockEm = {
+        getConnection: vi.fn().mockReturnValue({
+            execute: vi.fn().mockResolvedValue([])
+        })
+    };
+    service = new FinOpsService(mockTelemetry, mockEm);
   });
 
   it('SHOULD attribute costs accurately based on resource consumption and mode', async () => {
@@ -19,9 +25,9 @@ describe('FinOps Precision Quantification', () => {
     // us-east-1 multiplier = 1.0
     // 100 units * 0.045 rate * 1.0 region * 1.0 mode = 4.5 USD
     expect(mockTelemetry.recordBusinessMetric).toHaveBeenCalledWith(
-      'tenant_estimated_cost_usd',
+      'tenant_resource_cost_observed_usd',
       4.5,
-      expect.objectContaining({ tenantId: 't1', mode: 'SHARED' })
+      expect.objectContaining({ tenantId: 't1', mode: 'SHARED', precision: 'reconciled-cloud-cost' })
     );
 
     // Scenario 2: DATABASE mode Storage consumption in sa-east-1 (Premium multiplier)
@@ -31,7 +37,7 @@ describe('FinOps Precision Quantification', () => {
     // DATABASE mode multiplier = 1.65
     // 50 units * 0.08 rate * 1.4 region * 1.65 mode = 9.24 USD
     expect(mockTelemetry.recordBusinessMetric).toHaveBeenCalledWith(
-      'tenant_estimated_cost_usd',
+      'tenant_resource_cost_observed_usd',
       9.239999999999998,
       expect.objectContaining({ tenantId: 't2', mode: 'DATABASE' })
     );
@@ -41,14 +47,14 @@ describe('FinOps Precision Quantification', () => {
       await service.recordResourceUsage('t3', 'SCHEMA', 'us-east-1', 'iops', 1000);
 
       expect(mockTelemetry.recordBusinessMetric).toHaveBeenCalledWith(
-          'tenant_resource_consumption',
-          1000,
-          {
+          'tenant_resource_cost_observed_usd',
+          9.2,
+          expect.objectContaining({
               tenantId: 't3',
               mode: 'SCHEMA',
               region: 'us-east-1',
               resource: 'iops'
-          }
+          })
       );
   });
 });

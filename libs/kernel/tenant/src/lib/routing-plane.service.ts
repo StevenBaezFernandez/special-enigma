@@ -28,11 +28,11 @@ export class RoutingPlaneService {
     const secret = this.configService.get<string>('ROUTING_SNAPSHOT_SECRET');
     const isProduction = process.env['NODE_ENV'] === 'production';
 
-    if (isProduction && (!secret || secret === 'dev-secret-change-in-prod')) {
-        this.logger.error('[SECURITY CRITICAL] Insecure ROUTING_SNAPSHOT_SECRET in production');
-        throw new Error('Insecure routing configuration');
+    if (!secret || secret === 'dev-secret-change-in-prod') {
+        this.logger.error('[SECURITY CRITICAL] Insecure or missing ROUTING_SNAPSHOT_SECRET');
+        throw new Error('Insecure routing configuration: ROUTING_SNAPSHOT_SECRET must be set and secure');
     }
-    this.hmacSecret = secret || 'dev-secret-change-in-prod';
+    this.hmacSecret = secret;
   }
 
   async resolveRoute(tenantId: string): Promise<any> {
@@ -164,16 +164,25 @@ export class RoutingPlaneService {
   private async getRegionalLoad(region: string): Promise<number> {
       // Integration with Prometheus/Telemetry to get real regional load
       try {
-          // Execution of a real telemetry check using the em connection as a proxy for platform stats
+          // Execution of a real telemetry check using the platform_regional_metrics table
+          // which is populated by an external telemetry ingestion process (e.g., Prometheus exporter)
           const result = await this.em.getConnection().execute(`
               SELECT load_factor
               FROM platform_regional_metrics
               WHERE region = ?
+              AND observed_at > now() - interval '5 minutes'
               ORDER BY observed_at DESC
               LIMIT 1
           `, [region]);
 
-          return parseFloat(result[0]?.load_factor || '0');
+          if (result && result.length > 0) {
+              const load = parseFloat(result[0].load_factor);
+              this.logger.log(`[ROUTING] Real-time load for ${region}: ${(load * 100).toFixed(2)}%`);
+              return load;
+          }
+
+          this.logger.warn(`[ROUTING] No recent load metrics for ${region}. Assuming safety-first load (0.5).`);
+          return 0.5;
       } catch (err) {
           this.logger.error(`[ROUTING] Failed to fetch regional load for ${region}: ${err instanceof Error ? err.message : String(err)}`);
           return 0;

@@ -44,6 +44,23 @@ if (matrix.modules?.marketplace?.CO?.status === 'GA') {
   violations.push('Marketplace CO cannot be GA before hardened sandbox evidence is available.');
 }
 
+// Level 5 Evidence Validation
+console.log('🛡️  Validating Level 5 Enterprise Evidence...');
+const latestEvidencePath = path.resolve('evidence/releases/2026.03-rc1');
+if (!fs.existsSync(latestEvidencePath)) {
+  violations.push('Level 5 Certification requires verified evidence pack for the current release (2026.03-rc1).');
+} else {
+  const summary = JSON.parse(fs.readFileSync(path.join(latestEvidencePath, 'summary.json'), 'utf8'));
+  const requiredGates = ['rls-audit', 'isolation-adversarial', 'migration-integrity', 'failover-drill'];
+
+  for (const gate of requiredGates) {
+    const gateEvidence = summary.gates?.[gate] || summary.results?.find(r => r.id === gate);
+    if (!gateEvidence || gateEvidence.status !== 'PASSED') {
+      violations.push(`Level 5 Certification FAILED: Missing or failed evidence for gate '${gate}'.`);
+    }
+  }
+}
+
 for (const file of sourceFiles) {
   if (!fs.existsSync(path.resolve(file))) continue;
   const content = fs.readFileSync(path.resolve(file), 'utf8');

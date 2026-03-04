@@ -28,13 +28,12 @@ export class JwtTenantMiddleware implements NestMiddleware {
       const jwtSecret = process.env['JWT_SECRET'];
       const isProduction = process.env['NODE_ENV'] === 'production';
 
-      if (isProduction && (!jwtSecret || jwtSecret === 'dev-secret')) {
-        this.logger.error('[SECURITY CRITICAL] Insecure JWT_SECRET in production');
-        throw new Error('Insecure JWT_SECRET configuration');
+      if (!jwtSecret || jwtSecret === 'dev-secret') {
+        this.logger.error('[SECURITY CRITICAL] Insecure or missing JWT_SECRET');
+        throw new Error('Insecure JWT_SECRET configuration: JWT_SECRET must be set and secure');
       }
 
-      const secret = jwtSecret || 'dev-secret';
-      const decoded: any = jwt.verify(token, secret);
+      const decoded: any = jwt.verify(token, jwtSecret);
 
       if (decoded && decoded.tenantId) {
         if (tenantIdHeader && tenantIdHeader !== decoded.tenantId) {

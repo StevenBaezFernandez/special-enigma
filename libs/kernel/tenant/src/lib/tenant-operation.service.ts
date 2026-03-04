@@ -18,7 +18,14 @@ export class TenantOperationService implements OnModuleInit {
   }
 
   async acquireLock(tenantId: string, ttl = 30000): Promise<boolean> {
-      if (!this.redis) return true; // Fallback to DB-only or no-lock if redis not available
+      if (!this.redis) {
+          const isProduction = process.env['NODE_ENV'] === 'production';
+          if (isProduction) {
+              this.logger.error('[SECURITY CRITICAL] Distributed lock attempted without Redis in production. Fail-closed.');
+              return false;
+          }
+          return true; // Safe fallback for local/test
+      }
       const key = `lock:tenant:ops:${tenantId}`;
       const result = await this.redis.set(key, 'locked', 'PX', ttl, 'NX');
       return result === 'OK';

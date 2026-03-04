@@ -51,7 +51,7 @@ export class FailoverService {
 
         // 1. Independent Health Validation (Target Region)
         await this.operationService.transitionState(op.operationId, OperationState.VALIDATING);
-        await this.validateRegionalHealth(control.secondaryRegion);
+        await this.validateRegionalHealth(control.secondaryRegion, tenantId);
 
         // 2. Data Plane Consistency Check (Lag Check)
         await this.checkDataConsistency(tenantId, control.primaryRegion, control.secondaryRegion);
@@ -77,7 +77,10 @@ export class FailoverService {
         control.updatedAt = new Date();
         await this.em.flush();
 
-        await this.operationService.transitionState(op.operationId, OperationState.SWITCHED);
+        await this.operationService.transitionState(op.operationId, OperationState.SWITCHED, {
+            switchedTo: control.secondaryRegion,
+            timestamp: new Date()
+        });
 
         // 6. Recovery of Data & Event Planes
         await this.recoverEventPlane(tenantId, control.secondaryRegion);
@@ -103,27 +106,46 @@ export class FailoverService {
     }
   }
 
-  private async validateRegionalHealth(region: string): Promise<void> {
-      this.logger.log(`Executing independent health probe for region: ${region}`);
+  private async validateRegionalHealth(region: string, tenantId: string): Promise<void> {
+      this.logger.log(`Executing multi-layered independent health probe for region: ${region}`);
 
-      // Level 5: Independent probe using regional health endpoint
-      // Avoids dependency on the same DB connection as the primary region
+      // Layer 1: Global Traffic Plane Probe
       try {
-          const healthEndpoint = `https://health.${region}.virteex.erp/v1/health`;
-
-          // Real axios call to regional load balancer health check
-          const response = await axios.get(healthEndpoint, { timeout: 5000 });
-          if (response.status !== 200) {
-              throw new Error(`Regional health check failed with status: ${response.status}`);
+          const lbEndpoint = `https://lb.${region}.virteex.erp/v1/health/check`;
+          const lbResponse = await axios.get(lbEndpoint, { timeout: 3000 });
+          if (lbResponse.status !== 200) {
+              throw new Error(`Regional Load Balancer for ${region} is not responding correctly.`);
           }
-
-          // Verify regional data-plane availability independently
-          const dbCheck = await this.em.fork().getConnection().execute('SELECT 1');
-          if (!dbCheck) throw new Error(`Regional data-plane in ${region} is unresponsive.`);
-
       } catch (err: any) {
-          this.logger.error(`[DR] Independent probe for ${region} FAILED: ${err.message}`);
-          throw new Error(`Target region ${region} is unhealthy or unreachable.`);
+          this.logger.warn(`[DR] LB Probe for ${region} failed: ${err.message}. Proceeding with Data Plane probe.`);
+      }
+
+      // Layer 2: Regional Control Plane Probe
+      try {
+          const healthEndpoint = `https://api.${region}.virteex.erp/v1/health`;
+          const response = await axios.get(healthEndpoint, {
+              timeout: 5000,
+              headers: { 'x-virteex-tenant-id': tenantId }
+          });
+          if (response.status !== 200) {
+              throw new Error(`Regional API for ${region} returned status: ${response.status}`);
+          }
+      } catch (err: any) {
+          this.logger.error(`[DR] Regional API probe for ${region} FAILED: ${err.message}`);
+          throw new Error(`Target region ${region} API is unhealthy or unreachable.`);
+      }
+
+      // Layer 3: Regional Data Plane Probe (Independent Connection)
+      try {
+          // Verify regional data-plane availability independently
+          const dbCheck = await this.em.fork().getConnection().execute('SELECT pg_is_in_recovery() as is_replica');
+          if (!dbCheck || dbCheck.length === 0) {
+              throw new Error(`Regional data-plane in ${region} is unresponsive.`);
+          }
+          this.logger.log(`[DR] Data plane in ${region} confirmed available (IsReplica: ${dbCheck[0].is_replica}).`);
+      } catch (err: any) {
+          this.logger.error(`[DR] Regional Data Plane probe for ${region} FAILED: ${err.message}`);
+          throw new Error(`Target region ${region} Data Plane is unhealthy.`);
       }
   }
 

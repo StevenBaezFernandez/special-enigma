@@ -8,10 +8,19 @@ variable "db_password" {
   sensitive = true
 }
 
+resource "aws_rds_global_cluster" "global" {
+  global_cluster_identifier = "virteex-global-${var.environment}"
+  engine                    = "aurora-postgresql"
+  engine_version            = "15.3"
+  database_name             = "virteex"
+  storage_encrypted         = true
+}
+
 resource "aws_rds_cluster" "aurora" {
   cluster_identifier      = "virteex-aurora-${var.environment}-${var.region}"
   engine                  = "aurora-postgresql"
   engine_version          = "15.3"
+  global_cluster_identifier = aws_rds_global_cluster.global.id
   availability_zones      = var.availability_zones
   database_name           = "virteex"
   master_username         = "postgres"
@@ -23,12 +32,13 @@ resource "aws_rds_cluster" "aurora" {
 
   db_subnet_group_name    = aws_db_subnet_group.default.name
 
-  # Multi-region: Global Cluster configuration wiring (simulated via tags/params)
+  # Level 5: Real Multi-region Global Cluster Configuration
   tags = {
     Region      = var.region
     Environment = var.environment
     Service     = "virteex-erp"
     MultiRegion = "true"
+    ManagedBy   = "Terraform"
   }
 }
 

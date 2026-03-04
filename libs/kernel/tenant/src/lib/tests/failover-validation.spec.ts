@@ -2,6 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FailoverService } from '../failover.service';
 import { RoutingPlaneService } from '../routing-plane.service';
 import { OperationState, TenantStatus } from '../interfaces/tenant-config.interface';
+import axios from 'axios';
+
+vi.mock('axios');
 
 describe('Regional Failover Operational Validation', () => {
   let service: FailoverService;
@@ -10,11 +13,19 @@ describe('Regional Failover Operational Validation', () => {
   let mockRoutingPlane: any;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    (axios.get as any).mockResolvedValue({ status: 200 });
+
     mockEm = {
       findOneOrFail: vi.fn(),
       flush: vi.fn().mockResolvedValue(undefined),
       getConnection: vi.fn().mockReturnValue({
-          execute: vi.fn().mockResolvedValue([{ rows: [1], is_recovery: false }])
+          execute: vi.fn().mockResolvedValue([{ rows: [1], is_replica: false, lag_ms: '0' }])
+      }),
+      fork: vi.fn().mockReturnValue({
+          getConnection: vi.fn().mockReturnValue({
+              execute: vi.fn().mockResolvedValue([{ is_replica: false }])
+          })
       })
     };
     mockOpService = {
@@ -43,12 +54,14 @@ describe('Regional Failover Operational Validation', () => {
 
     await service.triggerRegionalFailover('t1', 'key-1');
 
-    expect(mockOpService.transitionState).toHaveBeenCalledWith('fail-123', OperationState.SWITCHED);
+    expect(mockOpService.transitionState).toHaveBeenCalledWith('fail-123', OperationState.SWITCHED, expect.objectContaining({
+        switchedTo: 'sa-east-1'
+    }));
     expect(mockRoutingPlane.createSnapshot).toHaveBeenCalledWith('t1', expect.objectContaining({
       primaryRegion: 'sa-east-1',
       failoverActive: true
     }));
-    expect(mockOpService.transitionState).toHaveBeenCalledWith('fail-123', OperationState.FINALIZED);
+    expect(mockOpService.transitionState).toHaveBeenCalledWith('fail-123', OperationState.FINALIZED, expect.any(Object));
   });
 
   it('SHOULD reject failover if already in degraded state', async () => {
@@ -57,7 +70,7 @@ describe('Regional Failover Operational Validation', () => {
       status: TenantStatus.DEGRADED,
     });
 
-    await expect(service.triggerRegionalFailover('t1', 'key-2')).rejects.toThrow(/already in a degraded/);
+    await expect(service.triggerRegionalFailover('t1', 'key-2')).rejects.toThrow(/already in failover state/);
   });
 
   it('SHOULD rollback failover operation if routing publish fails', async () => {

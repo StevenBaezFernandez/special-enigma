@@ -162,16 +162,26 @@ export class MigrationOrchestratorService {
       }
 
       const qb = em.getConnection();
-      const tables = ['orders', 'customers', 'products', 'invoices'];
+
+      // Level 5: Declarative table discovery for reconciliation
+      const tablesWithTenantIdResult = await qb.execute(`
+          SELECT table_name
+          FROM information_schema.columns
+          WHERE column_name = 'tenant_id'
+          AND table_schema = ?
+      `, [tenant.mode === TenantMode.SCHEMA ? schema : 'public']);
+
+      const tables = tablesWithTenantIdResult.map((r: any) => r.table_name);
       const stats: Record<string, any> = {};
 
       for (const table of tables) {
           const tableName = schema ? `"${schema}"."${table}"` : `"${table}"`;
-          const tableOnly = schema ? table : tableName.replace(/"/g, '');
+          const tableOnly = table;
 
           try {
               // Level 5: Industrial structural hash and content checksum
-              const result = await qb.execute(`
+              // Uses MD5(string_agg(...)) for data-integrity and schema-diff for structural integrity
+              const query = `
                   SELECT
                     COUNT(*) as count,
                     COALESCE(md5(string_agg(id::text || updated_at::text, ',' ORDER BY id)), '0') as checksum,
@@ -179,7 +189,13 @@ export class MigrationOrchestratorService {
                      FROM information_schema.columns
                      WHERE table_name = ? AND table_schema = ?) as structural_hash
                   FROM ${tableName}
-              `, [tableOnly, schema || 'public']);
+                  ${tenant.mode === TenantMode.SHARED ? ` WHERE tenant_id = ?` : ''}
+              `;
+              const params = tenant.mode === TenantMode.SHARED
+                ? [tableOnly, schema || 'public', tenant.id]
+                : [tableOnly, schema || 'public'];
+
+              const result = await qb.execute(query, params);
 
               stats[table] = {
                   count: parseInt(result[0]?.count || '0'),

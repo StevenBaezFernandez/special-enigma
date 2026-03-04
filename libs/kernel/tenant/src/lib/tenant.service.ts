@@ -95,7 +95,7 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
     }
 
     const config = await this.getTenantConfig(tenantId);
-    this.logger.error(`Tenant ${tenantId} is being PURGED. Executing data deletion.`);
+    this.logger.error(`Tenant ${tenantId} is being PURGED. Executing industrial data deletion.`);
 
     if (config.mode === TenantMode.DATABASE) {
         // Full database dropping for isolated instances
@@ -103,9 +103,18 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
         const dbName = config.connectionString?.split('/').pop()?.split('?')[0];
         await tenantEm.getConnection().execute(`DROP DATABASE IF EXISTS "${dbName}"`);
     } else {
-        // Schema or Shared purging
-        const tables = ['orders', 'customers', 'products', 'invoices', 'audit_logs'];
+        // Level 5: Declarative purging based on database metadata
         const schema = config.schemaName || 'public';
+
+        // Discover all tables that have a tenant_id column
+        const tablesWithTenantIdResult = await this.em.getConnection().execute(`
+            SELECT table_name
+            FROM information_schema.columns
+            WHERE column_name = 'tenant_id'
+            AND table_schema = ?
+        `, [config.mode === TenantMode.SCHEMA ? schema : 'public']);
+
+        const tables = tablesWithTenantIdResult.map((r: any) => r.table_name);
 
         await this.em.transactional(async (tx) => {
             for (const table of tables) {
@@ -121,7 +130,7 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
     }
 
     await this.updateTenantStatus(tenantId, TenantStatus.PURGED);
-    this.logger.error(`Tenant ${tenantId} data has been completely removed from all regions.`);
+    this.logger.error(`Tenant ${tenantId} data has been completely removed using declarative discovery.`);
   }
 
   async reopenTenant(tenantId: string): Promise<void> {

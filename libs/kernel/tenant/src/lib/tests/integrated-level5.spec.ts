@@ -8,6 +8,9 @@ import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { TenantMode, TenantStatus, OperationState, OperationType } from '../interfaces/tenant-config.interface';
 import * as auth from '@virteex/kernel-auth';
 import { of, lastValueFrom } from 'rxjs';
+import axios from 'axios';
+
+vi.mock('axios');
 
 describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () => {
   let mockEm: any;
@@ -22,12 +25,17 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
   });
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    (axios.get as any).mockResolvedValue({ status: 200 });
+
     mockEm = {
       transactional: vi.fn().mockImplementation((cb) => cb(mockEm)),
       getConnection: vi.fn().mockReturnValue({
         execute: vi.fn().mockImplementation((query) => {
-            if (query.includes('pg_is_in_recovery')) return [{ is_recovery: false }];
-            return [{ tenantId: 't1', count: 10 }];
+            if (query.includes('pg_is_in_recovery')) return [{ is_replica: false }];
+            if (query.includes('pg_last_xact_replay_timestamp')) return [{ lag: 0, lag_ms: 0 }];
+            if (query.includes('information_schema.columns')) return [{ table_name: 'orders' }];
+            return [{ tenantId: 't1', count: 10, checksum: 'hash', structural_hash: 'hash' }];
         }),
       }),
       setFilterParams: vi.fn(),

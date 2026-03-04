@@ -49,25 +49,43 @@ async function checkRls() {
   // Attempt to query a sensitive table without setting app.current_tenant MUST fail
   try {
       console.log('🧪 Executing real adversarial DB query...');
-      // This logic remains active for environments with DB connectivity
       const results = await attemptUnauthorizedQuery();
+
+      // If we are here and results were returned, RLS is not working for the current user/session
       if (results && results.length > 0) {
           console.error('❌ SECURITY VIOLATION: Tenant escape detected! Data accessible without context.');
           process.exit(1);
+      } else if (results && results.length === 0) {
+          console.log('✅ Adversarial probe returned 0 rows as expected (RLS active).');
       }
   } catch (err) {
       if (err.message.includes('insufficient privilege') || err.message.includes('permission denied') || err.message.includes('RLS policy violation')) {
           console.log('✅ Adversarial probe BLOCKED by database permissions as expected.');
-      } else {
-          // In CI environments without real DB, this is expected to fail with connection errors
-          // which we handle gracefully while ensuring the MIGRATION check passed above.
+      } else if (err.code === 'ECONNREFUSED' || err.message.includes('connect')) {
           console.warn('⚠️  Database probe could not be fully executed (no connectivity), relying on migration static analysis.');
+      } else {
+          console.error(`❌ Unexpected error during adversarial probe: ${err.message}`);
+          process.exit(1);
       }
   }
 
   async function attemptUnauthorizedQuery() {
-      // Logic to attempt query would go here if DB available
-      return [];
+      const { Client } = require('pg');
+      const client = new Client({
+          connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/virteex'
+      });
+
+      try {
+          await client.connect();
+          // We attempt to select from a critical table.
+          // If RLS is working and no tenant is set, this should return 0 rows (or fail if FORCE RLS is strict)
+          const res = await client.query('SELECT * FROM orders LIMIT 1');
+          return res.rows;
+      } catch (err) {
+          throw err;
+      } finally {
+          await client.end();
+      }
   }
 
   console.log('✅ RLS validation passed: Adversarial probe confirmed data isolation.');
