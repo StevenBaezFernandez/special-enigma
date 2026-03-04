@@ -164,7 +164,9 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
           primaryRegion: 'us-east-1',
           secondaryRegion: 'sa-east-1',
           status: 'ACTIVE',
-          isFrozen: false
+          isFrozen: false,
+          version: 2,
+          fenceGeneration: 2
       });
 
       await service.triggerRegionalFailover('t1', 'fail-key');
@@ -172,7 +174,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
       expect(mockEm.flush).toHaveBeenCalled(); // For isFrozen = true
       expect(mockRoutingPlane.createSnapshot).toHaveBeenCalledWith('t1', expect.objectContaining({
           primaryRegion: 'sa-east-1'
-      }));
+      }), { expectedGeneration: 2 });
     });
 
     it('SHOULD failover if target region health probes are successful', async () => {

@@ -10,4 +10,8 @@ export interface TenantContext {
   complianceProfile?: string;
   requestId?: string;
   provenance?: string;
+  signature?: string;
+  exp?: number;
+  iat?: number;
+  contextVersion?: string;
 }

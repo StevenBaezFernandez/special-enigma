@@ -10,6 +10,8 @@ import { SandboxService } from './sandbox.service';
 import { PluginAdmissionService } from './services/plugin-admission.service';
 import { MeteringService } from './services/metering.service';
 import { BillingService } from './services/billing.service';
+import { parseAndValidateSignedContext } from '@virteex/kernel-auth';
+import { metrics } from '@opentelemetry/api';
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 const authToken = process.env.PLUGIN_HOST_API_TOKEN;
@@ -55,6 +57,9 @@ if (nodeEnv === 'production' && admissionMode !== 'enforced') {
 }
 
 const server = Fastify({ logger: true });
+const meter = metrics.getMeter('virteex-plugin-host');
+const contextViolationCounter = meter.createCounter('tenant_context_violations_total');
+
 const sandbox = new SandboxService();
 const admissionService = new PluginAdmissionService();
 
@@ -63,6 +68,38 @@ let orm: MikroORM<PostgreSqlDriver>;
 // Middleware for MikroORM RequestContext
 server.addHook('onRequest', (request, reply, done) => {
   RequestContext.create(orm.em, done);
+});
+
+server.addHook('preHandler', async (request, reply) => {
+  if (request.url.startsWith('/health')) {
+    return;
+  }
+
+  const encodedContext = request.headers['x-virteex-context'] as string | undefined;
+  const signature = request.headers['x-virteex-signature'] as string | undefined;
+  const secret = process.env.VIRTEEX_HMAC_SECRET;
+
+  if (!secret) {
+    reply.status(500).send({ error: 'VIRTEEX_HMAC_SECRET is required for plugin-host context validation.' });
+    return;
+  }
+
+  try {
+    const claims = parseAndValidateSignedContext(encodedContext, signature, secret);
+    (request as any).tenantContext = claims;
+  } catch (error: any) {
+    const violationType = error?.violationType ?? 'invalid_context';
+    server.log.warn({
+      event: 'tenant_context_rejected',
+      channel: 'plugin-host-http',
+      path: request.url,
+      method: request.method,
+      violationType,
+      reason: error?.message ?? 'Unknown context validation failure',
+    });
+    contextViolationCounter.add(1, { channel: 'plugin-host-http', violationType });
+    reply.status(401).send({ error: 'Rejected request without valid signed tenant context.' });
+  }
 });
 
 function authorize(request: FastifyRequest) {
@@ -221,9 +258,10 @@ server.post('/execute', async (request, reply) => {
   }
 
   // Capability Consent Enforcement (Level 5)
-  const tenantId = request.headers['x-virteex-tenant-id'] as string;
+  const tenantContext = (request as any).tenantContext;
+  const tenantId = tenantContext?.tenantId;
   if (!tenantId) {
-      return reply.status(400).send({ error: 'x-virteex-tenant-id header is required for execution' });
+    return reply.status(401).send({ error: 'Valid signed tenant context is required for execution' });
   }
 
   let authorizedCapabilities: string[] = [];
@@ -287,6 +325,11 @@ server.get('/billing/reconciliation/:tenantId', async (request, reply) => {
     }
 
     const { tenantId } = request.params as { tenantId: string };
+    const contextTenantId = (request as any).tenantContext?.tenantId;
+    if (!contextTenantId || contextTenantId !== tenantId) {
+      return reply.status(403).send({ error: 'Tenant context does not match requested reconciliation tenant.' });
+    }
+
     const billingService = new BillingService(orm.em as any);
 
     const report = await billingService.generateReconciliationReport(

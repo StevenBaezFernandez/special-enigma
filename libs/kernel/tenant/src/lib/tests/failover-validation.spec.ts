@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FailoverService } from '../failover.service';
-import { RoutingPlaneService } from '../routing-plane.service';
 import { OperationState, TenantStatus } from '../interfaces/tenant-config.interface';
 import axios from 'axios';
 
@@ -62,6 +61,8 @@ describe('Regional Failover Operational Validation', () => {
       primaryRegion: 'us-east-1',
       secondaryRegion: 'sa-east-1',
       status: TenantStatus.ACTIVE,
+      version: 3,
+      fenceGeneration: 3,
     });
 
     await service.triggerRegionalFailover('t1', 'key-1');
@@ -72,7 +73,7 @@ describe('Regional Failover Operational Validation', () => {
     expect(mockRoutingPlane.createSnapshot).toHaveBeenCalledWith('t1', expect.objectContaining({
       primaryRegion: 'sa-east-1',
       failoverActive: true
-    }));
+    }), { expectedGeneration: 3 });
     expect(mockOpService.transitionState).toHaveBeenCalledWith('fail-123', OperationState.FINALIZED, expect.any(Object));
   });
 
@@ -91,6 +92,8 @@ describe('Regional Failover Operational Validation', () => {
       primaryRegion: 'us-east-1',
       secondaryRegion: 'sa-east-1',
       status: TenantStatus.ACTIVE,
+      version: 3,
+      fenceGeneration: 3,
     });
     mockRoutingPlane.createSnapshot.mockRejectedValue(new Error('KMS Failure'));
 

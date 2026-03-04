@@ -73,6 +73,22 @@ describe('Adversarial Isolation Tests (Tenant Escape)', () => {
     await expect(require('rxjs').lastValueFrom(observable)).rejects.toThrow(ForbiddenException);
   });
 
+
+  it('SHOULD BLOCK write if write-fence token is missing or invalid', async () => {
+    vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 't1' } as any);
+    mockTenantService.getTenantConfig.mockResolvedValue({ mode: 'SHARED', primaryRegion: 'us-east-1' });
+    process.env['AWS_REGION'] = 'us-east-1';
+    mockEm.findOne.mockResolvedValue({ isFrozen: false, status: 'ACTIVE', writeFenceToken: 'wf-valid' });
+
+    const mockContext: any = {
+      getHandler: () => ({}),
+      getClass: () => ({}),
+      switchToHttp: () => ({ getRequest: () => ({ method: 'POST', headers: {} }) }),
+    };
+
+    await expect(interceptor.intercept(mockContext, mockHandler)).rejects.toThrow(/Write fencing token validation failed/);
+  });
+
   it('SHOULD BLOCK access when region sovereignty is violated', async () => {
     vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 't1' } as any);
     mockTenantService.getTenantConfig.mockResolvedValue({

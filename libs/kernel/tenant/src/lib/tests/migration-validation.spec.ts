@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import { MigrationOrchestratorService } from '../migration-orchestrator.service';
 import { TenantMode, OperationState } from '../interfaces/tenant-config.interface';
 
@@ -9,6 +9,14 @@ describe('Migration Pipeline Operational Validation', () => {
   let mockOpService: any;
   let mockRoutingPlane: any;
 
+
+  beforeAll(() => {
+    process.env['EVIDENCE_SIGNING_SECRET'] = 'test-secret';
+  });
+
+  afterAll(() => {
+    delete process.env['EVIDENCE_SIGNING_SECRET'];
+  });
   beforeEach(() => {
     mockEm = {
       findOneOrFail: vi.fn(),

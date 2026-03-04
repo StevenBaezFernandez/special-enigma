@@ -37,7 +37,8 @@
     "build:frontend": "nx build web-portal-app",
     "build:backend": "nx build api-gateway-app",
     "quality:plugin-isolation": "node tools/quality-gates/validate-plugin-isolation.mjs",
-    "quality:block-simulations": "./tools/quality-gates/block-simulations.sh"
+    "quality:block-simulations": "./tools/quality-gates/block-simulations.sh",
+    "quality:verify-rollback-evidence": "node tools/quality-gates/verify-rollback-evidence.mjs"
   },
   "private": true,
   "devDependencies": {

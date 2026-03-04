@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { createHmac } from 'crypto';
 import { ResidencyComplianceService } from './residency-compliance.service';
+import { createHmac, randomUUID } from 'crypto';
 
 /**
  * Enterprise Regional Failover & Disaster Recovery Service
@@ -72,17 +73,24 @@ export class FailoverService {
         await this.operationService.transitionState(op.operationId, OperationState.SWITCHING);
         await this.freezeTenantWrites(tenantId);
 
+        const expectedGeneration = control.fenceGeneration || control.version || 0;
+        const writeFenceToken = `wf-${tenantId}-${randomUUID()}`;
+        control.writeFenceToken = writeFenceToken;
+        control.fenceGeneration = expectedGeneration + 1;
+
         const newTargets = {
             primaryRegion: control.secondaryRegion,
             secondaryRegion: control.primaryRegion,
             failoverActive: true,
             switchedAt: new Date(),
+            generationFence: control.fenceGeneration,
+            writeFenceToken,
             rto_observed_ms: 0,
             rpo_observed_ms: 0
         };
 
-        // 4. Atomic Routing Switch
-        await this.routingPlane.createSnapshot(tenantId, newTargets);
+        // 4. Atomic Routing Switch with generation fencing
+        await this.routingPlane.createSnapshot(tenantId, newTargets, { expectedGeneration });
 
         // 5. Update Persistent Control State
         control.status = TenantStatus.DEGRADED;
@@ -277,6 +285,7 @@ export class FailoverService {
   private async unfreezeTenantWrites(tenantId: string): Promise<void> {
       const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
       control.isFrozen = false;
+      control.writeFenceToken = undefined;
       await this.em.flush();
       this.logger.log(`Tenant ${tenantId} WRITES RESUMED in failover region`);
   }
