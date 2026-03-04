@@ -8,7 +8,7 @@ import { ServerConfigModule, IdempotencyInterceptor } from '@virteex/shared-util
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
+import { JwtAuthGuard, CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 import { TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/kernel-tenant';
 import { KafkaModule } from '@virteex/platform-kafka';
 import { AuditModule } from '@virteex/kernel-audit';
@@ -90,7 +90,7 @@ export class AppModule implements NestModule {
 
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(JwtTenantMiddleware)
+      .apply(CanonicalTenantMiddleware)
       .forRoutes('*');
 
     // UNIFIED GATEWAY STRATEGY:

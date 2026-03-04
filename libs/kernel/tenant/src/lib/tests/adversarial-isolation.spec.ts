@@ -4,7 +4,7 @@ import { RegionalResidencyGuard } from '../guards/regional-residency.guard';
 import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { TenantService } from '../tenant.service';
 import { ForbiddenException } from '@nestjs/common';
-import { of } from 'rxjs';
+import { of, from } from 'rxjs';
 import * as auth from '@virteex/kernel-auth';
 import { TenantModelSubscriber } from '../subscribers/tenant-model.subscriber';
 import { RoutingPlaneService } from '../routing-plane.service';
@@ -120,6 +120,38 @@ describe('Adversarial Isolation Tests (Tenant Escape)', () => {
 
       // Level 5 check: Routing snapshots must be cryptographically signed.
       await expect(routingService.createSnapshot('t1', snapshot)).resolves.toBeDefined();
+  });
+
+  it('SHOULD BLOCK write attempts if RLS WITH CHECK is violated', async () => {
+      // This test simulates a raw SQL write bypass attempt
+      vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 't1' } as any);
+      mockTenantService.getTenantConfig.mockResolvedValue({ mode: 'SHARED', primaryRegion: 'us-east-1' });
+      process.env['AWS_REGION'] = 'us-east-1';
+
+      // Mocking a PG error that would be thrown by WITH CHECK violation
+      mockEm.getConnection().execute.mockImplementation(async (query: string) => {
+          if (query.includes('INSERT') || query.includes('UPDATE') || query.includes('SET LOCAL app.current_tenant')) {
+              if (query.includes('SET LOCAL app.current_tenant')) return [];
+              throw new Error('new row violates row-level security policy for table "orders"');
+          }
+          return [];
+      });
+
+      const mockContext: any = {
+          getHandler: () => ({}),
+          getClass: () => ({}),
+          switchToHttp: () => ({ getRequest: () => ({ method: 'POST' }) })
+      };
+
+      // Ensure we trigger the transactional path in interceptor for SHARED mode
+      mockEm.transactional.mockImplementation(async (cb) => {
+          return await cb(mockEm);
+      });
+      mockHandler.handle.mockReturnValue(from(mockEm.getConnection().execute('INSERT INTO orders...')));
+
+      const observable = await interceptor.intercept(mockContext, mockHandler);
+      const { lastValueFrom } = require('rxjs');
+      await expect(lastValueFrom(observable)).rejects.toThrow(/violates row-level security policy/);
   });
 
   it('SHOULD NOT allow cross-tenant writes even if read filter is bypassed', async () => {

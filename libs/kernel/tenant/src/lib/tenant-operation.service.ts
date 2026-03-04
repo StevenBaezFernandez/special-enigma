@@ -3,6 +3,7 @@ import { EntityManager } from '@mikro-orm/core';
 import { TenantOperation } from './entities/tenant-operation.entity';
 import { OperationState, OperationType } from './interfaces/tenant-config.interface';
 import Redis from 'ioredis';
+import { createHmac } from 'crypto';
 
 @Injectable()
 export class TenantOperationService implements OnModuleInit {
@@ -90,13 +91,26 @@ export class TenantOperationService implements OnModuleInit {
 
   private async appendToJournal(op: TenantOperation, state: OperationState, payload?: any): Promise<void> {
     try {
-        // Level 5: Transactional Journaling to Immutable Audit Trail
+        // Level 5: Transactional Journaling to Immutable Audit Trail with Chained Hashing
         this.logger.log(`[JOURNAL] Tenant=${op.tenantId}, Op=${op.type}, State=${state}, Key=${op.idempotencyKey}`);
 
+        const secret = process.env['AUDIT_HMAC_SECRET'] || 'journal-secret-fail-safe';
+        const timestamp = new Date();
+
+        // Fetch last hash for this tenant to create a chain
+        const lastEntry = await this.em.getConnection().execute(
+            `SELECT chain_hash FROM tenant_operation_journal WHERE tenant_id = ? ORDER BY id DESC LIMIT 1`,
+            [op.tenantId]
+        );
+        const lastHash = lastEntry[0]?.chain_hash || 'genesis-standard-enterprise-5-5';
+
+        const content = `${op.tenantId}:${op.operationId}:${op.type}:${state}:${JSON.stringify(payload || {})}:${timestamp.toISOString()}:${lastHash}`;
+        const chainHash = createHmac('sha256', secret).update(content).digest('hex');
+
         await this.em.getConnection().execute(
-            `INSERT INTO tenant_operation_journal (tenant_id, operation_id, type, state, payload, created_at)
-             VALUES (?, ?, ?, ?, ?, ?)`,
-            [op.tenantId, op.operationId, op.type, state, JSON.stringify(payload || {}), new Date()]
+            `INSERT INTO tenant_operation_journal (tenant_id, operation_id, type, state, payload, created_at, chain_hash)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [op.tenantId, op.operationId, op.type, state, JSON.stringify(payload || {}), timestamp, chainHash]
         );
     } catch (err) {
         // Do not fail the operation if journaling fails, but log a CRITICAL error

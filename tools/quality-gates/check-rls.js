@@ -62,7 +62,8 @@ async function checkRls() {
       if (err.message.includes('insufficient privilege') || err.message.includes('permission denied') || err.message.includes('RLS policy violation')) {
           console.log('✅ Adversarial probe BLOCKED by database permissions as expected.');
       } else if (err.code === 'ECONNREFUSED' || err.message.includes('connect')) {
-          console.warn('⚠️  Database probe could not be fully executed (no connectivity), relying on migration static analysis.');
+          console.error('❌ CRITICAL: Database probe could not be executed (no connectivity). Real DB validation is MANDATORY for Level 5.');
+          process.exit(1);
       } else {
           console.error(`❌ Unexpected error during adversarial probe: ${err.message}`);
           process.exit(1);

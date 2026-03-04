@@ -73,12 +73,8 @@ export class FinOpsService {
           throw new Error(`CRITICAL FINOPS FAILURE: Pricing catalog unreachable. Resource: ${resource}, Region: ${region}. Attribution aborted to prevent drift.`);
       }
 
-      // Fallback to verified baseline ONLY in non-production environments
-      const baseRates: Record<string, number> = { cpu: 0.045, storage: 0.08, iops: 0.008 };
-      const regionalMultipliers: Record<string, number> = { 'us-east-1': 1.0, 'sa-east-1': 1.4, 'eu-central-1': 1.1 };
-      const base = baseRates[resource] || 0.05;
-      const multiplier = regionalMultipliers[region] || 1.2;
-      return base * multiplier;
+  this.logger.error(`[FINOPS] No pricing data found in catalog for ${resource} in ${region}.`);
+  throw new Error(`CRITICAL FINOPS FAILURE: Missing pricing data for ${resource} in ${region}. Real-time attribution is MANDATORY for Level 5.`);
   }
 
   /**

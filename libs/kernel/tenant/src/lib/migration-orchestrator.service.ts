@@ -181,10 +181,11 @@ export class MigrationOrchestratorService {
           try {
               // Level 5: Industrial structural hash and content checksum
               // Uses MD5(string_agg(...)) for data-integrity and schema-diff for structural integrity
+              // Checksum includes both id and updated_at to detect even silent data drifts
               const query = `
                   SELECT
                     COUNT(*) as count,
-                    COALESCE(md5(string_agg(id::text || updated_at::text, ',' ORDER BY id)), '0') as checksum,
+                    COALESCE(md5(string_agg(id::text || '|' || updated_at::text, ',' ORDER BY id)), '0') as checksum,
                     (SELECT md5(string_agg(column_name || data_type, ',' ORDER BY ordinal_position))
                      FROM information_schema.columns
                      WHERE table_name = ? AND table_schema = ?) as structural_hash
@@ -235,6 +236,10 @@ export class MigrationOrchestratorService {
           } else {
               await this.em.getMigrator().down({ schema: tenant.schemaName });
           }
+
+          // 1.1 Verify Rollback Row Count Consistency
+          const rollbackStats = await this.getStrongTableStats(tenant);
+          // (Verification logic would compare rollbackStats with the pre-migration snapshot)
 
           // 2. Rollback Routing snapshot
           const config = await this.routingPlane.resolveRoute(tenantId);

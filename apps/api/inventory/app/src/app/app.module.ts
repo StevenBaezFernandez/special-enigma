@@ -9,7 +9,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { JwtAuthGuard, JwtTenantMiddleware } from '@virteex/kernel-auth';
+import { JwtAuthGuard, CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 import { TenantRlsInterceptor, TenantModule } from '@virteex/kernel-tenant';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
@@ -104,7 +104,7 @@ import { InventoryPresentationModule } from '@virteex/domain-inventory-presentat
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(JwtTenantMiddleware)
+      .apply(CanonicalTenantMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

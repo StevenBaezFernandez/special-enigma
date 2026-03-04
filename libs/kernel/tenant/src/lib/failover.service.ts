@@ -6,6 +6,9 @@ import { FinOpsService } from './finops.service';
 import { TenantControlRecord } from './entities/tenant-control-record.entity';
 import { OperationType, OperationState, TenantStatus } from './interfaces/tenant-config.interface';
 import axios from 'axios';
+import * as fs from 'fs';
+import * as path from 'path';
+import { createHmac } from 'crypto';
 
 /**
  * Enterprise Regional Failover & Disaster Recovery Service
@@ -26,6 +29,13 @@ export class FailoverService {
     private readonly routingPlane: RoutingPlaneService,
     private readonly finops: FinOpsService
   ) {}
+
+  async executeDrill(tenantId: string): Promise<string> {
+      const drillId = `drill-${Date.now()}`;
+      this.logger.log(`Starting scheduled DR DRILL: ${drillId} for tenant ${tenantId}`);
+      await this.triggerRegionalFailover(tenantId, drillId);
+      return drillId;
+  }
 
   async triggerRegionalFailover(tenantId: string, idempotencyKey: string): Promise<void> {
     const locked = await this.operationService.acquireLock(tenantId);
@@ -93,7 +103,7 @@ export class FailoverService {
         this.logger.log(`[DR] Failover SUCCESS for tenant ${tenantId}. RTO: ${duration.toFixed(2)}ms`);
 
         await this.finops.recordOperationSlo(tenantId, 'failover', duration, true, 'multi-region');
-        await this.recordDrillResult(tenantId, duration);
+        await this.recordDrillResult(tenantId, duration, idempotencyKey);
 
       } catch (error: any) {
         this.logger.error(`[DR] Failover CRITICAL FAILURE for tenant ${tenantId}: ${error.message}`);
@@ -186,13 +196,38 @@ export class FailoverService {
       }
   }
 
-  private async recordDrillResult(tenantId: string, rtoMs: number): Promise<void> {
+  private async recordDrillResult(tenantId: string, rtoMs: number, idempotencyKey: string): Promise<void> {
+      const result: any = {
+          tenantId,
+          rtoMs,
+          rpoMs: 0,
+          status: 'SUCCESS',
+          executedAt: new Date().toISOString(),
+          idempotencyKey,
+          environment: process.env['NODE_ENV'] || 'development'
+      };
+
+      // Level 5: Cryptographic signing of evidence
+      const secret = process.env['EVIDENCE_SIGNING_SECRET'] || 'drill-secret-fail-safe';
+      const payload = JSON.stringify(result);
+      result.signature = createHmac('sha256', secret).update(payload).digest('hex');
+
       try {
           await this.em.getConnection().execute(
-              `INSERT INTO dr_drill_journal (tenant_id, rto_ms, rpo_ms, status, executed_at)
-               VALUES (?, ?, ?, ?, ?)`,
-              [tenantId, rtoMs, 0, 'SUCCESS', new Date()]
+              `INSERT INTO dr_drill_journal (tenant_id, rto_ms, rpo_ms, status, executed_at, evidence_signature)
+               VALUES (?, ?, ?, ?, ?, ?)`,
+              [tenantId, rtoMs, 0, 'SUCCESS', new Date(), result.signature]
           );
+
+          // Level 5: Immutable evidence artifact generation
+          const reportDir = path.join(process.cwd(), 'evidence/reports');
+          if (!fs.existsSync(reportDir)) {
+              fs.mkdirSync(reportDir, { recursive: true });
+          }
+          const reportPath = path.join(reportDir, `dr-drill-${tenantId}-${idempotencyKey}.json`);
+          fs.writeFileSync(reportPath, JSON.stringify(result, null, 2));
+          this.logger.log(`[DR] Signed immutable drill report persisted at ${reportPath}`);
+
       } catch (err) {
           this.logger.error(`Failed to record DR drill: ${err instanceof Error ? err.message : String(err)}`);
       }

@@ -27,6 +27,12 @@ export class DataAuditLog {
   @Property()
   timestamp: Date = new Date();
 
+  @Property({ nullable: true })
+  previousHash?: string;
+
+  @Property()
+  hash!: string;
+
   constructor(
     entityType: string,
     entityId: string,

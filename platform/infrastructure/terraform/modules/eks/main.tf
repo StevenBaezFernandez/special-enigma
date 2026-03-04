@@ -10,10 +10,6 @@ variable "subnet_ids" {
   type = list(string)
 }
 
-data "aws_lb" "nlb" {
-  name = "virteex-nlb-${var.cluster_name}"
-}
-
 resource "aws_eks_cluster" "main" {
   name     = var.cluster_name
   role_arn = aws_iam_role.cluster.arn
@@ -35,8 +31,8 @@ resource "aws_eks_node_group" "main" {
 
   scaling_config {
     desired_size = 2
-    max_size     = 3
-    min_size     = 1
+    max_size     = 5
+    min_size     = 2
   }
 
   depends_on = [
@@ -98,8 +94,4 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEKS_CNI_Policy" {
 resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.node.name
-}
-
-output "nlb_arn" {
-  value = data.aws_lb.nlb.arn
 }

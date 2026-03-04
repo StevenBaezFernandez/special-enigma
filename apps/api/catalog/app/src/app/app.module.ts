@@ -9,7 +9,7 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TenantModule } from '@virteex/kernel-tenant';
-import { JwtTenantMiddleware } from '@virteex/kernel-auth';
+import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 import { KafkaModule } from '@virteex/platform-kafka';
 import { CatalogInfrastructureModule } from '@virteex/domain-catalog-infrastructure';
 import { CatalogApplicationModule } from '@virteex/domain-catalog-application';
@@ -81,6 +81,6 @@ import { CatalogPresentationModule } from '@virteex/domain-catalog-presentation'
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtTenantMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+    consumer.apply(CanonicalTenantMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

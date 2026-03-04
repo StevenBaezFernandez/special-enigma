@@ -37,7 +37,8 @@ export class Migration20250220_RLS extends Migration {
 
               -- Create new policy
               -- Users can only see rows where tenant_id matches the session variable
-              EXECUTE format('CREATE POLICY tenant_isolation ON %I USING (tenant_id = app.current_tenant_id());', t);
+              -- WITH CHECK ensures that any INSERT or UPDATE must also satisfy the tenant isolation
+              EXECUTE format('CREATE POLICY tenant_isolation ON %I USING (tenant_id = app.current_tenant_id()) WITH CHECK (tenant_id = app.current_tenant_id());', t);
 
               -- Force RLS even for owners
               EXECUTE format('ALTER TABLE %I FORCE ROW LEVEL SECURITY;', t);

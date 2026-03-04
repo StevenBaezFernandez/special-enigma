@@ -11,7 +11,7 @@ import depthLimit from 'graphql-depth-limit';
 import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { TenantModule } from '@virteex/kernel-tenant';
-import { JwtTenantMiddleware } from '@virteex/kernel-auth';
+import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 import { IdentityPresentationModule } from '@virteex/domain-identity-presentation';
 import { IdentityInfrastructureModule } from '@virteex/domain-identity-infrastructure';
 
@@ -81,7 +81,7 @@ import { AppService } from './app.service';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(JwtTenantMiddleware)
+      .apply(CanonicalTenantMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
