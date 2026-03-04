@@ -1,0 +1,1 @@
+terraform show -json unavailable in current environment

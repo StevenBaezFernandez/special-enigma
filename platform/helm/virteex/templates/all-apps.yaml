@@ -1,11 +1,15 @@
 {{- range $name, $config := .Values.applications }}
+{{- $replicas := ($config.replicas | default 2) }}
+{{- $maxUnavailable := ($config.pdb.maxUnavailable | default 1) }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ $name }}
+  labels:
+    app: {{ $name }}
 spec:
-  replicas: {{ $config.replicas }}
+  replicas: {{ $replicas }}
   selector:
     matchLabels:
       app: {{ $name }}
@@ -13,12 +17,36 @@ spec:
     metadata:
       labels:
         app: {{ $name }}
+        topology.virteex.io/service: {{ $name }}
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values: [{{ $name | quote }}]
+              topologyKey: topology.kubernetes.io/zone
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: {{ $name }}
       containers:
         - name: {{ $name }}
           image: {{ $config.image }}
           ports:
             - containerPort: 3000
+          resources:
+            requests:
+              cpu: {{ $config.resources.requests.cpu | default "200m" }}
+              memory: {{ $config.resources.requests.memory | default "256Mi" }}
+            limits:
+              cpu: {{ $config.resources.limits.cpu | default "1" }}
+              memory: {{ $config.resources.limits.memory | default "1Gi" }}
 ---
 apiVersion: v1
 kind: Service
@@ -37,7 +65,7 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ $name }}-pdb
 spec:
-  minAvailable: 1
+  maxUnavailable: {{ $maxUnavailable }}
   selector:
     matchLabels:
       app: {{ $name }}
@@ -51,13 +79,13 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ $name }}
-  minReplicas: 2
-  maxReplicas: 10
+  minReplicas: {{ $config.hpa.minReplicas | default 2 }}
+  maxReplicas: {{ $config.hpa.maxReplicas | default 10 }}
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: {{ $config.hpa.targetCPUUtilizationPercentage | default 70 }}
 {{- end }}

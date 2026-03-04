@@ -37,7 +37,10 @@
     "build:frontend": "nx build web-portal-app",
     "build:backend": "nx build api-gateway-app",
     "quality:plugin-isolation": "node tools/quality-gates/validate-plugin-isolation.mjs",
-    "quality:block-simulations": "./tools/quality-gates/block-simulations.sh"
+    "quality:block-simulations": "./tools/quality-gates/block-simulations.sh",
+    "infra:validate-topology": "node tools/quality-gates/validate-regional-topology.mjs",
+    "infra:check-drift": "./tools/quality-gates/check-terraform-drift.sh",
+    "readiness:infra-evidence": "node tools/readiness/generate-infra-evidence-pack.mjs"
   },
   "private": true,
   "devDependencies": {
