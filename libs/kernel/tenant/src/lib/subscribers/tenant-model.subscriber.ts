@@ -51,6 +51,14 @@ export class TenantModelSubscriber implements EventSubscriber {
         args.entity.tenantId = tenantId;
     } else if (args.entity.tenantId !== tenantId) {
         this.logger.error(`[AUDIT] CROSS-TENANT WRITE ATTEMPT: Tenant ${tenantId} tried to ${operation} entity belonging to ${args.entity.tenantId}`);
+
+        // Level 5: Persistence-level Security Audit
+        await args.em.getConnection().execute(
+            `INSERT INTO security_audit_journal (tenant_id, event_type, severity, payload, created_at)
+             VALUES (?, ?, ?, ?, ?)`,
+            [tenantId, 'CROSS_TENANT_WRITE_ATTEMPT', 'CRITICAL', JSON.stringify({ operation, entity: args.entity.constructor.name, targetTenant: args.entity.tenantId }), new Date()]
+        );
+
         throw new Error('Cross-tenant write operation blocked.');
     }
   }

@@ -12,18 +12,16 @@ export class JwtTenantMiddleware implements NestMiddleware {
     const authHeader = req.headers.authorization;
     const tenantIdHeader = req.headers['x-virteex-tenant-id'];
 
-    if (!authHeader && !tenantIdHeader) {
-      return next();
+    if (!authHeader) {
+      this.logger.error('Access attempt without Authorization header');
+      throw new UnauthorizedException('Authentication required');
     }
 
     const token = authHeader?.split(' ')[1];
 
     if (!token) {
-      if (tenantIdHeader) {
-        this.logger.error('Attempted tenant access via header without signed context');
-        throw new UnauthorizedException('Signed tenant context required');
-      }
-      return next();
+      this.logger.error('Bearer token missing in Authorization header');
+      throw new UnauthorizedException('Valid token required');
     }
 
     try {

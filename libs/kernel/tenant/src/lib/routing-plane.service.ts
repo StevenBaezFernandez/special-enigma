@@ -61,10 +61,14 @@ export class RoutingPlaneService {
     const existing = await this.em.findOne(TenantRoutingSnapshot, { tenantId });
     const generation = existing ? existing.generation + 1 : 1;
 
+    // Snapshot Expiration Logic (Level 5)
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // Valid for 7 days
+
     const snapshot = this.em.create(TenantRoutingSnapshot, {
       tenantId,
       generation,
-      routeTargets: targets,
+      routeTargets: { ...targets, expiresAt: expiresAt.toISOString() },
       issuedAt: new Date(),
       signature: '',
     });
@@ -78,7 +82,7 @@ export class RoutingPlaneService {
     }
 
     await this.em.flush();
-    this.logger.log(`Created new signed routing snapshot for tenant ${tenantId} (Gen ${generation})`);
+    this.logger.log(`Created new signed routing snapshot for tenant ${tenantId} (Gen ${generation}). Expires: ${expiresAt.toISOString()}`);
     return snapshot;
   }
 

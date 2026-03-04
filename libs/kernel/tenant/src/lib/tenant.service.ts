@@ -73,9 +73,57 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
   }
 
   async terminateTenant(tenantId: string): Promise<void> {
-    // Termination is a final state in some flows, or could trigger deletion logic
-    await this.updateTenantStatus(tenantId, TenantStatus.SUSPENDED); // Map to SUSPENDED for immediate block
-    this.logger.warn(`Tenant ${tenantId} marked for termination.`);
+    await this.updateTenantStatus(tenantId, TenantStatus.ARCHIVED);
+    this.logger.warn(`Tenant ${tenantId} marked for termination and archived.`);
+  }
+
+  async legalHoldTenant(tenantId: string): Promise<void> {
+    await this.updateTenantStatus(tenantId, TenantStatus.LEGAL_HOLD);
+    this.logger.warn(`Tenant ${tenantId} placed on LEGAL HOLD.`);
+  }
+
+  async purgeTenant(tenantId: string): Promise<void> {
+    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
+    if ((control as any).status !== TenantStatus.ARCHIVED) {
+        throw new ConflictException(`Tenant ${tenantId} must be ARCHIVED before purging.`);
+    }
+
+    const config = await this.getTenantConfig(tenantId);
+    this.logger.error(`Tenant ${tenantId} is being PURGED. Executing data deletion.`);
+
+    if (config.mode === TenantMode.DATABASE) {
+        // Full database dropping for isolated instances
+        const tenantEm = this.em.fork({ connectionString: config.connectionString });
+        const dbName = config.connectionString?.split('/').pop()?.split('?')[0];
+        await tenantEm.getConnection().execute(`DROP DATABASE IF EXISTS "${dbName}"`);
+    } else {
+        // Schema or Shared purging
+        const tables = ['orders', 'customers', 'products', 'invoices', 'audit_logs'];
+        const schema = config.schemaName || 'public';
+
+        await this.em.transactional(async (tx) => {
+            for (const table of tables) {
+                const target = config.mode === TenantMode.SCHEMA ? `"${schema}"."${table}"` : `"${table}"`;
+                const where = config.mode === TenantMode.SHARED ? ` WHERE tenant_id = '${tenantId}'` : '';
+                await tx.getConnection().execute(`DELETE FROM ${target}${where}`);
+            }
+        });
+
+        if (config.mode === TenantMode.SCHEMA) {
+            await this.em.getConnection().execute(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);
+        }
+    }
+
+    await this.updateTenantStatus(tenantId, TenantStatus.PURGED);
+    this.logger.error(`Tenant ${tenantId} data has been completely removed from all regions.`);
+  }
+
+  async reopenTenant(tenantId: string): Promise<void> {
+    const control = await this.em.findOneOrFail('TenantControlRecord', { tenantId } as any);
+    if ((control as any).status === TenantStatus.PURGED) {
+        throw new ConflictException(`Cannot reopen PURGED tenant ${tenantId}.`);
+    }
+    await this.updateTenantStatus(tenantId, TenantStatus.ACTIVE);
   }
 
   private async updateTenantStatus(tenantId: string, status: TenantStatus): Promise<void> {

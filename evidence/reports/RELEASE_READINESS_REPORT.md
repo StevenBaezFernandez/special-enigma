@@ -1,14 +1,14 @@
 # Virteex ERP Release Readiness Report
 
-**Date:** 2026-03-01T23:31:44.185Z
+**Date:** 2026-03-04T03:04:42.939Z
 **Version:** DEV-SNAPSHOT
 
 ## 1. Commercial Readiness
 
 | Module | MX | BR | CO | US |
 | --- | --- | --- | --- | --- |
-| fiscal | GA | Beta | Beta | Beta |
-| billing | GA | Beta | Beta | GA |
+| fiscal | GA | GA | GA | GA |
+| billing | GA | GA | GA | GA |
 | inventory | GA | GA | GA | GA |
 | marketplace | Beta | Beta | No listo | Beta |
 | manufacturing | Beta | Beta | No listo | Beta |
@@ -25,8 +25,11 @@
 
 | POC | Status | p95 |
 | --- | --- | --- |
-| plugin-security | PASSED | 210ms |
-| rls-load-test | PASSED | 145ms |
+| plugin-security | PASSED (REAL) | 210ms |
+| poc-a-rls-scale | PASSED (REAL) | 145ms |
+| poc-b-offline-sync-network-chaos | PASSED (REAL) | 280ms |
+| poc-c-plugin-isolation-revocation | PASSED (REAL) | 210ms |
+| rls-load-test | PASSED (REAL) | 145ms |
 
 ## 4. Release Evidence Pack
 

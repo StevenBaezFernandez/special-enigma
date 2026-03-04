@@ -4,7 +4,10 @@ import { Injectable, Logger } from '@nestjs/common';
 export class FinOpsService {
   private readonly logger = new Logger(FinOpsService.name);
 
-  constructor(private readonly telemetry: any) {}
+  constructor(
+      private readonly telemetry: any,
+      private readonly em: any // Injecting for journaling
+  ) {}
 
   async recordResourceUsage(
     tenantId: string,
@@ -28,6 +31,9 @@ export class FinOpsService {
     const multiplier = multipliers[mode as keyof typeof multipliers] || 1.0;
 
     const observationCost = amount * baseRate * multiplier;
+
+    // Level 5: Persistence of FinOps data for billing reconciliation
+    await this.recordCostInJournal(tenantId, resource, amount, observationCost, region);
 
     this.telemetry.recordBusinessMetric('tenant_resource_cost_observed_usd', observationCost, {
       tenantId,
@@ -93,6 +99,20 @@ export class FinOpsService {
               recommendedMode: currentMode === 'SHARED' ? 'SCHEMA' : 'DATABASE',
               reason: 'cost_efficiency'
           });
+      }
+  }
+
+  private async recordCostInJournal(tenantId: string, resource: string, usage: number, cost: number, region: string): Promise<void> {
+      try {
+          if (this.em) {
+               await this.em.getConnection().execute(
+                `INSERT INTO tenant_finops_journal (tenant_id, resource, usage_amount, cost_usd, region, observed_at)
+                 VALUES (?, ?, ?, ?, ?, ?)`,
+                [tenantId, resource, usage, cost, region, new Date()]
+              );
+          }
+      } catch (err) {
+          this.logger.error(`Failed to record FinOps journal entry: ${err instanceof Error ? err.message : String(err)}`);
       }
   }
 }

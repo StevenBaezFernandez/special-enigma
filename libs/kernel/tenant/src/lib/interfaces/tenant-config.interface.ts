@@ -9,6 +9,9 @@ export enum TenantStatus {
   SUSPENDED = 'SUSPENDED',
   PROVISIONING = 'PROVISIONING',
   DEGRADED = 'DEGRADED',
+  LEGAL_HOLD = 'LEGAL_HOLD',
+  ARCHIVED = 'ARCHIVED',
+  PURGED = 'PURGED',
 }
 
 export enum OperationType {

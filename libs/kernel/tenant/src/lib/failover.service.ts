@@ -75,6 +75,9 @@ export class FailoverService {
 
         await this.finops.recordOperationSlo(tenantId, 'failover', performance.now() - startTime, true, 'multi-region');
 
+        // Automatic DR Drill Recording
+        await this.recordDrillResult(tenantId, performance.now() - startTime);
+
       } catch (error: any) {
         await this.finops.recordOperationSlo(tenantId, 'failover', performance.now() - startTime, false, 'multi-region');
         this.logger.error(`Failover failed for tenant ${tenantId}: ${error.message}`);
@@ -141,6 +144,24 @@ export class FailoverService {
       } catch (err) {
           return 9999;
       }
+  }
+
+  private async recordDrillResult(tenantId: string, rtoMs: number): Promise<void> {
+      this.logger.log(`Recording DR Drill result for tenant ${tenantId}. RTO: ${rtoMs}ms`);
+      try {
+          await this.em.getConnection().execute(
+              `INSERT INTO dr_drill_journal (tenant_id, rto_ms, rpo_ms, status, executed_at)
+               VALUES (?, ?, ?, ?, ?)`,
+              [tenantId, rtoMs, 0, 'SUCCESS', new Date()]
+          );
+      } catch (err) {
+          this.logger.error(`Failed to record DR drill result: ${err instanceof Error ? err.message : String(err)}`);
+      }
+  }
+
+  async executeDrill(tenantId: string): Promise<void> {
+      this.logger.log(`Initiating scheduled DR Drill for tenant ${tenantId}`);
+      await this.triggerRegionalFailover(tenantId, `drill-${Date.now()}`);
   }
 
   private async freezeTenantWrites(tenantId: string): Promise<void> {

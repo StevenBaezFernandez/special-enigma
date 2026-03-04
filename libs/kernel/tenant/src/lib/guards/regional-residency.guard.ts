@@ -37,7 +37,17 @@ export class RegionalResidencyGuard implements CanActivate {
 
     if (allowedRegion !== effectiveCurrentRegion) {
         this.logger.error(`[ASYNC SECURITY] Data Sovereignty Violation: Tenant ${tenantId} is restricted to ${allowedRegion} but async task reached ${effectiveCurrentRegion}`);
-        this.logger.warn(`AUDIT: ASYNC Region Bypass Attempted: Tenant=${tenantId}, Expected=${allowedRegion}, Actual=${effectiveCurrentRegion}`);
+
+        // Level 5: Audit Log for Async bypass
+        const em = (this.tenantService as any).em;
+        if (em) {
+             await em.getConnection().execute(
+                `INSERT INTO security_audit_journal (tenant_id, event_type, severity, payload, created_at)
+                 VALUES (?, ?, ?, ?, ?)`,
+                [tenantId, 'ASYNC_REGION_BYPASS_ATTEMPT', 'CRITICAL', JSON.stringify({ expected: allowedRegion, actual: effectiveCurrentRegion }), new Date()]
+            );
+        }
+
         throw new ForbiddenException(`Data residency policy violation in async channel. Access denied for region: ${effectiveCurrentRegion}`);
     }
 

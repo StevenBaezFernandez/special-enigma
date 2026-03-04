@@ -13,6 +13,8 @@ FORBIDDEN_PATTERNS=(
     "manual step"
     "best effort"
     "skip validation"
+    "return true"
+    "exit 0"
 )
 
 # Productive files are mainly .ts files in apps/ and libs/, excluding tests and mock directories

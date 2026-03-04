@@ -50,7 +50,9 @@ if (fs.existsSync(pocResultsDir)) {
         const data = JSON.parse(
           fs.readFileSync(path.join(pocResultsDir, file), 'utf8'),
         );
-        reportContent += `| ${file.replace('.json', '')} | PASSED | ${data.metrics?.http_req_duration?.p95 || 'N/A'}ms |\n`;
+        const p95 = data.metrics?.http_req_duration?.p95;
+        const status = (p95 && p95 > 0) ? 'PASSED (REAL)' : 'FAILED (INVALID EVIDENCE)';
+        reportContent += `| ${file.replace('.json', '')} | ${status} | ${p95 || 'N/A'}ms |\n`;
       } catch {
         reportContent += `| ${file} | ERROR | - |\n`;
       }

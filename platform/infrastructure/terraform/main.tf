@@ -119,3 +119,46 @@ resource "aws_vpc_peering_connection_accepter" "secondary" {
   vpc_peering_connection_id = aws_vpc_peering_connection.primary_secondary.id
   auto_accept               = true
 }
+
+# Global Traffic Plane (Level 5)
+resource "aws_globalaccelerator_accelerator" "virteex" {
+  name            = "virteex-global-traffic-plane"
+  ip_address_type = "IPV4"
+  enabled         = true
+}
+
+resource "aws_globalaccelerator_listener" "http" {
+  accelerator_arn = aws_globalaccelerator_accelerator.virteex.id
+  client_affinity = "SOURCE_IP"
+  protocol        = "TCP"
+
+  port_range {
+    from_port = 80
+    to_port   = 80
+  }
+
+  port_range {
+    from_port = 443
+    to_port   = 443
+  }
+}
+
+resource "aws_globalaccelerator_endpoint_group" "primary" {
+  listener_arn = aws_globalaccelerator_listener.http.id
+  endpoint_group_region = var.primary_region
+
+  endpoint_configuration {
+    endpoint_id = module.eks_primary.nlb_arn # Assuming module exposes NLB ARN
+    weight      = 100
+  }
+}
+
+resource "aws_globalaccelerator_endpoint_group" "secondary" {
+  listener_arn = aws_globalaccelerator_listener.http.id
+  endpoint_group_region = var.secondary_region
+
+  endpoint_configuration {
+    endpoint_id = module.eks_secondary.nlb_arn
+    weight      = 0 # Active-Passive configuration
+  }
+}

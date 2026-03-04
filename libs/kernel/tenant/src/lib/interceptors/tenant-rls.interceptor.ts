@@ -156,8 +156,12 @@ export class TenantRlsInterceptor implements NestInterceptor {
         this.logger.error(`[SECURITY] Data Sovereignty Violation: Tenant ${tenantId} is restricted to ${allowedRegion} but request reached ${effectiveCurrentRegion}`);
         this.errorCounter.add(1, { tenantId, type: 'sovereignty_violation' });
 
-        // Audit log entry for compliance
-        this.logger.warn(`AUDIT: Region Bypass Attempted: Tenant=${tenantId}, Expected=${allowedRegion}, Actual=${effectiveCurrentRegion}`);
+        // Audit log entry for compliance (Immutable Journal)
+        await this.em.getConnection().execute(
+            `INSERT INTO security_audit_journal (tenant_id, event_type, severity, payload, created_at)
+             VALUES (?, ?, ?, ?, ?)`,
+            [tenantId, 'REGION_BYPASS_ATTEMPT', 'CRITICAL', JSON.stringify({ expected: allowedRegion, actual: effectiveCurrentRegion }), new Date()]
+        );
 
         throw new ForbiddenException(`Data residency policy violation. Access denied for region: ${effectiveCurrentRegion}`);
     }

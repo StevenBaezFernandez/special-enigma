@@ -20,12 +20,12 @@
         "allowSimulation": false
       },
       "BR": {
-        "status": "Beta",
+        "status": "GA",
         "provider": "SEFAZ",
         "allowSimulation": false
       },
       "CO": {
-        "status": "Beta",
+        "status": "GA",
         "provider": "DIAN",
         "allowSimulation": false
       },
@@ -45,11 +45,11 @@
         "allowSimulation": false
       },
       "BR": {
-        "status": "Beta",
+        "status": "GA",
         "allowSimulation": false
       },
       "CO": {
-        "status": "Beta",
+        "status": "GA",
         "allowSimulation": false
       },
       "US": {

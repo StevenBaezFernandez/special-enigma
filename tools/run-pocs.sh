@@ -6,9 +6,9 @@ if ! command -v k6 >/dev/null 2>&1; then
   if command -v docker >/dev/null 2>&1; then
     K6_CMD="docker run --rm -i -v $(pwd):/src -w /src grafana/k6"
   else
-    echo "[WARN] k6 is not installed and docker is unavailable."
-    echo "[WARN] POC suite cannot be executed in this environment."
-    exit 0
+    echo "ERROR: k6 is not installed and docker is unavailable."
+    echo "POC suite MUST be executed to achieve Level 5 Certification."
+    exit 1
   fi
 fi
 
