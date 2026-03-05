@@ -71,7 +71,10 @@
           "buildTarget": "web-store-app:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4207
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"

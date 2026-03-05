@@ -66,7 +66,10 @@
           "buildTarget": "web-cms-app:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4201
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
@@ -76,7 +79,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "web-cms-app:build",
-        "port": 4200,
+        "port": 4201,
         "staticFilePath": "dist/apps/web-cms-app/browser",
         "spa": true
       }

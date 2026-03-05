@@ -82,7 +82,8 @@
       },
       "defaultConfiguration": "development",
       "options": {
-        "proxyConfig": "apps/web/portal/app/proxy.conf.json"
+        "proxyConfig": "apps/web/portal/app/proxy.conf.json",
+        "port": 4200
       }
     },
     "lint": {

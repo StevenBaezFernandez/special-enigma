@@ -1,4 +1,4 @@
-import { Module, Global, forwardRef } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
   SUBSCRIPTION_REPOSITORY,
@@ -7,8 +7,19 @@ import {
   SUBSCRIPTION_PROVIDER_GATEWAY,
   PAYMENT_SESSION_PROVIDER
 } from '@virteex/domain-subscription-domain';
+import {
+  IProcessCheckoutSuccessUseCase,
+  IHandleInvoicePaidUseCase,
+  IHandleSubscriptionUpdatedUseCase,
+  IHandleSubscriptionDeletedUseCase
+} from '@virteex/domain-subscription-contracts';
 import { SubscriptionDomainModule } from './subscription-domain.module';
-import { SubscriptionApplicationModule } from '@virteex/domain-subscription-application';
+import {
+  ProcessCheckoutSuccessUseCase,
+  HandleInvoicePaidUseCase,
+  HandleSubscriptionUpdatedUseCase,
+  HandleSubscriptionDeletedUseCase
+} from '@virteex/domain-subscription-application';
 
 import { MikroOrmSubscriptionRepository } from './repositories/mikro-orm-subscription.repository';
 import { MikroOrmSubscriptionPlanRepository } from './repositories/mikro-orm-subscription-plan.repository';
@@ -20,7 +31,6 @@ import { SubscriptionSchema, SubscriptionPlanSchema } from './persistence/subscr
 @Module({
   imports: [
     SubscriptionDomainModule,
-    forwardRef(() => SubscriptionApplicationModule),
     MikroOrmModule.forFeature([
       SubscriptionSchema,
       SubscriptionPlanSchema
@@ -47,6 +57,26 @@ import { SubscriptionSchema, SubscriptionPlanSchema } from './persistence/subscr
       provide: PAYMENT_SESSION_PROVIDER,
       useClass: StripeSubscriptionAdapter
     },
+    {
+      provide: IProcessCheckoutSuccessUseCase,
+      useClass: ProcessCheckoutSuccessUseCase
+    },
+    {
+      provide: IHandleInvoicePaidUseCase,
+      useClass: HandleInvoicePaidUseCase
+    },
+    {
+      provide: IHandleSubscriptionUpdatedUseCase,
+      useClass: HandleSubscriptionUpdatedUseCase
+    },
+    {
+      provide: IHandleSubscriptionDeletedUseCase,
+      useClass: HandleSubscriptionDeletedUseCase
+    },
+    ProcessCheckoutSuccessUseCase,
+    HandleInvoicePaidUseCase,
+    HandleSubscriptionUpdatedUseCase,
+    HandleSubscriptionDeletedUseCase,
     StripeSubscriptionListener
   ],
   exports: [

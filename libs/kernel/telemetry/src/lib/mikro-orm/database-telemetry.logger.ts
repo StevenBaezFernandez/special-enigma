@@ -1,6 +1,6 @@
 import { EventSubscriber, MiddlewareContext, FlushEventArgs, Logger } from '@mikro-orm/core';
 import { Injectable, Logger as NestLogger } from '@nestjs/common';
-import { getTenantContext } from '@virteex/kernel-auth';
+import { getTenantContext } from '@virteex/kernel-tenant-context';
 import { metrics } from '@opentelemetry/api';
 
 @Injectable()
@@ -15,10 +15,6 @@ export class DatabasePerformanceInterceptor implements EventSubscriber {
   async onHeader(ctx: MiddlewareContext): Promise<void> {
     (ctx as any).startTime = performance.now();
   }
-
-  // Note: MikroORM doesn't have a built-in "afterQuery" middleware that's easy to hook into for all queries
-  // but we can use the logger or a custom driver wrapper.
-  // For this remediation, we'll implement a logic that can be injected into the MikroORM config.
 }
 
 /**
@@ -40,7 +36,7 @@ export class DatabaseTelemetryLogger extends Logger {
 
     if (took > this.SLOW_QUERY_THRESHOLD) {
       this.slowQueryCounter.add(1, { tenantId });
-      this.nestLogger.warn(`SLOW QUERY [${tenantId}] (${took}ms): ${params.query}`);
+      this.nestLogger.warn(\`SLOW QUERY [\${tenantId}] (\${took}ms): \${params.query}\`);
     }
   }
 

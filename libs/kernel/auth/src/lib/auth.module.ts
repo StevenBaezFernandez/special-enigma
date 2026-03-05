@@ -15,12 +15,6 @@ import { CsrfMiddleware } from './middleware/csrf.middleware';
 import { JwtTokenService } from './services/jwt-token.service';
 import { StepUpGuard } from './guards/step-up.guard';
 
-/**
- * Enterprise Auth Module
- *
- * Centralizes authentication and tenant context propagation.
- * Enforces CanonicalTenantMiddleware as the single source of truth for tenancy.
- */
 @Module({
   imports: [ConfigModule, TelemetryModule, PassportModule.register({ defaultStrategy: 'jwt' }), JwtModule.register({})],
   providers: [

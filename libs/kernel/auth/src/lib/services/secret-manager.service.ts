@@ -1,7 +1,7 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { randomBytes } from 'node:crypto';
 import { SecretProvider } from '../interfaces/secret-provider.interface';
-import { TelemetryService } from '@virteex/kernel-telemetry';
+import { TelemetryService, TELEMETRY_SERVICE } from '@virteex/kernel-telemetry-interfaces';
 
 export const SECRET_PROVIDER = 'SECRET_PROVIDER';
 
@@ -13,7 +13,7 @@ export class SecretManagerService {
 
   constructor(
     @Inject(SECRET_PROVIDER) private readonly provider: SecretProvider,
-    private readonly telemetry: TelemetryService
+    @Inject(TELEMETRY_SERVICE) private readonly telemetry: TelemetryService
   ) {
     this.initSecrets();
   }

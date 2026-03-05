@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger, Inject } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { SecretManagerService } from './secret-manager.service';
-import { TelemetryService } from '@virteex/kernel-telemetry';
+import { TelemetryService, TELEMETRY_SERVICE } from '@virteex/kernel-telemetry-interfaces';
 import Redis from 'ioredis';
 
 export type SupportedTokenType = 'access' | 'refresh' | 'service' | 'plugin' | 'stepup';
@@ -38,7 +38,10 @@ export class JwtTokenService {
   private readonly logger = new Logger(JwtTokenService.name);
   private readonly isProduction: boolean;
 
-  constructor(private readonly secretManager: SecretManagerService, private readonly telemetry: TelemetryService) {
+  constructor(
+    private readonly secretManager: SecretManagerService,
+    @Inject(TELEMETRY_SERVICE) private readonly telemetry: TelemetryService
+  ) {
     this.isProduction = process.env['NODE_ENV'] === 'production';
 
     const algs = this.secretManager

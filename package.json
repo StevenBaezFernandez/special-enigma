@@ -40,11 +40,11 @@
     "quality:block-simulations": "./tools/quality-gates/block-simulations.sh",
     "infra:validate-topology": "node tools/quality-gates/validate-regional-topology.mjs",
     "infra:check-drift": "./tools/quality-gates/check-terraform-drift.sh",
-    "readiness:infra-evidence": "node tools/readiness/generate-infra-evidence-pack.mjs"
-    "governance:error-budget": "node tools/quality-gates/validate-error-budget-policy.mjs"
-    "readiness:consistency": "node tools/readiness/validate-readiness-consistency.mjs"
+    "readiness:infra-evidence": "node tools/readiness/generate-infra-evidence-pack.mjs",
+    "governance:error-budget": "node tools/quality-gates/validate-error-budget-policy.mjs",
+    "readiness:consistency": "node tools/readiness/validate-readiness-consistency.mjs",
     "dr:scheduled": "node tools/dr/run-scheduled-drill.mjs",
-    "readiness:dr-evidence": "node tools/readiness/validate-dr-evidence.mjs"
+    "readiness:dr-evidence": "node tools/readiness/validate-dr-evidence.mjs",
     "quality:verify-rollback-evidence": "node tools/quality-gates/verify-rollback-evidence.mjs"
   },
   "private": true,

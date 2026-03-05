@@ -1,15 +1,15 @@
-import { Injectable, NestMiddleware, UnauthorizedException, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, NestMiddleware, UnauthorizedException, Logger, OnModuleInit, Inject } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { TenantContext } from '../interfaces/tenant-context.interface';
-import { runWithTenantContext } from '../storage/tenant-context.storage';
-import { TelemetryService } from '@virteex/kernel-telemetry';
+import { TenantContext } from '@virteex/kernel-tenant-context';
+import { runWithTenantContext } from '@virteex/kernel-tenant-context';
+import { TelemetryService, TELEMETRY_SERVICE } from '@virteex/kernel-telemetry-interfaces';
 import { SecretManagerService } from '../services/secret-manager.service';
 import {
   claimsFromJwtPayload,
   parseAndValidateSignedContext,
 } from '../services/tenant-context-contract.service';
-import { TenantContextValidationError } from '../interfaces/signed-tenant-context.interface';
+import { TenantContextValidationError } from '@virteex/kernel-tenant-context';
 import '../interfaces/express.interface';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class CanonicalTenantMiddleware implements NestMiddleware, OnModuleInit {
   private jwtSecret!: string;
 
   constructor(
-    private readonly telemetryService: TelemetryService,
+    @Inject(TELEMETRY_SERVICE) private readonly telemetryService: TelemetryService,
     private readonly secretManager: SecretManagerService
   ) {}
 
