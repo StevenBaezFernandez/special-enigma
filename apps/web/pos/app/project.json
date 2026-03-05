@@ -74,7 +74,10 @@
           "buildTarget": "web-pos-app:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4204
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"

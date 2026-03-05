@@ -1,11 +1,14 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Inject } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { STEP_UP_KEY, StepUpOptions } from '../decorators/step-up.decorator';
-import { TelemetryService } from '@virteex/kernel-telemetry';
+import { TelemetryService, TELEMETRY_SERVICE } from '@virteex/kernel-telemetry-interfaces';
 
 @Injectable()
 export class StepUpGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector, private readonly telemetry: TelemetryService) {}
+  constructor(
+    private readonly reflector: Reflector,
+    @Inject(TELEMETRY_SERVICE) private readonly telemetry: TelemetryService
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const config = this.reflector.getAllAndOverride<StepUpOptions>(STEP_UP_KEY, [

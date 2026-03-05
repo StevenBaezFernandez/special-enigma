@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
-  ProcessCheckoutSuccessUseCase,
-  HandleInvoicePaidUseCase,
-  HandleSubscriptionUpdatedUseCase,
-  HandleSubscriptionDeletedUseCase
-} from '@virteex/domain-subscription-application';
+  IProcessCheckoutSuccessUseCase,
+  IHandleInvoicePaidUseCase,
+  IHandleSubscriptionUpdatedUseCase,
+  IHandleSubscriptionDeletedUseCase
+} from '@virteex/domain-subscription-contracts';
 import { StripeMapper } from '../adapters/stripe.mapper';
 
 export interface InvoicePaidPayload {
@@ -32,10 +32,10 @@ export class StripeSubscriptionListener {
   private readonly logger = new Logger(StripeSubscriptionListener.name);
 
   constructor(
-    private readonly processCheckoutSuccessUseCase: ProcessCheckoutSuccessUseCase,
-    private readonly handleInvoicePaidUseCase: HandleInvoicePaidUseCase,
-    private readonly handleSubscriptionUpdatedUseCase: HandleSubscriptionUpdatedUseCase,
-    private readonly handleSubscriptionDeletedUseCase: HandleSubscriptionDeletedUseCase
+    private readonly processCheckoutSuccessUseCase: IProcessCheckoutSuccessUseCase,
+    private readonly handleInvoicePaidUseCase: IHandleInvoicePaidUseCase,
+    private readonly handleSubscriptionUpdatedUseCase: IHandleSubscriptionUpdatedUseCase,
+    private readonly handleSubscriptionDeletedUseCase: IHandleSubscriptionDeletedUseCase
   ) {}
 
   @OnEvent('billing.invoice.paid')
@@ -68,7 +68,7 @@ export class StripeSubscriptionListener {
   async handleStripeSubscriptionUpdated(stripeSub: StripeSubscriptionUpdatedPayload) {
     await this.handleSubscriptionUpdatedUseCase.execute({
       subscriptionId: stripeSub.id,
-      status: StripeMapper.toSubscriptionStatus(stripeSub.status),
+      status: StripeMapper.toSubscriptionStatus(stripeSub.status) as any,
       currentPeriodEnd: StripeMapper.toDomainDate(stripeSub.current_period_end),
       cancelAtPeriodEnd: stripeSub.cancel_at_period_end
     });

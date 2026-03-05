@@ -1,0 +1,17 @@
+{
+  "name": "domain-subscription-contracts",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/subscription/contracts/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:domain-subscription",
+    "scope:subscription",
+    "type:contract"
+  ],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

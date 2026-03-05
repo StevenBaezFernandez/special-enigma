@@ -1,0 +1,17 @@
+{
+  "name": "kernel-telemetry-interfaces",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/kernel/telemetry-interfaces/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:kernel",
+    "type:contract",
+    "platform:agnostic"
+  ],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

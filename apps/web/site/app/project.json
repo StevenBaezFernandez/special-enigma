@@ -71,7 +71,10 @@
           "buildTarget": "web-site-app:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4206
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
@@ -81,7 +84,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "web-site-app:build",
-        "port": 4200,
+        "port": 4206,
         "staticFilePath": "dist/apps/web-site-app/browser",
         "spa": true
       }

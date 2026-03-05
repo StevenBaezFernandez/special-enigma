@@ -67,7 +67,10 @@
           "buildTarget": "web-wms-app:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4208
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
