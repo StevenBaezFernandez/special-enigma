@@ -41,8 +41,9 @@ export class AccountingListener {
     try {
         await this.setupChartOfAccountsUseCase.execute(event.tenantId);
         this.logger.log(`Chart of Accounts initialized for tenant: ${event.tenantId}`);
-    } catch (e: any) {
-        this.logger.error(`Failed to initialize Chart of Accounts: ${e.message}`);
+    } catch (e) {
+        const error = e as Error;
+        this.logger.error(`Failed to initialize Chart of Accounts: ${error.message}`);
     }
   }
 
@@ -73,8 +74,9 @@ export class AccountingListener {
     try {
         await this.recordJournalEntryUseCase.execute(dto);
         this.logger.log(`Journal Entry created for Invoice ${event.invoiceId}`);
-    } catch (e: any) {
-        this.logger.error(`Failed to create Journal Entry for Invoice ${event.invoiceId}: ${e.message}`);
+    } catch (e) {
+        const error = e as Error;
+        this.logger.error(`Failed to create Journal Entry for Invoice ${event.invoiceId}: ${error.message}`);
     }
   }
 
@@ -107,8 +109,9 @@ export class AccountingListener {
     try {
         await this.recordJournalEntryUseCase.execute(dto);
         this.logger.log(`Journal Entry created for Payroll ${event.payrollId}`);
-    } catch (e: any) {
-        this.logger.error(`Failed to create Journal Entry for Payroll ${event.payrollId}: ${e.message}`);
+    } catch (e) {
+        const error = e as Error;
+        this.logger.error(`Failed to create Journal Entry for Payroll ${event.payrollId}: ${error.message}`);
     }
   }
 }

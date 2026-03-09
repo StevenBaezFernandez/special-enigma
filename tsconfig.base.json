@@ -78,10 +78,10 @@
         "libs/shared/util/client/http/src/index.ts"
       ],
       "@virteex/domain-treasury-domain": [
-        "dist/libs/domain/treasury/domain/libs/domain/treasury/domain/src/index.d.ts"
+        "libs/domain/treasury/domain/src/index.ts"
       ],
       "@virteex/domain-treasury-domain/*": [
-        "dist/libs/domain/treasury/domain/libs/domain/treasury/domain/src/*"
+        "libs/domain/treasury/domain/src/*"
       ],
       "@virteex/domain-finops-domain": [
         "libs/domain/finops/domain/src/index.ts"
@@ -264,10 +264,10 @@
         "libs/platform/kafka/src/*"
       ],
       "@virteex/platform-storage": [
-        "dist/libs/platform/storage/src/index.d.ts"
+        "libs/platform/storage/src/index.ts"
       ],
       "@virteex/platform-storage/*": [
-        "dist/libs/platform/storage/src/*"
+        "libs/platform/storage/src/*"
       ],
       "@virteex/platform-xslt": [
         "libs/platform/xslt/src/index.ts"
@@ -333,10 +333,10 @@
         "libs/kernel/exceptions/src/index.ts"
       ],
       "@virteex/kernel-tenant-context": [
-        "dist/libs/kernel/tenant-context/src/index.d.ts"
+        "libs/kernel/tenant-context/src/index.ts"
       ],
       "@virteex/kernel-telemetry-interfaces": [
-        "dist/libs/kernel/telemetry-interfaces/src/index.d.ts"
+        "libs/kernel/telemetry-interfaces/src/index.ts"
       ],
       "@virteex/domain-billing-contracts": [
         "libs/domain/billing/contracts/src/index.ts"
@@ -375,13 +375,13 @@
         "libs/domain/scheduler/domain/src/index.ts"
       ],
       "@virteex/kernel-tenant-context/*": [
-        "dist/libs/kernel/tenant-context/src/*"
+        "libs/kernel/tenant-context/src/*"
       ],
       "@virteex/kernel-exceptions/*": [
         "libs/kernel/exceptions/src/*"
       ],
       "@virteex/kernel-telemetry-interfaces/*": [
-        "dist/libs/kernel/telemetry-interfaces/src/*"
+        "libs/kernel/telemetry-interfaces/src/*"
       ],
       "@virteex/domain-notification-infrastructure/*": [
         "libs/domain/notification/infrastructure/src/*"
@@ -681,10 +681,10 @@
         "libs/domain/projects/presentation/src/*"
       ],
       "@virteex/domain-treasury-contracts": [
-        "dist/libs/domain/treasury/contracts/libs/domain/treasury/contracts/src/index.d.ts"
+        "libs/domain/treasury/contracts/src/index.ts"
       ],
       "@virteex/domain-treasury-contracts/*": [
-        "dist/libs/domain/treasury/contracts/libs/domain/treasury/contracts/src/*"
+        "libs/domain/treasury/contracts/src/*"
       ],
       "@virteex/domain-treasury-application": [
         "libs/domain/treasury/application/src/index.ts"

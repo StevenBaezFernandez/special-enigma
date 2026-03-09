@@ -4,11 +4,10 @@ import { SetupChartOfAccountsUseCase } from './use-cases/setup-chart-of-accounts
 import { RecordJournalEntryUseCase } from './use-cases/record-journal-entry.use-case';
 import { GetAccountsUseCase } from './use-cases/get-accounts.use-case';
 import { GetJournalEntriesUseCase } from './use-cases/get-journal-entries.use-case';
-import { AccountingInfrastructureModule } from '@virteex/domain-accounting-infrastructure';
 import { AccountingListener } from './listeners/accounting.listener';
 
 @Module({
-  imports: [AccountingInfrastructureModule],
+  imports: [],
   providers: [
     CreateAccountUseCase,
     SetupChartOfAccountsUseCase,

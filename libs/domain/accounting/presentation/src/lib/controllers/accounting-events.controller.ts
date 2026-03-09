@@ -52,8 +52,9 @@ export class AccountingEventsController {
     try {
         await this.recordJournalEntryUseCase.execute(dto);
         this.logger.log(`Journal Entry created for Invoice ${event.id}`);
-    } catch (e: any) {
-        this.logger.error(`Failed to create Journal Entry for Invoice ${event.id}: ${e.message}`);
+    } catch (e) {
+        const error = e as Error;
+        this.logger.error(`Failed to create Journal Entry for Invoice ${event.id}: ${error.message}`);
     }
   }
 }
