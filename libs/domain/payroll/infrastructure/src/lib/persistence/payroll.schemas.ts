@@ -1,4 +1,4 @@
-import { EntitySchema } from '@mikro-orm/core';
+import { EntitySchema, Cascade } from '@mikro-orm/core';
 import { TaxTable, Employee, Payroll, Attendance, PayrollDetail } from '@virteex/domain-payroll-domain';
 
 export const TaxTableSchema = new EntitySchema<TaxTable>({
@@ -9,7 +9,10 @@ export const TaxTableSchema = new EntitySchema<TaxTable>({
     country: { type: 'string' },
     year: { type: 'number' },
     type: { type: 'string' },
-    rules: { type: 'json' },
+    limit: { type: 'number' },
+    fixed: { type: 'number' },
+    percent: { type: 'number' },
+    state: { type: 'string', nullable: true },
   },
 });
 
@@ -21,8 +24,22 @@ export const EmployeeSchema = new EntitySchema<Employee>({
     firstName: { type: 'string' },
     lastName: { type: 'string' },
     email: { type: 'string' },
-    taxId: { type: 'string' },
-    salary: { type: 'string' },
+    rfc: { type: 'string', nullable: true },
+    curp: { type: 'string', nullable: true },
+    nss: { type: 'string', nullable: true },
+    departmentId: { type: 'string', nullable: true },
+    position: { type: 'string', nullable: true },
+    salary: { type: 'number' },
+    hireDate: { type: 'Date' },
+    postalCode: { type: 'string', nullable: true },
+    contractType: { type: 'string' },
+    regimeType: { type: 'string' },
+    periodicity: { type: 'string' },
+    status: { type: 'string' },
+    createdAt: { type: 'Date' },
+    updatedAt: { type: 'Date' },
+    payrolls: { kind: '1:m', entity: 'Payroll', mappedBy: 'employee', cascade: [Cascade.ALL] },
+    attendanceRecords: { kind: '1:m', entity: 'Attendance', mappedBy: 'employee', cascade: [Cascade.ALL] },
   },
 });
 
@@ -33,8 +50,19 @@ export const PayrollSchema = new EntitySchema<Payroll>({
     tenantId: { type: 'string' },
     periodStart: { type: 'Date' },
     periodEnd: { type: 'Date' },
+    paymentDate: { type: 'Date' },
+    totalEarnings: { type: 'number' },
+    totalDeductions: { type: 'number' },
+    netPay: { type: 'number' },
     status: { type: 'string' },
-    details: { kind: '1:m', entity: 'PayrollDetail', mappedBy: 'payroll', cascade: ['all'] },
+    type: { type: 'string' },
+    employee: { kind: 'm:1', entity: 'Employee' },
+    fiscalUuid: { type: 'string', nullable: true },
+    xmlContent: { type: 'text', nullable: true },
+    stampedAt: { type: 'Date', nullable: true },
+    createdAt: { type: 'Date' },
+    updatedAt: { type: 'Date' },
+    details: { kind: '1:m', entity: 'PayrollDetail', mappedBy: 'payroll', cascade: [Cascade.ALL] },
   },
 });
 

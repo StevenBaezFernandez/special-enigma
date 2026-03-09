@@ -10,18 +10,16 @@ export class BiInvoiceAdapter implements InvoicePort {
 
   async getStatusSummary(tenantId: string): Promise<InvoiceStatusSummary> {
     const invoices: Invoice[] = await this.invoiceRepository.findByTenantId(tenantId);
+    const now = new Date();
 
     const paid = invoices.filter(i => i.status === 'PAID').length;
-    const pending = invoices.filter(i => i.status === 'SENT' || i.status === 'DRAFT' || i.status === 'STAMPED').length;
-    const overdue = invoices.filter(i => i.status === 'OVERDUE').length;
+    const pending = invoices.filter(i => (i.status === 'DRAFT' || i.status === 'PENDING_STAMP' || i.status === 'STAMPED') && new Date(i.dueDate || i.issueDate) >= now).length;
+    const overdue = invoices.filter(i => i.status !== 'PAID' && new Date(i.dueDate || i.issueDate) < now).length;
 
     return { paid, pending, overdue };
   }
 
   async getArAging(tenantId: string): Promise<ArAging> {
-    // In MikroORM usually findByTenantId returns array directly.
-    // Assuming InvoiceRepository implements generic methods matching this signature.
-    // Based on billing-domain port, it returns Promise<Invoice[]>.
     const invoices: Invoice[] = await this.invoiceRepository.findByTenantId(tenantId);
     const now = new Date();
 

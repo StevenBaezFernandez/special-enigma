@@ -49,6 +49,7 @@ export class InitialSeederService {
       { limit: 375975.62, fixed: 117912.32, percent: 35.00 },
     ];
 
-    return data.map(d => new TaxTable(d.limit, d.fixed, d.percent, year, 'MONTHLY'));
+    // Using 'SYSTEM' as default tenantId for seed data
+    return data.map(d => new TaxTable('SYSTEM', d.limit, d.fixed, d.percent, year, 'MONTHLY'));
   }
 }

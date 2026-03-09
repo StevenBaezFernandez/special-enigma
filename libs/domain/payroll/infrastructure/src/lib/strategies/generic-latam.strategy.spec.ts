@@ -26,8 +26,8 @@ describe('GenericLatamStrategy', () => {
 
   it('should calculate tax correctly for Argentina', async () => {
     const tables: TaxTable[] = [
-      new TaxTable(0, 0, 0, 2025, 'MONTHLY', 'AR'),
-      new TaxTable(1000, 10, 5, 2025, 'MONTHLY', 'AR'),
+      new TaxTable('SYSTEM', 0, 0, 0, 2025, 'MONTHLY', 'AR'),
+      new TaxTable('SYSTEM', 1000, 10, 5, 2025, 'MONTHLY', 'AR'),
     ];
     (repo.findForYear as any).mockResolvedValue(tables);
 

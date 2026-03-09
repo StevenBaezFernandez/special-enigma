@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 
 export class TaxTable {
   id: string = v4();
+  tenantId!: string;
   limit!: number;
   fixed!: number;
   percent!: number;
@@ -12,6 +13,7 @@ export class TaxTable {
   state?: string;
 
   constructor(
+    tenantId: string,
     limit: number,
     fixed: number,
     percent: number,
@@ -20,6 +22,7 @@ export class TaxTable {
     country = 'MX',
     state?: string,
   ) {
+    this.tenantId = tenantId;
     this.limit = limit;
     this.fixed = fixed;
     this.percent = percent;
