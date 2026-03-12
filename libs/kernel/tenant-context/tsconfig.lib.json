@@ -1,8 +1,10 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
+    "outDir": "../../../dist/libs/kernel/tenant-context",
+    "tsBuildInfoFile": "../../../dist/libs/kernel/tenant-context/.tsbuildinfo",
     "declaration": true,
+    "composite": true,
     "rootDir": "src",
     "types": [
       "node"

@@ -3,12 +3,31 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domain/pos/infrastructure/src",
   "projectType": "library",
-  "tags": ["scope:pos", "type:infrastructure", "platform:node"],
+  "tags": [
+    "scope:pos",
+    "type:infrastructure",
+    "platform:node"
+  ],
   "targets": {
     "test": {
       "executor": "@nx/vitest:test",
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domain/pos/infrastructure"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/pos/infrastructure",
+        "main": "libs/domain/pos/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/pos/infrastructure/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/pos/infrastructure/*.md"
+        ],
+        "generateExportsField": true
       }
     }
   }

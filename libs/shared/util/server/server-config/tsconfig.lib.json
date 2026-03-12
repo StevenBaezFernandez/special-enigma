@@ -1,8 +1,9 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../../../dist/out-tsc",
+    "outDir": "../../../../../dist/libs/shared/util/server/server-config",
     "declaration": true,
+    "rootDir": "src",
     "types": [
       "node"
     ]

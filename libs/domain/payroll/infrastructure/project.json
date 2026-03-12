@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/payroll/infrastructure/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     },
     "test": {

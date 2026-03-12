@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/fixed-assets/application/*.md"
         ],
-        "rootDir": "libs/domain/fixed-assets/application/src"
+        "generateExportsField": true
       }
     },
     "test": {

@@ -31,8 +31,11 @@ import { StepUpGuard } from './guards/step-up.guard';
     {
         provide: SECRET_PROVIDER,
         useFactory: async (defaultP: DefaultSecretProvider, vaultP: VaultSecretProvider, kmsP: KmsSecretProvider) => {
-            await vaultP.initialize();
-            await kmsP.initialize();
+            const isTest = process.env['NODE_ENV'] === 'test';
+            if (!isTest) {
+                await vaultP.initialize();
+                await kmsP.initialize();
+            }
             return new CompositeSecretProvider([vaultP, kmsP, defaultP]);
         },
         inject: [DefaultSecretProvider, VaultSecretProvider, KmsSecretProvider]

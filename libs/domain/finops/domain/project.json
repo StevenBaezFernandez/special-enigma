@@ -10,5 +10,21 @@
     "platform:agnostic",
     "criticality:medium"
   ],
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/finops/domain",
+        "main": "libs/domain/finops/domain/src/index.ts",
+        "tsConfig": "libs/domain/finops/domain/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/finops/domain/*.md"
+        ],
+        "generateExportsField": true
+      }
+    }
+  }
 }

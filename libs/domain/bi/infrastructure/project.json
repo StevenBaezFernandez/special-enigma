@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/bi/infrastructure/*.md"
         ],
-        "rootDir": "../../../.."
+        "generateExportsField": true
       }
     },
     "test": {

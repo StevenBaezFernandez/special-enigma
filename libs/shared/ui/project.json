@@ -22,6 +22,21 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/shared/ui",
+        "main": "libs/shared/ui/src/index.ts",
+        "tsConfig": "libs/shared/ui/tsconfig.lib.json",
+        "assets": [
+          "libs/shared/ui/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

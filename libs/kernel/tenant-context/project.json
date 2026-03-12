@@ -12,12 +12,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/kernel/tenant-context",
         "main": "libs/kernel/tenant-context/src/index.ts",
         "tsConfig": "libs/kernel/tenant-context/tsconfig.lib.json",
-        "assets": []
+        "assets": [
+          "libs/kernel/tenant-context/*.md"
+        ],
+        "generateExportsField": true
       }
     },
     "lint": {

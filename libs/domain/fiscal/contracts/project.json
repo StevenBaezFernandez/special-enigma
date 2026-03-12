@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/fiscal/contracts/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     },
     "test": {

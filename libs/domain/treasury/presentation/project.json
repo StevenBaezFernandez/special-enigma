@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/treasury/presentation/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     },
     "test": {

@@ -25,6 +25,21 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/pos/ui",
+        "main": "libs/domain/pos/ui/src/index.ts",
+        "tsConfig": "libs/domain/pos/ui/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/pos/ui/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

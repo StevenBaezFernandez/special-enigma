@@ -21,7 +21,8 @@
         "tsConfig": "libs/domain/billing/contracts/tsconfig.lib.json",
         "assets": [
           "libs/domain/billing/contracts/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     },
     "test": {

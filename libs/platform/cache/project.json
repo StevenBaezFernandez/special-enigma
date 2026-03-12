@@ -30,7 +30,8 @@
         "tsConfig": "libs/platform/cache/tsconfig.lib.json",
         "assets": [
           "libs/platform/cache/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     }
   }

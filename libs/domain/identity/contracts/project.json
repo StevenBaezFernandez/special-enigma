@@ -21,7 +21,8 @@
         "tsConfig": "libs/domain/identity/contracts/tsconfig.lib.json",
         "assets": [
           "libs/domain/identity/contracts/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     },
     "lint": {

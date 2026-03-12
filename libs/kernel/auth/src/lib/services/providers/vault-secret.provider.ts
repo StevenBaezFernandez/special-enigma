@@ -26,8 +26,9 @@ export class VaultSecretProvider implements SecretProvider {
         });
         this.secrets = response.data.data.data;
         this.logger.log('Vault secrets initialized successfully');
-    } catch (error: any) {
-        this.logger.error(`Failed to initialize Vault secrets: ${error.message}`);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        this.logger.error(`Failed to initialize Vault secrets: ${message}`);
     }
   }
 

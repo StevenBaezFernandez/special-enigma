@@ -9,10 +9,17 @@
     "allowSyntheticDefaultImports": true,
     "target": "es2021",
     "sourceMap": true,
-    "outDir": "../../../dist/out-tsc",
-    "rootDir": "../../..",
-    "baseUrl": "."
+    "outDir": "../../../dist/libs/kernel/messaging",
+    "tsBuildInfoFile": "../../../dist/libs/kernel/messaging/.tsbuildinfo",
+    "rootDir": "src",
+    "composite": true,
+    "paths": {
+      "@virteex/platform-cache": ["../../../dist/libs/platform/cache/index.d.ts"]
+    }
   },
+  "references": [
+    { "path": "../../platform/cache/tsconfig.lib.json" }
+  ],
   "include": [
     "src/**/*.ts"
   ],

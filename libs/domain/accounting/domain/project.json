@@ -25,7 +25,8 @@
         "tsConfig": "libs/domain/accounting/domain/tsconfig.lib.json",
         "assets": [
           "libs/domain/accounting/domain/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     },
     "test": {

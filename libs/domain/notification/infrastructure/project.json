@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/notification/infrastructure/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     }
   }

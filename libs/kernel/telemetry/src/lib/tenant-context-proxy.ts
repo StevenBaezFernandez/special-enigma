@@ -1,10 +1,5 @@
-// Proxy to avoid circular dependency
+import { getTenantContext as getContext } from '@virteex/kernel-tenant-context';
+
 export const getTenantContext = () => {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { getTenantContext: getContext } = require('@virteex/kernel-tenant');
-    return getContext();
-  } catch {
-    return null;
-  }
+  return getContext();
 };

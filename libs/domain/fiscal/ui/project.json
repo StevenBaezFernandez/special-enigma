@@ -19,6 +19,21 @@
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domain/fiscal/ui"
       }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/fiscal/ui",
+        "main": "libs/domain/fiscal/ui/src/index.ts",
+        "tsConfig": "libs/domain/fiscal/ui/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/fiscal/ui/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

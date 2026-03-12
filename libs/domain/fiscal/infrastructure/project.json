@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/fiscal/infrastructure/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     },
     "test": {

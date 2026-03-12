@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Logger } from '@nestjs/common';
 import { TenantService } from '../tenant.service';
-import { getTenantContext } from '@virteex/kernel-auth';
+import { getTenantContext } from '@virteex/kernel-tenant-context';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
 import { ResidencyComplianceService } from '../residency-compliance.service';
 

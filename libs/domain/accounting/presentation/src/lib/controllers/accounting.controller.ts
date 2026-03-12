@@ -4,10 +4,12 @@ import {
   CreateAccountDto,
   RecordJournalEntryDto,
 } from '@virteex/domain-accounting-contracts';
-import { CreateAccountUseCase } from '@virteex/domain-accounting-application/lib/use-cases/create-account.use-case';
-import { RecordJournalEntryUseCase } from '@virteex/domain-accounting-application/lib/use-cases/record-journal-entry.use-case';
-import { GetAccountsUseCase } from '@virteex/domain-accounting-application/lib/use-cases/get-accounts.use-case';
-import { GetJournalEntriesUseCase } from '@virteex/domain-accounting-application/lib/use-cases/get-journal-entries.use-case';
+import {
+  CreateAccountUseCase,
+  RecordJournalEntryUseCase,
+  GetAccountsUseCase,
+  GetJournalEntriesUseCase,
+} from '@virteex/domain-accounting-application';
 
 @ApiTags('Accounting')
 @Controller('accounting')

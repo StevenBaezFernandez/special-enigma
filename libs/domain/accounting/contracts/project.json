@@ -25,7 +25,8 @@
         "tsConfig": "libs/domain/accounting/contracts/tsconfig.lib.json",
         "assets": [
           "libs/domain/accounting/contracts/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     }
   }

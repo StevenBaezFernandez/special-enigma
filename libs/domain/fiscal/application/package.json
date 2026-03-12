@@ -9,5 +9,14 @@
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
     "@virteex/domain-fiscal-domain": "0.0.1"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

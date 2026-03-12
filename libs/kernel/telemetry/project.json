@@ -25,9 +25,9 @@
         "tsConfig": "libs/kernel/telemetry/tsconfig.lib.json",
         "assets": [
           "libs/kernel/telemetry/*.md"
-        ]
-      },
-      "dependsOn": ["kernel-telemetry-interfaces", "kernel-tenant-context"]
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

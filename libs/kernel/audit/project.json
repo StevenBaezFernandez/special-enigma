@@ -13,5 +13,21 @@
     "region:global"
   ],
   "// targets": "to see all targets run: nx show project kernel-audit --web",
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/kernel/audit",
+        "main": "libs/kernel/audit/src/index.ts",
+        "tsConfig": "libs/kernel/audit/tsconfig.lib.json",
+        "assets": [
+          "libs/kernel/audit/*.md"
+        ],
+        "generateExportsField": true
+      }
+    }
+  }
 }

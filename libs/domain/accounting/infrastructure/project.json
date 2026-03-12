@@ -21,12 +21,12 @@
       ],
       "options": {
         "outputPath": "dist/libs/domain/accounting/infrastructure",
-        "tsConfig": "libs/domain/accounting/infrastructure/tsconfig.lib.json",
-        "packageJson": "libs/domain/accounting/infrastructure/package.json",
         "main": "libs/domain/accounting/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/accounting/infrastructure/tsconfig.lib.json",
         "assets": [
           "libs/domain/accounting/infrastructure/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     }
   }

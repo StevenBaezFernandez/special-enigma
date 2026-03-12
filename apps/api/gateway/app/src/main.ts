@@ -9,7 +9,6 @@ import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
-import { InitialSeederService } from './app/seeds/initial-seeder.service';
 import { MikroORM } from '@mikro-orm/core';
 import { setupGlobalConfig } from '@virteex/shared-util-server-server-config';
 
@@ -53,12 +52,6 @@ async function bootstrap(): Promise<void> {
 
         await generator.updateSchema();
         logger.log('Database Schema Initialized.');
-
-        // Run Seeder
-        logger.log('Running Seeders...');
-        const seeder = app.get(InitialSeederService);
-        await seeder.seed();
-        logger.log('Seeding Complete.');
     } catch (error) {
         logger.error('Database Initialization Failed', error);
         // We might want to exit here if DB is critical, but for now we log and continue (or let it crash later)

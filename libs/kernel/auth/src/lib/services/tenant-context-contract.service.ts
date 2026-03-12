@@ -4,7 +4,7 @@ import {
   SignedTenantContextClaims,
   TENANT_CONTEXT_VERSION,
   TenantContextValidationError,
-} from '../interfaces/signed-tenant-context.interface';
+} from '@virteex/kernel-tenant-context';
 
 const REQUIRED_STRING_CLAIMS: Array<keyof SignedTenantContextClaims> = [
   'tenantId',
@@ -112,7 +112,7 @@ export const claimsFromJwtPayload = (payload: JwtPayload): SignedTenantContextCl
 export const validateClaims = (claims: SignedTenantContextClaims, nowEpochSeconds: number): void => {
   for (const claim of REQUIRED_STRING_CLAIMS) {
     if (!claims[claim] || typeof claims[claim] !== 'string') {
-      throw new TenantContextValidationError('invalid_claims', `Missing or invalid claim: ${claim}.`);
+      throw new TenantContextValidationError('invalid_claims', `Missing or invalid claim: ${String(claim)}.`);
     }
   }
 

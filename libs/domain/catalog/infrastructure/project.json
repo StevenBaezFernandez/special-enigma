@@ -14,5 +14,21 @@
     "region:global"
   ],
   "// targets": "to see all targets run: nx show project domain-catalog-infrastructure --web",
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/catalog/infrastructure",
+        "main": "libs/domain/catalog/infrastructure/src/index.ts",
+        "tsConfig": "libs/domain/catalog/infrastructure/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/catalog/infrastructure/*.md"
+        ],
+        "generateExportsField": true
+      }
+    }
+  }
 }

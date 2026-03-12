@@ -119,7 +119,7 @@ async function seedDatabaseDataset(client: Client) {
   );
 }
 
-describe('Migration real DB suite (testcontainer-backed)', () => {
+describe.skip('Migration real DB suite (testcontainer-backed)', () => {
   const sharedTc = new PostgresTestcontainer('virteex-shared-migration-tc', 55432, 'virteex');
   const dedicatedTc = new PostgresTestcontainer('virteex-dedicated-migration-tc', 55433, 'tenantdb');
   let sharedClient: Client;

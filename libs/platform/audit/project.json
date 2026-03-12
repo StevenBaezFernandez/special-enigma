@@ -1,0 +1,36 @@
+{
+  "name": "platform-audit",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/platform/audit/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:platform",
+    "type:util",
+    "platform:agnostic",
+    "criticality:medium",
+    "compliance:none",
+    "tenant-mode:multi",
+    "region:global"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/platform/audit",
+        "main": "libs/platform/audit/src/index.ts",
+        "tsConfig": "libs/platform/audit/tsconfig.lib.json",
+        "assets": [
+          "libs/platform/audit/*.md"
+        ],
+        "generateExportsField": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

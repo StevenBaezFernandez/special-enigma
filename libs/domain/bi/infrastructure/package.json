@@ -14,5 +14,14 @@
     "@mikro-orm/nestjs": "^6.1.1",
     "@virteex/domain-crm-infrastructure": "0.0.1",
     "@mikro-orm/postgresql": "^6.6.5"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

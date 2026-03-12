@@ -22,6 +22,21 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/manufacturing/ui-shopfloor",
+        "main": "libs/domain/manufacturing/ui-shopfloor/src/index.ts",
+        "tsConfig": "libs/domain/manufacturing/ui-shopfloor/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/manufacturing/ui-shopfloor/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

@@ -14,5 +14,14 @@
     "@nestjs/schedule": "^6.1.0",
     "ioredis": "^5.9.2",
     "kafkajs": "^2.2.4"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

@@ -25,6 +25,21 @@
       "options": {
         "reportsDirectory": "../../../../../coverage/libs/shared/util/client/config"
       }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/shared/util/client/config",
+        "main": "libs/shared/util/client/config/src/index.ts",
+        "tsConfig": "libs/shared/util/client/config/tsconfig.lib.json",
+        "assets": [
+          "libs/shared/util/client/config/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

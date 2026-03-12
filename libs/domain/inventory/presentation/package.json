@@ -12,8 +12,19 @@
     "class-validator": "^0.14.3",
     "class-transformer": "^0.5.1",
     "@nestjs/swagger": "^11.2.0",
+    "@nestjs/graphql": "^13.2.3",
+    "dataloader": "^2.2.3",
     "@virteex/kernel-auth": "*",
     "@virteex/domain-inventory-domain": "*",
     "@virteex/domain-inventory-infrastructure": "*"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

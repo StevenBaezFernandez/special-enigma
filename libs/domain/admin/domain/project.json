@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/admin/domain/*.md"
         ],
-        "rootDir": "libs/domain/admin/domain/src"
+        "generateExportsField": true
       }
     },
     "test": {

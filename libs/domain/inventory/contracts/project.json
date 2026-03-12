@@ -25,7 +25,8 @@
         "tsConfig": "libs/domain/inventory/contracts/tsconfig.lib.json",
         "assets": [
           "libs/domain/inventory/contracts/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     }
   }

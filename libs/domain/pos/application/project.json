@@ -3,12 +3,31 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domain/pos/application/src",
   "projectType": "library",
-  "tags": ["scope:pos", "type:application", "platform:agnostic"],
+  "tags": [
+    "scope:pos",
+    "type:application",
+    "platform:agnostic"
+  ],
   "targets": {
     "test": {
       "executor": "@nx/vitest:test",
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domain/pos/application"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/pos/application",
+        "main": "libs/domain/pos/application/src/index.ts",
+        "tsConfig": "libs/domain/pos/application/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/pos/application/*.md"
+        ],
+        "generateExportsField": true
       }
     }
   }

@@ -280,8 +280,9 @@ export class JwtTokenService {
     try {
       const res = await this.redis.get(`revoked:${jti}`);
       return res === '1';
-    } catch (e) {
-      this.logger.error(`Redis error during revocation check: ${e}`);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      this.logger.error(`Redis error during revocation check: ${message}`);
       if (this.isProduction) return true;
       return false;
     }
@@ -298,8 +299,9 @@ export class JwtTokenService {
     try {
       const res = await this.redis.get(`used:${jti}`);
       return res === '1';
-    } catch (e) {
-      this.logger.error(`Redis error during replay check: ${e}`);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      this.logger.error(`Redis error during replay check: ${message}`);
       if (this.isProduction) return true;
       return false;
     }
@@ -309,8 +311,9 @@ export class JwtTokenService {
     if (!this.redis) return;
     const ttlSeconds = exp - Math.floor(Date.now() / 1000);
     if (ttlSeconds > 0) {
-      await this.redis.set(`used:${jti}`, '1', 'EX', ttlSeconds).catch((e) => {
-        this.logger.error(`Failed to mark jti as used in Redis: ${e}`);
+      await this.redis.set(`used:${jti}`, '1', 'EX', ttlSeconds).catch((e: unknown) => {
+        const message = e instanceof Error ? e.message : String(e);
+        this.logger.error(`Failed to mark jti as used in Redis: ${message}`);
       });
     }
   }

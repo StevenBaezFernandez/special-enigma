@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/treasury/infrastructure/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     },
     "test": {

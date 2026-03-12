@@ -25,7 +25,8 @@
         "tsConfig": "libs/kernel/messaging/tsconfig.lib.json",
         "assets": [
           "libs/kernel/messaging/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     }
   }

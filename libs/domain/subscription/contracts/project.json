@@ -12,6 +12,21 @@
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/subscription/contracts",
+        "main": "libs/domain/subscription/contracts/src/index.ts",
+        "tsConfig": "libs/domain/subscription/contracts/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/subscription/contracts/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

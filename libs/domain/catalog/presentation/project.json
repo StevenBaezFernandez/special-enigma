@@ -14,5 +14,21 @@
     "region:global"
   ],
   "// targets": "to see all targets run: nx show project domain-catalog-presentation --web",
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/catalog/presentation",
+        "main": "libs/domain/catalog/presentation/src/index.ts",
+        "tsConfig": "libs/domain/catalog/presentation/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/catalog/presentation/*.md"
+        ],
+        "generateExportsField": true
+      }
+    }
+  }
 }

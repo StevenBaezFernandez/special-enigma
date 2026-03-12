@@ -1,25 +1,16 @@
 {
   "name": "@virteex/kernel-tenant",
   "version": "0.0.1",
-  "private": true,
-  "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
-  "dependencies": {
-    "tslib": "^2.3.0",
-    "@nestjs/common": "^11.0.0",
-    "@mikro-orm/core": "^6.6.5",
-    "rxjs": "^7.8.0",
-    "@virteex/kernel-auth": "file:../auth",
-    "@virteex/kernel-tenant-context": "file:../tenant-context",
-    "@nestjs/core": "^11.0.0",
-    "ioredis": "^5.9.2",
-    "@virteex/kernel-telemetry-interfaces": "file:../telemetry-interfaces",
-    "@nestjs/config": "^4.0.0",
-    "@nestjs/throttler": "^6.5.0",
-    "@opentelemetry/api": "^1.9.0",
-    "uuid": "^10.0.0",
-    "vitest": "^4.0.0",
-    "@nx/vite": "^22.0.0"
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

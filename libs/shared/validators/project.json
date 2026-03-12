@@ -13,12 +13,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/shared/validators",
         "main": "libs/shared/validators/src/index.ts",
         "tsConfig": "libs/shared/validators/tsconfig.lib.json",
-        "assets": ["libs/shared/validators/*.md"]
+        "assets": [
+          "libs/shared/validators/*.md"
+        ],
+        "generateExportsField": true
       }
     }
   }

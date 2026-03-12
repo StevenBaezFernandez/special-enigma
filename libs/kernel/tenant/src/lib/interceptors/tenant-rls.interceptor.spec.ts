@@ -3,13 +3,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TenantRlsInterceptor } from './tenant-rls.interceptor';
 import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { TenantService } from '../tenant.service';
+import { ResidencyComplianceService } from '../residency-compliance.service';
 import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { of, lastValueFrom } from 'rxjs';
-import * as AuthModule from '@virteex/kernel-auth';
+import * as TenantContextLib from '@virteex/kernel-tenant-context';
 
-vi.mock('@virteex/kernel-auth', () => ({
+vi.mock('@virteex/kernel-tenant-context', () => ({
     getTenantContext: vi.fn(),
-    SECRET_PROVIDER: 'SECRET_PROVIDER'
 }));
 
 describe('TenantRlsInterceptor', () => {
@@ -31,6 +31,10 @@ describe('TenantRlsInterceptor', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TenantRlsInterceptor,
+        {
+            provide: ResidencyComplianceService,
+            useValue: { assertRegionAllowed: vi.fn().mockResolvedValue(undefined) }
+        },
         {
           provide: EntityManager,
           useValue: {
@@ -55,6 +59,7 @@ describe('TenantRlsInterceptor', () => {
 
     (interceptor as any).tenantService = tenantService;
     (interceptor as any).em = em;
+    (interceptor as any).residencyComplianceService = module.get(ResidencyComplianceService);
   });
 
   it('should be defined', () => {
@@ -62,7 +67,7 @@ describe('TenantRlsInterceptor', () => {
   });
 
   it('should use transaction for SHARED mode', async () => {
-    (AuthModule.getTenantContext as any).mockReturnValue({ tenantId: 't1' });
+    (TenantContextLib.getTenantContext as any).mockReturnValue({ tenantId: 't1', contextVersion: 'v1', exp: Math.floor(Date.now() / 1000) + 3600 });
     (tenantService.getTenantConfig as any).mockResolvedValue({
         mode: 'SHARED',
         tenantId: 't1',

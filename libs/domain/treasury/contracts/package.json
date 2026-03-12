@@ -9,5 +9,14 @@
     "tslib": "^2.3.0",
     "@nestjs/swagger": "^11.2.6",
     "class-validator": "^0.14.3"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

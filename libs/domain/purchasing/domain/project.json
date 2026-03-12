@@ -20,13 +20,13 @@
         "{options.outputPath}"
       ],
       "options": {
-        "rootDir": "libs/domain/purchasing/domain/src",
         "outputPath": "dist/libs/domain/purchasing/domain",
         "main": "libs/domain/purchasing/domain/src/index.ts",
         "tsConfig": "libs/domain/purchasing/domain/tsconfig.lib.json",
         "assets": [
           "libs/domain/purchasing/domain/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     },
     "lint": {

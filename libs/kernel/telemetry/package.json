@@ -20,5 +20,14 @@
     "@opentelemetry/instrumentation-http": "^0.211.0",
     "@opentelemetry/instrumentation-express": "^0.59.0",
     "@opentelemetry/instrumentation-nestjs-core": "^0.57.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

@@ -22,6 +22,21 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/shared/util/client/auth",
+        "main": "libs/shared/util/client/auth/src/index.ts",
+        "tsConfig": "libs/shared/util/client/auth/tsconfig.lib.json",
+        "assets": [
+          "libs/shared/util/client/auth/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

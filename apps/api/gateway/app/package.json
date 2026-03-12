@@ -1,0 +1,23 @@
+{
+  "name": "@virteex/api-gateway-app",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@virteex/kernel-auth": "workspace:*",
+    "@virteex/kernel-tenant": "workspace:*",
+    "@virteex/kernel-audit": "workspace:*",
+    "@virteex/platform-kafka": "workspace:*",
+    "@virteex/shared-util-server-server-config": "workspace:*",
+    "@virteex/domain-inventory-presentation": "workspace:*",
+    "@virteex/domain-accounting-presentation": "workspace:*",
+    "@virteex/kernel-exceptions": "workspace:*",
+    "@virteex/kernel-tenant-context": "workspace:*",
+    "@virteex/kernel-telemetry-interfaces": "workspace:*",
+    "@virteex/kernel-telemetry": "workspace:*",
+    "@virteex/kernel-messaging": "workspace:*",
+    "@virteex/platform-audit": "workspace:*",
+    "@virteex/platform-cache": "workspace:*",
+    "@virteex/platform-storage": "workspace:*",
+    "@virteex/platform-xslt": "workspace:*"
+  }
+}

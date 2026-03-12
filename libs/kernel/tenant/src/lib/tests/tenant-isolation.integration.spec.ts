@@ -3,7 +3,7 @@ import { MikroORM, EntityManager } from '@mikro-orm/postgresql';
 import { TenantModelSubscriber } from '../subscribers/tenant-model.subscriber';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
 import { TenantStatus } from '../interfaces/tenant-config.interface';
-import * as AuthModule from '@virteex/kernel-auth';
+import * as TenantContextLib from '@virteex/kernel-tenant-context';
 
 /**
  * Enterprise Adversarial Integration Test: Tenant Isolation
@@ -12,8 +12,9 @@ import * as AuthModule from '@virteex/kernel-auth';
  * correctly block cross-tenant write attempts and respect tenant freezing.
  */
 
-vi.mock('@virteex/kernel-auth', () => ({
+vi.mock('@virteex/kernel-tenant-context', () => ({
     getTenantContext: vi.fn(),
+    runWithTenantContext: vi.fn(),
 }));
 
 class MockEntity {
@@ -33,7 +34,7 @@ describe('Tenant Isolation Adversarial Tests', () => {
     });
 
     it('SHOULD BLOCK cross-tenant write (Adversarial Bypass Attempt)', async () => {
-        (AuthModule.getTenantContext as any).mockReturnValue({ tenantId: 'tenant-legit' });
+        (TenantContextLib.getTenantContext as any).mockReturnValue({ tenantId: 'tenant-legit' });
 
         const entity = new MockEntity();
         entity.tenantId = 'tenant-victim';
@@ -50,7 +51,7 @@ describe('Tenant Isolation Adversarial Tests', () => {
     });
 
     it('SHOULD BLOCK write when tenant is FROZEN (DR/Failover scenario)', async () => {
-        (AuthModule.getTenantContext as any).mockReturnValue({ tenantId: 'tenant-1' });
+        (TenantContextLib.getTenantContext as any).mockReturnValue({ tenantId: 'tenant-1' });
 
         const entity = new MockEntity();
         entity.tenantId = 'tenant-1';
@@ -66,7 +67,7 @@ describe('Tenant Isolation Adversarial Tests', () => {
     });
 
     it('SHOULD BLOCK write when tenant is SUSPENDED (Compliance gate)', async () => {
-        (AuthModule.getTenantContext as any).mockReturnValue({ tenantId: 'tenant-1' });
+        (TenantContextLib.getTenantContext as any).mockReturnValue({ tenantId: 'tenant-1' });
 
         const entity = new MockEntity();
         entity.tenantId = 'tenant-1';

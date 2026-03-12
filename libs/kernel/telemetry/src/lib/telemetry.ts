@@ -4,7 +4,7 @@ import { NodeSDK } from '@opentelemetry/sdk-node';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { ConsoleSpanExporter, SimpleSpanProcessor, BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
-import { trace, context, Span, metrics, Meter } from '@opentelemetry/api';
+import { trace, context, Span, metrics, Meter, Attributes } from '@opentelemetry/api';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
@@ -73,10 +73,10 @@ export class TelemetryService implements ITelemetryService, OnModuleInit, OnModu
     }
   }
 
-  recordSecurityEvent(eventName: string, details: Record<string, any>) {
+  recordSecurityEvent(eventName: string, details: Record<string, unknown>) {
     const span = this.getActiveSpan();
     if (span) {
-      span.addEvent(eventName, details);
+      span.addEvent(eventName, details as Attributes);
     }
     this.logger.warn(`[SECURITY] ${eventName}`, details);
     this.recordBusinessMetric('security_events_total', 1, { event: eventName });

@@ -2,7 +2,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { StepUpGuard } from './step-up.guard';
-import { TelemetryService } from '@virteex/kernel-telemetry';
+import { TelemetryService } from '@virteex/kernel-telemetry-interfaces';
 
 describe('StepUpGuard', () => {
   const reflector = { getAllAndOverride: vi.fn() } as any as Reflector;

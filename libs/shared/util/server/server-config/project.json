@@ -22,7 +22,8 @@
         "tsConfig": "libs/shared/util/server/server-config/tsconfig.lib.json",
         "assets": [
           "libs/shared/util/server/server-config/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     },
     "lint": {

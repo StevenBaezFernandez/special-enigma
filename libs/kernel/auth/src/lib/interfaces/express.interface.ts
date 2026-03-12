@@ -1,4 +1,4 @@
-import { TenantContext } from './tenant-context.interface';
+import { TenantContext } from '@virteex/kernel-tenant-context';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

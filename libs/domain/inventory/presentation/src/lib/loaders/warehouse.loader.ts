@@ -1,5 +1,5 @@
 import { Injectable, Scope, Inject } from '@nestjs/common';
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 import { WAREHOUSE_REPOSITORY, WarehouseRepository, Warehouse } from '@virteex/domain-inventory-domain';
 
 @Injectable({ scope: Scope.REQUEST })

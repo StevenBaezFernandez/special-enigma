@@ -25,7 +25,8 @@
         "tsConfig": "libs/domain/identity/presentation/tsconfig.lib.json",
         "assets": [
           "libs/domain/identity/presentation/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     },
     "lint": {

@@ -1,8 +1,11 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../../dist/out-tsc",
+    "outDir": "../../../dist/libs/platform/cache",
+    "tsBuildInfoFile": "../../../dist/libs/platform/cache/.tsbuildinfo",
     "declaration": true,
+    "composite": true,
+    "rootDir": "src",
     "types": [
       "node"
     ]

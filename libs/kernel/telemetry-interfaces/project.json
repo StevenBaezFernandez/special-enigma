@@ -12,12 +12,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/kernel/telemetry-interfaces",
         "main": "libs/kernel/telemetry-interfaces/src/index.ts",
         "tsConfig": "libs/kernel/telemetry-interfaces/tsconfig.lib.json",
-        "assets": []
+        "assets": [
+          "libs/kernel/telemetry-interfaces/*.md"
+        ],
+        "generateExportsField": true
       }
     },
     "lint": {

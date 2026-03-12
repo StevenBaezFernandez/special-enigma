@@ -1,21 +1,16 @@
 {
   "name": "@virteex/kernel-auth",
   "version": "0.0.1",
-  "private": true,
-  "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
-  "dependencies": {
-    "tslib": "^2.3.0",
-    "@nestjs/common": "^11.0.0",
-    "express": "^4.21.2",
-    "rxjs": "^7.8.0",
-    "@virteex/kernel-telemetry-interfaces": "file:../telemetry-interfaces",
-    "@nestjs/core": "^11.0.0",
-    "@nestjs/config": "^4.0.3",
-    "jsonwebtoken": "^9.0.3",
-    "@nestjs/passport": "^11.0.5",
-    "@nestjs/jwt": "^11.0.2",
-    "passport-jwt": "^4.0.1"
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

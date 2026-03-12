@@ -13,5 +13,14 @@
     "@virteex/shared-contracts": "0.0.1",
     "@nestjs/event-emitter": "^3.0.1",
     "fast-xml-parser": "^4.2.7"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

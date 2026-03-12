@@ -1,5 +1,4 @@
-export * from './lib/interfaces/tenant-context.interface';
-export * from './lib/interfaces/signed-tenant-context.interface';
+export * from '@virteex/kernel-tenant-context';
 export * from './lib/middleware/canonical-tenant.middleware';
 export * from './lib/guards/tenant.guard';
 export * from './lib/auth.module';

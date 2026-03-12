@@ -1,8 +1,11 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
+    "outDir": "../../../dist/libs/kernel/audit",
+    "tsBuildInfoFile": "../../../dist/libs/kernel/audit/.tsbuildinfo",
     "declaration": true,
+    "composite": true,
+    "rootDir": "src",
     "types": [
       "node"
     ],
@@ -15,6 +18,11 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
+  "references": [
+    { "path": "../telemetry-interfaces/tsconfig.lib.json" },
+    { "path": "../tenant-context/tsconfig.lib.json" },
+    { "path": "../../platform/audit/tsconfig.lib.json" }
+  ],
   "include": [
     "src/**/*.ts"
   ]

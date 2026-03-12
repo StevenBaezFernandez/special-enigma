@@ -11,5 +11,14 @@
     "@nestjs/swagger": "^11.2.6",
     "@virteex/domain-manufacturing-application": "0.0.1",
     "@virteex/kernel-auth": "0.0.1"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

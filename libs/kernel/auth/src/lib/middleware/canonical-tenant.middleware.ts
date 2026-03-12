@@ -1,15 +1,14 @@
 import { Injectable, NestMiddleware, UnauthorizedException, Logger, OnModuleInit, Inject } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { TenantContext } from '../interfaces/tenant-context.interface';
-import { runWithTenantContext } from '@virteex/kernel-tenant-context';
+import { runWithTenantContext, TenantContext } from '@virteex/kernel-tenant-context';
 import { TelemetryService, TELEMETRY_SERVICE } from '@virteex/kernel-telemetry-interfaces';
 import { SecretManagerService } from '../services/secret-manager.service';
 import {
   claimsFromJwtPayload,
   parseAndValidateSignedContext,
 } from '../services/tenant-context-contract.service';
-import { TenantContextValidationError } from '../interfaces/signed-tenant-context.interface';
+import { TenantContextValidationError } from '@virteex/kernel-tenant-context';
 import '../interfaces/express.interface';
 
 @Injectable()

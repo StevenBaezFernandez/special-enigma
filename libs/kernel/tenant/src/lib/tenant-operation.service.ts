@@ -75,7 +75,7 @@ export class TenantOperationService implements OnModuleInit {
   async transitionState(
     operationId: string,
     newState: OperationState,
-    result?: any,
+    result?: unknown,
     evidenceUri?: string
   ): Promise<TenantOperation> {
     const op = await this.em.findOneOrFail(TenantOperation, { operationId });
@@ -85,7 +85,7 @@ export class TenantOperationService implements OnModuleInit {
     }
 
     op.state = newState;
-    if (result) op.result = { ...op.result, ...result };
+    if (result) op.result = { ...op.result, ...(result as any) };
     if (evidenceUri) op.evidenceUri = evidenceUri;
 
     if (newState === OperationState.FINALIZED || newState === OperationState.ROLLBACK) {
@@ -96,7 +96,7 @@ export class TenantOperationService implements OnModuleInit {
     this.logger.log(`Operation ${operationId} transitioned to ${newState}`);
 
     // Level 5: Append to Immutable Operation Journal
-    await this.appendToJournal(op, newState, result);
+    await this.appendToJournal(op, newState, result as any);
     this.telemetry.recordSecurityEvent('CONTROL_PLANE_OPERATION_TRANSITION', {
       tenantId: op.tenantId,
       operationId: op.operationId,
@@ -108,7 +108,7 @@ export class TenantOperationService implements OnModuleInit {
     return op;
   }
 
-  private async appendToJournal(op: TenantOperation, state: OperationState, payload?: any): Promise<void> {
+  private async appendToJournal(op: TenantOperation, state: OperationState, payload?: unknown): Promise<void> {
     const secret = process.env['AUDIT_HMAC_SECRET'];
     if (!secret) {
       const message = 'AUDIT_HMAC_SECRET is required for immutable operation journal.';

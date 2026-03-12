@@ -1,12 +1,19 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
+    "outDir": "../../../dist/libs/kernel/telemetry",
+    "tsBuildInfoFile": "../../../dist/libs/kernel/telemetry/.tsbuildinfo",
     "declaration": true,
+    "composite": true,
+    "rootDir": "src",
     "types": [
       "node"
     ]
   },
+  "references": [
+    { "path": "../telemetry-interfaces/tsconfig.lib.json" },
+    { "path": "../tenant-context/tsconfig.lib.json" }
+  ],
   "include": [
     "src/**/*.ts"
   ],

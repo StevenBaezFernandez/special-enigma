@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/fiscal/presentation/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     },
     "test": {

@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/projects/contracts/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     },
     "test": {

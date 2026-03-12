@@ -14,7 +14,7 @@ export class MigrationOrchestratorService {
   private readonly logger = new Logger(MigrationOrchestratorService.name);
 
   constructor(
-    private readonly em: EntityManager, IDatabaseDriver, Connection,
+    private readonly em: EntityManager,
     private readonly migrationGuard: MigrationGuard,
     private readonly operationService: TenantOperationService,
     private readonly routingPlane: RoutingPlaneService

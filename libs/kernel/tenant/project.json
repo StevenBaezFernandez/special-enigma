@@ -34,9 +34,9 @@
         "tsConfig": "libs/kernel/tenant/tsconfig.lib.json",
         "assets": [
           "libs/kernel/tenant/*.md"
-        ]
-      },
-      "dependsOn": ["kernel-auth", "kernel-telemetry-interfaces", "kernel-tenant-context"]
+        ],
+        "generateExportsField": true
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"

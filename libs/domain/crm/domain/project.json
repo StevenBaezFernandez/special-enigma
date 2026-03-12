@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/crm/domain/*.md"
         ],
-        "rootDir": "libs/domain/crm/domain"
+        "generateExportsField": true
       }
     },
     "test": {

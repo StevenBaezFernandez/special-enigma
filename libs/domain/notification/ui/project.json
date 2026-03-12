@@ -19,6 +19,21 @@
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domain/notification/ui"
       }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/notification/ui",
+        "main": "libs/domain/notification/ui/src/index.ts",
+        "tsConfig": "libs/domain/notification/ui/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/notification/ui/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

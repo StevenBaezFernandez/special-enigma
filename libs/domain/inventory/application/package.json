@@ -12,5 +12,14 @@
     "class-validator": "^0.14.3",
     "decimal.js": "^10.6.0",
     "@virteex/domain-inventory-contracts": "*"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

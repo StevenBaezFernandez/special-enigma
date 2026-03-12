@@ -25,12 +25,15 @@
         "tsConfig": "libs/domain/inventory/infrastructure/tsconfig.lib.json",
         "assets": [
           "libs/domain/inventory/infrastructure/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../../../coverage/libs/domain/inventory/infrastructure"
       }

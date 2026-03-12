@@ -23,19 +23,19 @@ export class DatabaseTelemetryLogger implements Logger {
   private readonly queryHistogram = this.meter.createHistogram('db_query_duration_ms');
   private readonly SLOW_QUERY_THRESHOLD = 100;
 
-  log(namespace: string, message: string, context?: any): void {
+  log(namespace: string, message: string, context?: unknown): void {
     this.nestLogger.log(`[${namespace}] ${message}`);
   }
 
-  error(namespace: string, message: string, context?: any): void {
+  error(namespace: string, message: string, context?: unknown): void {
     this.nestLogger.error(`[${namespace}] ${message}`);
   }
 
-  warn(namespace: string, message: string, context?: any): void {
+  warn(namespace: string, message: string, context?: unknown): void {
     this.nestLogger.warn(`[${namespace}] ${message}`);
   }
 
-  setDebugMode(debugMode: any): void {
+  setDebugMode(debugMode: unknown): void {
       // noop
   }
 

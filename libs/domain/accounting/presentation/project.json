@@ -21,12 +21,12 @@
       ],
       "options": {
         "outputPath": "dist/libs/domain/accounting/presentation",
-        "tsConfig": "libs/domain/accounting/presentation/tsconfig.lib.json",
-        "packageJson": "libs/domain/accounting/presentation/package.json",
         "main": "libs/domain/accounting/presentation/src/index.ts",
+        "tsConfig": "libs/domain/accounting/presentation/tsconfig.lib.json",
         "assets": [
           "libs/domain/accounting/presentation/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     }
   }

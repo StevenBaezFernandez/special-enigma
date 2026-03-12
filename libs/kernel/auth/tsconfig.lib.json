@@ -1,13 +1,19 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
+    "outDir": "../../../dist/libs/kernel/auth",
+    "tsBuildInfoFile": "../../../dist/libs/kernel/auth/.tsbuildinfo",
     "declaration": true,
+    "composite": true,
     "rootDir": "src",
     "types": [
       "node"
     ]
   },
+  "references": [
+    { "path": "../tenant-context/tsconfig.lib.json" },
+    { "path": "../telemetry-interfaces/tsconfig.lib.json" }
+  ],
   "include": [
     "src/**/*.ts"
   ],

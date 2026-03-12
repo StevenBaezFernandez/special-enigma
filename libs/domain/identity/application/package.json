@@ -6,5 +6,17 @@
     "class-transformer": "^0.5.1",
     "@nestjs/common": "^11.0.0",
     "@virteex/domain-identity-domain": "*"
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

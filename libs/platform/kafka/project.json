@@ -15,6 +15,21 @@
       "outputs": [
         "{workspaceRoot}/coverage/libs/platform/kafka"
       ]
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/platform/kafka",
+        "main": "libs/platform/kafka/src/index.ts",
+        "tsConfig": "libs/platform/kafka/tsconfig.lib.json",
+        "assets": [
+          "libs/platform/kafka/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

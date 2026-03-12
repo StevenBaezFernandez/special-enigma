@@ -23,7 +23,7 @@
         "assets": [
           "libs/domain/billing/infrastructure/*.md"
         ],
-        "rootDir": "."
+        "generateExportsField": true
       }
     },
     "test": {

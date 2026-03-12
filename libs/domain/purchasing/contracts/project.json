@@ -20,13 +20,13 @@
         "{options.outputPath}"
       ],
       "options": {
-        "rootDir": ".",
         "outputPath": "dist/libs/domain/purchasing/contracts",
         "main": "libs/domain/purchasing/contracts/src/index.ts",
         "tsConfig": "libs/domain/purchasing/contracts/tsconfig.lib.json",
         "assets": [
           "libs/domain/purchasing/contracts/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     },
     "lint": {

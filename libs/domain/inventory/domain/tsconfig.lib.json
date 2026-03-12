@@ -1,8 +1,9 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../../dist/out-tsc",
+    "outDir": "../../../../dist/libs/domain/inventory/domain",
     "declaration": true,
+    "rootDir": "src",
     "types": [
       "node"
     ]

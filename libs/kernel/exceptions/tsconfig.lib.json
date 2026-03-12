@@ -1,8 +1,11 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
+    "outDir": "../../../dist/libs/kernel/exceptions",
+    "tsBuildInfoFile": "../../../dist/libs/kernel/exceptions/.tsbuildinfo",
     "declaration": true,
+    "composite": true,
+    "rootDir": "src",
     "types": [
       "node"
     ]

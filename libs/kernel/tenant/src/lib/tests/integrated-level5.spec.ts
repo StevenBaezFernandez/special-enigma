@@ -6,7 +6,7 @@ import { FailoverService } from '../failover.service';
 import { RegionalResidencyGuard } from '../guards/regional-residency.guard';
 import { EntityManager, RequestContext } from '@mikro-orm/core';
 import { TenantMode, TenantStatus, OperationState, OperationType } from '../interfaces/tenant-config.interface';
-import * as auth from '@virteex/kernel-auth';
+import * as TenantContextLib from '@virteex/kernel-tenant-context';
 import { of, lastValueFrom } from 'rxjs';
 import axios from 'axios';
 
@@ -23,6 +23,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
 
   beforeAll(() => {
     vi.spyOn(RequestContext, 'create').mockImplementation((em: any, cb: any) => cb());
+    process.env['AUDIT_HMAC_SECRET'] = 'test-secret';
   });
 
   beforeEach(() => {
@@ -101,7 +102,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
       const interceptor = new TenantRlsInterceptor(mockEm as any, mockTenantService as any, mockResidencyCompliance as any);
       const subscriber = new TenantModelSubscriber();
 
-      vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 'tenant-alpha' } as any);
+      vi.spyOn(TenantContextLib, 'getTenantContext').mockReturnValue({ tenantId: 'tenant-alpha', contextVersion: 'v1', exp: Math.floor(Date.now() / 1000) + 3600 } as any);
       mockTenantService.getTenantConfig.mockResolvedValue({ mode: 'SHARED', tenantId: 'tenant-alpha', primaryRegion: 'us-east-1' });
       mockEm.findOne.mockResolvedValue({ status: 'ACTIVE', isFrozen: false });
       process.env['AWS_REGION'] = 'us-east-1';
@@ -128,7 +129,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
 
     it('SHOULD fail-closed if tenant is SUSPENDED or context is invalid', async () => {
       const interceptor = new TenantRlsInterceptor(mockEm as any, mockTenantService as any, mockResidencyCompliance as any);
-      vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 'suspended-tenant' } as any);
+      vi.spyOn(TenantContextLib, 'getTenantContext').mockReturnValue({ tenantId: 'suspended-tenant', contextVersion: 'v1', exp: Math.floor(Date.now() / 1000) + 3600 } as any);
       mockEm.findOne.mockResolvedValue({ status: 'SUSPENDED' });
       mockTenantService.getTenantConfig.mockResolvedValue({ mode: 'SHARED', primaryRegion: 'us-east-1' });
 
@@ -154,7 +155,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
 
       expect(mockGuard.preMigrationCheck).toHaveBeenCalled();
       expect(mockOpService.transitionState).toHaveBeenCalledWith('op-123', OperationState.RECONCILING, expect.objectContaining({ reconciled: true }));
-      expect(mockOpService.transitionState).toHaveBeenCalledWith('op-123', OperationState.FINALIZED);
+      expect(mockOpService.transitionState).toHaveBeenCalledWith('op-123', OperationState.FINALIZED, undefined, expect.stringContaining('checksum-manifest.json'));
     });
   });
 
@@ -197,7 +198,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
     it('SHOULD block async execution in unauthorized region', async () => {
       const guard = new RegionalResidencyGuard(mockTenantService as any, mockResidencyCompliance as any);
 
-      vi.spyOn(auth, 'getTenantContext').mockReturnValue({ tenantId: 't1' } as any);
+      vi.spyOn(TenantContextLib, 'getTenantContext').mockReturnValue({ tenantId: 't1' } as any);
       mockTenantService.getTenantConfig.mockResolvedValue({ primaryRegion: 'us-east-1' });
       process.env['AWS_REGION'] = 'sa-east-1'; // Violation
       mockResidencyCompliance.assertRegionAllowed.mockRejectedValue(new Error('residency policy violation'));

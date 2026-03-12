@@ -25,7 +25,8 @@
         "tsConfig": "libs/domain/catalog/domain/tsconfig.lib.json",
         "assets": [
           "libs/domain/catalog/domain/*.md"
-        ]
+        ],
+        "generateExportsField": true
       }
     }
   }

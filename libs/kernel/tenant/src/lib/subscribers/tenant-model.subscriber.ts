@@ -1,6 +1,6 @@
 import { EventSubscriber, EventArgs } from '@mikro-orm/core';
 import { Injectable, Logger } from '@nestjs/common';
-import { getTenantContext } from '@virteex/kernel-auth';
+import { getTenantContext } from '@virteex/kernel-tenant-context';
 import { TenantControlRecord } from '../entities/tenant-control-record.entity';
 import { TenantStatus } from '../interfaces/tenant-config.interface';
 
@@ -8,16 +8,16 @@ import { TenantStatus } from '../interfaces/tenant-config.interface';
 export class TenantModelSubscriber implements EventSubscriber {
   private readonly logger = new Logger(TenantModelSubscriber.name);
 
-  async beforeCreate(args: EventArgs<any>): Promise<void> {
-    await this.enforceTenantSecurity(args, 'create');
+  async beforeCreate(args: EventArgs<unknown>): Promise<void> {
+    await this.enforceTenantSecurity(args as EventArgs<any>, 'create');
   }
 
-  async beforeUpdate(args: EventArgs<any>): Promise<void> {
-    await this.enforceTenantSecurity(args, 'update');
+  async beforeUpdate(args: EventArgs<unknown>): Promise<void> {
+    await this.enforceTenantSecurity(args as EventArgs<any>, 'update');
   }
 
-  async beforeDelete(args: EventArgs<any>): Promise<void> {
-    await this.enforceTenantSecurity(args, 'delete');
+  async beforeDelete(args: EventArgs<unknown>): Promise<void> {
+    await this.enforceTenantSecurity(args as EventArgs<any>, 'delete');
   }
 
   private async enforceTenantSecurity(args: EventArgs<any>, operation: string): Promise<void> {

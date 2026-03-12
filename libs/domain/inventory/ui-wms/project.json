@@ -25,6 +25,21 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/inventory/ui-wms",
+        "main": "libs/domain/inventory/ui-wms/src/index.ts",
+        "tsConfig": "libs/domain/inventory/ui-wms/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/inventory/ui-wms/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }

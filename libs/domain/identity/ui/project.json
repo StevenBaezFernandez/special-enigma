@@ -22,6 +22,21 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/identity/ui",
+        "main": "libs/domain/identity/ui/src/index.ts",
+        "tsConfig": "libs/domain/identity/ui/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/identity/ui/*.md"
+        ],
+        "generateExportsField": true
+      }
     }
   }
 }
