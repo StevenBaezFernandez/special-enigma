@@ -43,7 +43,7 @@ export interface CreateInvoiceDto {
 
 @Injectable({ providedIn: 'root' })
 export class InvoicesService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
   private http = inject(HttpClient);
   private apiUrl = `${this.config.apiUrl}/invoices`;
 

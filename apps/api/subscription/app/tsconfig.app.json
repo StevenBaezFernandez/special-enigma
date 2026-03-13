@@ -1,17 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "types": [
-      "node"
-    ],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "target": "es2021",
-    "moduleResolution": "node"
+    "outDir": "../../../../dist/out-tsc/apps/api/subscription/app",
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

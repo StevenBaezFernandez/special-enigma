@@ -10,7 +10,7 @@ type CreateJournalEntryDto = Omit<JournalEntry, 'id' | 'organizationId' | 'creat
   providedIn: 'root'
 })
 export class JournalEntries {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
   private http = inject(HttpClient);
   private apiUrl = `${this.config.apiUrl}/journal-entries`;
 

@@ -8,7 +8,7 @@ import { SwPush } from '@angular/service-worker';
   providedIn: 'root'
 })
 export class PushNotificationService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
   readonly VAPID_PUBLIC_KEY = this.config.vapidPublicKey || '';
 
   private swPush = inject(SwPush);

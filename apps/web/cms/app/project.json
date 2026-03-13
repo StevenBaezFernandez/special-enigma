@@ -1,9 +1,9 @@
 {
   "name": "web-cms-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "virteex",
-  "sourceRoot": "apps/web-cms-app/src",
+  "sourceRoot": "apps/web/cms/app/src",
   "tags": [
     "scope:shared",
     "type:app",
@@ -13,23 +13,19 @@
   "targets": {
     "build": {
       "executor": "@angular/build:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/web-cms-app",
-        "browser": "apps/web-cms-app/src/main.ts",
-        "tsConfig": "apps/web-cms-app/tsconfig.app.json",
+        "outputPath": "dist/apps/web/cms/app",
+        "browser": "apps/web/cms/app/src/main.ts",
+        "tsConfig": "apps/web/cms/app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/web-cms-app/public"
+            "input": "apps/web/cms/app/public"
           }
         ],
-        "styles": [
-          "apps/web-cms-app/src/styles.scss"
-        ]
+        "styles": ["apps/web/cms/app/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -80,17 +76,15 @@
       "options": {
         "buildTarget": "web-cms-app:build",
         "port": 4201,
-        "staticFilePath": "dist/apps/web-cms-app/browser",
+        "staticFilePath": "dist/apps/web/cms/app/browser",
         "spa": true
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/apps/web-cms-app"
+        "reportsDirectory": "coverage/apps/web/cms/app"
       }
     }
   }

@@ -1,9 +1,9 @@
 {
   "name": "web-support-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "virteex",
-  "sourceRoot": "apps/web-support-app/src",
+  "sourceRoot": "apps/web/support/app/src",
   "tags": [
     "scope:shared",
     "type:app",
@@ -13,23 +13,19 @@
   "targets": {
     "build": {
       "executor": "@angular/build:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/web-support-app",
-        "browser": "apps/web-support-app/src/main.ts",
-        "tsConfig": "apps/web-support-app/tsconfig.app.json",
+        "outputPath": "dist/apps/web/support/app",
+        "browser": "apps/web/support/app/src/main.ts",
+        "tsConfig": "apps/web/support/app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/web-support-app/public"
+            "input": "apps/web/support/app/public"
           }
         ],
-        "styles": [
-          "apps/web-support-app/src/styles.scss"
-        ]
+        "styles": ["apps/web/support/app/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -80,17 +76,15 @@
       "options": {
         "buildTarget": "web-support-app:build",
         "port": 4203,
-        "staticFilePath": "dist/apps/web-support-app/browser",
+        "staticFilePath": "dist/apps/web/support/app/browser",
         "spa": true
       }
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/apps/web-support-app"
+        "reportsDirectory": "coverage/apps/web/support/app"
       }
     }
   }

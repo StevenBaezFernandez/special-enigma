@@ -1,29 +1,11 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../../dist/out-tsc",
+    "outDir": "../../../../dist/libs/domain/treasury/application",
     "declaration": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "jest.config.ts",
-    "jest.config.cts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "vite.config.ts",
-    "vite.config.mts",
-    "vitest.config.ts",
-    "vitest.config.mts",
-    "src/**/*.test.tsx",
-    "src/**/*.spec.tsx",
-    "src/**/*.test.js",
-    "src/**/*.spec.js",
-    "src/**/*.test.jsx",
-    "src/**/*.spec.jsx"
-  ]
+  "include": ["src/**/*.ts"],
+  "files": [],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

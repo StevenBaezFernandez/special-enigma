@@ -1,6 +1,6 @@
 {
   "name": "api-gateway-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/gateway/app/src",
   "projectType": "application",
   "prefix": "virteex",

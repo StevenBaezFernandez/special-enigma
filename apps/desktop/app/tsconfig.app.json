@@ -1,20 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
-    "types": [
-      "node"
-    ]
+    "outDir": "../../../dist/out-tsc/apps/desktop/app",
+    "types": ["node"]
   },
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "jest.config.ts",
-    "jest.config.cts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ],
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

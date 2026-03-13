@@ -23,7 +23,7 @@ export interface CountryConfig {
   providedIn: 'root'
 })
 export class CountryService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any as any;
   private http = inject(HttpClient);
   private geoLocation = inject(GeoLocationService);
 

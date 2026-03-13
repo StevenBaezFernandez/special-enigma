@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Queue, Worker, Job as BullJob, QueueEvents } from 'bullmq';
-import { Job, JobStatus } from '../domain/entities/job.entity';
-import { JobStateMachine } from '../domain/job-state-machine';
+import { Job, JobStatus } from '@virteex/domain-scheduler-domain';
+import { JobStateMachine } from '@virteex/domain-scheduler-domain';
 import { EntityManager } from '@mikro-orm/core';
 
 @Injectable()

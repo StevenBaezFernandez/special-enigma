@@ -9,7 +9,7 @@ import { APP_CONFIG } from '@virteex/shared-config';
   providedIn: 'root'
 })
 export class WebSocketService implements OnDestroy {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
   private socket: Socket | null = null;
   // Subject para notificar cuando la conexión está establecida
   private connectionReady = new Subject<void>();

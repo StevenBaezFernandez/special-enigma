@@ -1,6 +1,6 @@
 {
   "name": "api-admin-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/admin/app/src",
   "projectType": "application",
   "tags": [

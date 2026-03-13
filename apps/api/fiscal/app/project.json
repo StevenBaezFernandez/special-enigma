@@ -1,6 +1,6 @@
 {
   "name": "api-fiscal-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/fiscal/app/src",
   "projectType": "application",
   "tags": [

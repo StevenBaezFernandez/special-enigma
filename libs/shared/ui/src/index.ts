@@ -18,3 +18,7 @@ export * from './lib/interfaces/register-payload.interface';
 export * from './lib/validators/async.validators';
 export * from './lib/services/toast.service';
 export * from './lib/interceptors/error.interceptor';
+export * from './lib/services/common/theme.service';
+export * from './lib/core/models/finance';
+export * from './lib/services/modal.interface';
+export * from './lib/components/ui/modal';

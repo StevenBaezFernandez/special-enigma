@@ -1,1 +1,5 @@
-export * from './lib/notification-domain.module';
+export enum NotificationChannel {
+  EMAIL = 'EMAIL',
+  SMS = 'SMS',
+  PUSH = 'PUSH'
+}

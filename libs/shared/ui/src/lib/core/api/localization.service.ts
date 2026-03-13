@@ -10,7 +10,7 @@ import { FiscalRegion } from '../models/fiscal-region.model';
   providedIn: 'root',
 })
 export class LocalizationApiService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any as any;
   private http = inject(HttpClient);
   private apiUrl = `${this.config.apiUrl}/localization`;
 

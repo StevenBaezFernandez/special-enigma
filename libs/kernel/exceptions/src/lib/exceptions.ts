@@ -1,41 +1,13 @@
-export abstract class DomainException extends Error {
+export class BaseException extends Error {
   constructor(message: string) {
     super(message);
-    this.name = this.constructor.name || 'DomainException';
+    this.name = this.constructor.name;
   }
 }
 
-export class EntityNotFoundException extends DomainException {
-  constructor(entityName: string, id: string | number) {
-    super(`${entityName} with id ${id} not found`);
-    this.name = 'EntityNotFoundException';
-  }
-}
-
-export class UnauthorizedException extends DomainException {
-  constructor(message = 'Unauthorized') {
-    super(message);
-    this.name = 'UnauthorizedException';
-  }
-}
-
-export class ForbiddenException extends DomainException {
-  constructor(message = 'Forbidden') {
-    super(message);
-    this.name = 'ForbiddenException';
-  }
-}
-
-export class ConflictException extends DomainException {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ConflictException';
-  }
-}
-
-export class BadRequestException extends DomainException {
-  constructor(message: string) {
-    super(message);
-    this.name = 'BadRequestException';
-  }
-}
+export class BadRequestException extends BaseException {}
+export class EntityNotFoundException extends BaseException {}
+export class UnauthorizedException extends BaseException {}
+export class ForbiddenException extends BaseException {}
+export class ConflictException extends BaseException {}
+export class InternalServerErrorException extends BaseException {}

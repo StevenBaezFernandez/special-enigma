@@ -1,6 +1,6 @@
 {
   "name": "api-purchasing-e2e",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "tags": ["scope:purchasing", "type:e2e", "platform:e2e", "criticality:low"],
   "implicitDependencies": ["api-purchasing-app"],

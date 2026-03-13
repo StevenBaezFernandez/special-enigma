@@ -1,6 +1,10 @@
 export interface ModalOptions {
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
+  title?: string;
+  content?: any;
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  centered?: boolean;
+  scrollable?: boolean;
+  backdrop?: boolean | 'static';
+  keyboard?: boolean;
+  data?: any;
 }

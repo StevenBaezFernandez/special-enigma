@@ -1,6 +1,6 @@
 {
   "name": "web-ops-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "virteex",
   "sourceRoot": "apps/web/ops/app/src",

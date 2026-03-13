@@ -21,7 +21,7 @@ export interface OrganizationProfile {
   providedIn: 'root'
 })
 export class OrganizationService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
   private apiUrl = `${this.config.apiUrl}/organizations`;
 
   constructor(private http: HttpClient) {}

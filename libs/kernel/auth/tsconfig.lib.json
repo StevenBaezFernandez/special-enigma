@@ -2,25 +2,10 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../../dist/libs/kernel/auth",
-    "tsBuildInfoFile": "../../../dist/libs/kernel/auth/.tsbuildinfo",
     "declaration": true,
-    "composite": true,
-    "rootDir": "src",
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "references": [
-    { "path": "../tenant-context/tsconfig.lib.json" },
-    { "path": "../telemetry-interfaces/tsconfig.lib.json" }
-  ],
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "jest.config.ts",
-    "jest.config.cts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "files": [],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

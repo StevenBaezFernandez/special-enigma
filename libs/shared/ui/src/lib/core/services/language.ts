@@ -2,7 +2,6 @@ import { Injectable, signal, effect, Inject, PLATFORM_ID, inject, untracked } fr
 import { isPlatformBrowser } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { UsersService } from '@virteex/identity-ui';
 import { AuthService } from './auth';
 
 // Clave estandarizada para guardar el idioma en el almacenamiento local del navegador.
@@ -19,7 +18,7 @@ export class LanguageService {
 
   // --- Inyección de Dependencias ---
   private translate = inject(TranslateService);
-  private usersService = inject(UsersService);
+  private usersService: any = null;
   private authService = inject(AuthService);
 
   /**

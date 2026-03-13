@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../src/lib/core/services/auth';
-import { LanguageService } from '../../../src/lib/core/services/language';
-import { authGuard } from '../../../src/lib/core/guards/auth-guard';
+import { AuthService } from '../../core/services/auth';
+import { LanguageService } from '../../core/services/language';
+import { authGuard } from '../../core/guards/auth-guard';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
 

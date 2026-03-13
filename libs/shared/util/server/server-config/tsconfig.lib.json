@@ -3,16 +3,9 @@
   "compilerOptions": {
     "outDir": "../../../../../dist/libs/shared/util/server/server-config",
     "declaration": true,
-    "rootDir": "src",
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "files": [],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

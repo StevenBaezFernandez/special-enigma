@@ -1,31 +1,11 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2021",
-    "sourceMap": true,
     "outDir": "../../../dist/libs/kernel/messaging",
-    "tsBuildInfoFile": "../../../dist/libs/kernel/messaging/.tsbuildinfo",
-    "rootDir": "src",
-    "composite": true,
-    "paths": {
-      "@virteex/platform-cache": ["../../../dist/libs/platform/cache/index.d.ts"]
-    }
+    "declaration": true,
+    "types": ["node"]
   },
-  "references": [
-    { "path": "../../platform/cache/tsconfig.lib.json" }
-  ],
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "jest.config.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "files": [],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }
