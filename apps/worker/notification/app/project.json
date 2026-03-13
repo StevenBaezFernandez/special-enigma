@@ -1,7 +1,7 @@
 {
   "name": "worker-notification-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/worker-notification-app/src",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/worker/notification/app/src",
   "projectType": "application",
   "tags": [
     "scope:notification",
@@ -12,15 +12,28 @@
   ],
   "targets": {
     "build": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
       "options": {
-        "command": "webpack-cli build",
-        "args": ["--node-env=production"],
-        "cwd": "apps/worker-notification-app"
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/worker/notification/app",
+        "main": "apps/worker/notification/app/src/main.ts",
+        "tsConfig": "apps/worker/notification/app/tsconfig.app.json",
+        "webpackConfig": "apps/worker/notification/app/webpack.config.js",
+        "assets": ["apps/worker/notification/app/src/assets"]
       },
       "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        },
         "development": {
-          "args": ["--node-env=development"]
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
         }
       }
     },
@@ -29,8 +42,8 @@
       "cache": true,
       "executor": "@nx/js:prune-lockfile",
       "outputs": [
-        "{workspaceRoot}/dist/apps/worker-notification-app/package.json",
-        "{workspaceRoot}/dist/apps/worker-notification-app/package-lock.json"
+        "{workspaceRoot}/dist/apps/worker/notification/app/package.json",
+        "{workspaceRoot}/dist/apps/worker/notification/app/package-lock.json"
       ],
       "options": {
         "buildTarget": "build"
@@ -40,7 +53,7 @@
       "dependsOn": ["build"],
       "cache": true,
       "outputs": [
-        "{workspaceRoot}/dist/apps/worker-notification-app/workspace_modules"
+        "{workspaceRoot}/dist/apps/worker/notification/app/workspace_modules"
       ],
       "executor": "@nx/js:copy-workspace-modules",
       "options": {

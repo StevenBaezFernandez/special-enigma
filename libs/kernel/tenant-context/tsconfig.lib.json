@@ -2,21 +2,10 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../../dist/libs/kernel/tenant-context",
-    "tsBuildInfoFile": "../../../dist/libs/kernel/tenant-context/.tsbuildinfo",
     "declaration": true,
-    "composite": true,
-    "rootDir": "src",
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "jest.config.ts",
-    "jest.config.cts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "files": [],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

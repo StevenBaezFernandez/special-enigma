@@ -1,7 +1,7 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { GlobalSearchPage } from '../../../src/lib/components/global-search/global-search.page';
-import { SearchService } from '../../../src/lib/core/services/search.service';
+import { GlobalSearchPage } from '../../components/global-search/global-search.page';
+import { SearchService } from '../../core/services/search.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { vi } from 'vitest';
 import { of } from 'rxjs';

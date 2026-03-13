@@ -1,5 +1,4 @@
 import { Injectable, signal, inject, effect } from '@angular/core';
-import { GridsterItem } from 'angular-gridster2';
 import { Kpi } from '../models/finance';
 import { HttpClient } from '@angular/common/http';
 
@@ -9,36 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // Define un tipo para los gráficos permitidos
 export type ChartType = 'column' | 'bar' | 'pie' | 'area' | 'line' | 'waterfall';
 
-// Interfaz que define la estructura completa de un widget
-export interface DashboardWidget extends GridsterItem {
-  componentType:
-    | 'kpi-card'
-    | 'stat-card'
-    | 'comparison-chart'
-    | 'alerts-panel'
-    | 'sales-chart'
-    | 'invoice-status'
-    | 'low-stock'
-    | 'top-products'
-    | 'recent-activity'
-    | 'cashflow-chart'
-    | 'expenses-chart'
-    | 'ar-aging-chart'
-    | 'financial-ratios'
-    | 'kpi-roe'
-    | 'kpi-roa'
-    | 'kpi-current-ratio'
-    | 'kpi-quick-ratio'
-    | 'kpi-working-capital'
-    | 'kpi-leverage'
-    | 'kpi-net-margin'
-    | 'kpi-ebitda'
-    | 'kpi-fcf';
-  id: string;
-  name: string;
-  data?: any;
-  chartType?: ChartType;
-}
+import { DashboardWidget } from '../../models/gridster-compat';
 
 // Lista maestra de todos los widgets disponibles en la aplicación
 const ALL_AVAILABLE_WIDGETS: Omit<DashboardWidget, 'x' | 'y'>[] = [
@@ -196,7 +166,7 @@ export class DashboardService {
 
   private updateWidgetsWithRealData(stats: any): void {
     this.layout.update(currentLayout => {
-      return currentLayout.map(widget => {
+      return currentLayout.map((widget: any) => {
         if (widget.id === 'sales-today') {
            return { ...widget, data: { ...widget.data, value: this.formatCurrency(stats.salesToday) } };
         }
@@ -237,7 +207,7 @@ export class DashboardService {
 
   saveLayout(currentLayout: DashboardWidget[]): void {
     if (typeof window !== 'undefined') {
-      const layoutToSave = currentLayout.map(w => ({
+      const layoutToSave = currentLayout.map((w: any) => ({
         cols: w.cols, rows: w.rows, x: w.x, y: w.y,
         id: w.id, componentType: w.componentType, name: w.name, data: w.data, chartType: w.chartType
       }));
@@ -258,7 +228,7 @@ export class DashboardService {
   }
 
   addWidget(widgetId: string): void {
-    const widgetToAdd = ALL_AVAILABLE_WIDGETS.find(w => w['id'] === widgetId);
+    const widgetToAdd = ALL_AVAILABLE_WIDGETS.find(w => w['id'] === widgetId) as any;
 
     if (widgetToAdd) {
       const newWidget: any = {

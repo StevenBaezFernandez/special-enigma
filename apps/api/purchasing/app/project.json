@@ -1,6 +1,6 @@
 {
   "name": "api-purchasing-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/purchasing/app/src",
   "projectType": "application",
   "tags": [

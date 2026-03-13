@@ -17,7 +17,7 @@ export class LocalProductRepository implements ProductRepository {
 
     return {
       id: product.id,
-      name: product.name,
+      name: product["name"],
       price: product.price,
       taxGroup: product.taxGroup,
       fiscalCode: product.fiscalCode

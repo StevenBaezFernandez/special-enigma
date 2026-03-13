@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AuthQueueService } from '../../../src/lib/core/services/auth-queue.service';
+import { AuthQueueService } from '../../core/services/auth-queue.service';
 import { take, firstValueFrom } from 'rxjs';
 
 describe('AuthQueueService', () => {

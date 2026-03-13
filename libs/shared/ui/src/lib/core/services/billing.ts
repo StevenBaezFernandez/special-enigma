@@ -2,7 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { Plan } from '../models/plan.model';
+import { Plan } from '../../models/plan.model';
 
 export interface Subscription {
   planName: string;

@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../src/lib/core/services/auth';
-import { LanguageService } from '../../../src/lib/core/services/language';
-import { languageRedirectGuard } from '../../../src/lib/core/guards/language-redirect.guard';
+import { AuthService } from '../../core/services/auth';
+import { LanguageService } from '../../core/services/language';
+import { languageRedirectGuard } from '../../core/guards/language-redirect.guard';
 import { vi } from 'vitest';
 
 describe('languageRedirectGuard', () => {

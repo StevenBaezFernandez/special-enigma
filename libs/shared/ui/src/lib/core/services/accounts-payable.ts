@@ -35,7 +35,7 @@ export type UpdateVendorBillDto = Partial<CreateVendorBillDto>
 
 @Injectable({ providedIn: 'root' })
 export class AccountsPayableService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any as any;
   private http = inject(HttpClient);
   private apiUrl = `${this.config.apiUrl}/accounts-payable`;
 

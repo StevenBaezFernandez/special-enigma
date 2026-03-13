@@ -1,6 +1,6 @@
 {
   "name": "api-payroll-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/payroll/app/src",
   "projectType": "application",
   "tags": [

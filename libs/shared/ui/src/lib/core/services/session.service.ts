@@ -17,7 +17,7 @@ export interface UserSession {
     providedIn: 'root'
 })
 export class SessionService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
     private http = inject(HttpClient);
     private apiUrl = `${this.config.apiUrl}/auth/sessions`;
 

@@ -14,7 +14,7 @@ export interface GeoLocationResponse {
   providedIn: 'root'
 })
 export class GeoLocationService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
   private http = inject(HttpClient);
   private router = inject(Router);
 

@@ -1,1 +1,1 @@
-export * from '../../../../src/lib/components/ui/modal/ui-modal.component';
+export * from './ui-modal.component';

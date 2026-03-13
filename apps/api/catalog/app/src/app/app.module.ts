@@ -1,7 +1,7 @@
 import { Module, MiddlewareConsumer, RequestMethod, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
-import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
+import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
@@ -33,7 +33,14 @@ import { CatalogPresentationModule } from '@virteex/domain-catalog-presentation'
       },
       validationRules: [
         depthLimit(10),
-        createComplexityLimitRule(1000)
+        createComplexityRule({
+          maximumComplexity: 1000,
+          variables: {},
+          estimators: [simpleEstimator({ defaultComplexity: 1 })],
+          onComplete: (complexity: number) => {
+            console.log('Query Complexity:', complexity);
+          },
+        })
       ],
     }),
     MikroOrmModule.forRootAsync({

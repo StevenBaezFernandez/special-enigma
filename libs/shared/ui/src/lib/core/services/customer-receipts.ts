@@ -13,7 +13,7 @@ export interface CustomerReceipt {
 
 @Injectable({ providedIn: 'root' })
 export class CustomerReceiptsService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
   private http = inject(HttpClient);
   private apiUrl = `${this.config.apiUrl}/customer-payments`; // Assuming this is the new endpoint
 

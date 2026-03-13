@@ -1,8 +1,8 @@
 import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { Worker, Job as BullJob } from 'bullmq';
 import { EntityManager } from '@mikro-orm/core';
-import { Job, JobStatus } from '../domain/entities/job.entity';
-import { JobStateMachine } from '../domain/job-state-machine';
+import { Job, JobStatus } from '@virteex/domain-scheduler-domain';
+import { JobStateMachine } from '@virteex/domain-scheduler-domain';
 import { InboxService } from '@virteex/kernel-messaging';
 import { FiscalJobHandler } from './handlers/fiscal-job.handler';
 import { BillingJobHandler } from './handlers/billing-job.handler';

@@ -14,8 +14,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Account } from '../models/account.model';
-import { FlattenedAccount } from '../models/flattened-account.model';
+import { Account } from '../../models/account.model';
+import { FlattenedAccount } from '../../models/flattened-account.model';
 
 @Injectable({
   providedIn: 'root'

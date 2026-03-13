@@ -1,37 +1,18 @@
 {
-  "name": "billing-contracts",
+  "name": "domain-billing-contracts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/domain/billing/contracts/src",
   "projectType": "library",
-  "tags": [
-    "scope:billing",
-    "type:contracts",
-    "platform:server",
-    "criticality:medium"
-  ],
+  "prefix": "virteex",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/domain/billing/contracts",
         "main": "libs/domain/billing/contracts/src/index.ts",
         "tsConfig": "libs/domain/billing/contracts/tsconfig.lib.json",
-        "assets": [
-          "libs/domain/billing/contracts/*.md"
-        ],
-        "generateExportsField": true
-      }
-    },
-    "test": {
-      "executor": "@nx/vitest:test",
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
-      "options": {
-        "reportsDirectory": "../../../../coverage/libs/domain/billing/contracts"
+        "assets": ["libs/domain/billing/contracts/*.md"]
       }
     }
   }

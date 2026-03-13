@@ -1,3 +1,5 @@
-export function payrollContracts(): string {
-  return 'payroll-contracts';
+export class CalculatePayrollDto {
+  tenantId!: string;
+  month!: number;
+  year!: number;
 }

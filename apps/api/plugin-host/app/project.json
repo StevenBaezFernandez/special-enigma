@@ -1,6 +1,6 @@
 {
   "name": "api-plugin-host-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/plugin-host/app/src",
   "projectType": "application",
   "prefix": "virteex",

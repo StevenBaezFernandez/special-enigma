@@ -1,6 +1,6 @@
 {
   "name": "desktop-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/desktop/app/src",
   "projectType": "application",
   "prefix": "virteex",

@@ -19,7 +19,7 @@ export interface SearchResultGroup {
   providedIn: 'root'
 })
 export class SearchService {
-  private config = inject(APP_CONFIG);
+  private config = inject(APP_CONFIG) as any;
   private http = inject(HttpClient);
   private apiUrl = `${this.config.apiUrl}/search`;
 

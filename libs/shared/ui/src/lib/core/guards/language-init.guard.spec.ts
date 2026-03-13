@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { LanguageService } from '../../../src/lib/core/services/language';
-import { languageInitGuard } from '../../../src/lib/core/guards/language-init.guard';
+import { LanguageService } from '../../core/services/language';
+import { languageInitGuard } from '../../core/guards/language-init.guard';
 import { vi } from 'vitest';
 
 describe('languageInitGuard', () => {

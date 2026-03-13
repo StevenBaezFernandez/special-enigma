@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { CountryService } from '../../../src/lib/core/services/country.service';
-import { LanguageService } from '../../../src/lib/core/services/language';
-import { GeoLocationService } from '../../../src/lib/core/services/geo-location.service';
-import { CountryGuard } from '../../../src/lib/core/guards/country.guard';
+import { CountryService } from '../../core/services/country.service';
+import { LanguageService } from '../../core/services/language';
+import { GeoLocationService } from '../../core/services/geo-location.service';
+import { CountryGuard } from '../../core/guards/country.guard';
 import { of, firstValueFrom } from 'rxjs';
 import { vi } from 'vitest';
 

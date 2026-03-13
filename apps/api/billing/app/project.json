@@ -1,6 +1,6 @@
 {
   "name": "api-billing-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/billing/app/src",
   "projectType": "application",
   "tags": [

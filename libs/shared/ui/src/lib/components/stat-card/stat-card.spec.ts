@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatCard } from '../../../src/lib/components/stat-card/stat-card';
+import { StatCard } from '../../components/stat-card/stat-card';
 import { LucideAngularModule, DollarSign } from 'lucide-angular';
 
 describe('StatCard', () => {
