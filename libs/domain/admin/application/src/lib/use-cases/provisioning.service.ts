@@ -25,7 +25,8 @@ export class ProvisioningService {
     private readonly tenantService: TenantService,
     private readonly operationService: TenantOperationService
   ) {
-    this.redis = new Redis(this.configService.get('REDIS_URL') || 'redis://localhost:6379');
+    const redisUrl = this.configService.get<string>('REDIS_URL') || 'redis://localhost:6379';
+    this.redis = new Redis(redisUrl);
   }
 
   async startProvisioning(tenantId: string): Promise<void> {
@@ -57,10 +58,10 @@ export class ProvisioningService {
       const generator = this.orm.getSchemaGenerator();
 
       if (config.mode === TenantMode.SCHEMA) {
-        await generator.createSchema({ schema: config.schemaName });
+        await (generator as any).createSchema({ schema: config.schemaName });
       } else if (config.mode === TenantMode.DATABASE) {
-        const tenantEm = this.orm.em.fork({ connectionString: config.connectionString });
-        await tenantEm.getSchemaGenerator().createSchema();
+        const tenantEm = this.orm.em.fork();
+        await (tenantEm as any).getSchemaGenerator().createSchema();
       } else {
         await generator.updateSchema(); // SHARED mode
       }
@@ -70,10 +71,10 @@ export class ProvisioningService {
 
       const migrator = this.orm.getMigrator();
       if (config.mode === TenantMode.SCHEMA) {
-          await migrator.up({ schema: config.schemaName });
+          await migrator.up({ schema: [config.schemaName] } as any);
       } else if (config.mode === TenantMode.DATABASE) {
-          const tenantEm = this.orm.em.fork({ connectionString: config.connectionString });
-          await tenantEm.getMigrator().up();
+          const tenantEm = this.orm.em.fork();
+          await (tenantEm as any).getMigrator().up();
       } else {
           await migrator.up();
       }

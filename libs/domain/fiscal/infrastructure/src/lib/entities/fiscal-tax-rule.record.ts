@@ -4,29 +4,38 @@ import { FiscalTaxRule as DomainFiscalTaxRule } from "@virteex/domain-fiscal-dom
 @Entity({ tableName: 'fiscal_tax_rules' })
 export class FiscalTaxRuleRecord extends DomainFiscalTaxRule {
   @PrimaryKey({ type: 'uuid' })
-  override id!: string;
+  declare id: string;
 
   @Property()
-  override tenantId!: string;
+  declare tenantId: string;
 
   @Property()
-  override name!: string;
+  declare name: string;
 
   @Property()
-  override type!: string;
+  declare type: string;
 
   @Property()
-  override rate!: string;
+  declare rate: string;
 
   @Property({ nullable: true })
-  override appliesTo?: string;
+  declare appliesTo?: string;
 
   @Property()
-  override isActive = true;
+  declare isActive: boolean;
 
   @Property()
-  override createdAt: Date = new Date();
+  declare createdAt: Date;
 
   @Property()
-  override updatedAt: Date = new Date();
+  declare updatedAt: Date;
+
+  constructor(tenantId: string, name: string, type: string, rate: string, appliesTo?: string) {
+    super();
+    this.tenantId = tenantId;
+    this.name = name;
+    this.type = type;
+    this.rate = rate;
+    this.appliesTo = appliesTo;
+  }
 }

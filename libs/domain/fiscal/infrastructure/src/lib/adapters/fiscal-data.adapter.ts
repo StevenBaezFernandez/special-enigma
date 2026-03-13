@@ -24,10 +24,15 @@ export class FiscalDataAdapter implements FiscalDataProvider {
     const pendingDeclarations = 1;
 
     return {
+      total: totalSales,
       taxesPayable,
       pendingDeclarations,
       nextDueDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 17),
       status: taxesPayable > 10000 ? 'WARNING' : 'OK'
     };
+  }
+
+  async getStats(tenantId: string): Promise<FiscalStats> {
+    return this.getFiscalStats(tenantId);
   }
 }

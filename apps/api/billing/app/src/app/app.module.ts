@@ -9,7 +9,7 @@ import { ServerConfigModule } from '@virteex/shared-util-server-server-config';
 import { KafkaModule } from '@virteex/platform-kafka';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
-import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
+import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { BillingPresentationModule } from '@virteex/domain-billing-presentation';
 import { BillingInfrastructureModule } from '@virteex/domain-billing-infrastructure';
@@ -43,7 +43,7 @@ import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
       },
       validationRules: [
         depthLimit(10),
-        createComplexityLimitRule(1000)
+        createComplexityRule({ maximumComplexity: 1000, estimators: [simpleEstimator({ defaultComplexity: 1 })] })
       ],
     }),
     KafkaModule.forRoot({

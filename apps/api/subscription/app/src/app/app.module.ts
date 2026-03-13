@@ -8,7 +8,7 @@ import { TerminusModule } from '@nestjs/terminus';
 import { ServerConfigModule } from '@virteex/shared-util-server-server-config';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
-import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
+import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { SubscriptionPresentationModule } from '@virteex/domain-subscription-presentation';
 import { SubscriptionInfrastructureModule } from '@virteex/domain-subscription-infrastructure';
@@ -39,7 +39,7 @@ import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
       },
       validationRules: [
         depthLimit(10),
-        createComplexityLimitRule(1000)
+        createComplexityRule({ maximumComplexity: 1000, estimators: [simpleEstimator({ defaultComplexity: 1 })] })
       ],
     }),
     MikroOrmModule.forRootAsync({

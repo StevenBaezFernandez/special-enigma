@@ -21,7 +21,7 @@ export class TimeoutInterceptor implements NestInterceptor {
   }
 }
 
-export function setupGlobalConfig(app: INestApplication) {
+export function setupGlobalConfig(app: INestApplication, serviceName?: string) {
   const httpAdapter = app.getHttpAdapter();
   const instance = httpAdapter.getInstance();
 

@@ -13,7 +13,7 @@ import { JwtAuthGuard, CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 import { TenantRlsInterceptor, TenantModule } from '@virteex/kernel-tenant';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
-import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
+import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -50,7 +50,7 @@ import { InventoryPresentationModule } from '@virteex/domain-inventory-presentat
       },
       validationRules: [
         depthLimit(10),
-        createComplexityLimitRule(1000)
+        createComplexityRule({ maximumComplexity: 1000, estimators: [simpleEstimator({ defaultComplexity: 1 })] })
       ],
     }),
     MikroOrmModule.forRootAsync({

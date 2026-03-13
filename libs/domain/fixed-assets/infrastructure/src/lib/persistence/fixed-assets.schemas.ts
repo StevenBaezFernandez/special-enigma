@@ -20,9 +20,15 @@ export const AssetSchema = new EntitySchema<Asset>({
   properties: {
     id: { primary: true, type: 'uuid' },
     tenantId: { type: 'string' },
-    fixedAssetId: { type: 'string' },
-    serialNumber: { type: 'string' },
-    location: { type: 'string' },
+    code: { type: 'string' },
+    purchaseDate: { type: 'Date' },
+    purchaseCost: { type: 'number' },
+    residualValue: { type: 'number' },
+    usefulLifeMonths: { type: 'number' },
+    createdAt: { type: 'Date' },
+    updatedAt: { type: 'Date' },
+    name: { type: 'string' },
+    status: { enum: true, items: () => AssetStatus },
   },
 });
 
@@ -30,10 +36,11 @@ export const DepreciationSchema = new EntitySchema<Depreciation>({
   class: Depreciation,
   properties: {
     id: { primary: true, type: 'uuid' },
-    fixedAssetId: { type: 'string' },
-    period: { type: 'string' },
-    amount: { type: 'string' },
-    accumulatedAmount: { type: 'string' },
+    tenantId: { type: 'string' },
+    assetId: { type: 'string' },
     date: { type: 'Date' },
+    amount: { type: 'number' },
+    accumulatedDepreciation: { type: 'number' },
+    createdAt: { type: 'Date' },
   },
 });

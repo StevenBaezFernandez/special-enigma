@@ -9,7 +9,8 @@ import { InvoiceContract, CustomerBillingInfoContract } from '@virteex/domain-bi
 export class BrFiscalDocumentBuilder implements FiscalDocumentBuilder {
   private readonly logger = new Logger(BrFiscalDocumentBuilder.name);
 
-  async build(invoice: InvoiceContract, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfoContract): Promise<string> {
+  async build(data: any): Promise<string> {
+    const { invoice, tenantConfig, customer } = data;
     this.logger.log(`Building SEFAZ NFe for ${invoice.id}`);
 
     const builder = new XMLBuilder({

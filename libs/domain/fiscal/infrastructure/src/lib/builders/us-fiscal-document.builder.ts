@@ -4,7 +4,8 @@ import { InvoiceContract, CustomerBillingInfoContract } from '@virteex/domain-bi
 
 @Injectable()
 export class UsFiscalDocumentBuilder implements FiscalDocumentBuilder {
-  async build(invoice: InvoiceContract, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfoContract): Promise<string> {
+  async build(data: any): Promise<string> {
+    const { invoice, tenantConfig, customer } = data;
       // US doesn't require XML stamping usually. Just a JSON representation or PDF data.
       // For this abstraction, we'll return a JSON string that can be used by a PDF generator or API.
 

@@ -21,11 +21,11 @@ export class ApprovalsController {
     const requisitions = await this.getRequisitionsUseCase.execute(context.tenantId);
 
     return requisitions
-      .filter(req => req.status === 'PENDING')
+      .filter(req => req.status === 'Pending Approval')
       .map(req => ({
         id: req.id,
-        title: `Requisition #${req.number}`,
-        requester: req.requesterName || 'Unknown',
+        title: `Requisition #${req.reqNumber}`,
+        requester: req.requester || 'Unknown',
         amount: req.total
       }));
   }

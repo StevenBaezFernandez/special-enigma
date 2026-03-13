@@ -74,6 +74,12 @@ export class UsTaxPartnerFiscalAdapter implements FiscalProvider {
     this.logger.log(`US fiscal transaction successfully transmitted for invoice ${invoice.id}`);
   }
 
+  async send(document: any): Promise<any> {
+    this.logger.log('Forwarding document to US Tax Partner transmission pipeline');
+    await this.transmitInvoice(document);
+    return { success: true };
+  }
+
   private async callPartner(endpoint: string, payload: unknown): Promise<any> {
     if (!this.partnerUrl || !this.partnerApiKey) {
       this.logger.error(`CRITICAL: US tax partner integration is not configured! Endpoint: ${endpoint}`);

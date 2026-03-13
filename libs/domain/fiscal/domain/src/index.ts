@@ -2,8 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class FiscalDocumentBuilderFactory {
-  createBuilder(country: string) {
-    return null;
+  getBuilder(country: string): FiscalDocumentBuilder {
+    return null as any;
+  }
+
+  createBuilder(country: string): FiscalDocumentBuilder {
+    return this.getBuilder(country);
   }
 }
 
@@ -16,22 +20,43 @@ export interface FiscalDocumentBuilder {
 export interface TenantFiscalConfig {
   legalName: string;
   taxId: string;
+  rfc?: string;
+  postalCode?: string;
+  regime?: string;
+  country?: string;
+  brandName?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  certificateNumber?: string;
+  csdCertificate?: string;
+  csdKey?: string;
+  fiscalAddress?: string;
 }
 
 export interface FiscalProvider {
   send(document: any): Promise<any>;
+  validateInvoice(invoice: any): Promise<boolean>;
+  signInvoice(invoice: any): Promise<string>;
+  transmitInvoice(invoice: any): Promise<void>;
 }
 
 export interface FiscalStats {
   total: number;
+  taxesPayable?: number;
+  pendingDeclarations?: number;
+  nextDueDate?: Date;
+  status?: string;
 }
 
 export interface FiscalDataProvider {
   getStats(tenantId: string): Promise<FiscalStats>;
+  getFiscalStats(tenantId: string): Promise<FiscalStats>;
 }
 
 export interface HardwareTokenPort {
   getInfo(): Promise<any>;
+  isAvailable(): Promise<boolean>;
 }
 
 export interface HardwareTokenInfo {
@@ -50,6 +75,12 @@ export class TaxDeclaration {
   period!: string;
   amount!: string;
   status!: string;
+
+  constructor(tenantId?: string, period?: string, amount?: string) {
+    if (tenantId) this.tenantId = tenantId;
+    if (period) this.period = period;
+    if (amount) this.amount = amount;
+  }
 }
 
 export class FiscalTaxRule {
@@ -62,6 +93,14 @@ export class FiscalTaxRule {
   isActive = true;
   createdAt: Date = new Date();
   updatedAt: Date = new Date();
+
+  constructor(tenantId?: string, name?: string, type?: string, rate?: string, appliesTo?: string) {
+    if (tenantId) this.tenantId = tenantId;
+    if (name) this.name = name;
+    if (type) this.type = type;
+    if (rate) this.rate = rate;
+    if (appliesTo) this.appliesTo = appliesTo;
+  }
 }
 
 export interface TaxDeclarationRepository {
@@ -70,10 +109,12 @@ export interface TaxDeclarationRepository {
 
 export interface TaxRuleRepository {
   save(rule: FiscalTaxRule): Promise<void>;
+  findByTenant(tenantId: string): Promise<FiscalTaxRule[]>;
 }
 
 export interface TenantConfigRepository {
   get(tenantId: string): Promise<TenantFiscalConfig>;
+  getFiscalConfig(tenantId: string): Promise<TenantFiscalConfig>;
 }
 
 export * from './lib/fiscal-domain.service';

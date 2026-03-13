@@ -11,7 +11,11 @@ export class DomainException extends BaseException {
     super(message);
   }
 }
-export class EntityNotFoundException extends BaseException {}
+export class EntityNotFoundException extends BaseException {
+  constructor(entityName: string, entityId: string) {
+    super(`${entityName} with ID ${entityId} not found`);
+  }
+}
 export class UnauthorizedException extends BaseException {}
 export class ForbiddenException extends BaseException {}
 export class ConflictException extends BaseException {}

@@ -18,6 +18,9 @@ export class Tenant {
   @Property({ type: 'json', nullable: true })
   settings?: Record<string, any>;
 
+  @Property({ nullable: true })
+  plan?: string;
+
   @Property()
   createdAt: Date = new Date();
 

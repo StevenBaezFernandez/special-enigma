@@ -143,4 +143,10 @@ export class DgiiFiscalAdapter implements FiscalProvider {
       throw new InternalServerErrorException(`DGII Transmission Error: ${error.message}`);
     }
   }
+
+  async send(document: any): Promise<any> {
+    this.logger.log('Forwarding document to DGII transmission pipeline');
+    await this.transmitInvoice(document);
+    return { success: true };
+  }
 }

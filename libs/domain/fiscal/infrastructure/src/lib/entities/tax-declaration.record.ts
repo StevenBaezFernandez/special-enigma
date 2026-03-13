@@ -4,17 +4,24 @@ import { TaxDeclaration as DomainTaxDeclaration } from "@virteex/domain-fiscal-d
 @Entity({ tableName: 'tax_declarations' })
 export class TaxDeclarationRecord extends DomainTaxDeclaration {
   @PrimaryKey({ type: 'uuid' })
-  override id!: string;
+  declare id: string;
 
   @Property()
-  override tenantId!: string;
+  declare tenantId: string;
 
   @Property()
-  override period!: string;
+  declare period: string;
 
   @Property()
-  override amount!: string;
+  declare amount: string;
 
   @Property()
-  override status!: string;
+  declare status: string;
+
+  constructor(tenantId: string, period: string, amount: string) {
+    super();
+    this.tenantId = tenantId;
+    this.period = period;
+    this.amount = amount;
+  }
 }

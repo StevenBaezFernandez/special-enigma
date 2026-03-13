@@ -7,6 +7,10 @@ import { TenantConfigRepository, TenantFiscalConfig } from '@virteex/domain-fisc
 export class MikroOrmTenantConfigRepository implements TenantConfigRepository {
   constructor(private readonly em: EntityManager) {}
 
+  async get(tenantId: string): Promise<TenantFiscalConfig> {
+    return this.getFiscalConfig(tenantId);
+  }
+
   async getFiscalConfig(tenantId: string): Promise<TenantFiscalConfig> {
     const company = await this.em.findOne(Company, { id: tenantId });
     if (!company) {
