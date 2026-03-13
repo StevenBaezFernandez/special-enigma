@@ -6,6 +6,11 @@ export class BaseException extends Error {
 }
 
 export class BadRequestException extends BaseException {}
+export class DomainException extends BaseException {
+  constructor(message: string, public readonly code?: string) {
+    super(message);
+  }
+}
 export class EntityNotFoundException extends BaseException {}
 export class UnauthorizedException extends BaseException {}
 export class ForbiddenException extends BaseException {}

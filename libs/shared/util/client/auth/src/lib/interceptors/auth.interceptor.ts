@@ -42,7 +42,7 @@ function handle401Error(
     tokenService: TokenService,
     http: HttpClient,
     router: Router,
-    apiUrl: string
+    apiUrl: any
 ) {
   if (!isRefreshing) {
     isRefreshing = true;

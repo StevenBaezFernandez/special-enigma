@@ -1,1 +1,1 @@
-export * from './lib/auth-util';
+export * from '@virteex/shared-util-client-auth';
