@@ -15,7 +15,7 @@ export class DataImportService {
 
     const workbook = new ExcelJS.Workbook();
     try {
-        await workbook.xlsx.load(fileBuffer);
+        await workbook.xlsx.load(fileBuffer as any);
     } catch (e) {
         this.logger.error('Failed to parse file', e);
         throw new Error('Invalid file format');

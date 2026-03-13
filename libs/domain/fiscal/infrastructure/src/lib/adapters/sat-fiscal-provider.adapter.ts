@@ -145,4 +145,10 @@ export class SatFiscalAdapter implements FiscalProvider {
           throw new InternalServerErrorException('Failed to generate Cadena Original');
       }
   }
+
+  async send(document: any): Promise<any> {
+    this.logger.log('Forwarding document to SAT transmission pipeline');
+    await this.transmitInvoice(document);
+    return { success: true };
+  }
 }

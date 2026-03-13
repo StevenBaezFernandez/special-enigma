@@ -9,7 +9,8 @@ import { InvoiceContract, CustomerBillingInfoContract } from '@virteex/domain-bi
 export class CoFiscalDocumentBuilder implements FiscalDocumentBuilder {
   private readonly logger = new Logger(CoFiscalDocumentBuilder.name);
 
-  async build(invoice: InvoiceContract, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfoContract): Promise<string> {
+  async build(data: any): Promise<string> {
+    const { invoice, tenantConfig, customer } = data;
     this.logger.log(`Building DIAN UBL 2.1 Invoice for ${invoice.id}`);
 
     const builder = new XMLBuilder({

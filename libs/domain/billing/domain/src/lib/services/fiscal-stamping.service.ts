@@ -30,8 +30,8 @@ export class FiscalStampingService {
         throw new EntityNotFoundException('Customer', invoice.customerId);
     }
 
-    const builder = this.documentBuilderFactory.getBuilder(tenantConfig.country);
-    const document = await builder.build(invoice, tenantConfig, customer);
+    const builder = this.documentBuilderFactory.getBuilder(tenantConfig.country!);
+    const document = await builder.build({ invoice, tenantConfig, customer });
 
     const provider = this.pacStrategyFactory.getProvider(tenantConfig.country);
     return await provider.stamp(document);

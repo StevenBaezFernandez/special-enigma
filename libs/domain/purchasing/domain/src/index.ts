@@ -1,6 +1,5 @@
 export * from './lib/entities/supplier.entity';
-export * from './lib/entities/purchase-order.entity';
-export * from './lib/entities/purchase-order-item.entity';
+export { PurchaseOrder, PurchaseOrderItem } from './lib/entities/purchase-order.entity';
 export * from './lib/ports/supplier.repository.port';
 export * from './lib/ports/purchase-order.repository.port';
 export * from './lib/enums/supplier-type.enum';

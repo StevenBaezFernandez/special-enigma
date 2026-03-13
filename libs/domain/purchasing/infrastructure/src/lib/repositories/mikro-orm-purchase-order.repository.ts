@@ -11,6 +11,6 @@ export class MikroOrmPurchaseOrderRepository implements IPurchaseOrderRepository
   }
 
   async findById(id: string): Promise<PurchaseOrder | null> {
-    return this.em.findOne(PurchaseOrder, { id }, { populate: ['items', 'supplier'] });
+    return this.em.findOne(PurchaseOrder, { id }, { populate: ['items'] });
   }
 }

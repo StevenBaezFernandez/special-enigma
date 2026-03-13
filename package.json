@@ -246,7 +246,7 @@
     "twilio": "^5.12.2",
     "uuid": "^10.0.0",
     "xml-crypto": "^6.1.2",
-    "xslt-processor": "^5.0.2",
+    "xslt-processor": "^5.0.4",
     "zone.js": "^0.16.0"
   },
   "lint-staged": {

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import ivm = require('isolated-vm');
+import ivm from 'isolated-vm';
 import * as crypto from 'crypto';
 import * as https from 'https';
 import * as dns from 'dns';

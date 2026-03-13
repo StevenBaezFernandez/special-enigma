@@ -19,8 +19,8 @@ export class Isolate {
 
 export class Context {
   global = {
-    setSync: vi.fn(),
-    derefInto: vi.fn(),
+    setSync: (fn: any) => {},
+    derefInto: () => ({}),
   };
   release() {
     // Mock release

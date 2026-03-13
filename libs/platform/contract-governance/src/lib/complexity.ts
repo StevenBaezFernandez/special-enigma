@@ -9,7 +9,7 @@ export const complexityBudgets = {
 export function createTenantAwareComplexityEstimator(): ComplexityEstimator {
   return (args: ComplexityEstimatorArgs) => {
     // Standard estimation logic
-    const baseComplexity = args.field.complexity || 1;
+    const baseComplexity = (args.field as any).complexity || 1;
     const multipliers = args.childComplexity || 1;
 
     // In a real implementation, we could also inject tenant-specific multipliers

@@ -9,16 +9,18 @@ import {
 } from '@virteex/domain-fiscal-infrastructure';
 
 @Injectable()
-export class FiscalDocumentBuilderFactoryImpl implements FiscalDocumentBuilderFactory {
+export class FiscalDocumentBuilderFactoryImpl extends FiscalDocumentBuilderFactory {
     constructor(
         private readonly mx: MxFiscalDocumentBuilder,
         private readonly us: UsFiscalDocumentBuilder,
         private readonly co: CoFiscalDocumentBuilder,
         private readonly br: BrFiscalDocumentBuilder,
         private readonly dom: DoFiscalDocumentBuilder
-    ) {}
+    ) {
+        super();
+    }
 
-    getBuilder(country: string): FiscalDocumentBuilder {
+    override getBuilder(country: string): FiscalDocumentBuilder {
         if (!country) return this.mx;
 
         switch(country.toUpperCase()) {

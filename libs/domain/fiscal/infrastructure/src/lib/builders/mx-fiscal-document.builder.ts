@@ -10,7 +10,8 @@ import { InvoiceContract, CustomerBillingInfoContract } from '@virteex/domain-bi
 export class MxFiscalDocumentBuilder implements FiscalDocumentBuilder {
   constructor(private readonly xsltService: XsltService) {}
 
-  async build(invoice: InvoiceContract, tenantConfig: TenantFiscalConfig, customer: CustomerBillingInfoContract): Promise<string> {
+  async build(data: any): Promise<string> {
+    const { invoice, tenantConfig, customer } = data;
     const builder = new XMLBuilder({
         ignoreAttributes: false,
         format: true,

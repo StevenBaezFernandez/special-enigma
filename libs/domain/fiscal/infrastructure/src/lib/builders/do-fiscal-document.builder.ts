@@ -8,11 +8,8 @@ import { InvoiceContract, CustomerBillingInfoContract } from '@virteex/domain-bi
 export class DoFiscalDocumentBuilder implements FiscalDocumentBuilder {
   private readonly logger = new Logger(DoFiscalDocumentBuilder.name);
 
-  async build(
-    invoice: InvoiceContract,
-    tenantConfig: TenantFiscalConfig,
-    customer: CustomerBillingInfoContract
-  ): Promise<string> {
+  async build(data: any): Promise<string> {
+    const { invoice, tenantConfig, customer } = data;
     const builder = new XMLBuilder({
       ignoreAttributes: false,
       format: true,

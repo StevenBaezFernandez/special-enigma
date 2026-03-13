@@ -254,4 +254,10 @@ export class DianFiscalAdapter implements FiscalProvider {
         throw new Error(`DIAN Transmission Error: ${error.message}`);
     }
   }
+
+  async send(document: any): Promise<any> {
+    this.logger.log('Forwarding document to DIAN transmission pipeline');
+    await this.transmitInvoice(document);
+    return { success: true };
+  }
 }

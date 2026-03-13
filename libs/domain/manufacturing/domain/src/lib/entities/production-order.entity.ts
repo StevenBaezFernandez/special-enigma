@@ -5,6 +5,7 @@ export class ProductionOrder {
   id: string = v4();
 
   tenantId!: string;
+  orderNumber!: string;
   productSku!: string;
   warehouseId!: string;
 
@@ -22,6 +23,7 @@ export class ProductionOrder {
     this.quantity = quantity;
     this.dueDate = dueDate;
     this.status = 'PLANNED';
+    this.orderNumber = `PO-${this.id.substring(0, 8).toUpperCase()}`;
   }
 }
 

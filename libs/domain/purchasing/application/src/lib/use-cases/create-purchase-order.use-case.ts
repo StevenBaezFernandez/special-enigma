@@ -27,10 +27,10 @@ export class CreatePurchaseOrderUseCase {
        throw new Error('Supplier belongs to another tenant');
     }
 
-    const order = new PurchaseOrder(tenantId, supplier, new Date(dto.expectedDate));
+    const order = new PurchaseOrder(tenantId, supplier.id, new Date(dto.expectedDate));
 
     for (const itemDto of dto.items) {
-      const item = new PurchaseOrderItem(itemDto.productId, itemDto.quantity, itemDto.unitPrice);
+      const item = new PurchaseOrderItem(itemDto.productId, itemDto.quantity, String(itemDto.unitPrice));
       order.addItem(item);
     }
 

@@ -6,7 +6,7 @@ import { TreasuryInfrastructureModule } from '@virteex/domain-treasury-infrastru
 import { TreasuryPresentationModule } from '@virteex/domain-treasury-presentation';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
-import pkg from 'graphql-query-complexity'; const { createComplexityLimitRule } = pkg;
+import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { FederationSupportModule } from '@virteex/shared-util-server-server-config';
 import { TenantModule } from '@virteex/kernel-tenant';
@@ -20,7 +20,7 @@ import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
       autoSchemaFile: true,
       validationRules: [
         depthLimit(10),
-        createComplexityLimitRule(1000)
+        createComplexityRule({ maximumComplexity: 1000, estimators: [simpleEstimator({ defaultComplexity: 1 })] })
       ],
     }),
     FederationSupportModule,

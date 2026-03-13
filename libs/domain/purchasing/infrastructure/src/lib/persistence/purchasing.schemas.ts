@@ -7,8 +7,12 @@ export const SupplierSchema = new EntitySchema<Supplier>({
     id: { primary: true, type: 'uuid' },
     tenantId: { type: 'string' },
     name: { type: 'string' },
+    taxId: { type: 'string' },
+    type: { type: 'string' },
     email: { type: 'string', nullable: true },
-    taxId: { type: 'string', nullable: true },
+    phoneNumber: { type: 'string', nullable: true },
+    address: { type: 'string', nullable: true },
+    createdAt: { type: 'Date' },
   },
 });
 
@@ -18,9 +22,10 @@ export const PurchaseOrderSchema = new EntitySchema<PurchaseOrder>({
     id: { primary: true, type: 'uuid' },
     tenantId: { type: 'string' },
     orderNumber: { type: 'string' },
-    supplier: { kind: 'm:1', entity: 'Supplier' },
+    supplierId: { type: 'string' },
     status: { type: 'string' },
     totalAmount: { type: 'string' },
+    expectedDate: { type: 'Date' },
     items: { kind: '1:m', entity: 'PurchaseOrderItem', mappedBy: 'purchaseOrder', cascade: [Cascade.ALL] },
   },
 });
@@ -41,9 +46,13 @@ export const RequisitionSchema = new EntitySchema<Requisition>({
   properties: {
     id: { primary: true, type: 'uuid' },
     tenantId: { type: 'string' },
-    requisitionNumber: { type: 'string' },
+    reqNumber: { type: 'string' },
     status: { type: 'string' },
-    requestedBy: { type: 'string' },
+    requester: { type: 'string' },
+    department: { type: 'string' },
+    date: { type: 'Date' },
+    total: { type: 'string' },
+    items: { type: 'json' },
   },
 });
 
@@ -52,10 +61,13 @@ export const VendorBillSchema = new EntitySchema<VendorBill>({
   properties: {
     id: { primary: true, type: 'uuid' },
     tenantId: { type: 'string' },
-    purchaseOrder: { kind: 'm:1', entity: 'PurchaseOrder', nullable: true },
+    supplierId: { type: 'string' },
     billNumber: { type: 'string' },
-    amount: { type: 'string' },
-    status: { type: 'string' },
+    issueDate: { type: 'Date' },
     dueDate: { type: 'Date' },
+    notes: { type: 'string', nullable: true },
+    lineItems: { type: 'json' },
+    totalAmount: { type: 'string' },
+    status: { type: 'string' },
   },
 });

@@ -332,6 +332,9 @@
       "@virteex/platform-xslt": [
         "libs/platform/xslt/src/index.ts"
       ],
+      "@virteex/platform-contract-governance": [
+        "libs/platform/contract-governance/src/index.ts"
+      ],
       "@virteex/shared-contracts": [
         "libs/shared/contracts/src/index.ts"
       ],

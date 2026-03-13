@@ -7,7 +7,7 @@ export class InvoiceConsumer {
   private readonly logger = new Logger(InvoiceConsumer.name);
 
   constructor(
-    @Inject('FiscalProvider') private readonly fiscalProvider: FiscalProvider
+    @Inject('FiscalProvider') private readonly fiscalProvider: any
   ) {}
 
   @MessagePattern('billing.invoice.created')

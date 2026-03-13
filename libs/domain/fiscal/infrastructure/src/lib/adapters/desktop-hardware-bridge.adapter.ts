@@ -23,6 +23,13 @@ export class DesktopHardwareBridge implements HardwareTokenPort {
     return [];
   }
 
+  async getInfo(): Promise<any> {
+    return {
+      status: (await this.isAvailable()) ? 'OK' : 'OFFLINE',
+      bridgeVersion: '1.0.0',
+    };
+  }
+
   async signData(tokenId: string, pin: string, data: string): Promise<string> {
     this.logger.log(`Requesting hardware signature for token ${tokenId}`);
 

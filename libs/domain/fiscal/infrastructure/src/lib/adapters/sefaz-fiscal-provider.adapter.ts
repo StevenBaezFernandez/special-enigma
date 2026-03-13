@@ -203,4 +203,10 @@ export class SefazFiscalAdapter implements FiscalProvider {
         throw new Error(`SEFAZ Transmission Error: ${error.message}`);
     }
   }
+
+  async send(document: any): Promise<any> {
+    this.logger.log('Forwarding document to SEFAZ transmission pipeline');
+    await this.transmitInvoice(document);
+    return { success: true };
+  }
 }
