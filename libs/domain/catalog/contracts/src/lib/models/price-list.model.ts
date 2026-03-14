@@ -1,5 +1,5 @@
 // app/core/models/price-list.model.ts
-import { Product } from './product.model';
+import { type Product } from './product.model';
 
 export enum PriceListStatus {
   DRAFT = 'Draft',

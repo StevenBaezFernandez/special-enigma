@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
-import {
-  WarehouseRepository,
-  Warehouse,
-  Location
-} from '@virteex/domain-inventory-domain';
+import { type WarehouseRepository, Warehouse, Location } from '@virteex/domain-inventory-domain';
 import { WarehouseOrmEntity } from '../persistence/entities/warehouse.orm-entity';
 import { InventoryMapper } from '../persistence/mappers/inventory.mapper';
 import { LocationOrmEntity } from '../persistence/entities/location.orm-entity';

@@ -5,7 +5,7 @@ import { firstValueFrom, timer } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { SignedXml } from 'xml-crypto';
 import * as https from 'https';
-import * as libxmljs from 'libxmljs';
+import * as libxmljs from 'libxmljs2';
 import * as fs from 'fs';
 import * as path from 'path';
 

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { FixedAsset, FixedAssetRepository, FIXED_ASSET_REPOSITORY } from '@virteex/domain-fixed-assets-domain';
+import { FixedAsset, type FixedAssetRepository, FIXED_ASSET_REPOSITORY } from '@virteex/domain-fixed-assets-domain';
 
 export class CreateFixedAssetDto {
   tenantId!: string;

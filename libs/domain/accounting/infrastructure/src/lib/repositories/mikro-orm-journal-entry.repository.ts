@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { JournalEntry, JournalEntryRepository } from '@virteex/domain-accounting-domain';
+import { JournalEntry, type JournalEntryRepository } from '@virteex/domain-accounting-domain';
 
 @Injectable()
 export class MikroOrmJournalEntryRepository implements JournalEntryRepository {

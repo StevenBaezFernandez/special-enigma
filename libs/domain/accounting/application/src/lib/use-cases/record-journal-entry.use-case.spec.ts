@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecordJournalEntryUseCase } from './record-journal-entry.use-case';
-import { JOURNAL_ENTRY_REPOSITORY, JournalEntryRepository, ACCOUNT_REPOSITORY, AccountRepository, Account } from '@virteex/domain-accounting-domain';
+import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository, ACCOUNT_REPOSITORY, type AccountRepository, Account } from '@virteex/domain-accounting-domain';
 import { AccountType } from '@virteex/domain-accounting-contracts';
 
 describe('RecordJournalEntryUseCase', () => {

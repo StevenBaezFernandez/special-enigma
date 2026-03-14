@@ -1,11 +1,6 @@
-import {
-  Controller, Get, Patch, Post, Body, UseGuards, UseInterceptors, UploadedFile
-} from '@nestjs/common';
+import { Controller, Get, Patch, Post, Body, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
-  GetJobTitlesUseCase, GetAuditLogsUseCase
-} from '@virteex/domain-identity-application';
+import { GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase, GetJobTitlesUseCase, GetAuditLogsUseCase } from '@virteex/domain-identity-application';
 import { UpdateUserDto, InviteUserDto } from '@virteex/domain-identity-contracts';
 import { JwtAuthGuard, CurrentUser, StepUp, StepUpGuard } from '@virteex/kernel-auth';
 import { UserMapper } from '../mappers/user.mapper';

@@ -1,10 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
-import {
-  DomainValidationError,
-  InsufficientStockException,
-  StockNotFoundError,
-  WarehouseNotFoundError,
-} from '@virteex/domain-inventory-domain';
+import { DomainValidationError, InsufficientStockException, StockNotFoundError, WarehouseNotFoundError } from '@virteex/domain-inventory-domain';
 
 @Catch(WarehouseNotFoundError, StockNotFoundError, DomainValidationError, InsufficientStockException)
 export class InventoryApplicationExceptionFilter implements ExceptionFilter {

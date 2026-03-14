@@ -1,5 +1,5 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { TransactionRepository, TRANSACTION_REPOSITORY, BankAccountRepository, BANK_ACCOUNT_REPOSITORY } from '@virteex/domain-treasury-domain';
+import { type TransactionRepository, TRANSACTION_REPOSITORY, type BankAccountRepository, BANK_ACCOUNT_REPOSITORY } from '@virteex/domain-treasury-domain';
 import { BankStatementParser, StatementLine } from '../services/bank-statement-parser.service';
 
 export interface ReconciliationResult {

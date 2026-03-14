@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PRODUCT_READ_REPOSITORY, ProductReadRepository, Product } from '@virteex/domain-catalog-domain';
+import { PRODUCT_READ_REPOSITORY, type ProductReadRepository, type Product } from '@virteex/domain-catalog-domain';
 
 @Injectable()
 export class GetProductByIdUseCase {

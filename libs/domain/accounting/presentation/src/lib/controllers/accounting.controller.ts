@@ -1,15 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import {
-  CreateAccountDto,
-  RecordJournalEntryDto,
-} from '@virteex/domain-accounting-contracts';
-import {
-  CreateAccountUseCase,
-  RecordJournalEntryUseCase,
-  GetAccountsUseCase,
-  GetJournalEntriesUseCase,
-} from '@virteex/domain-accounting-application';
+import { type CreateAccountDto, type RecordJournalEntryDto } from '@virteex/domain-accounting-contracts';
+import { CreateAccountUseCase, RecordJournalEntryUseCase, GetAccountsUseCase, GetJournalEntriesUseCase } from '@virteex/domain-accounting-application';
 
 @ApiTags('Accounting')
 @Controller('accounting')

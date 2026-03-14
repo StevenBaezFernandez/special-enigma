@@ -1,10 +1,5 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
-import {
-    LoginUserUseCase,
-    InitiateSignupUseCase,
-    VerifySignupUseCase,
-    CompleteOnboardingUseCase
-} from '@virteex/domain-identity-application';
+import { LoginUserUseCase, InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase } from '@virteex/domain-identity-application';
 import { LoginInput } from './dto/login.input';
 import { LoginResponse } from './dto/login.response';
 import { InitiateSignupInput, VerifySignupInput, CompleteOnboardingInput } from './dto/signup.input';

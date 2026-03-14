@@ -1,5 +1,5 @@
 import { defineConfig } from '@mikro-orm/postgresql';
-import { Product, Plugin, PluginVersion, TenantConsent, MeteringRecord } from '@virteex/domain-catalog-domain';
+import { type Product, Plugin, PluginVersion, TenantConsent, MeteringRecord } from '@virteex/domain-catalog-domain';
 import { TenantModelSubscriber } from '@virteex/kernel-tenant';
 import { getTenantContext } from '@virteex/kernel-auth';
 

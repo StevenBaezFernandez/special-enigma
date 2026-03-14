@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from '../../../services/auth.service';
 import { LanguageService } from '@virteex/shared-ui/lib/core/services/language';
 import { CountryService } from '@virteex/shared-ui/lib/core/services/country.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';

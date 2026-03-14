@@ -1,33 +1,9 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  inject,
-  signal,
-  ChangeDetectorRef,
-  DestroyRef
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, signal, ChangeDetectorRef, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from '@angular/forms';
-import {
-  LucideAngularModule,
-  User as UserIcon,
-  Mail,
-  Phone,
-  Building2,
-  Save,
-  Image,
-  Shield,
-  Check,
-} from 'lucide-angular';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { LucideAngularModule, User as UserIcon, Mail, Phone, Building2, Save, Image, Shield, Check } from 'lucide-angular';
 import { UsersService } from '@virteex/identity-ui';
 import { AuthService, FileUtil } from '@virteex/shared-ui';
 import { NotificationService } from '@virteex/domain-identity-domain';

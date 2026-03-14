@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ReserveBatchStockUseCase } from '@virteex/domain-inventory-application';
-import { JwtAuthGuard, CurrentUser, UserPayload } from '@virteex/kernel-auth';
+import { JwtAuthGuard, CurrentUser, type UserPayload } from '@virteex/kernel-auth';
 import { resolveTenantId } from '../security/tenant-context.resolver';
 import { ReserveBatchStockDto } from './dto/reserve-batch-stock.dto';
 import { InventoryApplicationExceptionFilter } from '../filters/inventory-application-exception.filter';

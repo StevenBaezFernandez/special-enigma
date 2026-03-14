@@ -1,51 +1,23 @@
-import {
-  Component,
-  OnInit,
-  inject,
-  signal,
-  effect,
-  computed,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  LucideAngularModule,
-  CheckCircle,
-  BarChart2,
-  Package,
-  Check,
-  ArrowLeft,
-  ArrowRight,
-  Rocket,
-  AlertCircle,
-} from 'lucide-angular';
+import { LucideAngularModule, CheckCircle, BarChart2, Package, Check, ArrowLeft, ArrowRight, Rocket, AlertCircle } from 'lucide-angular';
 import { trigger, style, transition, animate } from '@angular/animations';
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from '../../../services/auth.service';
 import { RegisterPayload, GeoMismatchModalComponent } from '@virteex/shared-ui'; // Import from shared-ui
-import { StepAccountInfo } from "./steps/step-account-info/step-account-info";
-import { StepBusiness } from "./steps/step-business/step-business";
-import { StepConfiguration } from "./steps/step-configuration/step-configuration";
-import { StepPlan } from "./steps/step-plan/step-plan";
+import { StepAccountInfo } from './steps/step-account-info/step-account-info';
+import { StepBusiness } from './steps/step-business/step-business';
+import { StepConfiguration } from './steps/step-configuration/step-configuration';
+import { StepPlan } from './steps/step-plan/step-plan';
 import { strongPasswordValidator } from '@virteex/shared-ui';
-import {
-  RECAPTCHA_V3_SITE_KEY,
-  RecaptchaV3Module,
-  ReCaptchaV3Service,
-} from 'ng-recaptcha-19';
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module, ReCaptchaV3Service } from 'ng-recaptcha-19';
 import { APP_CONFIG, AppConfig } from '@virteex/shared-config';
 import { CountryService, LanguageService } from '@virteex/shared-ui';
-import { AuthLayoutComponent } from "../components/auth-layout/auth-layout.component";
-import { AuthButtonComponent } from "../components/auth-button/auth-button.component";
-import { AuthInputComponent } from "../components/auth-input/auth-input.component";
+import { AuthLayoutComponent } from '../components/auth-layout/auth-layout.component';
+import { AuthButtonComponent } from '../components/auth-button/auth-button.component';
+import { AuthInputComponent } from '../components/auth-input/auth-input.component';
 
 // Validador personalizado para coincidencia de contraseñas
 export function passwordMatchValidator(

@@ -2,18 +2,11 @@ import { Resolver, Query, Mutation, Args, ID, ResolveField, Parent } from '@nest
 import { UseGuards, InternalServerErrorException } from '@nestjs/common';
 import { JwtAuthGuard } from '@virteex/kernel-auth';
 import { CurrentTenant } from '@virteex/shared-util-server-server-config';
-import {
-  CreateWarehouseUseCase,
-  GenerateWarehouseCodeUseCase,
-  GetWarehousesUseCase,
-  RegisterInventoryMovementBatchUseCase,
-  UpdateWarehouseUseCase,
-  DeleteWarehouseUseCase,
-} from '@virteex/domain-inventory-application';
+import { CreateWarehouseUseCase, GenerateWarehouseCodeUseCase, GetWarehousesUseCase, RegisterInventoryMovementBatchUseCase, UpdateWarehouseUseCase, DeleteWarehouseUseCase } from '@virteex/domain-inventory-application';
 import { WarehouseObject } from './dto/warehouse.object';
 import { CreateWarehouseInput } from './dto/create-warehouse.input';
 import { WarehouseLoader } from '../loaders/warehouse.loader';
-import { RegisterMovementInput } from './dto/register-movement.input';
+import { type RegisterMovementInput } from './dto/register-movement.input';
 import { UpdateWarehouseInput } from './dto/update-warehouse.input';
 
 @Resolver(() => WarehouseObject)

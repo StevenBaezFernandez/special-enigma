@@ -1,15 +1,6 @@
 import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException, UseGuards, Inject, Optional } from '@nestjs/common';
-import {
-  LoginUserUseCase, VerifyMfaUseCase,
-  RefreshTokenUseCase,
-  InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
-  CheckSecurityContextUseCase, LogoutUserUseCase
-} from '@virteex/domain-identity-application';
-import {
-  LoginUserDto, VerifyMfaDto,
-  RefreshTokenDto,
-  InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto
-} from '@virteex/domain-identity-contracts';
+import { LoginUserUseCase, VerifyMfaUseCase, RefreshTokenUseCase, InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase, CheckSecurityContextUseCase, LogoutUserUseCase } from '@virteex/domain-identity-application';
+import { LoginUserDto, VerifyMfaDto, RefreshTokenDto, InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto } from '@virteex/domain-identity-contracts';
 import { Request, Response } from 'express';
 import { Public, JwtAuthGuard, SecretManagerService } from '@virteex/kernel-auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';

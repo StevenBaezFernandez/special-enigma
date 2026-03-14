@@ -3,19 +3,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { UserManagementPage } from './user-management.page';
-import {
-  UsersService,
-  InviteUserDto,
-  UpdateUserDto,
-  RolesService,
-  Role,
-  AuthService,
-  User as ApiUser,
-  UserStatus,
-  WebSocketService,
-  HasPermissionDirective,
-  ToastService
-} from '@virteex/shared-ui';
+import { UsersService, InviteUserDto, UpdateUserDto, RolesService, Role, AuthService, User as ApiUser, UserStatus, WebSocketService, HasPermissionDirective, ToastService } from '@virteex/shared-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule, UserPlus, Save, X, Send, User, History, Trash2, Key, Search, Filter, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, FilePenLine, Ban, UserCog, Mail, ChevronLeft, ChevronRight, Plus, RefreshCw, Power, PowerOff, Building, Lock, Archive, UserCheck, Zap, FileInput, FileOutput, UserCircle2, LogOut } from 'lucide-angular';
 import { vi } from 'vitest';

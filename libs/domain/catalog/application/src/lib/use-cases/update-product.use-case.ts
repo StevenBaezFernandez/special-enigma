@@ -1,13 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import {
-  PRODUCT_READ_REPOSITORY,
-  ProductReadRepository,
-  PRODUCT_WRITE_REPOSITORY,
-  ProductWriteRepository,
-  Product,
-  ProductUpdatedEvent,
-} from '@virteex/domain-catalog-domain';
+import { PRODUCT_READ_REPOSITORY, type ProductReadRepository, PRODUCT_WRITE_REPOSITORY, type ProductWriteRepository, type Product, ProductUpdatedEvent } from '@virteex/domain-catalog-domain';
 import { DomainException } from '@virteex/shared-util-server-server-config';
 
 export interface UpdateProductDto {

@@ -1,4 +1,4 @@
-import { Product } from '../entities/product.entity';
+import { type Product } from '../entities/product.entity';
 
 export const PRODUCT_READ_REPOSITORY = 'PRODUCT_READ_REPOSITORY';
 

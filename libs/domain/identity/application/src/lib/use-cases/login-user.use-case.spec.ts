@@ -1,9 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoginUserUseCase } from './login-user.use-case';
-import {
-  UserRepository, AuditLogRepository,
-  AuthService, RiskEngineService
-} from '@virteex/domain-identity-domain';
+import { UserRepository, AuditLogRepository, AuthService, RiskEngineService } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
 import { UnauthorizedException, ForbiddenException } from '@virteex/kernel-exceptions';
 import { vi, Mock } from 'vitest';

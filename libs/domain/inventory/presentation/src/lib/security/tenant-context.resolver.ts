@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { UserPayload } from '@virteex/kernel-auth';
+import { type UserPayload } from '@virteex/kernel-auth';
 
 export function resolveTenantId(user: UserPayload): string {
   if (!user.tenantId) {

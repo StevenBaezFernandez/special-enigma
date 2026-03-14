@@ -1,8 +1,9 @@
 import { Controller, Logger, Inject } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { RecordJournalEntryUseCase } from '@virteex/domain-accounting-application';
-import { ACCOUNT_REPOSITORY, AccountRepository } from '@virteex/domain-accounting-domain';
-import { RecordJournalEntryDto } from '@virteex/domain-accounting-contracts';
+import { ACCOUNT_REPOSITORY, type AccountRepository } from '@virteex/domain-accounting-domain';
+import { ACCOUNT_REPOSITORY, type AccountRepository } from '@virteex/domain-accounting-domain';
+import { type RecordJournalEntryDto } from '@virteex/domain-accounting-contracts';
 
 interface InvoiceValidatedEvent {
     id: string;

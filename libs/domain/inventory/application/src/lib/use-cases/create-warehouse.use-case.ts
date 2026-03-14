@@ -1,11 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IsString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
-import {
-  WAREHOUSE_REPOSITORY,
-  WarehouseRepository,
-  Warehouse,
-  DomainValidationError,
-} from '@virteex/domain-inventory-domain';
+import { WAREHOUSE_REPOSITORY, type WarehouseRepository, Warehouse, DomainValidationError } from '@virteex/domain-inventory-domain';
 
 export class CreateWarehouseDto {
   @IsUUID()

@@ -1,8 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  WAREHOUSE_REPOSITORY,
-  WarehouseRepository,
-} from '@virteex/domain-inventory-domain';
+import { WAREHOUSE_REPOSITORY, type WarehouseRepository } from '@virteex/domain-inventory-domain';
 import { WarehouseDto } from '@virteex/domain-inventory-contracts';
 
 @Injectable()

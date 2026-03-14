@@ -1,5 +1,5 @@
-import { ProductReadRepository } from './product-read.repository';
-import { ProductWriteRepository } from './product-write.repository';
+import { type ProductReadRepository } from './product-read.repository';
+import { type ProductWriteRepository } from './product-write.repository';
 
 /**
  * Legacy composite contract kept for backward compatibility.

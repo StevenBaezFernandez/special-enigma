@@ -1,12 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import * as crypto from 'crypto';
-import {
-  SessionRepository,
-  AuthService,
-  CachePort,
-  User,
-  Session
-} from '@virteex/domain-identity-domain';
+import { SessionRepository, AuthService, CachePort, User, Session } from '@virteex/domain-identity-domain';
 
 export interface TokenGenerationResult {
   accessToken: string;

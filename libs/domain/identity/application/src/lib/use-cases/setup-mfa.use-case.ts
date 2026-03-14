@@ -1,9 +1,6 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
-import {
-  UserRepository, AuditLogRepository, AuditLog,
-  AuthService
-} from '@virteex/domain-identity-domain';
+import { UserRepository, AuditLogRepository, AuditLog, AuthService } from '@virteex/domain-identity-domain';
 
 export interface SetupMfaResult {
   secret: string;

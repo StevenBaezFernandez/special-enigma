@@ -8,6 +8,6 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'catalog',
-    loadComponent: () => import('@virteex/catalog-ui-store').then((m) => m.ProductListComponent),
+    loadComponent: () => import('@virteex/domain-catalog-ui-store').then((m) => m.ProductListComponent),
   },
 ];

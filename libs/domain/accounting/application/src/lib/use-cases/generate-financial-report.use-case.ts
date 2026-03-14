@@ -1,10 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  JOURNAL_ENTRY_REPOSITORY,
-  JournalEntryRepository,
-  ACCOUNT_REPOSITORY,
-  AccountRepository
-} from '@virteex/domain-accounting-domain';
+import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository, ACCOUNT_REPOSITORY, type AccountRepository } from '@virteex/domain-accounting-domain';
 import { Decimal } from 'decimal.js';
 
 export interface FinancialReport {

@@ -1,16 +1,6 @@
 import { BadRequestException, Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import {
-  GetProductsUseCase,
-  GetProductByIdUseCase,
-  CreateProductUseCase,
-  CreateProductDto,
-  UpdateProductUseCase,
-  UpdateProductDto,
-  DeleteProductUseCase,
-  GetSatCatalogsUseCase,
-  GetProductBySkuUseCase
-} from '@virteex/domain-catalog-application';
+import { GetProductsUseCase, GetProductByIdUseCase, CreateProductUseCase, CreateProductDto, UpdateProductUseCase, UpdateProductDto, DeleteProductUseCase, GetSatCatalogsUseCase, GetProductBySkuUseCase } from '@virteex/domain-catalog-application';
 
 @ApiTags('Catalog')
 @Controller('catalog')

@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/postgresql';
-import {
-  InventoryRepository,
-  InventoryMovement,
-  Stock
-} from '@virteex/domain-inventory-domain';
+import { type InventoryRepository, InventoryMovement, Stock } from '@virteex/domain-inventory-domain';
 import { StockOrmEntity } from '../persistence/entities/stock.orm-entity';
 import { InventoryMapper } from '../persistence/mappers/inventory.mapper';
 import { InventoryMovementOrmEntity } from '../persistence/entities/inventory-movement.orm-entity';

@@ -1,10 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import {
-  PRODUCT_READ_REPOSITORY,
-  ProductReadRepository,
-  PRODUCT_WRITE_REPOSITORY,
-  ProductWriteRepository,
-} from '@virteex/domain-catalog-domain';
+import { PRODUCT_READ_REPOSITORY, type ProductReadRepository, PRODUCT_WRITE_REPOSITORY, type ProductWriteRepository } from '@virteex/domain-catalog-domain';
 import { DomainException } from '@virteex/shared-util-server-server-config';
 
 @Injectable()

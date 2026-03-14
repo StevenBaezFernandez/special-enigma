@@ -1,15 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RefreshTokenUseCase } from './refresh-token.use-case';
-import {
-  SessionRepository,
-  UserRepository,
-  AuthService,
-  AuditLogRepository,
-  CachePort,
-  User,
-  Session,
-  Company
-} from '@virteex/domain-identity-domain';
+import { SessionRepository, UserRepository, AuthService, AuditLogRepository, CachePort, User, Session, Company } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import * as crypto from 'crypto';

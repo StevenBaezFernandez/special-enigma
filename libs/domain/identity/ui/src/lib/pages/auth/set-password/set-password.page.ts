@@ -3,15 +3,15 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from '../../../services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReCaptchaV3Service, RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-19';
 
 // Shared
-import { AuthLayoutComponent } from "../components/auth-layout/auth-layout.component";
-import { AuthInputComponent } from "../components/auth-input/auth-input.component";
-import { AuthButtonComponent } from "../components/auth-button/auth-button.component";
-import { PasswordValidatorComponent } from "../components/password-validator/password-validator.component";
+import { AuthLayoutComponent } from '../components/auth-layout/auth-layout.component';
+import { AuthInputComponent } from '../components/auth-input/auth-input.component';
+import { AuthButtonComponent } from '../components/auth-button/auth-button.component';
+import { PasswordValidatorComponent } from '../components/password-validator/password-validator.component';
 
 const strongPasswordValidator = (): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {

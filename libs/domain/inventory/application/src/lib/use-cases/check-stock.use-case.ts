@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { INVENTORY_REPOSITORY, InventoryRepository } from '@virteex/domain-inventory-domain';
+import { INVENTORY_REPOSITORY, type InventoryRepository } from '@virteex/domain-inventory-domain';
 import Decimal from 'decimal.js';
 
 @Injectable()

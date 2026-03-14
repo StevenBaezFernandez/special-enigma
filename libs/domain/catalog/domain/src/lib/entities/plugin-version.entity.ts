@@ -6,8 +6,8 @@ export class PluginVersion {
   @PrimaryKey()
   id!: string;
 
-  @ManyToOne(() => Plugin)
-  plugin!: Plugin;
+  @ManyToOne('Plugin')
+  plugin!: any;
 
   @Property()
   version!: string;

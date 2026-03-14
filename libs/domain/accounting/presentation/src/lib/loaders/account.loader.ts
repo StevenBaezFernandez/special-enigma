@@ -1,6 +1,6 @@
 import { Injectable, Scope, Inject } from '@nestjs/common';
 import DataLoader from 'dataloader';
-import { ACCOUNT_REPOSITORY, AccountRepository, Account } from '@virteex/domain-accounting-domain';
+import { ACCOUNT_REPOSITORY, type AccountRepository, Account } from '@virteex/domain-accounting-domain';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AccountLoader extends DataLoader<string, Account | null> {

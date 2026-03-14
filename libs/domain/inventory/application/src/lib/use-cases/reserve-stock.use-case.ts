@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { INVENTORY_REPOSITORY, InventoryRepository, StockNotFoundError } from '@virteex/domain-inventory-domain';
+import { INVENTORY_REPOSITORY, type InventoryRepository, StockNotFoundError } from '@virteex/domain-inventory-domain';
 
 @Injectable()
 export class ReserveStockUseCase {

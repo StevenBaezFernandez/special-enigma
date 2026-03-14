@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Account, AccountRepository } from '@virteex/domain-accounting-domain';
+import { Account, type AccountRepository } from '@virteex/domain-accounting-domain';
 import { EntityManager } from '@mikro-orm/core';
 
 @Injectable()

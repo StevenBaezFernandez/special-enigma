@@ -2,11 +2,7 @@ import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EntityManager } from '@mikro-orm/core';
-import {
-  AuthService, NotificationService, UserRepository, CompanyRepository,
-  AuditLogRepository, AuditLog, RiskEngineService,
-  User, Company, Session, SessionRepository, CachePort
-} from '@virteex/domain-identity-domain';
+import { AuthService, NotificationService, UserRepository, CompanyRepository, AuditLogRepository, AuditLog, RiskEngineService, User, Company, Session, SessionRepository, CachePort } from '@virteex/domain-identity-domain';
 import { Tenant, TenantMode } from '@virteex/kernel-tenant';
 import * as crypto from 'crypto';
 import { TokenGenerationService } from '../services/token-generation.service';

@@ -1,6 +1,6 @@
 import { SefazFiscalAdapter, UFValidationRule } from './sefaz-fiscal-provider.adapter';
 import { HttpService } from '@nestjs/axios';
-import * as libxmljs from 'libxmljs';
+import * as libxmljs from 'libxmljs2';
 
 describe('SefazFiscalAdapter Hardening', () => {
   let adapter: SefazFiscalAdapter;

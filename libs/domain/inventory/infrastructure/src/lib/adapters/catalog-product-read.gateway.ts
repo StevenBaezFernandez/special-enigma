@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom, timeout } from 'rxjs';
-import { ProductGateway } from '@virteex/domain-inventory-domain';
+import { type ProductGateway } from '@virteex/domain-inventory-domain';
 
 interface CatalogProductResponse {
   id: number;

@@ -1,13 +1,4 @@
-import {
-  Component,
-  Input,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  inject,
-  OnInit,
-  OnChanges,
-  SimpleChanges
-} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, inject, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Mail, Lock, Eye, EyeOff, Check, X } from 'lucide-angular';

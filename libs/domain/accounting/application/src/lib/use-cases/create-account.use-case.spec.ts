@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateAccountUseCase } from './create-account.use-case';
-import { ACCOUNT_REPOSITORY, AccountRepository, Account } from '@virteex/domain-accounting-domain';
+import { ACCOUNT_REPOSITORY, type AccountRepository, Account } from '@virteex/domain-accounting-domain';
 import { AccountType } from '@virteex/domain-accounting-contracts';
 
 describe('CreateAccountUseCase', () => {

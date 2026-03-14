@@ -1,10 +1,7 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
 import { VerifyMfaDto, LoginResponseDto } from '@virteex/domain-identity-contracts';
-import {
-  UserRepository, AuditLogRepository, AuditLog,
-  AuthService
-} from '@virteex/domain-identity-domain';
+import { UserRepository, AuditLogRepository, AuditLog, AuthService } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
 
 export interface VerifyMfaContext {

@@ -1,12 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  JOURNAL_ENTRY_REPOSITORY,
-  JournalEntryRepository,
-  ACCOUNT_REPOSITORY,
-  AccountRepository,
-  JournalEntry,
-  JournalEntryLine
-} from '@virteex/domain-accounting-domain';
+import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository, ACCOUNT_REPOSITORY, type AccountRepository, JournalEntry, JournalEntryLine } from '@virteex/domain-accounting-domain';
 import { Decimal } from 'decimal.js';
 
 @Injectable()

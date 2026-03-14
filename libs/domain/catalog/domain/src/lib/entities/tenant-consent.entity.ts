@@ -9,8 +9,8 @@ export class TenantConsent {
   @Property()
   tenantId!: string;
 
-  @ManyToOne(() => Plugin)
-  plugin!: Plugin;
+  @ManyToOne('Plugin')
+  plugin!: any;
 
   @Property({ type: 'json' })
   grantedCapabilities!: string[];

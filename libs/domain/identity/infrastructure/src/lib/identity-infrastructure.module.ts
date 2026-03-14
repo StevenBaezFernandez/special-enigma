@@ -2,11 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import {
-  UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository,
-  AuthService, NotificationService, RiskEngineService, CachePort,
-  RiskEvaluatorService
-} from '@virteex/domain-identity-domain';
+import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService } from '@virteex/domain-identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
 import { UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema } from './persistence/identity.schemas';
@@ -24,17 +20,7 @@ import { MailProcessor } from './services/mail.processor';
 import { GeoIpLiteAdapter } from './adapters/geo-ip-lite.adapter';
 import { GEO_IP_PORT } from '@virteex/domain-identity-domain';
 
-import {
-  LoginUserUseCase, VerifyMfaUseCase, StoragePort,
-  GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase,
-  ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase,
-  InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase,
-  UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase,
-  TokenGenerationService,
-  GetJobTitlesUseCase,
-  CheckSecurityContextUseCase,
-  LogoutUserUseCase
-} from '@virteex/domain-identity-application';
+import { LoginUserUseCase, VerifyMfaUseCase, StoragePort, GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase, ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase, InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase, UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase, TokenGenerationService, GetJobTitlesUseCase, CheckSecurityContextUseCase, LogoutUserUseCase } from '@virteex/domain-identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/platform-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
 import { RedisCacheModule } from '@virteex/platform-cache';
