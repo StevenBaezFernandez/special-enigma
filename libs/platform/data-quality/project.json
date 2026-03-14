@@ -1,0 +1,27 @@
+{
+  "name": "platform-data-quality",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/platform/data-quality/src",
+  "projectType": "library",
+  "tags": [
+    "type:infrastructure",
+    "platform:agnostic",
+    "criticality:medium",
+    "scope:platform"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/platform/data-quality",
+        "main": "libs/platform/data-quality/src/index.ts",
+        "tsConfig": "libs/platform/data-quality/tsconfig.lib.json",
+        "assets": [],
+        "generateExportsField": true
+      }
+    }
+  }
+}

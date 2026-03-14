@@ -3,9 +3,16 @@
   "compilerOptions": {
     "outDir": "../../../../dist/libs/domain/billing/infrastructure",
     "declaration": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts"
+  ],
   "files": [],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }

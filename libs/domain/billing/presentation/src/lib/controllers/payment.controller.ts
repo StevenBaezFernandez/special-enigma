@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Logger } from '@nestjs/common';
-import { ProcessPaymentUseCase } from '../../../../application/src/lib/use-cases/process-payment.use-case';
+import { ProcessPaymentUseCase } from '@virteex/domain-billing-application';
 
 @Controller('billing/payment')
 export class PaymentController {
