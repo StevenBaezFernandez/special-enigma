@@ -1,47 +1,163 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  padding: var(--spacing-md);
+}
 
-    .login-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f5f7;
-    }
-    .login-card {
-      background: white;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-    h2 {
-      margin-bottom: 24px;
-      text-align: center;
-      color: #172B4D;
-    }
-    .error-banner {
-      margin-top: 16px;
-      padding: 10px;
-      background-color: #FFEBE6;
-      color: #DE350B;
-      border-radius: 4px;
-      text-align: center;
-    }
-    .context-banner {
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      background-color: #FFFAE6;
-      color: #FF8B00;
-    }
-    .context-banner.danger {
-      background-color: #FFEBE6;
-      color: #DE350B;
-    }
-    .mfa-instruction {
-        font-size: 0.9rem;
-        color: #42526E;
-        margin-bottom: 20px;
-        text-align: center;
-    }
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-high);
+  padding: var(--spacing-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.auth-logo {
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-md);
+  margin: 0 auto var(--spacing-md);
+}
+
+.auth-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.auth-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  color: var(--color-text-primary);
+
+  input {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-strong);
+    cursor: pointer;
+  }
+}
+
+.auth-link {
+  color: var(--color-primary);
+  font-weight: 500;
+  transition: opacity var(--transition-fast);
+
+  &:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+
+  &--prominent {
+    font-size: 15px;
+  }
+}
+
+.auth-actions {
+  margin-top: var(--spacing-md);
+
+  .w-full {
+    width: 100%;
+  }
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: var(--spacing-xl) 0;
+  color: var(--color-text-tertiary);
+  font-size: 13px;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-border);
+  }
+
+  span {
+    padding: 0 var(--spacing-md);
+  }
+}
+
+.auth-footer {
+  text-align: center;
+}
+
+.auth-instruction {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.auth-instruction-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.auth-instruction-text {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.auth-error {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-sm);
+  background-color: rgba(196, 43, 28, 0.1);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  text-align: center;
+}
+
+.mica {
+  backdrop-filter: blur(20px) saturate(125%);
+  background-color: var(--mica-bg);
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: var(--spacing-lg);
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+  }
+}

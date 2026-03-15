@@ -1,18 +1,16 @@
-
-    <div class="form-group">
-      @if (label) {
-        <label [for]="'input-' + label">{{ label }}</label>
-      }
-      <input
-        [id]="'input-' + label"
-        [type]="type"
-        [placeholder]="placeholder"
-        [value]="value"
-        (input)="onInput($event)"
-        (blur)="onTouched()"
-        [disabled]="disabled"
-      />
-      @if (error) {
-        <div class="error-msg">{{ error }}</div>
-      }
-    </div>
+<div class="input-container">
+  <label *ngIf="label" class="input-label">{{ label }}</label>
+  <div class="input-wrapper">
+    <input
+      [type]="type"
+      [placeholder]="placeholder"
+      [value]="value"
+      [disabled]="disabled"
+      (input)="onInput($event)"
+      (blur)="onTouched()"
+      class="input-field"
+      [class.input-field--error]="!!error"
+    />
+  </div>
+  <span *ngIf="error" class="input-error-msg">{{ error }}</span>
+</div>
