@@ -347,6 +347,9 @@
       "@virteex/platform-desktop-hardware": [
         "libs/platform/desktop/hardware/src/index.ts"
       ],
+      "@virteex/platform-desktop-file-system": [
+        "libs/platform/desktop/file-system/src/index.ts"
+      ],
       "@virteex/shared-contracts": [
         "libs/shared/contracts/src/index.ts"
       ],

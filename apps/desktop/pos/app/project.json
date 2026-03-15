@@ -8,7 +8,10 @@
     "scope:pos",
     "type:app",
     "platform:desktop",
-    "criticality:high"
+    "criticality:high",
+    "compliance:none",
+    "tenant-mode:multi",
+    "region:global"
   ],
   "targets": {
     "build": {

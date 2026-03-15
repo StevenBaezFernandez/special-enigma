@@ -1,0 +1,36 @@
+{
+  "name": "platform-desktop-file-system",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/platform/desktop/file-system/src",
+  "prefix": "virteex",
+  "projectType": "library",
+  "tags": [
+    "type:infrastructure",
+    "platform:desktop",
+    "criticality:medium",
+    "scope:platform"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/platform/desktop/file-system",
+        "main": "libs/platform/desktop/file-system/src/index.ts",
+        "tsConfig": "libs/platform/desktop/file-system/tsconfig.lib.json",
+        "assets": ["libs/platform/desktop/file-system/*.md"],
+        "generateExportsField": true
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "options": {
+        "config": "libs/platform/desktop/file-system/vitest.config.ts",
+        "reportsDirectory": "../../../../coverage/libs/platform/desktop/file-system"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

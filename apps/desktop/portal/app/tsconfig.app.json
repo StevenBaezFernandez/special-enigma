@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/apps/desktop/app",
+    "outDir": "../../../../dist/out-tsc/apps/desktop/portal/app",
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],

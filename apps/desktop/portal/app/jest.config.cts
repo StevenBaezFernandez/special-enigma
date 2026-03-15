@@ -1,10 +1,10 @@
 module.exports = {
-  displayName: 'virteex-desktop',
-  preset: '../../jest.preset.js',
+  displayName: 'desktop-portal-app',
+  preset: '../../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/virteex-desktop',
+  coverageDirectory: '../../../../coverage/apps/desktop/portal/app',
 };
