@@ -1,6 +1,10 @@
 export * from './lib/entities/bi-report.entity';
-export * from './lib/ports/bi-report.repository';
-export * from './lib/ports/sales.port'; // Added
-export * from './lib/ports/invoice.port';
-export * from './lib/ports/expenses.port';
+export type { BiReportRepository } from './lib/ports/bi-report.repository';
+export { BI_REPORT_REPOSITORY } from './lib/ports/bi-report.repository';
+export type { SalesPort, TopProductDto } from './lib/ports/sales.port';
+export { SALES_PORT } from './lib/ports/sales.port';
+export type { InvoicePort, InvoiceStatusSummary, ArAging } from './lib/ports/invoice.port';
+export { INVOICE_PORT } from './lib/ports/invoice.port';
+export type { ExpensesPort, ExpenseCategory } from './lib/ports/expenses.port';
+export { EXPENSES_PORT } from './lib/ports/expenses.port';
 export * from './lib/ports/dashboard-gateway.port';
