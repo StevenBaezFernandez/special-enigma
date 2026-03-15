@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
-import { ITelemetryService } from './telemetry.interface';
+import { TelemetryService as AbstractTelemetryService } from '@virteex/kernel-telemetry-interfaces';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
@@ -11,12 +11,13 @@ import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 
 @Injectable()
-export class TelemetryService implements ITelemetryService, OnModuleInit, OnModuleDestroy {
+export class TelemetryService extends AbstractTelemetryService implements OnModuleInit, OnModuleDestroy {
   private sdk: NodeSDK;
   private readonly logger = new Logger(TelemetryService.name);
   private meter: Meter;
 
   constructor() {
+    super();
     this.meter = metrics.getMeter('virteex-business-metrics');
     let traceExporter;
     let spanProcessor;

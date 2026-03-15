@@ -12,5 +12,6 @@
       "default": "./src/index.js"
     },
     "./package.json": "./package.json"
-  }
+  },
+  "dependencies": {}
 }
