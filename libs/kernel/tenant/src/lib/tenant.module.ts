@@ -14,9 +14,11 @@ import { DualWriteManager } from './dual-write-manager';
 import { TenantCriticalConfigService } from './tenant-critical-config.service';
 import { ResidencyComplianceService } from './residency-compliance.service';
 import { ResidencyAuditorController } from './controllers/residency-auditor.controller';
+import { TelemetryModule } from '@virteex/kernel-telemetry';
 
 @Global()
 @Module({
+  imports: [TelemetryModule],
   controllers: [ResidencyAuditorController],
   providers: [
     TenantService,

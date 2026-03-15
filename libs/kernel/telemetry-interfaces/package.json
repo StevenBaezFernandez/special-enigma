@@ -4,6 +4,7 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "type": "commonjs",
+  "dependencies": {},
   "exports": {
     ".": {
       "types": "./src/index.d.ts",
