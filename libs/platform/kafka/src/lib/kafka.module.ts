@@ -22,6 +22,7 @@ export class KafkaModule {
               client: {
                 clientId: options.clientId,
                 brokers: options.brokers || process.env['KAFKA_BROKERS']?.split(',') || ['localhost:9092'],
+                connectionTimeout: 3000,
               },
               consumer: {
                 groupId: options.groupId,

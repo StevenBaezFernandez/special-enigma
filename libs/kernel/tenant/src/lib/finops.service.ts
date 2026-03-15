@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
+import { TelemetryService, TELEMETRY_SERVICE } from '@virteex/kernel-telemetry-interfaces';
 
 /**
  * Enterprise FinOps Service
@@ -15,7 +16,7 @@ export class FinOpsService {
   private readonly logger = new Logger(FinOpsService.name);
 
   constructor(
-      private readonly telemetry: any,
+      @Inject(TELEMETRY_SERVICE) private readonly telemetry: TelemetryService,
       private readonly em: EntityManager
   ) {}
 

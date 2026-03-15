@@ -55,7 +55,7 @@ export const StockBatchSchema = new EntitySchema<StockBatch>({
   tableName: 'stock_batch',
   properties: {
     id: { primary: true, type: 'uuid' },
-    stockId: { type: 'string' },
+    stockId: { kind: 'm:1', entity: 'Stock', fieldName: 'stockId' },
     quantity: { type: 'decimal', precision: 14, scale: 4, default: '0' },
     entryDate: { type: 'Date' },
     expirationDate: { type: 'Date', nullable: true },

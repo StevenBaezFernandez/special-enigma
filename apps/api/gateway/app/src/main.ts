@@ -15,19 +15,21 @@ import { setupGlobalConfig } from '@virteex/shared-util-server-server-config';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        brokers: process.env.KAFKA_BROKERS?.split(',') || ['localhost:9092'],
+  if (process.env.KAFKA_ENABLED === 'true') {
+    app.connectMicroservice<MicroserviceOptions>({
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          brokers: process.env.KAFKA_BROKERS?.split(',') || ['localhost:9092'],
+        },
+        consumer: {
+          groupId: 'gateway-consumer',
+        },
       },
-      consumer: {
-        groupId: 'gateway-consumer',
-      },
-    },
-  });
+    });
 
-  await app.startAllMicroservices();
+    await app.startAllMicroservices();
+  }
 
   app.useLogger(app.get(PinoLogger));
   const logger = new Logger('Bootstrap');
