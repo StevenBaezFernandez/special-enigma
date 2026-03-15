@@ -70,7 +70,8 @@
       ],
       "options": {
         "buildTarget": "api-identity-app:build",
-        "runBuildTargetDependencies": false
+        "runBuildTargetDependencies": false,
+        "port": 9231
       },
       "configurations": {
         "development": {

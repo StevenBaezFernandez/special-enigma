@@ -80,7 +80,8 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api-bi-app:build"
+        "buildTarget": "api-bi-app:build",
+        "port": 9245
       },
       "configurations": {
         "development": {

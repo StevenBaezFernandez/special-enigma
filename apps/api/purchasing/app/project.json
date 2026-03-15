@@ -80,7 +80,8 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api-purchasing-app:build"
+        "buildTarget": "api-purchasing-app:build",
+        "port": 9244
       },
       "configurations": {
         "development": {

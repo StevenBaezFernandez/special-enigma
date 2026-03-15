@@ -80,7 +80,8 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api-treasury-app:build"
+        "buildTarget": "api-treasury-app:build",
+        "port": 9243
       },
       "configurations": {
         "development": {

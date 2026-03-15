@@ -80,7 +80,8 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api-admin-app:build"
+        "buildTarget": "api-admin-app:build",
+        "port": 9246
       },
       "configurations": {
         "development": {

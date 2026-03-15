@@ -13,7 +13,9 @@
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
@@ -22,7 +24,9 @@
         "main": "apps/worker/notification/app/src/main.ts",
         "tsConfig": "apps/worker/notification/app/tsconfig.app.json",
         "webpackConfig": "apps/worker/notification/app/webpack.config.js",
-        "assets": ["apps/worker/notification/app/src/assets"]
+        "assets": [
+          "apps/worker/notification/app/src/assets"
+        ]
       },
       "configurations": {
         "production": {
@@ -38,7 +42,9 @@
       }
     },
     "prune-lockfile": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "cache": true,
       "executor": "@nx/js:prune-lockfile",
       "outputs": [
@@ -50,7 +56,9 @@
       }
     },
     "copy-workspace-modules": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "cache": true,
       "outputs": [
         "{workspaceRoot}/dist/apps/worker/notification/app/workspace_modules"
@@ -61,17 +69,23 @@
       }
     },
     "prune": {
-      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ],
       "executor": "nx:noop"
     },
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "options": {
         "buildTarget": "worker-notification-app:build",
-        "runBuildTargetDependencies": false
+        "runBuildTargetDependencies": false,
+        "port": 9236
       },
       "configurations": {
         "development": {

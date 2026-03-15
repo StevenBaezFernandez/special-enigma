@@ -96,7 +96,8 @@
       ],
       "options": {
         "buildTarget": "api-plugin-host-app:build",
-        "runBuildTargetDependencies": false
+        "runBuildTargetDependencies": false,
+        "port": 9230
       },
       "configurations": {
         "development": {
