@@ -10,6 +10,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
 import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 import { IdentityPresentationModule } from '@virteex/domain-identity-presentation';
@@ -31,6 +32,13 @@ import { AppService } from './app.service';
     EventEmitterModule.forRoot(),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
+      plugins: [
+        process.env.NODE_ENV === 'production'
+          ? ApolloServerPluginLandingPageProductionDefault({
+              embed: true,
+            })
+          : ApolloServerPluginLandingPageLocalDefault({ embed: true }),
+      ],
       autoSchemaFile: {
         federation: 2,
       },

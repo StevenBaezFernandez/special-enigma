@@ -15,6 +15,7 @@ import { createTenantAwareComplexityEstimator, complexityBudgets } from '@virtee
 import { GraphQLError } from 'graphql';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 
 @Module({
   imports: [
