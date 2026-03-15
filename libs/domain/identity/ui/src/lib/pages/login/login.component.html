@@ -1,87 +1,91 @@
-<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <img class="mx-auto h-12 w-auto" src="assets/virteex-logo.svg" alt="Virteex ERP">
-    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-      Iniciar Sesión
-    </h2>
-    <p class="mt-2 text-center text-sm text-gray-600">
-      Accede a tu cuenta de Virteex
-    </p>
-  </div>
-
-  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-
-      @if (!mfaRequired) {
-      <div>
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-
-            <virteex-input formControlName="email" label="Correo electrónico o teléfono" type="text" [error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched ? 'Requerido' : ''"></virteex-input>
-            <virteex-input formControlName="password" label="Contraseña" type="password" [error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched ? 'Requerido' : ''"></virteex-input>
-
-            <div class="flex items-center justify-between mt-4 mb-4">
-            <div class="flex items-center">
-                <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                <label for="remember_me" class="ml-2 block text-sm text-gray-900"> Recordarme </label>
-            </div>
-            <div class="text-sm">
-                <a [routerLink]="['/', lang, country.toLowerCase(), 'auth', 'forgot-password']" class="font-medium text-indigo-600 hover:text-indigo-500">
-                ¿Olvidaste tu contraseña?
-                </a>
-            </div>
-            </div>
-
-            <div>
-            <virteex-button type="submit" [loading]="loading" class="w-full">
-                Iniciar Sesión
-            </virteex-button>
-            </div>
-        </form>
-
-        <div class="mt-6">
-            <div class="relative">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-300"></div>
-                </div>
-                <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">
-                        ¿No tienes cuenta?
-                    </span>
-                </div>
-            </div>
-            <div class="mt-6 text-center">
-                <a [routerLink]="['/', lang, country.toLowerCase(), 'auth', 'register']" class="font-medium text-indigo-600 hover:text-indigo-500">
-                    Regístrate aquí
-                </a>
-            </div>
-        </div>
-      </div>
-      }
-
-      @if (mfaRequired) {
-      <div>
-        <form [formGroup]="mfaForm" (ngSubmit)="onMfaSubmit()">
-            <div class="text-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900">Verificación de Identidad</h3>
-                <p class="text-sm text-gray-500">Ingresa el código enviado a tu dispositivo.</p>
-            </div>
-            <virteex-input formControlName="code" label="Código de verificación" type="text" [error]="mfaForm.get('code')?.invalid && mfaForm.get('code')?.touched ? 'Código requerido (6 dígitos)' : ''"></virteex-input>
-
-            <div class="mt-4">
-                <virteex-button type="submit" [loading]="loading" class="w-full">
-                    Verificar
-                </virteex-button>
-            </div>
-        </form>
-      </div>
-      }
-
-      @if (errorMsg) {
-      <div class="mt-4 text-sm text-red-600 text-center">
-        {{ errorMsg }}
-      </div>
-      }
-
+<div class="auth-page">
+  <div class="auth-card mica">
+    <div class="auth-header">
+      <div class="auth-logo"></div>
+      <h2 class="auth-title">Iniciar Sesión</h2>
+      <p class="auth-subtitle">Accede a tu cuenta de Virteex</p>
     </div>
+
+    @if (!mfaRequired) {
+    <div class="auth-body">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <virteex-input
+          formControlName="email"
+          label="Correo electrónico o teléfono"
+          type="text"
+          [error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched ? 'Requerido' : ''"
+        ></virteex-input>
+
+        <virteex-input
+          formControlName="password"
+          label="Contraseña"
+          type="password"
+          [error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched ? 'Requerido' : ''"
+        ></virteex-input>
+
+        <div class="auth-options">
+          <label class="auth-checkbox">
+            <input id="remember_me" name="remember_me" type="checkbox" />
+            <span>Recordarme</span>
+          </label>
+          <a
+            [routerLink]="['/', lang, country.toLowerCase(), 'auth', 'forgot-password']"
+            class="auth-link"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <div class="auth-actions">
+          <virteex-button type="submit" [loading]="loading" class="w-full">
+            Iniciar Sesión
+          </virteex-button>
+        </div>
+      </form>
+
+      <div class="auth-divider">
+        <span>¿No tienes cuenta?</span>
+      </div>
+
+      <div class="auth-footer">
+        <a
+          [routerLink]="['/', lang, country.toLowerCase(), 'auth', 'register']"
+          class="auth-link auth-link--prominent"
+        >
+          Regístrate aquí
+        </a>
+      </div>
+    </div>
+    }
+
+    @if (mfaRequired) {
+    <div class="auth-body">
+      <form [formGroup]="mfaForm" (ngSubmit)="onMfaSubmit()" class="auth-form">
+        <div class="auth-instruction">
+          <h3 class="auth-instruction-title">Verificación de Identidad</h3>
+          <p class="auth-instruction-text">Ingresa el código enviado a tu dispositivo.</p>
+        </div>
+
+        <virteex-input
+          formControlName="code"
+          label="Código de verificación"
+          type="text"
+          [error]="mfaForm.get('code')?.invalid && mfaForm.get('code')?.touched ? 'Código requerido (6 dígitos)' : ''"
+        ></virteex-input>
+
+        <div class="auth-actions">
+          <virteex-button type="submit" [loading]="loading" class="w-full">
+            Verificar
+          </virteex-button>
+        </div>
+      </form>
+    </div>
+    }
+
+    @if (errorMsg) {
+    <div class="auth-error">
+      {{ errorMsg }}
+    </div>
+    }
   </div>
 </div>

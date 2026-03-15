@@ -1,8 +1,11 @@
 <button
   [type]="type"
   [disabled]="disabled || loading"
+  class="button"
+  [class.button--primary]="variant === 'primary'"
+  [class.button--secondary]="variant === 'secondary'"
+  [class.button--loading]="loading"
   (click)="clicked.emit($event)"
-  [ngClass]="['btn', variant, loading ? 'loading' : '']"
 >
   <span *ngIf="loading" class="spinner"></span>
   <ng-content></ng-content>

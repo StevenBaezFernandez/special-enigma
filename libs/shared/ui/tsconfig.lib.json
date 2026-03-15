@@ -4,7 +4,7 @@
     "outDir": "../../../dist/libs/shared/ui",
     "declaration": true,
     "skipLibCheck": true,
-    "rootDir": "../../..",
+    "rootDir": "../../../..",
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],

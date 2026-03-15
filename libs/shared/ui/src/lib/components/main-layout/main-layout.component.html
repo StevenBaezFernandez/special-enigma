@@ -1,10 +1,11 @@
 <div class="shell">
   <!-- Sidebar -->
   <aside
-    class="shell__sidebar"
+    class="shell__sidebar mica"
     [class.shell__sidebar--collapsed]="!isSidebarOpen"
   >
     <div class="shell__logo">
+      <div class="shell__logo-icon"></div>
       <span class="shell__logo-text">Virteex ERP</span>
     </div>
 
@@ -12,7 +13,7 @@
       <ul class="shell__nav-list">
         <li class="shell__nav-item">
           <a routerLink="/" class="shell__nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-            <i class="shell__nav-icon"></i>
+            <i class="shell__nav-icon home-icon"></i>
             <span class="shell__nav-label">Home</span>
           </a>
         </li>
@@ -30,6 +31,7 @@
 
     <div class="shell__footer">
       <a routerLink="/auth/login" class="shell__logout">
+        <i class="shell__nav-icon logout-icon"></i>
         <span class="shell__nav-label">Logout</span>
       </a>
     </div>
@@ -37,7 +39,7 @@
 
   <!-- Main Area -->
   <div class="shell__main">
-    <header class="shell__header">
+    <header class="shell__header mica">
       <div class="shell__header-left">
         <button (click)="toggleSidebar()" class="shell__toggle" aria-label="Toggle Sidebar">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor">
@@ -51,13 +53,18 @@
         <virteex-theme-toggle></virteex-theme-toggle>
         <div class="shell__user-profile">
           <div class="shell__avatar">JD</div>
-          <span class="shell__username">John Doe</span>
+          <div class="shell__user-info">
+            <span class="shell__username">John Doe</span>
+            <span class="shell__user-role">Administrator</span>
+          </div>
         </div>
       </div>
     </header>
 
     <main class="shell__content">
-      <router-outlet></router-outlet>
+      <div class="shell__page-wrapper">
+        <router-outlet></router-outlet>
+      </div>
     </main>
   </div>
 </div>
