@@ -1,25 +1,75 @@
 :root {
-  --color-primary: #0052CC;
-  --color-primary-dark: #0747A6;
-  --color-primary-light: #DEEBFF;
-
-  --color-success: #00875A;
-  --color-warning: #FF8B00;
-  --color-error: #DE350B;
-  --color-info: #00B8D9;
-
-  --color-text-primary: #172B4D;
-  --color-text-secondary: #42526E;
-  --color-text-tertiary: #6B778C;
-
-  --color-background: #FFFFFF;
-  --color-surface: #F4F5F7;
-  --color-border: #DFE1E6;
-
+  // Common Tokens
   --spacing-unit: 4px;
-  --spacing-sm: calc(var(--spacing-unit) * 2);
-  --spacing-md: calc(var(--spacing-unit) * 3);
-  --spacing-lg: calc(var(--spacing-unit) * 4);
+  --spacing-xs: calc(var(--spacing-unit) * 1); // 4px
+  --spacing-sm: calc(var(--spacing-unit) * 2); // 8px
+  --spacing-md: calc(var(--spacing-unit) * 4); // 16px
+  --spacing-lg: calc(var(--spacing-unit) * 6); // 24px
+  --spacing-xl: calc(var(--spacing-unit) * 8); // 32px
 
+  --radius-sm: 2px;
   --radius-md: 4px;
+  --radius-lg: 8px;
+
+  --font-family: 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --transition-fast: 0.1s ease-out;
+  --transition-normal: 0.2s ease-out;
+
+  // Elevation (Windows 11 inspired)
+  --shadow-low: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-high: 0 8px 16px rgba(0, 0, 0, 0.16);
+}
+
+:root.light {
+  --color-primary: #0067c0;
+  --color-primary-hover: #1975c5;
+  --color-primary-active: #005bb7;
+  --color-on-primary: #ffffff;
+
+  --color-background: #f3f3f3; // Mica-like base
+  --color-surface: #ffffff;
+  --color-surface-secondary: #f9f9f9;
+
+  --color-text-primary: #1c1c1c;
+  --color-text-secondary: #5d5d5d;
+  --color-text-tertiary: #878787;
+
+  --color-border: rgba(0, 0, 0, 0.06);
+  --color-border-strong: rgba(0, 0, 0, 0.45);
+
+  --color-success: #0f7b0f;
+  --color-warning: #9d5d00;
+  --color-error: #c42b1c;
+  --color-info: #005fb8;
+
+  --sidebar-bg: #f3f3f3;
+  --header-bg: rgba(255, 255, 255, 0.8);
+}
+
+:root.dark {
+  --color-primary: #4cc2ff;
+  --color-primary-hover: #5ec9ff;
+  --color-primary-active: #3daade;
+  --color-on-primary: #000000;
+
+  --color-background: #202020; // Mica-like base dark
+  --color-surface: #2c2c2c;
+  --color-surface-secondary: #323232;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #cacaca;
+  --color-text-tertiary: #9a9a9a;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.54);
+
+  --color-success: #6ccb5f;
+  --color-warning: #ffaa44;
+  --color-error: #ff99a4;
+  --color-info: #60cdff;
+
+  --sidebar-bg: #202020;
+  --header-bg: rgba(44, 44, 44, 0.8);
 }

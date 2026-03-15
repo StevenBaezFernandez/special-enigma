@@ -1,13 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
 @use 'tokens';
 
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family:
-    'Inter',
-    -apple-system,
-    sans-serif;
-  color: var(--color-text-primary);
-  background-color: var(--color-background);
   margin: 0;
   padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Global scrollbar styling
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border: 2px solid var(--color-background);
+  border-radius: 10px;
+
+  &:hover {
+    background: var(--color-text-tertiary);
+  }
 }

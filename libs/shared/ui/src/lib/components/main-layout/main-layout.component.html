@@ -1,52 +1,62 @@
-<div class="flex h-screen bg-gray-100">
+<div class="shell">
   <!-- Sidebar -->
   <aside
-    class="bg-gray-800 text-white w-64 flex flex-col transition-all duration-300"
-    [class.hidden]="!isSidebarOpen"
+    class="shell__sidebar"
+    [class.shell__sidebar--collapsed]="!isSidebarOpen"
   >
-    <div class="p-4 text-center font-bold text-xl border-b border-gray-700">
-      Virteex ERP
+    <div class="shell__logo">
+      <span class="shell__logo-text">Virteex ERP</span>
     </div>
-    <nav class="flex-1 overflow-y-auto py-4">
-      <ul class="space-y-1">
-        <!-- Dashboard -->
-        <li>
-            <a routerLink="/" class="block px-4 py-2 hover:bg-gray-700">Home</a>
+
+    <nav class="shell__nav">
+      <ul class="shell__nav-list">
+        <li class="shell__nav-item">
+          <a routerLink="/" class="shell__nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <i class="shell__nav-icon"></i>
+            <span class="shell__nav-label">Home</span>
+          </a>
         </li>
-        <!-- Domains -->
-        <li><a routerLink="/accounting" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Accounting</a></li>
-        <li><a routerLink="/inventory" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Inventory</a></li>
-        <li><a routerLink="/payroll" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Payroll</a></li>
-        <li><a routerLink="/crm" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">CRM</a></li>
-        <li><a routerLink="/purchasing" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Purchasing</a></li>
-        <li><a routerLink="/treasury" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Treasury</a></li>
-        <li><a routerLink="/fixed-assets" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Fixed Assets</a></li>
-        <li><a routerLink="/projects" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Projects</a></li>
-        <li><a routerLink="/manufacturing" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Manufacturing</a></li>
-        <li><a routerLink="/billing" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Billing</a></li>
-        <li><a routerLink="/catalog" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Catalog</a></li>
-        <li><a routerLink="/bi" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">BI</a></li>
-        <li><a routerLink="/admin" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Admin</a></li>
-        <li><a routerLink="/fiscal" routerLinkActive="bg-gray-700" class="block px-4 py-2 hover:bg-gray-700">Fiscal</a></li>
+
+        <li class="shell__nav-separator"></li>
+
+        <li class="shell__nav-item" *ngFor="let item of navItems">
+          <a [routerLink]="item.path" class="shell__nav-link" routerLinkActive="active">
+            <i class="shell__nav-icon" [class]="item.icon"></i>
+            <span class="shell__nav-label">{{ item.label }}</span>
+          </a>
+        </li>
       </ul>
     </nav>
-    <div class="p-4 border-t border-gray-700">
-      <a routerLink="/auth/login" class="block px-4 py-2 text-sm text-gray-400 hover:text-white">Logout</a>
+
+    <div class="shell__footer">
+      <a routerLink="/auth/login" class="shell__logout">
+        <span class="shell__nav-label">Logout</span>
+      </a>
     </div>
   </aside>
 
-  <!-- Main Content -->
-  <div class="flex-1 flex flex-col overflow-hidden">
-    <header class="bg-white shadow p-4 flex justify-between items-center">
-      <button (click)="toggleSidebar()" class="text-gray-500 focus:outline-none">
-        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
-      <div class="font-semibold text-gray-700">User</div>
+  <!-- Main Area -->
+  <div class="shell__main">
+    <header class="shell__header">
+      <div class="shell__header-left">
+        <button (click)="toggleSidebar()" class="shell__toggle" aria-label="Toggle Sidebar">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+            <path d="M2 4H14M2 8H14M2 12H14" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <h1 class="shell__title">Dashboard</h1>
+      </div>
+
+      <div class="shell__header-right">
+        <virteex-theme-toggle></virteex-theme-toggle>
+        <div class="shell__user-profile">
+          <div class="shell__avatar">JD</div>
+          <span class="shell__username">John Doe</span>
+        </div>
+      </div>
     </header>
 
-    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+    <main class="shell__content">
       <router-outlet></router-outlet>
     </main>
   </div>

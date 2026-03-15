@@ -1,51 +1,49 @@
-@use '../../../../assets/styles/variables' as *;
+@use 'tokens' as *;
 
 .theme-toggle-button {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     background-color: transparent;
     border: 1px solid transparent;
-    border-radius: $border-radius;
-    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
     cursor: pointer;
-    transition: background-color $transition-duration $transition-easing,
-        color $transition-duration $transition-easing;
+    transition: all var(--transition-fast);
 
     &:hover {
-        background-color: var(--bg-hover);
-        color: var(--text-primary);
+        background-color: var(--color-border);
+        color: var(--color-text-primary);
     }
 
     // Estilo del Tooltip
     &::after {
         content: attr(data-tooltip);
         position: absolute;
-        bottom: 125%;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: var(--bg-layer-1);
-        color: var(--text-primary);
-        padding: 6px 10px;
-        border-radius: $border-radius;
-        font-size: 0.875rem;
-        font-weight: $font-weight-semibold;
+        top: 125%;
+        right: 0;
+        background-color: var(--color-surface);
+        color: var(--color-text-primary);
+        padding: 4px 8px;
+        border-radius: var(--radius-sm);
+        font-size: 0.75rem;
+        font-weight: 500;
         white-space: nowrap;
-        box-shadow: 0 4px 8px var(--shadow-color);
-        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-medium);
+        border: 1px solid var(--color-border);
 
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.2s ease, visibility 0.2s ease;
-        z-index: 10;
+        z-index: 100;
     }
 
     &:hover::after {
         opacity: 1;
         visibility: visible;
-        transition-delay: 0.5s;
+        transition-delay: 0.8s;
     }
 }
