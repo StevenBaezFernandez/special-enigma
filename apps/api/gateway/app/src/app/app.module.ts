@@ -8,7 +8,7 @@ import { ServerConfigModule, IdempotencyInterceptor } from '@virteex/shared-util
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TerminusModule } from '@nestjs/terminus';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { JwtAuthGuard, CanonicalTenantMiddleware } from '@virteex/kernel-auth';
+import { AuthModule, JwtAuthGuard, CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 import { RoutingPlaneService, TenantRlsInterceptor, TenantModule, TenantThrottlerGuard } from '@virteex/kernel-tenant';
 import { KafkaModule } from '@virteex/platform-kafka';
 import { AuditModule } from '@virteex/kernel-audit';
@@ -23,6 +23,7 @@ import { createServiceProxy } from './middleware/proxy.middleware';
 
 @Module({
   imports: [
+    AuthModule,
     TenantModule,
     InventoryPresentationModule,
     AccountingPresentationModule,
