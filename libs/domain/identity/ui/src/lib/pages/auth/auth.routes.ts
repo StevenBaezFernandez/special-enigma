@@ -5,7 +5,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { createAuthTranslateLoader } from '../../core/utils/auth-translate-loader';
 
 // Importa el nuevo guard que acabamos de crear.
-import { publicGuard } from '@virteex/shared-ui/core/guards/public.guard';
+import { publicGuard } from '@virteex/shared-ui';
 
 export const AUTH_ROUTES: Routes = [
   {
@@ -116,7 +116,7 @@ export const AUTH_ROUTES: Routes = [
     path: 'plan-selection',
     title: 'Seleccionar Plan | FacturaPRO',
     loadComponent: () =>
-      import('../payment/components/plan-selection/plan-selection.component').then(
+      import('./plan-selection/plan-selection.component').then(
         (m) => m.PlanSelectionComponent
       ),
   },

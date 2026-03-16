@@ -1,4 +1,4 @@
-import { User } from '../interfaces/user.interface';
+import { User, Role } from '../interfaces/user.interface';
 
 export interface InviteUserDto {
   firstName: string;
@@ -15,15 +15,16 @@ export interface UpdateUserDto {
   preferredLanguage?: string;
 }
 
+export interface UpdateProfileDto {
+  firstName?: string;
+  lastName?: string;
+  preferredLanguage?: string;
+  phone?: string;
+  jobTitle?: string;
+  email?: string;
+}
+
 export interface PaginatedUsersResponse {
   data: User[];
   total: number;
-}
-
-export interface Role {
-  id: string;
-  name: string;
-  description: string;
-  permissions: string[];
-  isSystemRole: boolean;
 }

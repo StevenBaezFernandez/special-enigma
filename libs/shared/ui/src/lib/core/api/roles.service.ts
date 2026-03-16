@@ -3,16 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-//
+import { Role } from '../../interfaces/user.interface';
 
 // Interfaces que coinciden con los DTOs del Backend
-export interface Role {
-  id: string;
-  name: string;
-  description: string;
-  permissions: string[];
-  isSystemRole: boolean;
-}
 
 export interface CreateRoleDto {
   name: string;

@@ -3,37 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { User } from '@virteex/shared-ui';
-
-export interface InviteUserDto {
-  firstName: string;
-  lastName: string;
-  email: string;
-  roleId: string;
-}
-
-export interface UpdateUserDto {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  roleId?: string;
-  preferredLanguage?: string;
-}
-
-export interface UpdateProfileDto {
-  firstName?: string;
-  lastName?: string;
-  preferredLanguage?: string;
-  phone?: string;
-  jobTitle?: string;
-  email?: string;
-}
-
-// Interfaz para la respuesta paginada
-export interface PaginatedUsersResponse {
-  data: User[];
-  total: number;
-}
+import { User } from '../../interfaces/user.interface';
+import { PaginatedUsersResponse, InviteUserDto, UpdateUserDto, UpdateProfileDto } from '../../models/user-dtos';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {

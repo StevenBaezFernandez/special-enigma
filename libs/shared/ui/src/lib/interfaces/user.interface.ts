@@ -1,8 +1,5 @@
 import { UserStatus } from '../enums/user-status.enum';
-import { Role } from '../models/user-dtos';
 import { User as AuthUser } from '@virteex/shared-util-auth';
-
-export type { Role };
 
 export interface Organization {
   id: string;
@@ -10,6 +7,14 @@ export interface Organization {
   logoUrl?: string;
   subscriptionStatus?: string;
   gracePeriodEnd?: Date | string;
+}
+
+export interface Role {
+  id: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  isSystemRole: boolean;
 }
 
 export interface User extends AuthUser {
