@@ -59,6 +59,7 @@ import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
       groupId: 'billing-service-consumer',
     }),
     MikroOrmModule.forRootAsync({
+      driver: PostgreSqlDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {

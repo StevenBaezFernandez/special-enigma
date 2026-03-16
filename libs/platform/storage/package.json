@@ -1,7 +1,6 @@
 {
   "name": "@virteex/platform-storage",
   "version": "0.0.1",
-  "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": {

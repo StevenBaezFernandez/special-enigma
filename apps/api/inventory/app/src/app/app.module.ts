@@ -62,6 +62,7 @@ import { InventoryPresentationModule } from '@virteex/domain-inventory-presentat
       ],
     }),
     MikroOrmModule.forRootAsync({
+      driver: PostgreSqlDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {

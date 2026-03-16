@@ -42,6 +42,7 @@ import { createServiceProxy } from './middleware/proxy.middleware';
       },
     ]),
     MikroOrmModule.forRootAsync({
+      driver: PostgreSqlDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {

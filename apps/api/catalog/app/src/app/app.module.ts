@@ -52,6 +52,7 @@ import { CatalogPresentationModule } from '@virteex/domain-catalog-presentation'
       ],
     }),
     MikroOrmModule.forRootAsync({
+      driver: PostgreSqlDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {

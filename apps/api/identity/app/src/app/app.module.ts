@@ -48,6 +48,7 @@ import { AppService } from './app.service';
       ],
     }),
     MikroOrmModule.forRootAsync({
+      driver: PostgreSqlDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {

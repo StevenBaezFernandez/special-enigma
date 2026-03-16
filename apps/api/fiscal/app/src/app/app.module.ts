@@ -40,6 +40,7 @@ import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
     ConfigModule.forRoot({ isGlobal: true }),
     HttpModule,
     MikroOrmModule.forRootAsync({
+      driver: PostgreSqlDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
