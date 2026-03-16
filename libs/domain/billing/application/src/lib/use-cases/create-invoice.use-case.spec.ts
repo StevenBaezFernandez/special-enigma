@@ -1,18 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Decimal } from 'decimal.js';
-import {
-  FiscalStampingService,
-  INVOICE_REPOSITORY,
-  InvoiceRepository,
-  PRODUCT_REPOSITORY,
-  ProductRepository,
-  TaxCalculatorService,
-  TENANT_CONFIG_REPOSITORY,
-  TenantConfigRepository,
-} from '@virteex/domain-billing-domain';
+import { FiscalStampingService, INVOICE_REPOSITORY, type InvoiceRepository, PRODUCT_REPOSITORY, type ProductRepository, TaxCalculatorService, TENANT_CONFIG_REPOSITORY, type TenantConfigRepository } from '@virteex/domain-billing-domain';
 import { CreateInvoiceUseCase } from './create-invoice.use-case';
-import { INVOICE_INTEGRATION_PUBLISHER, InvoiceIntegrationPublisherPort } from '../ports/invoice-integration-publisher.port';
+import { INVOICE_INTEGRATION_PUBLISHER, type InvoiceIntegrationPublisherPort } from '../ports/invoice-integration-publisher.port';
 import { PriceValidationPolicy } from '../services/price-validation.policy';
 import { InvoiceStampingOrchestrator } from '../services/invoice-stamping.orchestrator';
 import { SUBSCRIPTION_REPOSITORY } from '@virteex/domain-subscription-domain';

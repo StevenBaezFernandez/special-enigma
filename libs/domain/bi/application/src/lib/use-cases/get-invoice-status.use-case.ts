@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { InvoicePort, INVOICE_PORT, InvoiceStatusSummary } from '@virteex/domain-bi-domain';
+import { type InvoicePort, INVOICE_PORT, type InvoiceStatusSummary } from '@virteex/domain-bi-domain';
 
 @Injectable()
 export class GetInvoiceStatusUseCase {

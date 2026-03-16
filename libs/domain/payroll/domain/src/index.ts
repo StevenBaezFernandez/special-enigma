@@ -1,11 +1,12 @@
 export * from './lib/entities/tax-table.entity';
 export * from './lib/entities/employee.entity';
 export * from './lib/entities/payroll.entity';
+export { Payroll } from './lib/entities/payroll.entity';
 export * from './lib/entities/payroll-detail.entity';
 export * from './lib/entities/attendance.entity';
-export * from './lib/repositories/tax-table.repository';
+export { type TaxTableRepository, TAX_TABLE_REPOSITORY } from './lib/repositories/tax-table.repository';
 export * from './lib/repositories/employee.repository';
-export * from './lib/repositories/payroll.repository';
+export { type PayrollRepository, PAYROLL_REPOSITORY } from './lib/repositories/payroll.repository';
 export * from './lib/repositories/attendance.repository';
 export * from './lib/ports/tax-service.port';
 export * from './lib/ports/pac-provider.port';

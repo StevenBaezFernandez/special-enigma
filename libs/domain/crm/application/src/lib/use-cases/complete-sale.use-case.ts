@@ -1,6 +1,6 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
-import { Sale, SaleRepository, SaleStatus } from '@virteex/domain-crm-domain';
+import { Sale, type SaleRepository, SaleStatus } from '@virteex/domain-crm-domain';
 
 @Injectable()
 export class CompleteSaleUseCase {

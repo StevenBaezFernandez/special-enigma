@@ -11,12 +11,12 @@ export * from './lib/strategies/tax-strategy.interface';
 export * from './lib/strategies/tax-strategy.factory';
 
 export * from './lib/ports/pac-provider.port';
-export * from './lib/ports/payment-provider.port';
-export * from './lib/ports/invoice.repository';
-export * from './lib/ports/payment-method.repository';
-export * from './lib/ports/tenant-config.port';
+export { type PaymentProvider, PAYMENT_PROVIDER } from './lib/ports/payment-provider.port';
+export { type InvoiceRepository, INVOICE_REPOSITORY } from './lib/ports/invoice.repository';
+export { type PaymentMethodRepository, PAYMENT_METHOD_REPOSITORY } from './lib/ports/payment-method.repository';
+export { type TenantConfigRepository, type TenantFiscalConfig, TENANT_CONFIG_REPOSITORY } from './lib/ports/tenant-config.port';
 export * from './lib/ports/customer.repository';
-export * from './lib/repositories/product.repository';
+export { type ProductRepository, type BillingProduct, PRODUCT_REPOSITORY } from './lib/repositories/product.repository';
 
 export * from './lib/events/invoice-stamped.event';
 

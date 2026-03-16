@@ -10,4 +10,4 @@ export interface InvoiceRepository {
   countByTenantId(tenantId: string): Promise<number>;
 }
 
-export { InvoiceRepository as IInvoiceRepository };
+export { type InvoiceRepository as IInvoiceRepository };

@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { BiReport, BiReportRepository, BI_REPORT_REPOSITORY } from '@virteex/domain-bi-domain';
-import { JOURNAL_ENTRY_REPOSITORY, JournalEntryRepository } from '@virteex/domain-accounting-domain';
+import { BiReport, type BiReportRepository, BI_REPORT_REPOSITORY } from '@virteex/domain-bi-domain';
+import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository } from '@virteex/domain-accounting-domain';
 
 export class GenerateReportDto {
   name!: string;

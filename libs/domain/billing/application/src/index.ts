@@ -3,7 +3,7 @@ export * from './lib/use-cases/create-invoice.use-case';
 export * from './lib/use-cases/get-invoices.use-case';
 export * from './lib/use-cases/get-payment-history.use-case';
 export * from './lib/use-cases/get-usage.use-case';
-export * from './lib/use-cases/add-payment-method.use-case';
+export { AddPaymentMethodUseCase, type AddPaymentMethodDto } from './lib/use-cases/add-payment-method.use-case';
 export * from './lib/use-cases/get-payment-method.use-case';
 export * from './lib/use-cases/process-payment.use-case';
 export * from './lib/dtos/create-invoice.dto';

@@ -1,8 +1,8 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { Sale, SaleItem, SaleRepository, SaleStatus, CustomerRepository, InventoryService, CatalogService } from '@virteex/domain-crm-domain';
+import { Sale, SaleItem, type SaleRepository, SaleStatus, type CustomerRepository, type InventoryService, type CatalogService } from '@virteex/domain-crm-domain';
 import type { StockReservationItem } from '@virteex/domain-crm-domain';
-import { CreateSaleDto } from '../dtos/create-sale.dto';
+import { type CreateSaleDto } from '../dtos/create-sale.dto';
 import Decimal from 'decimal.js';
 import { OutboxService } from '@virteex/kernel-messaging';
 
