@@ -1,15 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { ButtonComponent, InputComponent } from '@virteex/shared-ui';
+import { ButtonComponent, InputComponent, LanguageService } from '@virteex/shared-ui';
 import { SessionService } from '@virteex/shared-util-auth';
 
 @Component({
   selector: 'virteex-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, ButtonComponent, InputComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, ButtonComponent, InputComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private sessionService = inject(SessionService);
+  public languageService = inject(LanguageService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
