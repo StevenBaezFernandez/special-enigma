@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -67,10 +67,16 @@ export class LoginPage implements OnInit {
 
   @ViewChild(OtpComponent) otpComponent!: OtpComponent;
 
+  constructor() {
+    effect(() => {
+      this.translate.use(this.languageService.currentLang());
+    });
+  }
+
   ngOnInit() {
     this.countryService.detectAndSetCountry();
 
-    this.route.paramMap.subscribe(params => {
+    this.route.queryParamMap.subscribe(params => {
       const lang = params.get('lang');
       if (lang) {
         this.languageService.setLanguage(lang);

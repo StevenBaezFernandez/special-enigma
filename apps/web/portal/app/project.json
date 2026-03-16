@@ -28,6 +28,11 @@
           {
             "glob": "**/*",
             "input": "apps/web/portal/app/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/web/portal/app/src/assets",
+            "output": "assets"
           }
         ],
         "styles": [

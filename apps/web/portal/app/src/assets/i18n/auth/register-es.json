@@ -1,0 +1,92 @@
+{
+  "REGISTER": {
+    "TITLE": "Crea tu Cuenta",
+    "SUBTITLE": "Únete a miles de empresas que gestionan sus finanzas con facilidad",
+    "SUBMIT_BUTTON": "Crear Cuenta",
+    "HAS_ACCOUNT": "¿Ya tienes una cuenta?",
+    "LOGIN_LINK": "Inicia sesión aquí",
+    "FIRST_NAME": "Nombre",
+    "FIRST_NAME_PLACEHOLDER": "Juan",
+    "LAST_NAME": "Apellido",
+    "LAST_NAME_PLACEHOLDER": "Pérez",
+    "EMAIL": "Correo Electrónico",
+    "EMAIL_PLACEHOLDER": "juan.perez@empresa.com",
+    "PASSWORD": "Contraseña",
+    "PASSWORD_PLACEHOLDER": "Mínimo 8 caracteres",
+    "CONFIRM_PASSWORD": "Confirmar Contraseña",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Repite tu contraseña",
+    "JOB_TITLE": "Cargo",
+    "JOB_TITLE_PLACEHOLDER": "CEO, Gerente, etc.",
+    "PHONE": "Número de Teléfono",
+    "PHONE_PLACEHOLDER": "+1 (555) 000-0000",
+    "COUNTRY": "País",
+    "CURRENCY": "Moneda",
+    "TAX_ID": "Identificación Fiscal",
+    "COMPANY_NAME": "Nombre de la Empresa",
+    "COMPANY_NAME_PLACEHOLDER": "Tu Empresa S.A.",
+    "INDUSTRY": "Industria",
+    "INDUSTRY_PLACEHOLDER": "Selecciona una industria",
+    "EMPLOYEES": "Número de Empleados",
+    "EMPLOYEES_PLACEHOLDER": "Selecciona el tamaño de la empresa",
+    "WEBSITE": "Sitio Web",
+    "WEBSITE_PLACEHOLDER": "https://www.tuempresa.com",
+    "TERMS_AGREEMENT_1": "Acepto los",
+    "TERMS": "Términos de Servicio",
+    "AND": "y la",
+    "PRIVACY": "Política de Privacidad",
+    "BACK": "Atrás",
+    "NEXT": "Siguiente",
+    "STEPS": {
+      "ACCOUNT": {
+        "TITLE": "Información de la Cuenta",
+        "SUBTITLE": "Comencemos con tus datos personales"
+      },
+      "CONFIGURATION": {
+        "TITLE": "País e Impuestos",
+        "SUBTITLE": "Configuración regional para tu cuenta"
+      },
+      "BUSINESS": {
+        "TITLE": "Perfil de Negocio",
+        "SUBTITLE": "Cuéntanos sobre tu empresa"
+      },
+      "PLAN": {
+        "TITLE": "Confirmar Plan",
+        "SUBTITLE": "Listo para comenzar tu viaje",
+        "FREE_TRIAL_TITLE": "Prueba Gratuita de 30 Días",
+        "FREE_TRIAL_SUBTITLE": "Acceso completo a todas las funciones Premium.",
+        "FEATURE_1": "Sin tarjeta de crédito requerida",
+        "FEATURE_2": "Cancela en cualquier momento",
+        "FEATURE_3": "Soporte prioritario incluido"
+      }
+    },
+    "INDUSTRIES": {
+      "TECHNOLOGY": "Tecnología",
+      "RETAIL": "Ventas al por menor",
+      "MANUFACTURING": "Manufactura",
+      "SERVICES": "Servicios",
+      "HEALTHCARE": "Salud",
+      "CONSTRUCTION": "Construcción",
+      "OTHER": "Otro"
+    },
+    "ERRORS": {
+      "REQUIRED": "Este campo es obligatorio",
+      "PASSWORD_MISMATCH": "Las contraseñas no coinciden",
+      "TERMS_REQUIRED": "Debes aceptar los términos y condiciones",
+      "INVALID_FORMAT": "Formato inválido"
+    }
+  },
+  "LOGIN": {
+    "RECAPTCHA_LEGAL_1": "Este sitio está protegido por reCAPTCHA y se aplican la",
+    "RECAPTCHA_LEGAL_2": "de Google.",
+    "PRIVACY_POLICY": "Política de Privacidad",
+    "TERMS_OF_SERVICE": "Términos de Servicio",
+    "AND": "y los",
+    "FOOTER": {
+      "TERMS": "Términos",
+      "PRIVACY": "Privacidad",
+      "SECURITY": "Seguridad",
+      "CONTACT": "Contacto",
+      "ALL_RIGHTS_RESERVED": "Todos los derechos reservados."
+    }
+  }
+}

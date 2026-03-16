@@ -72,7 +72,7 @@
           (click)="prevStep()"
           class="back-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-          Atrás
+          {{ 'REGISTER.BACK' | translate }}
         </button>
         <div *ngIf="currentStep() === 1" class="spacer"></div> <!-- Spacer -->
 
@@ -80,7 +80,7 @@
             <virteex-auth-button
             (onClick)="nextStep()"
             variant="primary">
-            Siguiente
+            {{ 'REGISTER.NEXT' | translate }}
             <svg icon xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </virteex-auth-button>
         </div>
@@ -106,9 +106,9 @@
 
     <!-- ReCAPTCHA Legal Text -->
     <p class="recaptcha-legal">
-      This site is protected by reCAPTCHA and the Google
-      <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and
-      <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
+      {{ 'LOGIN.RECAPTCHA_LEGAL_1' | translate }}
+      <a href="https://policies.google.com/privacy" target="_blank">{{ 'LOGIN.PRIVACY_POLICY' | translate }}</a> {{ 'LOGIN.AND' | translate }}
+      <a href="https://policies.google.com/terms" target="_blank">{{ 'LOGIN.TERMS_OF_SERVICE' | translate }}</a> {{ 'LOGIN.RECAPTCHA_LEGAL_2' | translate }}
     </p>
 
   </div>

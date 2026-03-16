@@ -1,0 +1,46 @@
+{
+  "LOGIN": {
+    "TITLE": "Bienvenido de nuevo",
+    "SUBTITLE": "Ingrese sus credenciales para acceder a su cuenta",
+    "OR": "O continuar con",
+    "EMAIL_LABEL": "Correo Electrónico",
+    "EMAIL_PLACEHOLDER": "tu@email.com",
+    "PASSWORD_LABEL": "Contraseña",
+    "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+    "REMEMBER_ME": "Recordarme",
+    "LOGGING_IN": "Iniciando sesión...",
+    "SUBMIT_BUTTON": "Iniciar Sesión",
+    "NO_ACCOUNT": "¿No tienes una cuenta?",
+    "REGISTER_LINK": "Crea una aquí",
+    "CONTINUE_WITH": "Continuar con {{provider}}",
+    "PASSKEY_BUTTON": "Iniciar sesión con Passkey",
+    "RECAPTCHA_LEGAL_1": "Este sitio está protegido por reCAPTCHA y se aplican la",
+    "RECAPTCHA_LEGAL_2": "de Google.",
+    "PRIVACY_POLICY": "Política de Privacidad",
+    "TERMS_OF_SERVICE": "Términos de Servicio",
+    "AND": "y los",
+    "2FA": {
+      "TITLE": "Autenticación de Dos Factores",
+      "SUBTITLE": "Ingrese el código de 6 dígitos de su aplicación de autenticación",
+      "BACK_TO_LOGIN": "Volver al inicio de sesión"
+    },
+    "ERRORS": {
+      "EMAIL_REQUIRED": "El correo electrónico es obligatorio",
+      "PASSWORD_REQUIRED": "La contraseña es obligatoria",
+      "EMAIL_INVALID": "Por favor, ingrese un correo electrónico válido",
+      "PASSKEY_ERROR": "Error al iniciar sesión con passkey",
+      "SERVER_ERROR": "Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.",
+      "INVALID_CODE": "Código 2FA inválido",
+      "AUTH_INVALID_CREDENTIALS": "Correo electrónico o contraseña inválidos",
+      "TOO_MANY_ATTEMPTS": "Demasiados intentos de inicio de sesión. Por favor, inténtelo de nuevo más tarde.",
+      "ACCOUNT_LOCKED": "Su cuenta está bloqueada. Por favor, contacte a soporte."
+    },
+    "FOOTER": {
+      "TERMS": "Términos",
+      "PRIVACY": "Privacidad",
+      "SECURITY": "Seguridad",
+      "CONTACT": "Contacto",
+      "ALL_RIGHTS_RESERVED": "Todos los derechos reservados."
+    }
+  }
+}

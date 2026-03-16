@@ -4,6 +4,7 @@ import {
   importProvidersFrom,
   isDevMode
 } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
@@ -34,6 +35,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 export const appConfig: ApplicationConfig = {
   providers: [
       provideBrowserGlobalErrorListeners(),
+      provideAnimations(),
       provideRouter(appRoutes),
       provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor, errorInterceptor, globalErrorInterceptor])),
       provideStore(

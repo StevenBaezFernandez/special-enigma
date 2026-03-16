@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, effect, computed } from '@angular/co
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule, CheckCircle, BarChart2, Package, Check, ArrowLeft, ArrowRight, Rocket, AlertCircle } from 'lucide-angular';
 import { trigger, style, transition, animate } from '@angular/animations';
 import { AuthService } from '../../../services/auth.service';
@@ -88,6 +88,7 @@ export class RegisterPage implements OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private recaptchaV3Service = inject(ReCaptchaV3Service);
+  private translate = inject(TranslateService);
   public countryService = inject(CountryService);
   public languageService = inject(LanguageService);
 
@@ -101,6 +102,10 @@ export class RegisterPage implements OnInit {
   currentCountryConfig = computed(() => this.countryService.currentCountry());
 
   constructor() {
+    effect(() => {
+      this.translate.use(this.languageService.currentLang());
+    });
+
     // 1. Efecto: Actualizar validadores y valores cuando cambia la configuración del país
     effect(() => {
       const config = this.currentCountryConfig();
@@ -152,6 +157,13 @@ export class RegisterPage implements OnInit {
   }
 
   ngOnInit(): void {
+    this.activatedRoute.queryParamMap.subscribe(params => {
+      const lang = params.get('lang');
+      if (lang) {
+        this.languageService.setLanguage(lang);
+      }
+    });
+
     // Check if we have a country in the route
     const routeCountry = this.activatedRoute.parent?.parent?.snapshot.paramMap.get('country') ||
                          this.activatedRoute.parent?.snapshot.paramMap.get('country');

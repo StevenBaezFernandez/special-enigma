@@ -1,0 +1,46 @@
+{
+  "LOGIN": {
+    "TITLE": "Welcome Back",
+    "SUBTITLE": "Enter your credentials to access your account",
+    "OR": "Or continue with",
+    "EMAIL_LABEL": "Email Address",
+    "EMAIL_PLACEHOLDER": "your@email.com",
+    "PASSWORD_LABEL": "Password",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "REMEMBER_ME": "Remember me",
+    "LOGGING_IN": "Signing in...",
+    "SUBMIT_BUTTON": "Sign In",
+    "NO_ACCOUNT": "Don't have an account?",
+    "REGISTER_LINK": "Create one here",
+    "CONTINUE_WITH": "Continue with {{provider}}",
+    "PASSKEY_BUTTON": "Sign in with Passkey",
+    "RECAPTCHA_LEGAL_1": "This site is protected by reCAPTCHA and the Google",
+    "RECAPTCHA_LEGAL_2": "apply.",
+    "PRIVACY_POLICY": "Privacy Policy",
+    "TERMS_OF_SERVICE": "Terms of Service",
+    "AND": "and",
+    "2FA": {
+      "TITLE": "Two-Factor Authentication",
+      "SUBTITLE": "Enter the 6-digit code from your authenticator app",
+      "BACK_TO_LOGIN": "Back to login"
+    },
+    "ERRORS": {
+      "EMAIL_REQUIRED": "Email is required",
+      "PASSWORD_REQUIRED": "Password is required",
+      "EMAIL_INVALID": "Please enter a valid email",
+      "PASSKEY_ERROR": "Error signing in with passkey",
+      "SERVER_ERROR": "An error occurred on the server. Please try again later.",
+      "INVALID_CODE": "Invalid 2FA code",
+      "AUTH_INVALID_CREDENTIALS": "Invalid email or password",
+      "TOO_MANY_ATTEMPTS": "Too many login attempts. Please try again later.",
+      "ACCOUNT_LOCKED": "Your account is locked. Please contact support."
+    },
+    "FOOTER": {
+      "TERMS": "Terms",
+      "PRIVACY": "Privacy",
+      "SECURITY": "Security",
+      "CONTACT": "Contact",
+      "ALL_RIGHTS_RESERVED": "All rights reserved."
+    }
+  }
+}

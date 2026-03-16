@@ -1,10 +1,11 @@
 import { APP_CONFIG, AppConfig } from '@virteex/shared-config';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, effect } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { LanguageService } from '@virteex/shared-ui';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ReCaptchaV3Service, RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-19';
 
 // Shared
@@ -57,6 +58,14 @@ export class SetPasswordPage implements OnInit {
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private recaptchaV3Service = inject(ReCaptchaV3Service);
+  private translate = inject(TranslateService);
+  public languageService = inject(LanguageService);
+
+  constructor() {
+    effect(() => {
+      this.translate.use(this.languageService.currentLang());
+    });
+  }
 
   setPasswordForm!: FormGroup;
   isLoading = false;

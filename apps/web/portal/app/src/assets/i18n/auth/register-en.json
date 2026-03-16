@@ -1,0 +1,92 @@
+{
+  "REGISTER": {
+    "TITLE": "Create Your Account",
+    "SUBTITLE": "Join thousands of businesses managing their finances with ease",
+    "SUBMIT_BUTTON": "Create Account",
+    "HAS_ACCOUNT": "Already have an account?",
+    "LOGIN_LINK": "Sign in here",
+    "FIRST_NAME": "First Name",
+    "FIRST_NAME_PLACEHOLDER": "John",
+    "LAST_NAME": "Last Name",
+    "LAST_NAME_PLACEHOLDER": "Doe",
+    "EMAIL": "Email Address",
+    "EMAIL_PLACEHOLDER": "john.doe@company.com",
+    "PASSWORD": "Password",
+    "PASSWORD_PLACEHOLDER": "Minimum 8 characters",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Repeat your password",
+    "JOB_TITLE": "Job Title",
+    "JOB_TITLE_PLACEHOLDER": "CEO, Manager, etc.",
+    "PHONE": "Phone Number",
+    "PHONE_PLACEHOLDER": "+1 (555) 000-0000",
+    "COUNTRY": "Country",
+    "CURRENCY": "Currency",
+    "TAX_ID": "Tax ID",
+    "COMPANY_NAME": "Company Name",
+    "COMPANY_NAME_PLACEHOLDER": "Your Company S.A.",
+    "INDUSTRY": "Industry",
+    "INDUSTRY_PLACEHOLDER": "Select an industry",
+    "EMPLOYEES": "Number of Employees",
+    "EMPLOYEES_PLACEHOLDER": "Select company size",
+    "WEBSITE": "Website",
+    "WEBSITE_PLACEHOLDER": "https://www.yourcompany.com",
+    "TERMS_AGREEMENT_1": "I agree to the",
+    "TERMS": "Terms of Service",
+    "AND": "and",
+    "PRIVACY": "Privacy Policy",
+    "BACK": "Back",
+    "NEXT": "Next",
+    "STEPS": {
+      "ACCOUNT": {
+        "TITLE": "Account Information",
+        "SUBTITLE": "Let's start with your personal details"
+      },
+      "CONFIGURATION": {
+        "TITLE": "Country & Tax",
+        "SUBTITLE": "Regional settings for your account"
+      },
+      "BUSINESS": {
+        "TITLE": "Business Profile",
+        "SUBTITLE": "Tell us about your company"
+      },
+      "PLAN": {
+        "TITLE": "Confirm Plan",
+        "SUBTITLE": "Ready to start your journey",
+        "FREE_TRIAL_TITLE": "30-Day Free Trial",
+        "FREE_TRIAL_SUBTITLE": "Full access to all Premium features.",
+        "FEATURE_1": "No credit card required",
+        "FEATURE_2": "Cancel at any time",
+        "FEATURE_3": "Priority support included"
+      }
+    },
+    "INDUSTRIES": {
+      "TECHNOLOGY": "Technology",
+      "RETAIL": "Retail",
+      "MANUFACTURING": "Manufacturing",
+      "SERVICES": "Services",
+      "HEALTHCARE": "Healthcare",
+      "CONSTRUCTION": "Construction",
+      "OTHER": "Other"
+    },
+    "ERRORS": {
+      "REQUIRED": "This field is required",
+      "PASSWORD_MISMATCH": "Passwords do not match",
+      "TERMS_REQUIRED": "You must accept the terms and conditions",
+      "INVALID_FORMAT": "Invalid format"
+    }
+  },
+  "LOGIN": {
+    "RECAPTCHA_LEGAL_1": "This site is protected by reCAPTCHA and the Google",
+    "RECAPTCHA_LEGAL_2": "apply.",
+    "PRIVACY_POLICY": "Privacy Policy",
+    "TERMS_OF_SERVICE": "Terms of Service",
+    "AND": "and",
+    "FOOTER": {
+      "TERMS": "Terms",
+      "PRIVACY": "Privacy",
+      "SECURITY": "Security",
+      "CONTACT": "Contact",
+      "ALL_RIGHTS_RESERVED": "All rights reserved."
+    }
+  }
+}
