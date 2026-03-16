@@ -1,11 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  CustomerRegistryGateway,
-  SubscriptionProviderGateway,
-  SubscriptionProviderResult,
-  PaymentSessionProvider
-} from '@virteex/domain-subscription-domain';
+import { CustomerRegistryGateway, type SubscriptionProviderGateway, type SubscriptionProviderResult, type PaymentSessionProvider } from '@virteex/domain-subscription-domain';
 import { resolveStripeSecretKey } from '@virteex/domain-subscription-domain';
 import Stripe from 'stripe';
 import { StripeMapper } from './stripe.mapper';

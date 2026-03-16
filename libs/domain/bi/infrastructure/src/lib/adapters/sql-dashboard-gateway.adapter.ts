@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DashboardGateway, DashboardStats } from '@virteex/domain-bi-domain';
+import { DashboardGateway, type DashboardStats } from '@virteex/domain-bi-domain';
 import { EntityManager } from '@mikro-orm/core';
 
 @Injectable()

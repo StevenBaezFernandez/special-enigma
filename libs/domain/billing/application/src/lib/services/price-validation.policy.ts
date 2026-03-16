@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Decimal } from 'decimal.js';
 import { DomainException } from '@virteex/shared-util-server-server-config';
-import { ProductRepository } from '@virteex/domain-billing-domain';
+import { type ProductRepository } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class PriceValidationPolicy {

@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GenericLatamStrategy } from './generic-latam.strategy';
-import { TaxTableRepository, TAX_TABLE_REPOSITORY, TaxTable } from '@virteex/domain-payroll-domain';
+import { type TaxTableRepository, TAX_TABLE_REPOSITORY, TaxTable } from '@virteex/domain-payroll-domain';
 
 describe('GenericLatamStrategy', () => {
   let strategy: GenericLatamStrategy;

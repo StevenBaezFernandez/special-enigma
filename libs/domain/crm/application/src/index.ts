@@ -1,7 +1,7 @@
 export { CreateSaleUseCase } from './lib/use-cases/create-sale.use-case';
-export { CreateSaleDto } from './lib/dtos/create-sale.dto';
+export { type CreateSaleDto } from './lib/dtos/create-sale.dto';
 export { ListSalesUseCase } from './lib/use-cases/list-sales.use-case';
-export { CreateCustomerUseCase, CreateCustomerDto } from './lib/use-cases/create-customer.use-case';
+export { CreateCustomerUseCase, type CreateCustomerDto } from './lib/use-cases/create-customer.use-case';
 export { ListCustomersUseCase } from './lib/use-cases/list-customers.use-case';
 export { GetCustomerByIdUseCase } from './lib/use-cases/get-customer-by-id.use-case';
 export { ApproveSaleUseCase } from './lib/use-cases/approve-sale.use-case';

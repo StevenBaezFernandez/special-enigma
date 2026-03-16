@@ -18,13 +18,7 @@ import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      plugins: [
-        process.env.NODE_ENV === 'production'
-          ? ApolloServerPluginLandingPageProductionDefault({
-              embed: true,
-            })
-          : ApolloServerPluginLandingPageLocalDefault({ embed: true }),
-      ],
+      plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
       autoSchemaFile: true,
       validationRules: [
         depthLimit(10),

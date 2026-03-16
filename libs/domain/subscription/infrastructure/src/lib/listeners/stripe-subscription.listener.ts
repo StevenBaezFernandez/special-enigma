@@ -1,11 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import {
-  IProcessCheckoutSuccessUseCase,
-  IHandleInvoicePaidUseCase,
-  IHandleSubscriptionUpdatedUseCase,
-  IHandleSubscriptionDeletedUseCase
-} from '@virteex/domain-subscription-contracts';
+import { IProcessCheckoutSuccessUseCase, IHandleInvoicePaidUseCase, IHandleSubscriptionUpdatedUseCase, IHandleSubscriptionDeletedUseCase } from '@virteex/domain-subscription-contracts';
 import { StripeMapper } from '../adapters/stripe.mapper';
 
 export interface InvoicePaidPayload {

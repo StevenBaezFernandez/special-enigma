@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PaymentProvider } from '@virteex/domain-billing-domain';
+import { type PaymentProvider } from '@virteex/domain-billing-domain';
 
 @Injectable()
 export class CreateSubscriptionUseCase {

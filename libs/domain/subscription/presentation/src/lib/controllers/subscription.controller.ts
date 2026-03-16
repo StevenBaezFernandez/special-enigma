@@ -2,18 +2,7 @@ import { Controller, Get, Post, Body, UseGuards, Query, Put } from '@nestjs/comm
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentTenant } from '@virteex/shared-util-server-server-config';
 import { JwtAuthGuard, TenantGuard } from '@virteex/kernel-auth';
-import {
-  SubscribeToPlanUseCase,
-  SubscribeToPlanDto,
-  ChangeSubscriptionPlanUseCase,
-  ChangeSubscriptionPlanDto,
-  GetSubscriptionUseCase,
-  CreateCheckoutSessionUseCase,
-  CreateCheckoutSessionDto,
-  CreatePortalSessionUseCase,
-  CreatePortalSessionDto,
-  GetSubscriptionPlansUseCase
-} from '@virteex/domain-subscription-application';
+import { SubscribeToPlanUseCase, SubscribeToPlanDto, ChangeSubscriptionPlanUseCase, ChangeSubscriptionPlanDto, GetSubscriptionUseCase, CreateCheckoutSessionUseCase, CreateCheckoutSessionDto, CreatePortalSessionUseCase, CreatePortalSessionDto, GetSubscriptionPlansUseCase } from '@virteex/domain-subscription-application';
 
 @ApiTags('Subscription')
 @Controller('subscription')

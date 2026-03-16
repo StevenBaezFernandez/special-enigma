@@ -1,13 +1,6 @@
 import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import {
-  GenerateReportUseCase,
-  GenerateReportDto,
-  GetTopProductsUseCase,
-  GetInvoiceStatusUseCase,
-  GetArAgingUseCase,
-  GetExpensesUseCase
-} from '@virteex/domain-bi-application';
+import { GenerateReportUseCase, GenerateReportDto, GetTopProductsUseCase, GetInvoiceStatusUseCase, GetArAgingUseCase, GetExpensesUseCase } from '@virteex/domain-bi-application';
 
 @ApiTags('BI')
 @Controller('bi')

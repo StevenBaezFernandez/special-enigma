@@ -1,11 +1,7 @@
 import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { StepUp, StepUpGuard } from '@virteex/kernel-auth';
-import {
-  AddPaymentMethodUseCase,
-  AddPaymentMethodDto,
-  GetPaymentMethodUseCase
-} from '@virteex/domain-billing-application';
+import { AddPaymentMethodUseCase, type AddPaymentMethodDto, GetPaymentMethodUseCase } from '@virteex/domain-billing-application';
 
 @ApiTags('Billing')
 @Controller('billing/payment-methods')

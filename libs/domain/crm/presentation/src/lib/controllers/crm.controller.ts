@@ -1,17 +1,6 @@
 import { Controller, Post, Get, Body, Query, Param, Headers } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import {
-  CreateSaleUseCase,
-  CreateSaleDto,
-  ListSalesUseCase,
-  CreateCustomerUseCase,
-  CreateCustomerDto,
-  ListCustomersUseCase,
-  GetCustomerByIdUseCase,
-  ApproveSaleUseCase,
-  CancelSaleUseCase,
-  CompleteSaleUseCase
-} from '@virteex/domain-crm-application';
+import { CreateSaleUseCase, type CreateSaleDto, ListSalesUseCase, CreateCustomerUseCase, type CreateCustomerDto, ListCustomersUseCase, GetCustomerByIdUseCase, ApproveSaleUseCase, CancelSaleUseCase, CompleteSaleUseCase } from '@virteex/domain-crm-application';
 
 @ApiTags('CRM')
 @Controller('crm')

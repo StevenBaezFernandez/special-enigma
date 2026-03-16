@@ -2,15 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from '@virteex/kernel-auth';
 import { FiscalInfrastructureModule } from '@virteex/domain-fiscal-infrastructure';
-import {
-  PAC_STRATEGY_FACTORY,
-  TENANT_CONFIG_REPOSITORY,
-  INVOICE_REPOSITORY,
-  PAYMENT_METHOD_REPOSITORY,
-  PRODUCT_REPOSITORY,
-  CUSTOMER_REPOSITORY,
-  BillingDomainModule,
-} from '@virteex/domain-billing-domain';
+import { PAC_STRATEGY_FACTORY, TENANT_CONFIG_REPOSITORY, INVOICE_REPOSITORY, PAYMENT_METHOD_REPOSITORY, PRODUCT_REPOSITORY, CUSTOMER_REPOSITORY, BillingDomainModule } from '@virteex/domain-billing-domain';
 import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '@virteex/domain-fiscal-domain';
 import { BILLING_TAX_STRATEGY_FACTORY } from '@virteex/domain-billing-domain';
 
@@ -40,11 +32,7 @@ import { ProductEventsController } from './listeners/product-events.controller';
 
 import { XsltService } from '@virteex/platform-xslt';
 import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/domain-billing-application';
-import {
-  PaymentMethodSchema,
-  TaxLineSchema,
-  TaxRuleSchema,
-} from './persistence/mikro-orm.schemas';
+import { PaymentMethodSchema, TaxLineSchema, TaxRuleSchema } from './persistence/mikro-orm.schemas';
 
 @Global()
 @Module({

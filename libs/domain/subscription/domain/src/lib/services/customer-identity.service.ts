@@ -1,4 +1,4 @@
-import { SubscriptionRepository, SUBSCRIPTION_REPOSITORY } from '../repositories/subscription.repository';
+import { type SubscriptionRepository, SUBSCRIPTION_REPOSITORY } from '../repositories/subscription.repository';
 import { CustomerRegistryGateway, CUSTOMER_REGISTRY_GATEWAY } from '../ports/customer-registry.port';
 
 export class CustomerIdentityService {

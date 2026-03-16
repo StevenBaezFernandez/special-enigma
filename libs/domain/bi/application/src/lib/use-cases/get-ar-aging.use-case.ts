@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { InvoicePort, INVOICE_PORT, ArAging } from '@virteex/domain-bi-domain';
+import { type InvoicePort, INVOICE_PORT, type ArAging } from '@virteex/domain-bi-domain';
 
 @Injectable()
 export class GetArAgingUseCase {

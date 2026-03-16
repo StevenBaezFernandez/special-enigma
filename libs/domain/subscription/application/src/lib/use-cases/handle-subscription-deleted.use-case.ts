@@ -1,9 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import {
-  SubscriptionStatus,
-  SubscriptionRepository,
-  SUBSCRIPTION_REPOSITORY,
-} from '@virteex/domain-subscription-domain';
+import { SubscriptionStatus, type SubscriptionRepository, SUBSCRIPTION_REPOSITORY } from '@virteex/domain-subscription-domain';
 
 export interface HandleSubscriptionDeletedDto {
   subscriptionId: string;

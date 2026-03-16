@@ -2,7 +2,7 @@ import { Body, Controller, Post, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CalculatePayrollDto } from '@virteex/domain-payroll-contracts';
 import { CalculatePayrollUseCase, GetEmployeesUseCase } from '@virteex/domain-payroll-application';
-import { Payroll, Employee } from '@virteex/domain-payroll-domain';
+import { type Payroll, Employee } from '@virteex/domain-payroll-domain';
 
 @ApiTags('Payroll')
 @Controller('payroll')

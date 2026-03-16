@@ -55,7 +55,7 @@ describe('FiscalStampingService', () => {
       expect(mockTenantConfigRepo.getFiscalConfig).toHaveBeenCalledWith(invoice.tenantId);
       expect(mockCustomerRepo.findById).toHaveBeenCalledWith(invoice.customerId);
       expect(mockBuilderFactory.getBuilder).toHaveBeenCalledWith('MX');
-      expect(mockBuilder.build).toHaveBeenCalledWith(invoice, tenantConfig, customer);
+      expect(mockBuilder.build).toHaveBeenCalledWith({ invoice, tenantConfig, customer });
       expect(mockPacFactory.getProvider).toHaveBeenCalledWith('MX');
       expect(mockProvider.stamp).toHaveBeenCalledWith(document);
       expect(result).toBe(stamp);
