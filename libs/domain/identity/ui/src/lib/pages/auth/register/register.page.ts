@@ -49,10 +49,10 @@ export function passwordMatchValidator(
   ],
   providers: [
     ReCaptchaV3Service,
-    // Note: Same issue with APP_CONFIG in metadata.
-    // Assuming providers are set up correctly at module level or ignoring for now to fix compile/test issues.
-    // Tests are failing because this provider setup is tricky with tokens if not fully integrated.
-    // Removing the complex provider setup for now as it's often better handled at the module level for env config.
+    {
+        provide: RECAPTCHA_V3_SITE_KEY,
+        useValue: 'mock-key'
+    }
   ],
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
@@ -321,12 +321,14 @@ export class RegisterPage implements OnInit {
         // Limpieza final de datos
         const regionId = formValue.configuration.fiscalRegionId;
 
-        const payload: RegisterPayload = {
+        const payload: any = {
           firstName: formValue.accountInfo.firstName,
           lastName: formValue.accountInfo.lastName,
           email: formValue.accountInfo.email,
           password: formValue.accountInfo.passwordGroup.password,
           organizationName: formValue.business.companyName,
+          companyName: formValue.business.companyName,
+          country: formValue.configuration.country,
           // Datos fiscales
           taxId: formValue.configuration.taxId,
           // Solo enviar fiscalRegionId si tiene valor real, sino undefined

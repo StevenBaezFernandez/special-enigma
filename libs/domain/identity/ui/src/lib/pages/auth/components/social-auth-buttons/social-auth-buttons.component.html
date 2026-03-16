@@ -1,19 +1,21 @@
 <div class="social-login-container">
   <!-- Google -->
-  <button (click)="loginWith('google')" class="social-btn" title="{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Google' } }}">
+  <button (click)="loginWith('google')" class="social-btn" [attr.aria-label]="'LOGIN.CONTINUE_WITH' | translate: { provider: 'Google' }" title="{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Google' } }}">
      <img src="assets/icons/google.svg" alt="Google" class="social-icon">
-     <span class="social-text">{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Google' } }}</span>
   </button>
 
   <!-- Microsoft -->
-  <button (click)="loginWith('microsoft')" class="social-btn" title="{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Microsoft' } }}">
+  <button (click)="loginWith('microsoft')" class="social-btn" [attr.aria-label]="'LOGIN.CONTINUE_WITH' | translate: { provider: 'Microsoft' }" title="{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Microsoft' } }}">
     <img src="assets/icons/microsoft.svg" alt="Microsoft" class="social-icon">
-    <span class="social-text">{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Microsoft' } }}</span>
   </button>
 
   <!-- Okta -->
-  <button (click)="loginWith('okta')" class="social-btn" title="{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Okta' } }}">
+  <button (click)="loginWith('okta')" class="social-btn" [attr.aria-label]="'LOGIN.CONTINUE_WITH' | translate: { provider: 'Okta' }" title="{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Okta' } }}">
      <img src="assets/icons/okta.svg" alt="Okta" class="social-icon">
-     <span class="social-text">{{ 'LOGIN.CONTINUE_WITH' | translate: { provider: 'Okta' } }}</span>
+  </button>
+
+  <!-- Passkey -->
+  <button (click)="loginWith('passkey')" class="social-btn" [attr.aria-label]="'LOGIN.PASSKEY_BUTTON' | translate" title="{{ 'LOGIN.PASSKEY_BUTTON' | translate }}">
+    <img src="assets/icons/passkey.svg" alt="Passkey" class="social-icon">
   </button>
 </div>

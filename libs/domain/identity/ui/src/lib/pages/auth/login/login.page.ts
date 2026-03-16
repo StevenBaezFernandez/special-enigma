@@ -3,8 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
-import { LanguageService } from '@virteex/shared-ui/lib/core/services/language';
-import { CountryService } from '@virteex/shared-ui/lib/core/services/country.service';
+import { LanguageService, CountryService } from '@virteex/shared-ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RecaptchaV3Module, ReCaptchaV3Service } from 'ng-recaptcha-19';
 import { LucideAngularModule, Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle, ShieldCheck } from 'lucide-angular';
@@ -34,7 +33,13 @@ import { OtpComponent } from '@virteex/shared-ui';
     PasskeyButtonComponent,
     OtpComponent
   ],
-  providers: [ReCaptchaV3Service],
+  providers: [
+    ReCaptchaV3Service,
+    {
+        provide: RECAPTCHA_V3_SITE_KEY,
+        useValue: 'mock-key'
+    }
+  ],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })

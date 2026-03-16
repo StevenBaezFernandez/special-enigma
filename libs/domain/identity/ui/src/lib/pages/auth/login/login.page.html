@@ -26,14 +26,8 @@
       </div>
 
       <!-- Quick Login Section (Social + Passkey) -->
-       <div class="quick-login-section">
+      <div class="quick-login-section">
         <virteex-social-auth-buttons (onLogin)="socialLogin($event)"></virteex-social-auth-buttons>
-
-        <div class="passkey-wrapper">
-          <virteex-passkey-button (onClick)="onLoginWithPasskey()" [loading]="isLoggingIn()">
-              {{ 'LOGIN.PASSKEY_BUTTON' | translate }}
-          </virteex-passkey-button>
-        </div>
       </div>
 
       <!-- Divider -->
@@ -106,9 +100,9 @@
 
       <!-- Legal Text -->
       <p class="recaptcha-legal">
-        Protected by reCAPTCHA. Google
-        <a href="https://policies.google.com/privacy" target="_blank" tabindex="0">Privacy</a> &
-        <a href="https://policies.google.com/terms" target="_blank" tabindex="0">Terms</a>.
+        This site is protected by reCAPTCHA and the Google
+        <a href="https://policies.google.com/privacy" target="_blank" tabindex="0">Privacy Policy</a> and
+        <a href="https://policies.google.com/terms" target="_blank" tabindex="0">Terms of Service</a> apply.
       </p>
 
     </div>

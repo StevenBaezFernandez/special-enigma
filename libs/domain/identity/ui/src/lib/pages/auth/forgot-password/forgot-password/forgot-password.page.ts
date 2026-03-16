@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module, ReCaptchaV3Service } from 'ng-recaptcha-19';
+import { switchMap } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { LanguageService } from '@virteex/shared-ui';
@@ -29,16 +30,15 @@ import { AuthButtonComponent } from '../../components/auth-button/auth-button.co
   ],
   providers: [
     ReCaptchaV3Service,
-    // Note: Config is injected in constructor/fields, cannot be used in decorator metadata directly if it relies on instance 'this'.
-    // However, if we assume APP_CONFIG is a token that provides the whole config object, we might need a factory or direct string if static.
-    // For now, removing the problematic provider usage in decorator or handling it differently.
-    // Assuming the site key should be provided at module/app level, not here.
-    // But if we must, we can't access 'this' here.
+    {
+      provide: RECAPTCHA_V3_SITE_KEY,
+      useValue: 'mock-key' // Should be provided at app level
+    }
   ],
   templateUrl: './forgot-password.page.html'
 })
 export class ForgotPasswordPage {
-  private config = inject(APP_CONFIG);
+  private config: any = inject(APP_CONFIG, { optional: true });
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private recaptchaV3Service = inject(ReCaptchaV3Service);
@@ -71,18 +71,22 @@ export class ForgotPasswordPage {
     this.errorMessage.set(null);
     this.successMessage.set(null);
 
-    this.recaptchaV3Service.execute('forgotPassword').pipe(
-      switchMap((recaptchaToken) => {
+    this.recaptchaV3Service.execute('forgotPassword').subscribe({
+      next: (recaptchaToken) => {
         const email = this.forgotPasswordForm.value.email!;
-        return this.authService.forgotPassword(email, recaptchaToken);
-      })
-    ).subscribe({
-      next: (response) => {
-        this.isLoading.set(false);
-        this.successMessage.set('FORGOT_PASSWORD.SUCCESS'); // Will be translated in template
-        this.forgotPasswordForm.reset();
+        this.authService.forgotPassword(email, recaptchaToken).subscribe({
+          next: () => {
+            this.isLoading.set(false);
+            this.successMessage.set('FORGOT_PASSWORD.SUCCESS'); // Will be translated in template
+            this.forgotPasswordForm.reset();
+          },
+          error: () => {
+            this.isLoading.set(false);
+            this.errorMessage.set('LOGIN.ERRORS.SERVER_ERROR');
+          }
+        });
       },
-      error: (err) => {
+      error: () => {
         this.isLoading.set(false);
         this.errorMessage.set('LOGIN.ERRORS.SERVER_ERROR');
       }
