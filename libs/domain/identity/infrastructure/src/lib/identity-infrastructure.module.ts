@@ -2,10 +2,10 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService } from '@virteex/domain-identity-domain';
+import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService, WebAuthnService } from '@virteex/domain-identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
-import { UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema } from './persistence/identity.schemas';
+import { UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema, UserAuthenticatorSchema } from './persistence/identity.schemas';
 import { MikroOrmCompanyRepository } from './persistence/mikro-orm-company.repository';
 import { MikroOrmAuditLogRepository } from './persistence/mikro-orm-audit-log.repository';
 import { MikroOrmSessionRepository } from './persistence/mikro-orm-session.repository';
@@ -13,6 +13,11 @@ import { MikroOrmJobTitleRepository } from './persistence/mikro-orm-job-title.re
 
 import { Argon2AuthService } from './services/argon2-auth.service';
 import { KeycloakAuthService } from './services/keycloak-auth.service';
+import { WebAuthnService as InfrastructureWebAuthnService } from './services/webauthn.service';
+import { SessionSerializer } from './services/session.serializer';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { MicrosoftStrategy } from './strategies/microsoft.strategy';
+import { OktaStrategy } from './strategies/okta.strategy';
 import { NodemailerNotificationService } from './services/nodemailer-notification.service';
 import { DefaultRiskEngineService } from './services/risk-engine.service';
 import { MailQueueProducer } from './services/mail-queue.producer';
@@ -20,7 +25,32 @@ import { MailProcessor } from './services/mail.processor';
 import { GeoIpLiteAdapter } from './adapters/geo-ip-lite.adapter';
 import { GEO_IP_PORT } from '@virteex/domain-identity-domain';
 
-import { LoginUserUseCase, VerifyMfaUseCase, StoragePort, GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase, ListTenantsUseCase, UserInvitedListener, RefreshTokenUseCase, InitiateSignupUseCase, VerifySignupUseCase, CompleteOnboardingUseCase, UpdateSubscriptionUseCase, GetSubscriptionStatusUseCase, TokenGenerationService, GetJobTitlesUseCase, CheckSecurityContextUseCase, LogoutUserUseCase } from '@virteex/domain-identity-application';
+import {
+  LoginUserUseCase,
+  VerifyMfaUseCase,
+  StoragePort,
+  GetUserProfileUseCase,
+  UpdateUserProfileUseCase,
+  InviteUserUseCase,
+  UploadAvatarUseCase,
+  ListTenantsUseCase,
+  UserInvitedListener,
+  RefreshTokenUseCase,
+  InitiateSignupUseCase,
+  VerifySignupUseCase,
+  CompleteOnboardingUseCase,
+  UpdateSubscriptionUseCase,
+  GetSubscriptionStatusUseCase,
+  TokenGenerationService,
+  GetJobTitlesUseCase,
+  CheckSecurityContextUseCase,
+  LogoutUserUseCase,
+  HandleSocialLoginUseCase,
+  GeneratePasskeyRegistrationOptionsUseCase,
+  VerifyPasskeyRegistrationUseCase,
+  GeneratePasskeyLoginOptionsUseCase,
+  VerifyPasskeyLoginUseCase
+} from '@virteex/domain-identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/platform-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
 import { RedisCacheModule } from '@virteex/platform-cache';
@@ -33,7 +63,7 @@ import { AuthModule } from '@virteex/kernel-auth';
     ConfigModule,
     EventEmitterModule,
     AuthModule,
-    MikroOrmModule.forFeature([UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema]),
+    MikroOrmModule.forFeature([UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema, UserAuthenticatorSchema]),
     SharedInfrastructureStorageModule,
     RedisCacheModule.forRootAsync({
       inject: [ConfigService],
@@ -61,6 +91,11 @@ import { AuthModule } from '@virteex/kernel-auth';
     { provide: JobTitleRepository, useClass: MikroOrmJobTitleRepository },
     Argon2AuthService,
     KeycloakAuthService,
+    { provide: WebAuthnService, useClass: InfrastructureWebAuthnService },
+    SessionSerializer,
+    GoogleStrategy,
+    MicrosoftStrategy,
+    OktaStrategy,
     {
         provide: AuthService,
         useFactory: (config: ConfigService, argon: Argon2AuthService, keycloak: KeycloakAuthService) => {
@@ -91,7 +126,12 @@ import { AuthModule } from '@virteex/kernel-auth';
       TokenGenerationService,
     GetJobTitlesUseCase,
     CheckSecurityContextUseCase,
-    LogoutUserUseCase
+    LogoutUserUseCase,
+    HandleSocialLoginUseCase,
+    GeneratePasskeyRegistrationOptionsUseCase,
+    VerifyPasskeyRegistrationUseCase,
+    GeneratePasskeyLoginOptionsUseCase,
+    VerifyPasskeyLoginUseCase
   ],
   exports: [
     InitiateSignupUseCase,
@@ -111,6 +151,11 @@ import { AuthModule } from '@virteex/kernel-auth';
     GetJobTitlesUseCase,
     CheckSecurityContextUseCase,
     LogoutUserUseCase,
+    HandleSocialLoginUseCase,
+    GeneratePasskeyRegistrationOptionsUseCase,
+    VerifyPasskeyRegistrationUseCase,
+    GeneratePasskeyLoginOptionsUseCase,
+    VerifyPasskeyLoginUseCase,
     StoragePort,
     UserRepository,
     CompanyRepository,
@@ -118,6 +163,7 @@ import { AuthModule } from '@virteex/kernel-auth';
     SessionRepository,
     JobTitleRepository,
     AuthService,
+    WebAuthnService,
     RiskEngineService,
     RiskEvaluatorService,
     CachePort,

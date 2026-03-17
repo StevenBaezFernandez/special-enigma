@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from, lastValueFrom } from 'rxjs';
+import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
 import { LoginUserDto, RegisterUserDto, LoginResponseDto, VerifyMfaDto, InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto } from '@virteex/domain-identity-contracts';
 
 @Injectable({ providedIn: 'root' })
@@ -41,9 +42,16 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/social-register-info?token=${token}`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  loginWithPasskey(email?: string): Promise<any> {
-    return Promise.resolve({ id: 'mock-user-id' });
+  async registerPasskey(): Promise<any> {
+    const options = await lastValueFrom(this.http.get<any>(`${this.apiUrl}/passkey/register-options`));
+    const attResp = await startRegistration({ optionsJSON: options });
+    return lastValueFrom(this.http.post(`${this.apiUrl}/passkey/register-verify`, attResp));
+  }
+
+  async loginWithPasskey(email?: string): Promise<any> {
+    const options = await lastValueFrom(this.http.post<any>(`${this.apiUrl}/passkey/login-options`, { email }));
+    const asseResp = await startAuthentication({ optionsJSON: options });
+    return lastValueFrom(this.http.post(`${this.apiUrl}/passkey/login-verify`, asseResp));
   }
 
   verify2fa(code: string, tempToken: string): Observable<any> {

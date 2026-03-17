@@ -1,5 +1,6 @@
-import { Entity, PrimaryKey, Property, ManyToOne, Unique } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, ManyToOne, Unique, OneToMany, Collection } from '@mikro-orm/core';
 import { Company } from '@virteex/domain-identity-domain';
+import { UserAuthenticatorOrmEntity } from './user-authenticator.orm-entity';
 import { v4 as uuidv4 } from 'uuid';
 
 @Entity({ schema: 'identity', tableName: 'user' })
@@ -68,6 +69,23 @@ export class UserOrmEntity {
 
   @Property({ nullable: true })
   lockedUntil?: Date;
+
+  // Social Identity fields
+  @Property({ nullable: true })
+  @Unique()
+  googleId?: string;
+
+  @Property({ nullable: true })
+  @Unique()
+  microsoftId?: string;
+
+  @Property({ nullable: true })
+  @Unique()
+  oktaId?: string;
+
+  // Passkey Authenticators
+  @OneToMany(() => UserAuthenticatorOrmEntity, (a) => a.user, { orphanRemoval: true })
+  authenticators = new Collection<UserAuthenticatorOrmEntity>(this);
 
   @Property()
   createdAt: Date = new Date();

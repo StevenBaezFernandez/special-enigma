@@ -104,7 +104,11 @@ export class LoginPage implements OnInit {
   }
 
   socialLogin(provider: string) {
-    const apiUrl = `${window.location.origin}/api/v1/auth`;
+    if (provider === 'passkey') {
+      this.onLoginWithPasskey();
+      return;
+    }
+    const apiUrl = `${window.location.origin}/api/auth`;
     window.location.href = `${apiUrl}/${provider}`;
   }
 
@@ -114,11 +118,8 @@ export class LoginPage implements OnInit {
     this.errorMessage.set(null);
 
     this.authService.loginWithPasskey(email || undefined)
-      .then((user) => {
-        if (user) {
-          this.handleSuccess(user);
-        }
-        this.isLoggingIn.set(false);
+      .then((response) => {
+        this.handleSuccess(response);
       })
       .catch((err) => {
         console.error('Passkey login error:', err);

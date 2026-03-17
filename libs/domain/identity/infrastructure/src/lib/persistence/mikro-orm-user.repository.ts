@@ -16,12 +16,22 @@ export class MikroOrmUserRepository implements UserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const entity = await this.em.findOne(UserOrmEntity, { email });
+    const entity = await this.em.findOne(UserOrmEntity, { email }, { populate: ['authenticators'] as any });
     return entity ? UserMapper.toDomain(entity) : null;
   }
 
   async findById(id: string): Promise<User | null> {
-    const entity = await this.em.findOne(UserOrmEntity, { id });
+    const entity = await this.em.findOne(UserOrmEntity, { id }, { populate: ['authenticators'] as any });
+    return entity ? UserMapper.toDomain(entity) : null;
+  }
+
+  async findBySocialId(provider: 'google' | 'microsoft' | 'okta', id: string): Promise<User | null> {
+    const filter: any = {};
+    if (provider === 'google') filter.googleId = id;
+    else if (provider === 'microsoft') filter.microsoftId = id;
+    else if (provider === 'okta') filter.oktaId = id;
+
+    const entity = await this.em.findOne(UserOrmEntity, filter, { populate: ['authenticators'] as any });
     return entity ? UserMapper.toDomain(entity) : null;
   }
 

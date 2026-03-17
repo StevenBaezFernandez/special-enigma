@@ -1,5 +1,6 @@
-import { User } from '@virteex/domain-identity-domain';
+import { User, UserAuthenticator } from '@virteex/domain-identity-domain';
 import { UserOrmEntity } from '../persistence/entities/user.orm-entity';
+import { UserAuthenticatorOrmEntity } from '../persistence/entities/user-authenticator.orm-entity';
 
 export class UserMapper {
   static toDomain(entity: UserOrmEntity): User {
@@ -26,6 +27,24 @@ export class UserMapper {
     user.lastLoginAt = entity.lastLoginAt;
     user.failedLoginAttempts = entity.failedLoginAttempts;
     user.lockedUntil = entity.lockedUntil;
+    user.googleId = entity.googleId;
+    user.microsoftId = entity.microsoftId;
+    user.oktaId = entity.oktaId;
+
+    if (entity.authenticators && entity.authenticators.isInitialized()) {
+      user.authenticators = entity.authenticators.getItems().map(
+        (a) =>
+          new UserAuthenticator(
+            a.credentialID,
+            a.publicKey,
+            a.counter,
+            a.credentialDeviceType,
+            a.credentialBackedUp,
+            a.transports
+          )
+      );
+    }
+
     user.createdAt = entity.createdAt;
     user.updatedAt = entity.updatedAt;
     return user;
@@ -55,6 +74,33 @@ export class UserMapper {
     entity.lastLoginAt = domain.lastLoginAt;
     entity.failedLoginAttempts = domain.failedLoginAttempts;
     entity.lockedUntil = domain.lockedUntil;
+    entity.googleId = domain.googleId;
+    entity.microsoftId = domain.microsoftId;
+    entity.oktaId = domain.oktaId;
+
+    if (domain.authenticators) {
+      domain.authenticators.forEach((a) => {
+        let authEntity = entity.authenticators.getItems().find(e => e.id === a.id);
+        if (authEntity) {
+          authEntity.counter = a.counter;
+          authEntity.credentialBackedUp = a.credentialBackedUp;
+          authEntity.transports = a.transports;
+        } else {
+          authEntity = new UserAuthenticatorOrmEntity(
+            a.credentialID,
+            a.publicKey,
+            a.counter,
+            a.credentialDeviceType,
+            a.credentialBackedUp,
+            entity,
+            a.transports
+          );
+          authEntity.id = a.id;
+          entity.authenticators.add(authEntity);
+        }
+      });
+    }
+
     entity.createdAt = domain.createdAt;
     entity.updatedAt = domain.updatedAt;
     return entity;

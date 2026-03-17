@@ -1,5 +1,6 @@
 
 import type { Company } from './company.entity';
+import { UserAuthenticator } from './user-authenticator.entity';
 import { v4 as uuidv4 } from 'uuid';
 
 export class User {
@@ -26,6 +27,14 @@ export class User {
   lastLoginAt?: Date;
   failedLoginAttempts = 0;
   lockedUntil?: Date;
+
+  // Social Identity fields
+  googleId?: string;
+  microsoftId?: string;
+  oktaId?: string;
+
+  // Passkey Authenticators
+  authenticators: UserAuthenticator[] = [];
 
   createdAt: Date = new Date();
 

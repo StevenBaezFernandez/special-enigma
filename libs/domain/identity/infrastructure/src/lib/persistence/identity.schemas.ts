@@ -1,5 +1,5 @@
 import { EntitySchema } from '@mikro-orm/core';
-import { User, Company, AuditLog, Session, JobTitle } from '@virteex/domain-identity-domain';
+import { User, Company, AuditLog, Session, JobTitle, UserAuthenticator } from '@virteex/domain-identity-domain';
 
 export const UserSchema = new EntitySchema<any>({
   class: User,
@@ -27,6 +27,10 @@ export const UserSchema = new EntitySchema<any>({
     lastLoginAt: { type: 'Date', nullable: true },
     failedLoginAttempts: { type: 'number', default: 0 },
     lockedUntil: { type: 'Date', nullable: true },
+    googleId: { type: 'string', nullable: true, unique: true },
+    microsoftId: { type: 'string', nullable: true, unique: true },
+    oktaId: { type: 'string', nullable: true, unique: true },
+    authenticators: { kind: '1:m', entity: 'UserAuthenticator', mappedBy: 'user', orphanRemoval: true },
     createdAt: { type: 'Date', onCreate: () => new Date() },
     updatedAt: { type: 'Date', onCreate: () => new Date(), onUpdate: () => new Date() },
   },
@@ -74,5 +78,21 @@ export const JobTitleSchema = new EntitySchema<any>({
     id: { primary: true, type: 'uuid' },
     tenantId: { type: 'string' },
     name: { type: 'string' },
+  },
+});
+
+export const UserAuthenticatorSchema = new EntitySchema<any>({
+  class: UserAuthenticator,
+  schema: 'identity',
+  tableName: 'user_authenticator',
+  properties: {
+    id: { primary: true, type: 'uuid' },
+    credentialID: { type: 'blob' },
+    publicKey: { type: 'blob' },
+    counter: { type: 'number' },
+    credentialDeviceType: { type: 'string' },
+    credentialBackedUp: { type: 'boolean' },
+    transports: { type: 'json', nullable: true },
+    user: { kind: 'm:1', entity: 'User' },
   },
 });
