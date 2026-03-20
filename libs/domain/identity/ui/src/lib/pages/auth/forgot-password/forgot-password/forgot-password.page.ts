@@ -32,7 +32,7 @@ import { AuthButtonComponent } from '../../components/auth-button/auth-button.co
     ReCaptchaV3Service,
     {
       provide: RECAPTCHA_V3_SITE_KEY,
-      useValue: 'mock-key' // Should be provided at app level
+      useValue: 'RECAPTCHA_SITE_KEY_REQUIRED' // Should be provided at app level
     }
   ],
   templateUrl: './forgot-password.page.html'

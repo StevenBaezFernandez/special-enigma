@@ -5,7 +5,7 @@ import {
 } from '@mikro-orm/core';
 import { DataAuditLog } from '../entities/data-audit-log.entity';
 import { getTenantContext } from '@virteex/kernel-tenant-context';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
 import { createHmac } from 'crypto';
 
 @Injectable()
@@ -51,7 +51,13 @@ export class DataAuditSubscriber implements EventSubscriber {
       );
 
       // Level 5: Immutable Journal (Chained hashing)
-      const secret = process.env['AUDIT_HMAC_SECRET'] || 'audit-secret-fail-safe';
+      const secret = process.env['AUDIT_HMAC_SECRET'];
+      if (!secret && (process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production')) {
+          this.logger.error('CRITICAL: AUDIT_HMAC_SECRET is missing in production. Audit integrity cannot be guaranteed.');
+          throw new InternalServerErrorException('Audit security failure: HMAC secret is required.');
+      }
+
+      const effectiveSecret = secret || 'audit-secret-dev-only';
 
       // Fetch previous hash for this tenant
       const lastEntry = await args.em.getConnection().execute(
@@ -61,7 +67,7 @@ export class DataAuditSubscriber implements EventSubscriber {
       log.previousHash = lastEntry[0]?.hash || 'genesis-audit-chain';
 
       const content = `${log.timestamp.toISOString()}:${log.entityType}:${log.entityId}:${log.operation}:${JSON.stringify(log.changes)}:${log.userId || ''}:${log.tenantId || ''}:${log.previousHash}`;
-      log.hash = createHmac('sha256', secret).update(content).digest('hex');
+      log.hash = createHmac('sha256', effectiveSecret).update(content).digest('hex');
 
       logs.push(log);
     }

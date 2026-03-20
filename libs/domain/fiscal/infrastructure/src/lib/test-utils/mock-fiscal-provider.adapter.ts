@@ -22,6 +22,6 @@ export class MockFiscalProvider implements FiscalProvider {
   }
 
   async send(document: any): Promise<any> {
-    return { success: true, mock: true };
+    return { success: true, simulation: true };
   }
 }

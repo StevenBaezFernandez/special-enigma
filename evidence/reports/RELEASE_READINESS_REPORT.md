@@ -1,20 +1,20 @@
 # Virteex ERP Release Readiness Report
 
-**Date:** 2026-03-04T22:05:56.205Z
+**Date:** 2026-03-15T00:00:00.000Z
 **Version:** DEV-SNAPSHOT
 **Single source of truth:** config/readiness/operational-readiness.sot.json
-**Source hash (sha256):** 6fe150916a41a5db41d28bbb3faf1222c7b69cd19a66be137db3087a40c77860
+**Source hash (sha256):** 5e25c741dd33c62c85ef47febd5578f9a7f6a5e636fe9d35256e5f02ee67cd98
 
 ## 1. Commercial Readiness
 
 | Module | MX | BR | CO | US |
 | --- | --- | --- | --- | --- |
-| fiscal | GA | GA | GA | Beta |
-| billing | GA | GA | GA | GA |
+| fiscal | GA | Beta | Beta | Beta |
+| billing | GA | Beta | Beta | GA |
 | inventory | GA | GA | GA | GA |
-| marketplace | Beta | Beta | Beta | Beta |
-| manufacturing | GA | GA | GA | GA |
-| projects | GA | GA | GA | GA |
+| marketplace | Beta | Beta | No listo | Beta |
+| manufacturing | GA | GA | No listo | GA |
+| projects | GA | GA | Beta | GA |
 
 ## 2. Security Evidence
 
@@ -34,7 +34,7 @@
 
 ## 4. Release Evidence Pack
 
-- **Readiness state:** ready-with-evidence
+- **Readiness state:** blocked
 - **Evidence path:** evidence/releases/DEV-SNAPSHOT
 
 | Gate | Status |
@@ -42,8 +42,8 @@
 | commercial | PASSED |
 | docs-consistency | PASSED |
 | plugin-isolation | PASSED |
-| production-readiness | PASSED |
-| rls-audit | PASSED |
+| production-readiness | FAILED |
+| rls-audit | FAILED |
 
 ## 5. SLA by Tenant Mode / Region
 

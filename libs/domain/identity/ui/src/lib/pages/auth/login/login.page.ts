@@ -35,7 +35,7 @@ import { OtpComponent } from '@virteex/shared-ui';
     ReCaptchaV3Service,
     {
         provide: RECAPTCHA_V3_SITE_KEY,
-        useValue: 'mock-key'
+        useValue: 'RECAPTCHA_SITE_KEY_REQUIRED'
     }
   ],
   templateUrl: './login.page.html',

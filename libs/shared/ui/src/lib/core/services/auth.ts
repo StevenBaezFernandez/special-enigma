@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   refreshAccessToken(): Observable<string> {
-    return of('fake-token');
+    return of('invalid-token-fallback');
   }
 
   hasPermissions(requiredPermissions: string[]): boolean {

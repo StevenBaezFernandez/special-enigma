@@ -2,7 +2,7 @@
   "version": "2026.03-5.0-Hardened",
   "generatedFrom": {
     "source": "config/readiness/operational-readiness.sot.json",
-    "sha256": "6fe150916a41a5db41d28bbb3faf1222c7b69cd19a66be137db3087a40c77860"
+    "sha256": "5e25c741dd33c62c85ef47febd5578f9a7f6a5e636fe9d35256e5f02ee67cd98"
   },
   "countries": [
     "MX",
@@ -34,12 +34,12 @@
         "allowSimulation": false
       },
       "BR": {
-        "status": "GA",
+        "status": "Beta",
         "provider": "SEFAZ",
         "allowSimulation": false
       },
       "CO": {
-        "status": "GA",
+        "status": "Beta",
         "provider": "DIAN",
         "allowSimulation": false
       },
@@ -59,11 +59,11 @@
         "allowSimulation": false
       },
       "BR": {
-        "status": "GA",
+        "status": "Beta",
         "allowSimulation": false
       },
       "CO": {
-        "status": "GA",
+        "status": "Beta",
         "allowSimulation": false
       },
       "US": {
@@ -107,7 +107,7 @@
         "requiresHardenedSandbox": true
       },
       "CO": {
-        "status": "Beta",
+        "status": "No listo",
         "requiresHardenedSandbox": true
       },
       "US": {
@@ -129,7 +129,7 @@
         "allowSimulation": false
       },
       "CO": {
-        "status": "GA",
+        "status": "No listo",
         "allowSimulation": false
       },
       "US": {
@@ -151,7 +151,7 @@
         "allowSimulation": false
       },
       "CO": {
-        "status": "GA",
+        "status": "Beta",
         "allowSimulation": false
       },
       "US": {

@@ -4,12 +4,13 @@ Fuente de verdad técnica: `config/readiness/commercial-eligibility.matrix.json`
 
 ## Estado por país y módulo
 
-| País | Fiscal | Billing | Inventory | Marketplace | Manufacturing | Projects | Fixed Assets |
-|---|---|---|---|---|
-| MX | GA | GA | GA | Beta | Beta | Beta | Beta |
-| BR | Beta | Beta | GA | Beta | Beta | Beta | Beta |
-| CO | Beta | Beta | GA | No listo | No listo | Beta | Beta |
-| US | GA | GA | GA | Beta | Beta | Beta | Beta |
+| País | Fiscal | Billing | Inventory | Marketplace | Manufacturing | Projects | Fixed Assets | Payroll |
+|---|---|---|---|---|---|---|---|---|
+| MX | GA | GA | GA | Beta | GA | GA | - | - |
+| BR | Beta | Beta | GA | Beta | GA | GA | - | - |
+| CO | Beta | Beta | GA | No listo | No listo | Beta | - | - |
+| US | Beta | GA | GA | Beta | GA | GA | - | - |
+| DO | GA | GA | GA | Beta | GA | GA | - | - |
 
 ## Reglas de activación y venta
 

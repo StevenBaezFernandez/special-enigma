@@ -48,7 +48,7 @@ export function passwordMatchValidator(
     ReCaptchaV3Service,
     {
         provide: RECAPTCHA_V3_SITE_KEY,
-        useValue: 'mock-key'
+        useValue: 'RECAPTCHA_SITE_KEY_REQUIRED'
     }
   ],
   templateUrl: './register.page.html',
