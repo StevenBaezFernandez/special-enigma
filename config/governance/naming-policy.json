@@ -21,6 +21,10 @@
       "allowedPrefixes": ["worker-"]
     },
     {
+      "pathRegex": "^apps/edge/",
+      "allowedPrefixes": ["bff-"]
+    },
+    {
       "pathRegex": "^libs/domain/",
       "allowedPrefixes": ["domain-", "application-", "api-", "infra-"]
     }

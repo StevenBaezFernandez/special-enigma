@@ -1,0 +1,60 @@
+{
+  "name": "bff-site-public",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/edge/bff-site-public/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/edge/bff-site-public",
+        "main": "apps/edge/bff-site-public/src/main.ts",
+        "tsConfig": "apps/edge/bff-site-public/tsconfig.app.json",
+        "compiler": "tsc",
+        "target": "node",
+        "webpackConfig": "apps/edge/bff-site-public/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        },
+        "development": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "bff-site-public:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "bff-site-public:build:development"
+        },
+        "production": {
+          "buildTarget": "bff-site-public:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/edge/bff-site-public/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": [
+    "scope:site",
+    "type:bff",
+    "platform:node"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "bff-cms-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "implicitDependencies": ["bff-cms"],
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "options": {
+        "jestConfig": "apps/edge/bff-cms-e2e/jest.config.cts",
+        "passWithNoTests": true
+      },
+      "dependsOn": ["bff-cms:build", "bff-cms:serve"]
+    }
+  }
+}
