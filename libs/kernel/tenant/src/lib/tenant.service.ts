@@ -84,6 +84,9 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
         status: TenantStatus.PROVISIONING,
         version: 1,
         isFrozen: false,
+        fenceGeneration: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
     });
     await this.em.persistAndFlush(control);
 

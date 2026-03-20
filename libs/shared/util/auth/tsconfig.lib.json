@@ -1,10 +1,13 @@
 {
-  "extends": "../../../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../../dist/libs/shared/util/auth",
     "declaration": true,
     "rootDir": "../../../../",
-    "types": []
+    "types": [],
+    "moduleResolution": "node"
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts"
+  ]
 }
