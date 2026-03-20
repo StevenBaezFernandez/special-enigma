@@ -1,13 +1,8 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
-    "jest.preset.js": [
-      "{workspaceRoot}/jest.preset.js"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "jest.preset.js": ["{workspaceRoot}/jest.preset.js"],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -66,7 +61,15 @@
         "apps/api-purchasing-e2e/**/*",
         "apps/api-bi-e2e/**/*",
         "apps/api-admin-e2e/**/*",
-        "apps/api-fixed-assets-e2e/**/*"
+        "apps/api-fixed-assets-e2e/**/*",
+        "apps/edge/bff-portal-e2e/**/*",
+        "apps/edge/bff-pos-e2e/**/*",
+        "apps/edge/bff-wms-e2e/**/*",
+        "apps/edge/bff-shopfloor-e2e/**/*",
+        "apps/edge/bff-support-e2e/**/*",
+        "apps/edge/bff-cms-e2e/**/*",
+        "apps/edge/bff-site-public-e2e/**/*",
+        "apps/edge/bff-storefront-e2e/**/*"
       ]
     },
     {
@@ -79,40 +82,22 @@
   "targetDefaults": {
     "@angular/build:application": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "@nx/esbuild:esbuild": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "@nx/js:tsc": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "@nx/vitest:test": {
       "cache": true,
-      "inputs": [
-        "default",
-        "^production"
-      ]
+      "inputs": ["default", "^production"]
     },
     "lint": {
       "cache": true,

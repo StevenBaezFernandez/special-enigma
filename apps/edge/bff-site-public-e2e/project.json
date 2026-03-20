@@ -1,0 +1,17 @@
+{
+  "name": "bff-site-public-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "implicitDependencies": ["bff-site-public"],
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "options": {
+        "jestConfig": "apps/edge/bff-site-public-e2e/jest.config.cts",
+        "passWithNoTests": true
+      },
+      "dependsOn": ["bff-site-public:build", "bff-site-public:serve"]
+    }
+  }
+}

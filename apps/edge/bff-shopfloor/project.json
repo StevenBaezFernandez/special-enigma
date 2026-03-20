@@ -1,0 +1,60 @@
+{
+  "name": "bff-shopfloor",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/edge/bff-shopfloor/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/edge/bff-shopfloor",
+        "main": "apps/edge/bff-shopfloor/src/main.ts",
+        "tsConfig": "apps/edge/bff-shopfloor/tsconfig.app.json",
+        "compiler": "tsc",
+        "target": "node",
+        "webpackConfig": "apps/edge/bff-shopfloor/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        },
+        "development": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "bff-shopfloor:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "bff-shopfloor:build:development"
+        },
+        "production": {
+          "buildTarget": "bff-shopfloor:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/edge/bff-shopfloor/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": [
+    "scope:shopfloor",
+    "type:bff",
+    "platform:node"
+  ]
+}
