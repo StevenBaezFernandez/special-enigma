@@ -1,12 +1,13 @@
 {
-  "extends": "../../../../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../../../dist/libs/shared/util/client/http",
     "declaration": true,
     "types": [
       "node"
     ],
-    "rootDir": "../../../../../"
+    "rootDir": "../../../../../",
+    "moduleResolution": "node"
   },
   "include": [
     "src/**/*.ts"

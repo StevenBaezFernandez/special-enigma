@@ -1,11 +1,12 @@
 {
-  "extends": "../../../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../../dist/libs/domain/billing/infrastructure",
     "declaration": true,
     "types": [
       "node"
-    ]
+    ],
+    "moduleResolution": "node"
   },
   "include": [
     "src/**/*.ts"

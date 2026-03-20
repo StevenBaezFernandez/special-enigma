@@ -231,7 +231,7 @@ export class MigrationOrchestratorService {
           }
 
           const rowExpression = columns
-            .map((column) => `COALESCE("${column}"::text, '<null>')`)
+            .map((column: string) => `COALESCE("${column}"::text, '<null>')`)
             .join(` || '|' || `);
 
           try {

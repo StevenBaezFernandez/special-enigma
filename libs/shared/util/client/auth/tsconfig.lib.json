@@ -1,12 +1,20 @@
 {
-  "extends": "../../../../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../../../dist/libs/shared/util/client/auth",
     "declaration": true,
-    "types": ["node"],
-    "rootDir": "../../../../../"
+    "types": [
+      "node"
+    ],
+    "rootDir": "../../../../../",
+    "moduleResolution": "node"
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts"
+  ],
   "files": [],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }

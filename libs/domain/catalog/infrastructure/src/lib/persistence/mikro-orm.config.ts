@@ -17,13 +17,13 @@ export default defineConfig({
     },
   },
   dbName: 'virteex_catalog', // Domain specific DB
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env['DB_HOST'] || 'localhost',
   port: 5432,
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'password',
-  debug: process.env.NODE_ENV !== 'production',
+  user: process.env['DB_USER'] || 'postgres',
+  password: process.env['DB_PASSWORD'] || 'password',
+  debug: process.env['NODE_ENV'] !== 'production',
   replicas: [
-    { name: 'read-1', host: process.env.DB_REPLICA_HOST || 'localhost' },
+    { name: 'read-1', host: process.env['DB_REPLICA_HOST'] || 'localhost' },
   ],
   migrations: {
     path: './migrations',
