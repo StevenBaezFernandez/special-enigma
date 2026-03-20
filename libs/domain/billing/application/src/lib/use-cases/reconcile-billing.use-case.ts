@@ -25,7 +25,7 @@ export class ReconcileBillingUseCase {
     let matched = 0;
 
     for (const invoice of localInvoices) {
-        if (!invoice.fiscalStamp?.uuid) {
+        if (!invoice.fiscalUuid) {
             discrepancies.push({ invoiceId: invoice.id, reason: 'Missing fiscal stamp' });
         } else {
             matched++;

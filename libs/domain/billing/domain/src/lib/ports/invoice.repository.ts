@@ -7,6 +7,7 @@ export interface InvoiceRepository {
   findById(id: string): Promise<Invoice | null>;
   findAll(): Promise<Invoice[]>;
   findByTenantId(tenantId: string): Promise<Invoice[]>;
+  findByTenantAndDateRange(tenantId: string, startDate: Date, endDate: Date): Promise<Invoice[]>;
   countByTenantId(tenantId: string): Promise<number>;
 }
 

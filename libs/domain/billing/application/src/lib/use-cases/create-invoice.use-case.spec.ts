@@ -24,6 +24,7 @@ describe('CreateInvoiceUseCase', () => {
           useValue: {
             save: vi.fn(),
             countByTenantId: vi.fn().mockResolvedValue(0),
+            findByTenantAndDateRange: vi.fn(),
           },
         },
         {

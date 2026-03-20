@@ -7,6 +7,7 @@ import { SUBSCRIPTION_REPOSITORY } from '@virteex/domain-subscription-domain';
 
 const mockInvoiceRepository = {
   countByTenantId: vi.fn(),
+  findByTenantAndDateRange: vi.fn(),
 };
 
 const mockSubscriptionRepository = {
