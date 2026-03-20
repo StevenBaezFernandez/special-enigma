@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MessagingModule } from '@virteex/kernel-messaging';
 import { CrmInfrastructureModule } from '@virteex/domain-crm-infrastructure';
 import { CreateSaleUseCase } from './use-cases/create-sale.use-case';
 import { ListSalesUseCase } from './use-cases/list-sales.use-case';
@@ -10,7 +11,7 @@ import { CancelSaleUseCase } from './use-cases/cancel-sale.use-case';
 import { CompleteSaleUseCase } from './use-cases/complete-sale.use-case';
 
 @Module({
-  imports: [CrmInfrastructureModule],
+  imports: [CrmInfrastructureModule, MessagingModule],
   providers: [
     CreateSaleUseCase,
     ListSalesUseCase,

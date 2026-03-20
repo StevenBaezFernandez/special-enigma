@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 
 export interface SagaStep<T> {
   name: string;
@@ -38,7 +38,10 @@ export abstract class SagaPersistence {
 export class SagaOrchestrator {
   private readonly logger = new Logger(SagaOrchestrator.name);
 
-  constructor(private readonly persistence?: SagaPersistence) {}
+  constructor(
+    @Optional()
+    private readonly persistence?: SagaPersistence
+  ) {}
 
   /**
    * Executes a Saga.
