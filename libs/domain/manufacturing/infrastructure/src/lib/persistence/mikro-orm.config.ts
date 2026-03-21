@@ -4,6 +4,10 @@ import { TenantModelSubscriber } from '@virteex/kernel-tenant';
 import { getTenantContext } from '@virteex/kernel-auth';
 import { join } from 'path';
 
+if (process.env.NODE_ENV !== 'test' && !process.env.DB_PASSWORD) {
+  throw new Error('CRITICAL: DB_PASSWORD environment variable is not set. Fail-fast for security.');
+}
+
 export default defineConfig({
   entities: [ProductionOrder],
   subscribers: [new TenantModelSubscriber()],
@@ -21,7 +25,7 @@ export default defineConfig({
   host: process.env.DB_HOST || 'localhost',
   port: 5432,
   user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'password',
+  password: process.env.DB_PASSWORD,
   debug: process.env.NODE_ENV !== 'production',
   migrations: {
     path: join(__dirname, '../migrations'),

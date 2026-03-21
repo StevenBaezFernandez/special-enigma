@@ -1,17 +1,30 @@
 {
   "name": "edge-site-public-e2e",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["edge-site-public-app"],
+  "implicitDependencies": [
+    "edge-site-public-app"
+  ],
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/edge/site-public-e2e/app/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": ["edge-site-public:build-app", "edge-site-public:serve-app"]
+      "dependsOn": [
+        "edge-site-public:build-app",
+        "edge-site-public:serve-app"
+      ]
     }
-  }
+  },
+  "tags": [
+    "scope:site",
+    "type:e2e",
+    "platform:node",
+    "criticality:medium"
+  ]
 }

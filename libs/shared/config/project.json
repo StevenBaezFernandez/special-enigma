@@ -1,12 +1,19 @@
 {
   "name": "shared-config",
   "projectType": "library",
-  "tags": ["scope:shared", "type:util"],
+  "tags": [
+    "scope:shared",
+    "type:util",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
   "sourceRoot": "libs/shared/config/src",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/shared/config",
         "main": "libs/shared/config/src/index.ts",

@@ -1,17 +1,30 @@
 {
   "name": "edge-shopfloor-e2e",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["edge-shopfloor-app"],
+  "implicitDependencies": [
+    "edge-shopfloor-app"
+  ],
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/edge/shopfloor-e2e/app/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": ["edge-shopfloor-app:build", "edge-shopfloor-app:serve"]
+      "dependsOn": [
+        "edge-shopfloor-app:build",
+        "edge-shopfloor-app:serve"
+      ]
     }
-  }
+  },
+  "tags": [
+    "scope:shopfloor",
+    "type:e2e",
+    "platform:node",
+    "criticality:medium"
+  ]
 }

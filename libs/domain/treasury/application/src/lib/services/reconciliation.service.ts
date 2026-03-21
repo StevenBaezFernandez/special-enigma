@@ -1,10 +1,10 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { StatementLine } from '@virteex/domain-treasury-contracts';
-import { TransactionRepository } from '@virteex/domain-treasury-domain';
+import { TransactionRepository, Transaction } from '@virteex/domain-treasury-domain';
 
 export interface ReconciliationMatch {
     statementLine: StatementLine;
-    candidateTransactions: any[];
+    candidateTransactions: Transaction[];
     confidence: number;
     matchType: 'EXACT' | 'PARTIAL' | 'NONE';
 }
@@ -21,12 +21,12 @@ export class ReconciliationService {
         this.logger.log(`Starting reconciliation for account ${bankAccountId} with ${lines.length} lines`);
 
         const transactions = await this.transactionRepo.findAll(tenantId);
-        const candidatePool = transactions.filter(t => (t as any).bankAccountId === bankAccountId && !(t as any).reconciled);
+        const candidatePool = transactions.filter(t => (t.bankAccount as any)?.id === bankAccountId && !(t as any).reconciled);
 
         return lines.map(line => this.findMatch(line, candidatePool));
     }
 
-    private findMatch(line: StatementLine, candidates: any[]): ReconciliationMatch {
+    private findMatch(line: StatementLine, candidates: Transaction[]): ReconciliationMatch {
         const exactMatches = candidates.filter(c =>
             Math.abs(c.amount - line.amount) < 0.01 &&
             this.isSameDay(c.date, line.date)

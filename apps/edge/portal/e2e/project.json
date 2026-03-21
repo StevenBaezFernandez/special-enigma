@@ -1,17 +1,30 @@
 {
   "name": "edge-portal-e2e",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["edge-portal-app"],
+  "implicitDependencies": [
+    "edge-portal-app"
+  ],
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/edge/portal-e2e/app/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": ["edge-portal-app:build", "edge-portal-app:serve"]
+      "dependsOn": [
+        "edge-portal-app:build",
+        "edge-portal-app:serve"
+      ]
     }
-  }
+  },
+  "tags": [
+    "scope:portal",
+    "type:e2e",
+    "platform:node",
+    "criticality:medium"
+  ]
 }

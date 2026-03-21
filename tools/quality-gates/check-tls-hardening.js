@@ -14,6 +14,14 @@ const FORBIDDEN_PATTERNS = [
   {
       regex: /process\.env\[['"]DB_PASSWORD['"]\]\s*\|\|\s*['"]password['"]/g,
       reason: 'Unsafe fallback for DB_PASSWORD detected.'
+  },
+  {
+      regex: /process\.env\.DB_PASSWORD\s*\|\|\s*['"]password['"]/g,
+      reason: 'Unsafe fallback for DB_PASSWORD detected.'
+  },
+  {
+      regex: /connectionString:\s*process\.env\.DATABASE_URL\s*\|\|\s*['"]postgresql:\/\/postgres:postgres@localhost:5432\/virteex['"]/g,
+      reason: 'Hardcoded connection string fallback for DATABASE_URL detected.'
   }
 ];
 
@@ -26,7 +34,7 @@ function getFiles(dir, allFiles = []) {
       if (file !== 'node_modules' && file !== '.git' && file !== 'dist') {
         getFiles(name, allFiles);
       }
-    } else if (name.endsWith('.ts') && !name.includes('.spec.ts') && !name.includes('.test.ts')) {
+    } else if (/\.(ts|js|mjs|cjs|sh)$/.test(name) && !name.includes('.spec.ts') && !name.includes('.test.ts')) {
        allFiles.push(name);
     }
   }
@@ -34,9 +42,11 @@ function getFiles(dir, allFiles = []) {
 }
 
 let errors = 0;
-const productiveFiles = [...getFiles('apps'), ...getFiles('libs')];
+const productiveFiles = [...getFiles('apps'), ...getFiles('libs'), ...getFiles('tools')];
 
 for (const file of productiveFiles) {
+  if (file === 'tools/quality-gates/check-tls-hardening.js') continue; // Skip self
+
   const content = readFileSync(file, 'utf8');
   for (const pattern of FORBIDDEN_PATTERNS) {
     if (pattern.regex.test(content)) {

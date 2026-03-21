@@ -20,15 +20,21 @@ export class Requisition {
 
     status: 'Draft' | 'Pending Approval' | 'Approved' | 'Rejected' = 'Draft';
 
-    items!: any[]; // Using json for simplicity as per quick implementation, ideally separate entity
+    items!: RequisitionItem[];
 
-  constructor(tenantId: string, reqNumber: string, requester: string, department: string, date: Date, items: any[]) {
+  constructor(tenantId: string, reqNumber: string, requester: string, department: string, date: Date, items: RequisitionItem[]) {
     this.tenantId = tenantId;
     this.reqNumber = reqNumber;
     this.requester = requester;
     this.department = department;
     this.date = date;
     this.items = items;
-    this.total = items.reduce((sum: number, item: any) => sum + (item.quantity * item.unitPrice), 0).toFixed(2);
+    this.total = items.reduce((sum: number, item: RequisitionItem) => sum + (item.quantity * item.unitPrice), 0).toFixed(2);
   }
+}
+
+export interface RequisitionItem {
+  productId: string;
+  quantity: number;
+  unitPrice: number;
 }

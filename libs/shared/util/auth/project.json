@@ -5,7 +5,9 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/shared/util/auth",
         "main": "libs/shared/util/auth/src/index.ts",
@@ -13,5 +15,11 @@
         "assets": []
       }
     }
-  }
+  },
+  "tags": [
+    "scope:shared",
+    "type:util",
+    "platform:agnostic",
+    "criticality:medium"
+  ]
 }

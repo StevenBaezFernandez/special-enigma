@@ -1,17 +1,30 @@
 {
   "name": "edge-pos-e2e",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["edge-pos-app"],
+  "implicitDependencies": [
+    "edge-pos-app"
+  ],
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/edge/pos-e2e/app/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": ["edge-pos-app:build", "edge-pos-app:serve"]
+      "dependsOn": [
+        "edge-pos-app:build",
+        "edge-pos-app:serve"
+      ]
     }
-  }
+  },
+  "tags": [
+    "scope:pos",
+    "type:e2e",
+    "platform:node",
+    "criticality:medium"
+  ]
 }

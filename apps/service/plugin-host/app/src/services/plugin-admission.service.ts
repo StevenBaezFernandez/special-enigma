@@ -147,11 +147,11 @@ export class PluginAdmissionService {
 
   private async performSastScan(pluginName: string): Promise<{ valid: boolean; details?: unknown }> {
     if (!this.sonarToken) {
-      const isProduction = this.nodeEnv === 'production' || process.env.RELEASE_STAGE === 'production';
-      if (isProduction) {
-        return { valid: false, details: 'SONAR_TOKEN is required in production.' };
+      const isLocal = this.nodeEnv === 'local';
+      if (isLocal) {
+        return { valid: true, details: 'SONAR_TOKEN not configured. Local development mode bypass.' };
       }
-      return { valid: true, details: 'SONAR_TOKEN not configured. Development mode bypass.' };
+      return { valid: false, details: 'SONAR_TOKEN is required in all non-local environments (staging, canary, production) for security compliance.' };
     }
 
     try {

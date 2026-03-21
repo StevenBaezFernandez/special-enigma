@@ -6,7 +6,8 @@
   "tags": [
     "scope:pos",
     "type:infrastructure",
-    "platform:node"
+    "platform:node",
+    "criticality:medium"
   ],
   "targets": {
     "test": {
