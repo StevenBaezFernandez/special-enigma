@@ -96,9 +96,12 @@ async function checkRls() {
   }
 
   async function attemptUnauthorizedQuery() {
+      if (!process.env.DATABASE_URL) {
+          throw new Error('DATABASE_URL environment variable is mandatory for RLS validation gate.');
+      }
       const { Client } = require('pg');
       const client = new Client({
-          connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/virteex'
+          connectionString: process.env.DATABASE_URL
       });
 
       try {

@@ -23,8 +23,19 @@ export class MikroOrmTransactionRepository implements TransactionRepository {
   }
 
   async getCashFlowReport(tenantId: string, startDate: Date, endDate: Date): Promise<any[]> {
-    // TODO: Implement actual cash flow report query using QueryBuilder.
-    // This is a stub to allow the application to serve as requested.
-    return [];
+    const qb = this.em.createQueryBuilder(Transaction, 't');
+
+    return qb
+      .select(['date', 'type', 'SUM(amount) as total'])
+      .where({
+        tenantId,
+        date: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      } as any)
+      .groupBy(['date', 'type'])
+      .orderBy({ date: 'ASC' })
+      .execute();
   }
 }

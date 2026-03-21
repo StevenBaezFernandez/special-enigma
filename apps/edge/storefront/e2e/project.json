@@ -1,17 +1,30 @@
 {
   "name": "edge-storefront-e2e",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["edge-storefront-app"],
+  "implicitDependencies": [
+    "edge-storefront-app"
+  ],
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/edge/storefront-e2e/app/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": ["edge-storefront-app:build", "edge-storefront-app:serve"]
+      "dependsOn": [
+        "edge-storefront-app:build",
+        "edge-storefront-app:serve"
+      ]
     }
-  }
+  },
+  "tags": [
+    "scope:store",
+    "type:e2e",
+    "platform:node",
+    "criticality:medium"
+  ]
 }

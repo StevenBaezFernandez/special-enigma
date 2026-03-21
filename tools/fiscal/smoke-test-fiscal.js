@@ -44,7 +44,13 @@ async function runSmokeTest(country) {
 
   console.log('✅ Structural validation passed.');
 
+  const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
   const isRealMode = process.env.REAL_MODE === 'true';
+
+  if (isCI && !isRealMode) {
+    console.error('❌ CRITICAL: Fiscal smoke test MUST be run with REAL_MODE=true in CI/Release environments.');
+    return false;
+  }
 
   if (isRealMode) {
     console.log('🚀 REAL MODE: Performing actual transmission to sandbox...');

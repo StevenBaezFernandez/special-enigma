@@ -3,11 +3,18 @@
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/service/pos/app/src",
   "projectType": "application",
-  "tags": ["scope:pos", "type:api", "platform:node"],
+  "tags": [
+    "scope:pos",
+    "type:api",
+    "platform:node",
+    "criticality:medium"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/service/pos",
         "main": "apps/service/pos/app/src/main.ts",

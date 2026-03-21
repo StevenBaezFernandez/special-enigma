@@ -1,17 +1,30 @@
 {
   "name": "edge-wms-e2e",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["edge-wms-app"],
+  "implicitDependencies": [
+    "edge-wms-app"
+  ],
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/edge/wms-e2e/app/jest.config.cts",
         "passWithNoTests": true
       },
-      "dependsOn": ["edge-wms-app:build", "edge-wms-app:serve"]
+      "dependsOn": [
+        "edge-wms-app:build",
+        "edge-wms-app:serve"
+      ]
     }
-  }
+  },
+  "tags": [
+    "scope:wms",
+    "type:e2e",
+    "platform:node",
+    "criticality:medium"
+  ]
 }

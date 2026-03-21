@@ -7,13 +7,23 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domain/billing/contracts",
         "main": "libs/domain/billing/contracts/src/index.ts",
         "tsConfig": "libs/domain/billing/contracts/tsconfig.lib.json",
-        "assets": ["libs/domain/billing/contracts/*.md"]
+        "assets": [
+          "libs/domain/billing/contracts/*.md"
+        ]
       }
     }
-  }
+  },
+  "tags": [
+    "scope:billing",
+    "type:domain",
+    "platform:agnostic",
+    "criticality:medium"
+  ]
 }

@@ -7,13 +7,23 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/domain/notification/application",
         "main": "libs/domain/notification/application/src/index.ts",
         "tsConfig": "libs/domain/notification/application/tsconfig.lib.json",
-        "assets": ["libs/domain/notification/application/*.md"]
+        "assets": [
+          "libs/domain/notification/application/*.md"
+        ]
       }
     }
-  }
+  },
+  "tags": [
+    "scope:notification",
+    "type:application",
+    "platform:agnostic",
+    "criticality:medium"
+  ]
 }

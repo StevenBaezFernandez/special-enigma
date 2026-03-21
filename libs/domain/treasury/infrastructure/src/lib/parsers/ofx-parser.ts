@@ -6,11 +6,38 @@ export class OfxBankStatementParser implements BankStatementParser {
     }
 
     async parse(content: Buffer | string): Promise<ParserResult> {
-        // TODO: Implement actual OFX parsing logic.
-        // This is a stub to allow the application to serve as requested.
+        const text = content.toString();
+        const lines: StatementLine[] = [];
+
+        // Basic OFX parsing using regex for STMTTRN blocks
+        const transactionRegex = /<STMTTRN>([\s\S]*?)<\/STMTTRN>/g;
+        let match;
+
+        while ((match = transactionRegex.exec(text)) !== null) {
+            const block = match[1];
+
+            const trnamt = /<TRNAMT>([\d.-]+)/.exec(block)?.[1];
+            const dtposted = /<DTPOSTED>(\d{8})/.exec(block)?.[1];
+            const name = /<NAME>(.*)/.exec(block)?.[1];
+            const fitid = /<FITID>(.*)/.exec(block)?.[1];
+
+            if (trnamt && dtposted) {
+                const year = parseInt(dtposted.substring(0, 4));
+                const month = parseInt(dtposted.substring(4, 6)) - 1;
+                const day = parseInt(dtposted.substring(6, 8));
+
+                lines.push({
+                    amount: parseFloat(trnamt),
+                    date: new Date(year, month, day),
+                    description: name?.trim() || 'Unknown',
+                    reference: fitid?.trim()
+                });
+            }
+        }
+
         return {
-            lines: [],
-            metadata: { format: 'OFX' }
+            lines,
+            metadata: { format: 'OFX', count: lines.length }
         };
     }
 }

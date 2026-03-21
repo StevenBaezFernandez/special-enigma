@@ -7,7 +7,9 @@
   "tags": [
     "scope:domain-subscription",
     "scope:subscription",
-    "type:contract"
+    "type:contract",
+    "platform:agnostic",
+    "criticality:medium"
   ],
   "targets": {
     "lint": {

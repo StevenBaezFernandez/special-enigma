@@ -6,7 +6,8 @@
   "tags": [
     "scope:pos",
     "type:application",
-    "platform:agnostic"
+    "platform:agnostic",
+    "criticality:medium"
   ],
   "targets": {
     "test": {
