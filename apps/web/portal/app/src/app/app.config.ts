@@ -15,9 +15,8 @@ import { authInterceptor } from '@virteex/shared-util-auth';
 import { errorInterceptor } from '@virteex/shared-ui';
 import { loadingInterceptor } from '@virteex/shared-util-http';
 import { globalErrorInterceptor } from './core/interceptors/global-error.interceptor';
-import { APP_CONFIG, AppConfig } from '@virteex/shared-config';
+import { APP_CONFIG, AppConfig, getBffUrl, API_URL } from '@virteex/shared-config';
 import { environment } from '../environments/environment';
-import { API_URL } from '@virteex/shared-config';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
@@ -68,7 +67,7 @@ export const appConfig: ApplicationConfig = {
       { provide: APP_CONFIG, useValue: environment },
       {
         provide: API_URL,
-        useFactory: (config: AppConfig) => config.apiUrl,
+        useFactory: (config: AppConfig) => getBffUrl('portal', config.apiUrl),
         deps: [APP_CONFIG]
       }
   ],

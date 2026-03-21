@@ -2,11 +2,24 @@ global:
   env: production
 
 applications:
+  # Maintain gateway during migration
   gateway:
     image: virteex/gateway:latest
     replicas: 3
     pdb:
       maxUnavailable: 1
+
+  # New BFFs
+  bff-portal:
+    image: virteex/bff-portal:latest
+    replicas: 2
+  bff-pos:
+    image: virteex/bff-pos:latest
+    replicas: 2
+  bff-wms:
+    image: virteex/bff-wms:latest
+    replicas: 2
+
   identity:
     image: virteex/identity:latest
     replicas: 3
