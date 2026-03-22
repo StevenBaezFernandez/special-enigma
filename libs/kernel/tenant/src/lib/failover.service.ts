@@ -235,26 +235,38 @@ export class FailoverService {
       const timeoutMs = probeConfig.timeoutMs ?? this.regionInventory.defaultTimeoutMs ?? 5000;
 
       // Layer 1: Global Traffic Plane Probe
+      const lbStartTime = performance.now();
       try {
-          const lbResponse = await axios.get(probeConfig.lbEndpoint, { timeout: timeoutMs });
+          const lbResponse = await axios.get(probeConfig.lbEndpoint, {
+              timeout: timeoutMs,
+              headers: { 'Cache-Control': 'no-cache', 'X-Virteex-Probe-Type': 'lb-independent' }
+          });
+          const lbDuration = performance.now() - lbStartTime;
           if (lbResponse.status !== 200) {
               throw new Error(`Regional Load Balancer for ${region} is not responding correctly. Status: ${lbResponse.status}`);
           }
-          this.logger.log(`[DR] LB Probe for ${region} passed.`);
+          this.logger.log(`[DR] LB Probe for ${region} passed in ${lbDuration.toFixed(2)}ms.`);
       } catch (err: any) {
           this.logger.error(`[DR] LB Probe for ${region} FAILED: ${err.message}`);
           throw new Error(`Target region ${region} Load Balancer is unhealthy or unreachable. Failover aborted for safety.`);
       }
 
       // Layer 2: Regional Control Plane Probe
+      const apiStartTime = performance.now();
       try {
           const response = await axios.get(probeConfig.apiEndpoint, {
               timeout: timeoutMs,
-              headers: { 'x-virteex-tenant-id': tenantId }
+              headers: {
+                  'x-virteex-tenant-id': tenantId,
+                  'Cache-Control': 'no-cache',
+                  'X-Virteex-Probe-Type': 'api-independent'
+              }
           });
+          const apiDuration = performance.now() - apiStartTime;
           if (response.status !== 200) {
               throw new Error(`Regional API for ${region} returned status: ${response.status}`);
           }
+          this.logger.log(`[DR] API Probe for ${region} passed in ${apiDuration.toFixed(2)}ms.`);
       } catch (err: any) {
           this.logger.error(`[DR] Regional API probe for ${region} FAILED: ${err.message}`);
           throw new Error(`Target region ${region} API is unhealthy or unreachable.`);

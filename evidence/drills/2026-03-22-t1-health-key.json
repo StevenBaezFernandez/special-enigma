@@ -10,7 +10,7 @@
     "probeInventorySource": "config/operations/regional-health-inventory.json"
   },
   "telemetry": {
-    "rtoMs": 1.8061380000001463,
+    "rtoMs": 0.9133730000000924,
     "rpoMs": 0,
     "backlogBefore": 0,
     "backlogAfter": 0
@@ -31,7 +31,7 @@
   "timeline": [
     {
       "step": "PREPARING",
-      "at": "2026-03-22T02:09:32.183Z",
+      "at": "2026-03-22T04:40:32.739Z",
       "status": "completed",
       "details": {
         "targetRegion": "sa-east-1"
@@ -39,32 +39,32 @@
     },
     {
       "step": "VALIDATING",
-      "at": "2026-03-22T02:09:32.183Z",
+      "at": "2026-03-22T04:40:32.739Z",
       "status": "started"
     },
     {
       "step": "VALIDATING",
-      "at": "2026-03-22T02:09:32.183Z",
+      "at": "2026-03-22T04:40:32.739Z",
       "status": "completed"
     },
     {
       "step": "RPO_VALIDATION",
-      "at": "2026-03-22T02:09:32.184Z",
+      "at": "2026-03-22T04:40:32.739Z",
       "status": "completed"
     },
     {
       "step": "SWITCHING",
-      "at": "2026-03-22T02:09:32.184Z",
+      "at": "2026-03-22T04:40:32.739Z",
       "status": "started"
     },
     {
       "step": "SWITCHING",
-      "at": "2026-03-22T02:09:32.184Z",
+      "at": "2026-03-22T04:40:32.739Z",
       "status": "completed"
     },
     {
       "step": "POST_PROMOTION_VALIDATION",
-      "at": "2026-03-22T02:09:32.184Z",
+      "at": "2026-03-22T04:40:32.740Z",
       "status": "completed",
       "details": {
         "integrityPostPromotion": true,
@@ -73,6 +73,6 @@
     }
   ],
   "status": "SUCCESS",
-  "executedAt": "2026-03-22T02:09:32.185Z",
-  "signature": "72975cc39a002ec7354a586c84f36bbd5a3fbdf2403736b0f84bde56a71bd7a5"
+  "executedAt": "2026-03-22T04:40:32.740Z",
+  "signature": "3511e528b2721d7fa75c84725d7f4901dbed808623a6e4412e72f20aa3f30561"
 }

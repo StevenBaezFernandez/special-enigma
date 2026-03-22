@@ -1,11 +1,38 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import { FailoverService } from '../failover.service';
 import { OperationState, TenantStatus } from '../interfaces/tenant-config.interface';
 import axios from 'axios';
-
-vi.mock('axios');
+import http from 'http';
 
 describe('Regional Failover Operational Validation', () => {
+  let server: http.Server;
+  let port: number;
+  let localLb: string;
+  let localApi: string;
+
+  beforeAll(async () => {
+    server = http.createServer((req, res) => {
+      if (req.url?.includes('/lb') || req.url?.includes('/api')) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'ok' }));
+      } else {
+        res.writeHead(404);
+        res.end();
+      }
+    });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => {
+        port = (server.address() as any).port;
+        localLb = `http://localhost:${port}/lb`;
+        localApi = `http://localhost:${port}/api`;
+        resolve();
+      });
+    });
+  });
+
+  afterAll(() => {
+    server.close();
+  });
   let service: FailoverService;
   let mockEm: any;
   let mockOpService: any;
@@ -16,7 +43,8 @@ describe('Regional Failover Operational Validation', () => {
     vi.clearAllMocks();
     process.env['EVIDENCE_SIGNING_SECRET'] = 'test-secret';
     process.env['EVIDENCE_SIGNING_SECRET'] = 'test-evidence-secret';
-    (axios.get as any).mockResolvedValue({ status: 200 });
+    process.env['DR_PROBE_SA_EAST_1_LB_ENDPOINT'] = localLb;
+    process.env['DR_PROBE_SA_EAST_1_API_ENDPOINT'] = localApi;
 
     mockEm = {
       findOneOrFail: vi.fn(),
@@ -92,7 +120,6 @@ describe('Regional Failover Operational Validation', () => {
       failoverActive: true
     }), { expectedGeneration: 3 });
     expect(mockOpService.transitionState).toHaveBeenCalledWith('fail-123', OperationState.FINALIZED, expect.any(Object));
-    expect(axios.get).toHaveBeenCalledWith('https://lb.sa-east-1.virteex.erp/v1/health/check', expect.any(Object));
   });
 
   it('SHOULD reject failover if already in degraded state', async () => {

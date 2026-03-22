@@ -75,6 +75,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
     const mockSecretManager = {
       getSecret: vi.fn().mockReturnValue('mock-secret'),
     };
+    (global as any).mockSecretManager = mockSecretManager;
 
     mockRoutingPlane = {
       resolveRoute: vi.fn(),
@@ -151,6 +152,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
   describe('Flujo B — Migration Lifecycle (Pre-checks to Rollback)', () => {
     it('SHOULD reconcile and allow rollback on failure', async () => {
       const service = new MigrationOrchestratorService(mockEm, mockGuard, mockOpService, mockRoutingPlane);
+      vi.spyOn(service as any, 'getStrongTableStats').mockResolvedValue({ users: { count: 10, checksum: 'a', structuralHash: 'b' } });
 
       mockEm.findOneOrFail.mockResolvedValue({ id: 't1', mode: 'SCHEMA', schemaName: 'tenant_t1' });
       mockRoutingPlane.resolveRoute.mockResolvedValue({ version: 1 });
@@ -165,7 +167,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
 
   describe('Flujo C — Regional Failover (Signed Snapshots & Freeze)', () => {
     it('SHOULD freeze writes, promote region, and sign snapshot', async () => {
-      const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance, mockSecretManager as any);
+      const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance, (global as any).mockSecretManager as any);
 
       mockEm.findOneOrFail.mockResolvedValue({
           tenantId: 't1',
@@ -186,8 +188,11 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
     });
 
     it('SHOULD failover if target region health probes are successful', async () => {
-        const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance, mockSecretManager as any);
+        const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance, (global as any).mockSecretManager as any);
         mockEm.findOneOrFail.mockResolvedValue({ tenantId: 't1', secondaryRegion: 'sa-east-1', status: 'ACTIVE' });
+
+        process.env['DR_PROBE_SA_EAST_1_LB_ENDPOINT'] = 'http://localhost:5599/lb';
+        process.env['DR_PROBE_SA_EAST_1_API_ENDPOINT'] = 'http://localhost:5599/api';
 
         // Simulate healthy probes
         (axios.get as any).mockResolvedValueOnce({ status: 200 }); // LB
