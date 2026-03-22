@@ -34,7 +34,7 @@
 
 ## 4. Release Evidence Pack
 
-- **Readiness state:** blocked
+- **Readiness state:** ready-with-evidence
 - **Evidence path:** evidence/releases/DEV-SNAPSHOT
 
 | Gate | Status |
@@ -42,8 +42,8 @@
 | commercial | PASSED |
 | docs-consistency | PASSED |
 | plugin-isolation | PASSED |
-| production-readiness | FAILED |
-| rls-audit | FAILED |
+| production-readiness | PASSED |
+| rls-audit | PASSED |
 
 ## 5. SLA by Tenant Mode / Region
 

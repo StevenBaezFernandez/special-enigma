@@ -22,7 +22,7 @@ provider "aws" {
 }
 
 module "rds" {
-  source                    = "../../../modules/rds"
+  source                    = "../../../../modules/rds"
   environment               = "${var.environment}-v1"
   region                    = var.region
   vpc_id                    = var.vpc_id
@@ -35,7 +35,7 @@ module "rds" {
 }
 
 module "elasticache" {
-  source      = "../../../modules/elasticache"
+  source      = "../../../../modules/elasticache"
   environment = "${var.environment}-${var.region}-v1"
   vpc_id      = var.vpc_id
   subnet_ids  = var.subnet_ids

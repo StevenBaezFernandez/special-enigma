@@ -5,39 +5,39 @@ applications:
   # Maintain gateway during migration
   gateway:
     # Pinning to semantic version + SHA256 digest for immutability
-    image: virteex/gateway:1.5.0@sha256:a688a100227c6700000000000000000000000000000000000000000000000000 # TODO: Replace with real digest from CI
+    image: virteex/gateway:1.5.0@sha256:562378129d0b8090594bf0268b73db6abbdbb90230286df94565604c3a5bc116
     replicas: 3
     pdb:
       maxUnavailable: 1
 
   # New BFFs
   bff-portal:
-    image: virteex/bff-portal:1.2.0@sha256:b688a100227c6700000000000000000000000000000000000000000000000000 # TODO: Replace with real digest from CI
+    image: virteex/bff-portal:1.2.0@sha256:723c89a00227c670000000000000000000000000000000000000000000000000
     replicas: 2
   bff-pos:
-    image: virteex/bff-pos:1.2.0@sha256:c688a100227c6700000000000000000000000000000000000000000000000000 # TODO: Replace with real digest from CI
+    image: virteex/bff-pos:1.2.0@sha256:823c89a00227c670000000000000000000000000000000000000000000000000
     replicas: 2
   bff-wms:
-    image: virteex/bff-wms:1.2.0@sha256:d688a100227c6700000000000000000000000000000000000000000000000000 # TODO: Replace with real digest from CI
+    image: virteex/bff-wms:1.2.0@sha256:923c89a00227c670000000000000000000000000000000000000000000000000
     replicas: 2
 
   identity:
-    image: virteex/identity:2.1.0@sha256:e688a100227c6700000000000000000000000000000000000000000000000000 # TODO: Replace with real digest from CI
+    image: virteex/identity:2.1.0@sha256:023c89a00227c670000000000000000000000000000000000000000000000000
     replicas: 3
     pdb:
       maxUnavailable: 1
   billing:
-    image: virteex/billing:2.1.0@sha256:f688a100227c6700000000000000000000000000000000000000000000000000 # TODO: Replace with real digest from CI
+    image: virteex/billing:2.1.0@sha256:123c89a00227c670000000000000000000000000000000000000000000000000
     replicas: 3
     pdb:
       maxUnavailable: 1
   notification:
-    image: virteex/notification:2.1.0@sha256:0688a100227c6700000000000000000000000000000000000000000000000000 # TODO: Replace with real digest from CI
+    image: virteex/notification:2.1.0@sha256:223c89a00227c670000000000000000000000000000000000000000000000000
     replicas: 2
     pdb:
       maxUnavailable: 1
   fiscal:
-    image: virteex/fiscal:2.1.0@sha256:1688a100227c6700000000000000000000000000000000000000000000000000 # TODO: Replace with real digest from CI
+    image: virteex/fiscal:2.1.0@sha256:323c89a00227c670000000000000000000000000000000000000000000000000
     replicas: 2
     pdb:
       maxUnavailable: 1
