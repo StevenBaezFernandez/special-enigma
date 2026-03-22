@@ -1,5 +1,5 @@
+import 'reflect-metadata';
 import { PATH_METADATA } from '@nestjs/common/constants';
-import { describe, it, expect } from 'vitest';
 import { AppModule } from './app.module';
 import { TenantsController } from '@virteex/domain-admin-presentation';
 

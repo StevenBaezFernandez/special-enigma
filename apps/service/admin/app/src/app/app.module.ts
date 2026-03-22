@@ -13,7 +13,7 @@ import { TenantConfig, Incident } from '@virteex/domain-admin-domain';
       dbName: 'virteex_admin',
       driver: PostgreSqlDriver,
       allowGlobalContext: true,
-      connect: false, // Don't try to connect to a real DB during this demo/build
+      connect: true,
     }),
     AuthModule,
     TenantModule,

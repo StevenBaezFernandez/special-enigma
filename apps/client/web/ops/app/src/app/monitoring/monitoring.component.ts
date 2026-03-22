@@ -11,7 +11,10 @@ import { Observable } from 'rxjs';
     <div class="module-container">
       <div class="header">
         <h2>System Observability</h2>
-        <span class="refresh-indicator">Last update: {{ lastUpdate | date:'mediumTime' }}</span>
+        <div class="header-actions">
+           <button class="btn-refresh" (click)="refresh()">Refresh Now</button>
+           <span class="refresh-indicator">Last update: {{ lastUpdate | date:'mediumTime' }}</span>
+        </div>
       </div>
 
       <div class="health-grid" *ngIf="health$ | async as services; else loading">
@@ -35,17 +38,23 @@ import { Observable } from 'rxjs';
       </div>
 
       <ng-template #loading>
-        <div class="loading-state">Scanning system nodes and health endpoints...</div>
+        <div class="loading-state">
+           <div class="spinner"></div>
+           <p>Scanning system nodes and health endpoints...</p>
+        </div>
       </ng-template>
 
-      <div class="alerts-section">
+      <div class="alerts-section" *ngIf="health$ | async as services">
          <h3>Active Infrastructure Alerts</h3>
-         <div class="alert-item high">
+         <div class="alert-item" *ngFor="let s of services" [class.high]="s.status === 'UNKNOWN' || s.status === 'DEGRADED'" [hidden]="s.status === 'UP'">
             <div class="alert-icon">⚠️</div>
             <div class="alert-body">
-               <strong>Database Latency Peak</strong>
-               <p>Spike of 250ms detected in us-east-1 RDS instance. Automated scaling triggered.</p>
+               <strong>{{ s.name }} Status Alert</strong>
+               <p>The service is currently reporting a status of {{ s.status }}. Immediate investigation recommended.</p>
             </div>
+         </div>
+         <div class="empty-alerts" *ngIf="!hasAlerts(services)">
+            <p>✅ All core systems are operating within normal parameters.</p>
          </div>
       </div>
     </div>
@@ -87,6 +96,15 @@ export class MonitoringComponent implements OnInit {
   lastUpdate = new Date();
 
   ngOnInit() {
+    this.refresh();
+  }
+
+  refresh() {
     this.health$ = this.monitoringService.getSystemHealth();
+    this.lastUpdate = new Date();
+  }
+
+  hasAlerts(services: ServiceHealth[]): boolean {
+    return services.some(s => s.status !== 'UP');
   }
 }

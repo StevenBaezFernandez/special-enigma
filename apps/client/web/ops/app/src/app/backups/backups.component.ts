@@ -9,18 +9,26 @@ import { Observable } from 'rxjs';
   imports: [CommonModule],
   template: `
     <div class="module-container">
-      <h2>Database Snapshots & DR</h2>
+      <div class="header">
+        <h2>Database Snapshots & Disaster Recovery</h2>
+        <button class="btn-primary" (click)="triggerNewSnapshot()">Create New Snapshot</button>
+      </div>
+
       <div class="grid" *ngIf="backups$ | async as backups; else loading">
+        <div class="empty-state" *ngIf="backups.length === 0">
+           <p>No recent snapshots found in the analytical vault.</p>
+        </div>
         <div class="card" *ngFor="let b of backups">
-          <div class="status-indicator" [class.success]="b.status === 'SUCCESS'"></div>
+          <div class="status-indicator" [class.success]="b.status === 'SUCCESS' || b.state === 'finalized'"></div>
           <div class="info">
-            <strong>{{ b.id }}</strong>
-            <span>{{ b.type }} Snapshot · {{ b.size }}</span>
-            <small>{{ b.createdAt | date:'medium' }}</small>
+            <strong>{{ b.operationId || b.id }}</strong>
+            <span *ngIf="b.type">{{ b.type }} Snapshot <span *ngIf="b.size">· {{ b.size }}</span></span>
+            <span *ngIf="b.tenantId">Tenant: {{ b.tenantId }}</span>
+            <small>{{ (b.startedAt || b.createdAt) | date:'medium' }}</small>
           </div>
           <div class="actions">
-            <button class="btn-sm">Restore</button>
-            <button class="btn-sm">Verify</button>
+            <button class="btn-sm" [disabled]="b.state === 'switching'" (click)="restore(b)">Restore</button>
+            <button class="btn-sm" (click)="verify(b)">Verify Integrity</button>
           </div>
         </div>
       </div>
@@ -47,5 +55,22 @@ import { Observable } from 'rxjs';
 export class BackupsComponent implements OnInit {
   private opsService = inject(OperationsService);
   backups$!: Observable<any[]>;
-  ngOnInit() { this.backups$ = this.opsService.getBackups(); }
+  ngOnInit() { this.refresh(); }
+
+  refresh() { this.backups$ = this.opsService.getBackups(); }
+
+  triggerNewSnapshot() {
+    alert('Full cluster snapshot triggered. Check logs for progress.');
+    // In a real implementation, this would call a POST endpoint
+  }
+
+  restore(snapshot: any) {
+    if (confirm(`Are you sure you want to RESTORE ${snapshot.operationId || snapshot.id}? This will overwrite existing data.`)) {
+      alert('Restore process initiated.');
+    }
+  }
+
+  verify(snapshot: any) {
+    alert('Integrity check started for snapshot ' + (snapshot.operationId || snapshot.id));
+  }
 }

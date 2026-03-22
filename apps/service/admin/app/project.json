@@ -98,6 +98,7 @@
         "{options.reportsDirectory}"
       ],
       "options": {
+        "jestConfig": "apps/service/admin/app/jest.config.cts",
         "reportsDirectory": "../../coverage/apps/service-admin-app"
       }
     }
