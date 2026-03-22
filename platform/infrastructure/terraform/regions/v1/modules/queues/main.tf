@@ -10,7 +10,7 @@ provider "aws" {
 }
 
 module "msk" {
-  source      = "../../../modules/msk"
+  source      = "../../../../modules/msk"
   environment = "${var.environment}-${var.region}-v1"
   vpc_id      = var.vpc_id
   subnet_ids  = var.subnet_ids

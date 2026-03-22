@@ -4,6 +4,9 @@ import { TenantConfig, TenantMode, TenantStatus } from './interfaces/tenant-conf
 import { Tenant } from './entities/tenant.entity';
 import { TenantControlRecord } from './entities/tenant-control-record.entity';
 import Redis from 'ioredis';
+import { createHmac } from 'crypto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export interface CreateTenantInput {
   id: string;
@@ -99,11 +102,13 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
 
   async activateTenant(tenantId: string): Promise<void> {
     await this.updateTenantStatus(tenantId, TenantStatus.ACTIVE);
+    await this.generateLifecycleEvidence(tenantId, 'ACTIVATE');
     this.logger.log(`[LIFECYCLE] Tenant ${tenantId} ACTIVATED.`);
   }
 
   async suspendTenant(tenantId: string): Promise<void> {
     await this.updateTenantStatus(tenantId, TenantStatus.SUSPENDED);
+    await this.generateLifecycleEvidence(tenantId, 'SUSPEND');
     this.logger.warn(`[LIFECYCLE] Tenant ${tenantId} SUSPENDED.`);
   }
 
@@ -111,6 +116,7 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
     const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
     control.isFrozen = true;
     await this.updateTenantStatus(tenantId, TenantStatus.ARCHIVED);
+    await this.generateLifecycleEvidence(tenantId, 'TERMINATE');
     this.logger.warn(`[LIFECYCLE] Tenant ${tenantId} marked for termination and ARCHIVED. Writes frozen.`);
   }
 
@@ -118,6 +124,7 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
     const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
     control.isFrozen = true;
     await this.updateTenantStatus(tenantId, TenantStatus.LEGAL_HOLD);
+    await this.generateLifecycleEvidence(tenantId, 'LEGAL_HOLD');
     this.logger.warn(`[LIFECYCLE] Tenant ${tenantId} placed on LEGAL HOLD. Writes frozen.`);
   }
 
@@ -169,6 +176,7 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
     }
 
     await this.updateTenantStatus(tenantId, TenantStatus.PURGED);
+    await this.generateLifecycleEvidence(tenantId, 'PURGE');
     this.logger.error(`Tenant ${tenantId} data has been completely removed using declarative discovery.`);
   }
 
@@ -185,6 +193,7 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
         throw new ConflictException(`Cannot reopen PURGED tenant ${tenantId}.`);
     }
     await this.updateTenantStatus(tenantId, TenantStatus.ACTIVE);
+    await this.generateLifecycleEvidence(tenantId, 'REOPEN');
   }
 
   private async updateTenantStatus(tenantId: string, status: TenantStatus): Promise<void> {
@@ -271,5 +280,43 @@ export class TenantService implements OnModuleInit, OnModuleDestroy {
     if (input.mode === TenantMode.DATABASE && !input.connectionString) {
       throw new ConflictException('connectionString is required for DATABASE mode');
     }
+  }
+
+  private async generateLifecycleEvidence(tenantId: string, action: string): Promise<void> {
+    const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
+    const evidence = {
+      tenantId,
+      action,
+      status: control.status,
+      isFrozen: control.isFrozen,
+      timestamp: new Date().toISOString(),
+      environment: process.env['NODE_ENV'] || 'development',
+      region: process.env['AWS_REGION'] || 'us-east-1',
+      version: control.version,
+    };
+
+    let secret = process.env['EVIDENCE_SIGNING_SECRET'];
+    if (!secret && (process.env['NODE_ENV'] === 'development' || process.env['STRICT_READINESS'] === 'false')) {
+      secret = 'dev-secret-placeholder';
+    }
+
+    if (!secret) {
+      this.logger.error(`[SECURITY] EVIDENCE_SIGNING_SECRET missing. Evidence for ${action} on ${tenantId} NOT SIGNED.`);
+      return;
+    }
+
+    const signature = createHmac('sha256', secret).update(JSON.stringify(evidence)).digest('hex');
+    const signedEvidence = { ...evidence, signature, signatureAlgorithm: 'HMAC-SHA256' };
+
+    const evidenceDir = path.join(process.cwd(), 'evidence/tenant-lifecycle');
+    if (!fs.existsSync(evidenceDir)) {
+      fs.mkdirSync(evidenceDir, { recursive: true });
+    }
+
+    const filename = `${new Date().toISOString().split('T')[0]}-${tenantId}-${action}.json`;
+    const evidencePath = path.join(evidenceDir, filename);
+
+    fs.writeFileSync(evidencePath, JSON.stringify(signedEvidence, null, 2));
+    this.logger.log(`[LIFECYCLE EVIDENCE] Signed evidence persisted at ${evidencePath}`);
   }
 }

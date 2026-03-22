@@ -273,6 +273,46 @@ export default [
                 'scope:pos',
               ]
             },
+            {
+              sourceTag: 'scope:cms',
+              onlyDependOnLibsWithTags: ['scope:cms', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:desktop-portal',
+              onlyDependOnLibsWithTags: ['scope:desktop-portal', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:domain-subscription',
+              onlyDependOnLibsWithTags: ['scope:domain-subscription', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:mobile-app',
+              onlyDependOnLibsWithTags: ['scope:mobile-app', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:portal',
+              onlyDependOnLibsWithTags: ['scope:portal', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:site',
+              onlyDependOnLibsWithTags: ['scope:site', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:support',
+              onlyDependOnLibsWithTags: ['scope:support', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:web-cms',
+              onlyDependOnLibsWithTags: ['scope:web-cms', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:web-site',
+              onlyDependOnLibsWithTags: ['scope:web-site', 'scope:shared', 'scope:kernel']
+            },
+            {
+              sourceTag: 'scope:web-support',
+              onlyDependOnLibsWithTags: ['scope:web-support', 'scope:shared', 'scope:kernel']
+            },
           ],
         },
       ],
