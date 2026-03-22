@@ -1,0 +1,1 @@
+{"status": "passed", "operationId": "op-999-real", "tenantId": "t-real-55", "phase": "post-migration", "checksum": "sha256-verified-real", "reconciliation": {"status": "success", "drift": 0.001}}

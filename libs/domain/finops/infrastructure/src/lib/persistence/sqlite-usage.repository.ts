@@ -1,4 +1,10 @@
 import { Injectable } from '@nestjs/common';
+/**
+ * ⚠️ DEVELOPMENT/NON-PRODUCTION ONLY ⚠️
+ * This repository uses a simplified append-only JSONL format which does not
+ * meet the enterprise-grade reconciliation requirements for production use.
+ * For production, use the Analytical Store (TimescaleDB) integrated in FinOpsService.
+ */
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { ConfigService } from '@nestjs/config';

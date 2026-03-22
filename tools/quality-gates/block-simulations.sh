@@ -75,6 +75,15 @@ if [ ! -z "$MOCK_FILES" ]; then
     FOUND=1
 fi
 
+# 4. EVIDENCE SIMULATION CHECK (Level 5 requirement)
+echo "Checking for simulated status in evidence artifacts..."
+SIMULATED_EVIDENCE=$(grep -r "\"status\": \"simulated\"" evidence --include="*.json" || true)
+if [ ! -z "$SIMULATED_EVIDENCE" ]; then
+    echo "CRITICAL: Simulated evidence detected in evidence/ directory:"
+    echo "$SIMULATED_EVIDENCE"
+    FOUND=1
+fi
+
 if [ $FOUND -eq 1 ]; then
     echo "Gating failure: Level 5 compliance check FAILED."
     exit 1

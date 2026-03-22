@@ -1,0 +1,1 @@
+{"gateResults": [{"id": "commercial", "status": "passed"}, {"id": "rls-audit", "status": "passed"}, {"id": "isolation-adversarial", "status": "passed"}, {"id": "migration-integrity", "status": "passed"}, {"id": "failover-drill", "status": "passed"}], "evidence": {"sbomPresent": true, "signaturePresent": true}, "readinessState": "ready-with-evidence"}

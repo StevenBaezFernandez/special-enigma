@@ -8,6 +8,16 @@ provider "aws" {
   region = var.secondary_region
 }
 
+provider "aws" {
+  alias  = "mexico"
+  region = "mx-central-1"
+}
+
+provider "aws" {
+  alias  = "europe"
+  region = "eu-central-1"
+}
+
 variable "primary_region" {
   default = "us-east-1"
 }
@@ -63,6 +73,36 @@ module "eks_secondary" {
   cluster_name = "virteex-eks-${var.environment}-secondary"
   vpc_id       = module.vpc_secondary.vpc_id
   subnet_ids   = module.vpc_secondary.private_subnets
+}
+
+module "vpc_mexico" {
+  providers = { aws = aws.mexico }
+  source      = "./modules/vpc"
+  environment = var.environment
+  vpc_cidr    = "10.2.0.0/16"
+}
+
+module "eks_mexico" {
+  providers = { aws = aws.mexico }
+  source       = "./modules/eks"
+  cluster_name = "virteex-eks-${var.environment}-mexico"
+  vpc_id       = module.vpc_mexico.vpc_id
+  subnet_ids   = module.vpc_mexico.private_subnets
+}
+
+module "vpc_europe" {
+  providers = { aws = aws.europe }
+  source      = "./modules/vpc"
+  environment = var.environment
+  vpc_cidr    = "10.3.0.0/16"
+}
+
+module "eks_europe" {
+  providers = { aws = aws.europe }
+  source       = "./modules/eks"
+  cluster_name = "virteex-eks-${var.environment}-europe"
+  vpc_id       = module.vpc_europe.vpc_id
+  subnet_ids   = module.vpc_europe.private_subnets
 }
 
 

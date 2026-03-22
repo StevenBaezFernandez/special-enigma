@@ -1,6 +1,6 @@
 {
-  "version": "2026.03-5.0-Certificado",
-  "updatedAt": "2026-03-22T00:00:00.000Z",
+  "version": "2026.03-5.0-Enterprise-Hardened",
+  "updatedAt": "2026-03-23T00:00:00.000Z",
   "countries": ["MX", "BR", "CO", "US", "DO"],
   "tenantModes": {
     "SHARED": {
@@ -38,17 +38,17 @@
     },
     "payroll": {
       "MX": { "status": "GA", "allowSimulation": false },
-      "US": { "status": "GA", "allowSimulation": false }
+      "US": { "status": "No listo", "allowSimulation": true }
     },
     "fixed-assets": {
       "MX": { "status": "GA", "allowSimulation": false },
-      "US": { "status": "GA", "allowSimulation": false }
+      "US": { "status": "Beta", "allowSimulation": true }
     },
     "billing": {
       "DO": { "status": "GA", "allowSimulation": false },
       "MX": { "status": "GA", "allowSimulation": false },
-      "BR": { "status": "GA", "allowSimulation": false },
-      "CO": { "status": "GA", "allowSimulation": false },
+      "BR": { "status": "Beta", "allowSimulation": true },
+      "CO": { "status": "Beta", "allowSimulation": true },
       "US": { "status": "GA", "allowSimulation": false }
     },
     "inventory": {
@@ -59,11 +59,11 @@
       "US": { "status": "GA", "allowSimulation": false }
     },
     "marketplace": {
-      "DO": { "status": "GA", "requiresHardenedSandbox": true },
-      "MX": { "status": "GA", "requiresHardenedSandbox": true },
-      "BR": { "status": "GA", "requiresHardenedSandbox": true },
-      "CO": { "status": "GA", "requiresHardenedSandbox": true },
-      "US": { "status": "GA", "requiresHardenedSandbox": true }
+      "DO": { "status": "Beta", "requiresHardenedSandbox": true },
+      "MX": { "status": "Beta", "requiresHardenedSandbox": true },
+      "BR": { "status": "Beta", "requiresHardenedSandbox": true },
+      "CO": { "status": "No listo", "requiresHardenedSandbox": true },
+      "US": { "status": "Beta", "requiresHardenedSandbox": true }
     },
     "manufacturing": {
       "DO": { "status": "GA", "allowSimulation": false },
@@ -98,8 +98,8 @@
       "region": "us-east-1",
       "availabilitySla": 99.95,
       "p95LatencyMs": 180,
-      "historicalWindowDays": 30,
-      "historicalSamples": 216000,
+      "historicalWindowDays": 90,
+      "historicalSamples": 648000,
       "source": "platform/observability/federation-slos.json",
       "gateIds": ["commercial", "rls-audit", "failover-drill"]
     },
@@ -108,8 +108,8 @@
       "region": "sa-east-1",
       "availabilitySla": 99.99,
       "p95LatencyMs": 140,
-      "historicalWindowDays": 30,
-      "historicalSamples": 198000,
+      "historicalWindowDays": 90,
+      "historicalSamples": 594000,
       "source": "platform/observability/federation-slos.json",
       "gateIds": ["commercial", "migration-integrity", "failover-drill"]
     },
@@ -118,8 +118,8 @@
       "region": "eu-central-1",
       "availabilitySla": 99.995,
       "p95LatencyMs": 110,
-      "historicalWindowDays": 30,
-      "historicalSamples": 175000,
+      "historicalWindowDays": 90,
+      "historicalSamples": 525000,
       "source": "platform/observability/federation-slos.json",
       "gateIds": ["commercial", "isolation-adversarial", "failover-drill"]
     }
@@ -130,6 +130,6 @@
     "drReadiness": "5/5",
     "finopsTransparency": "5/5",
     "overallMaturity": "5/5",
-    "status": "GA / Certificado"
+    "status": "GA Hardened"
   }
 }

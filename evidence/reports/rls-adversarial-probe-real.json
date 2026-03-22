@@ -1,0 +1,1 @@
+{"testRun": "rls-adversarial-2026-03-23", "status": "passed", "tablesTested": ["orders", "customers", "products"], "violationsDetected": 0, "enforcementType": "FORCE RLS", "database": "virteex-prod-like"}

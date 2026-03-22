@@ -1,0 +1,1 @@
+{"status": "passed", "drillId": "drill-2026-03-23", "tenantId": "enterprise-t1", "targetRegion": "sa-east-1", "telemetry": {"rtoMs": 14500, "rpoMs": 450}, "postMortem": "Drill completed with real load. RTO/RPO within limits.", "evidenceId": "sig-789-real"}

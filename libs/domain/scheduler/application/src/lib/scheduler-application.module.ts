@@ -15,6 +15,6 @@ import { NotificationApplicationModule } from '@virteex/domain-notification-appl
     FiscalJobHandler,
     BillingJobHandler,
   ],
-  exports: [SchedulerService, JobOrchestrator],
+  exports: [SchedulerService, JobOrchestrator, JobProcessorService],
 })
 export class SchedulerApplicationModule {}
