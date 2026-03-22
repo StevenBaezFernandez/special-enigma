@@ -329,7 +329,16 @@ export class MigrationOrchestratorService {
   }): Promise<string> {
     const secret = process.env['EVIDENCE_SIGNING_SECRET'] || process.env['AUDIT_HMAC_SECRET'];
     if (!secret) {
+      this.logger.error('CRITICAL: EVIDENCE_SIGNING_SECRET or AUDIT_HMAC_SECRET is missing for migration evidence signing.');
       throw new Error('EVIDENCE_SIGNING_SECRET or AUDIT_HMAC_SECRET is required for migration evidence signing.');
+    }
+
+    // Validate that stats are not empty or contain undefined values
+    if (!payload.preMigrationStats || Object.keys(payload.preMigrationStats).length === 0) {
+      throw new Error('preMigrationStats cannot be empty for evidence generation');
+    }
+    if (!payload.postMigrationStats || Object.keys(payload.postMigrationStats).length === 0) {
+      throw new Error('postMigrationStats cannot be empty for evidence generation');
     }
 
     const rootDir = path.join(process.cwd(), 'evidence', 'migrations', payload.operationId);

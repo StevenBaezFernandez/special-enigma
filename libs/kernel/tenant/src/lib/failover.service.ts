@@ -117,12 +117,6 @@ export class FailoverService {
       try {
         await this.operationService.transitionState(op.operationId, OperationState.PREPARING);
 
-        // Level 5: Simulate realistic RTO during development drills
-        if (process.env['NODE_ENV'] === 'development' || process.env['DR_SIMULATE_LATENCY'] === 'true') {
-            this.logger.log(`[DR-SIM] Simulating realistic regional failover RTO latency (1.5s)...`);
-            await new Promise(resolve => setTimeout(resolve, 1500));
-        }
-
         const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
         timeline.push({ step: 'PREPARING', at: new Date().toISOString(), status: 'completed', details: { sourceRegion: control.primaryRegion, targetRegion: control.secondaryRegion } });
 
@@ -351,15 +345,12 @@ export class FailoverService {
           try {
               secret = this.secretManager.getSecret('VIRTEEX_HMAC_SECRET');
           } catch {
-              if (process.env['NODE_ENV'] === 'development' || process.env['STRICT_READINESS'] === 'false') {
-                  this.logger.warn('Security secrets missing. Using development placeholder for drill evidence signing.');
-                  secret = 'dev-secret-placeholder-hardened';
-              }
+              this.logger.error('Security secrets missing for DR drill evidence signing.');
           }
       }
 
       if (!secret) {
-          throw new Error('Secure signing secret is required to persist DR drill evidence in production.');
+          throw new Error('Secure signing secret is required to persist DR drill evidence (EVIDENCE_SIGNING_SECRET or VIRTEEX_HMAC_SECRET).');
       }
       const payload = JSON.stringify(result);
       result.signature = createHmac('sha256', secret).update(payload).digest('hex');
