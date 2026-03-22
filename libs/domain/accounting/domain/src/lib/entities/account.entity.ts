@@ -1,4 +1,4 @@
-import { AccountType } from '@virteex/domain-accounting-contracts';
+import { AccountType } from '../enums/account-type.enum';
 
 export class Account {
   id!: string;

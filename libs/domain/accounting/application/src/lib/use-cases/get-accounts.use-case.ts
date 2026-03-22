@@ -1,12 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ACCOUNT_REPOSITORY, type AccountRepository } from '@virteex/domain-accounting-domain';
 import { type AccountDto } from '@virteex/domain-accounting-contracts';
 import { AccountMapper } from '../mappers/account.mapper';
+import { type AccountRepository } from '@virteex/domain-accounting-domain';
 
-@Injectable()
 export class GetAccountsUseCase {
   constructor(
-    @Inject(ACCOUNT_REPOSITORY) private accountRepository: AccountRepository
+    private accountRepository: AccountRepository
   ) {}
 
   async execute(tenantId: string): Promise<AccountDto[]> {

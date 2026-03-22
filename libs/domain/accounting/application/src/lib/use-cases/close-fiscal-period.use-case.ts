@@ -1,12 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository, ACCOUNT_REPOSITORY, type AccountRepository, JournalEntry, JournalEntryLine } from '@virteex/domain-accounting-domain';
+import { type JournalEntryRepository, type AccountRepository, JournalEntry, JournalEntryLine } from '@virteex/domain-accounting-domain';
 import { Decimal } from 'decimal.js';
 
-@Injectable()
+
 export class CloseFiscalPeriodUseCase {
   constructor(
-    @Inject(JOURNAL_ENTRY_REPOSITORY) private journalEntryRepository: JournalEntryRepository,
-    @Inject(ACCOUNT_REPOSITORY) private accountRepository: AccountRepository
+    private journalEntryRepository: JournalEntryRepository,
+    private accountRepository: AccountRepository
   ) {}
 
   async execute(tenantId: string, closingDate: Date): Promise<void> {

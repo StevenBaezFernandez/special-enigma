@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { catchError, of } from 'rxjs';
+import { AccountingService } from '../../services/accounting.service';
+import { AccountDto } from '@virteex/domain-accounting-contracts';
 
 @Component({
   selector: 'app-chart-of-accounts',
@@ -41,13 +42,13 @@ import { Observable, catchError, of } from 'rxjs';
   `,
 })
 export class ChartOfAccountsComponent implements OnInit {
-  private http = inject(HttpClient);
-  accounts: any[] = [];
+  private accountingService = inject(AccountingService);
+  accounts: AccountDto[] = [];
   loading = true;
   error = '';
 
   ngOnInit() {
-    this.http.get<any[]>('/api/accounting/accounts')
+    this.accountingService.getAccounts()
       .pipe(
         catchError(err => {
           this.error = 'Failed to load accounts. Please try again later.';

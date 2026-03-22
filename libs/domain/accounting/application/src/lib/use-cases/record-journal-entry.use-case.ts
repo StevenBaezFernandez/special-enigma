@@ -1,51 +1,32 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { JournalEntry, JournalEntryLine, JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository, ACCOUNT_REPOSITORY, type AccountRepository } from '@virteex/domain-accounting-domain';
+import { JournalEntry, JournalEntryLine, type JournalEntryRepository, type AccountRepository, AccountNotFoundError, CrossTenantAccessError } from '@virteex/domain-accounting-domain';
 import { type RecordJournalEntryDto, type JournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { JournalEntryMapper } from '../mappers/journal-entry.mapper';
-import { Decimal } from 'decimal.js';
 
-@Injectable()
 export class RecordJournalEntryUseCase {
   constructor(
-    @Inject(JOURNAL_ENTRY_REPOSITORY) private journalEntryRepository: JournalEntryRepository,
-    @Inject(ACCOUNT_REPOSITORY) private accountRepository: AccountRepository
+    private journalEntryRepository: JournalEntryRepository,
+    private accountRepository: AccountRepository
   ) {}
 
-  async execute(dto: RecordJournalEntryDto): Promise<JournalEntryDto> {
+  async execute(dto: RecordJournalEntryDto & { tenantId: string }): Promise<JournalEntryDto> {
     const entry = new JournalEntry(dto.tenantId, dto.description, dto.date);
-
-    let totalDebit = new Decimal(0);
-    let totalCredit = new Decimal(0);
 
     for (const lineDto of dto.lines) {
       const account = await this.accountRepository.findById(lineDto.accountId);
       if (!account) {
-        throw new Error(`Account ${lineDto.accountId} not found`);
+        throw new AccountNotFoundError(lineDto.accountId);
       }
 
       if (account.tenantId !== dto.tenantId) {
-        throw new Error(`Account ${lineDto.accountId} belongs to a different tenant`);
+        throw new CrossTenantAccessError();
       }
 
-      const debit = new Decimal(lineDto.debit);
-      const credit = new Decimal(lineDto.credit);
-
-      if (debit.isNegative() || credit.isNegative()) {
-         throw new Error('Debit and Credit amounts must be non-negative');
-      }
-
-      const line = new JournalEntryLine(account, debit.toFixed(2), credit.toFixed(2));
+      const line = new JournalEntryLine(account, lineDto.debit, lineDto.credit);
       line.description = lineDto.description;
       entry.addLine(line);
-
-      totalDebit = totalDebit.plus(debit);
-      totalCredit = totalCredit.plus(credit);
     }
 
-    // Validation: Double entry
-    if (!totalDebit.equals(totalCredit)) {
-       throw new Error(`Journal Entry is not balanced. Debit: ${totalDebit.toFixed(2)}, Credit: ${totalCredit.toFixed(2)}`);
-    }
+    entry.validateBalance();
 
     const savedEntry = await this.journalEntryRepository.create(entry);
     return JournalEntryMapper.toDto(savedEntry);

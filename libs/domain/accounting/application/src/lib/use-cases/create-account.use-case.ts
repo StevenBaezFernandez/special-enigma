@@ -1,29 +1,27 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Account, ACCOUNT_REPOSITORY, type AccountRepository } from '@virteex/domain-accounting-domain';
+import { Account, AccountType, AccountAlreadyExistsError, ParentAccountNotFoundError, CrossTenantAccessError, type AccountRepository } from '@virteex/domain-accounting-domain';
 import { type CreateAccountDto, type AccountDto } from '@virteex/domain-accounting-contracts';
 import { AccountMapper } from '../mappers/account.mapper';
 
-@Injectable()
 export class CreateAccountUseCase {
   constructor(
-    @Inject(ACCOUNT_REPOSITORY) private accountRepository: AccountRepository
+    private accountRepository: AccountRepository
   ) {}
 
-  async execute(dto: CreateAccountDto): Promise<AccountDto> {
+  async execute(dto: CreateAccountDto & { tenantId: string }): Promise<AccountDto> {
     const existing = await this.accountRepository.findByCode(dto.tenantId, dto.code);
     if (existing) {
-      throw new Error(`Account with code ${dto.code} already exists`);
+      throw new AccountAlreadyExistsError(dto.code);
     }
 
-    const account = new Account(dto.tenantId, dto.code, dto.name, dto.type);
+    const account = new Account(dto.tenantId, dto.code, dto.name, dto.type as unknown as AccountType);
 
     if (dto.parentId) {
       const parent = await this.accountRepository.findById(dto.parentId);
       if (!parent) {
-        throw new Error(`Parent account ${dto.parentId} not found`);
+        throw new ParentAccountNotFoundError(dto.parentId);
       }
       if (parent.tenantId !== dto.tenantId) {
-        throw new Error(`Parent account ${dto.parentId} belongs to a different tenant`);
+        throw new CrossTenantAccessError();
       }
       account.parent = parent;
       account.level = parent.level + 1;

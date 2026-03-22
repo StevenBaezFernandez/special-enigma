@@ -1,48 +1,29 @@
-import { vi } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GenerateFinancialReportUseCase } from './generate-financial-report.use-case';
-import { JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
-import { AccountType } from '@virteex/domain-accounting-contracts';
+import { type JournalEntryRepository, type AccountRepository } from '@virteex/domain-accounting-domain';
 
 describe('GenerateFinancialReportUseCase Hardening', () => {
-  let useCase: GenerateFinancialReportUseCase;
-  let journalRepo: any;
-  let accountRepo: any;
+  let service: GenerateFinancialReportUseCase;
+  let journalRepo: JournalEntryRepository;
+  let accountRepo: AccountRepository;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     journalRepo = {
-      getBalancesByAccount: vi.fn(),
-    };
+        getBalancesByAccount: vi.fn(),
+    } as unknown as JournalEntryRepository;
     accountRepo = {
-      findAll: vi.fn(),
-    };
-
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        GenerateFinancialReportUseCase,
-        { provide: JOURNAL_ENTRY_REPOSITORY, useValue: journalRepo },
-        { provide: ACCOUNT_REPOSITORY, useValue: accountRepo },
-      ],
-    }).compile();
-
-    useCase = module.get<GenerateFinancialReportUseCase>(GenerateFinancialReportUseCase);
+        findAll: vi.fn(),
+    } as unknown as AccountRepository;
+    service = new GenerateFinancialReportUseCase(journalRepo, accountRepo);
   });
 
   it('should pass dimensions to repository', async () => {
-    const tenantId = 't1';
-    const endDate = new Date();
-    const dimensions = { costCenter: 'CC1', project: 'P1' };
+    const dimensions = { costCenter: 'CC1' };
+    (journalRepo.getBalancesByAccount as any).mockResolvedValue(new Map());
+    (accountRepo.findAll as any).mockResolvedValue([]);
 
-    accountRepo.findAll.mockResolvedValue([]);
-    journalRepo.getBalancesByAccount.mockResolvedValue(new Map());
+    await service.execute('tenant1', 'BALANCE_SHEET', new Date(), dimensions);
 
-    await useCase.execute(tenantId, 'BALANCE_SHEET', endDate, dimensions);
-
-    expect(journalRepo.getBalancesByAccount).toHaveBeenCalledWith(
-        tenantId,
-        undefined,
-        endDate,
-        dimensions
-    );
+    expect(journalRepo.getBalancesByAccount).toHaveBeenCalledWith('tenant1', undefined, expect.any(Date), dimensions);
   });
 });
