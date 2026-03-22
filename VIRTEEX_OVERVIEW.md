@@ -8,98 +8,120 @@ Construido sobre microservicios, GraphQL Federation y un sistema de plugins basa
 
 ---
 
-## 🏗️ Arquitectura y Principios de Diseño
+## 🏗️ Arquitectura de Clase Mundial
 
-Virteex se basa en principios de ingeniería de software de vanguardia para garantizar mantenibilidad y escalabilidad.
+Virteex se basa en principios de ingeniería de software de vanguardia para garantizar mantenibilidad, testabilidad y escalabilidad infinita.
 
 ### Pilares Arquitectónicos
 
-- **Clean Architecture**: Separación estricta de responsabilidades entre capas (Dominio, Aplicación, Infraestructura y Presentación).
-- **Domain-Driven Design (DDD)**: El software se modela siguiendo los procesos de negocio reales.
-- **Microservicios & GraphQL Federation**: Servicios desacoplados que exponen un grafo unificado de datos.
-- **Multi-tenant & Multi-región**: Capacidad de servir a múltiples organizaciones de forma aislada a través de diferentes zonas geográficas.
-- **Offline-First**: Las aplicaciones móviles funcionan sin conexión, sincronizando datos cuando la red está disponible.
+- **Clean Architecture**: Separación estricta de responsabilidades para evitar el acoplamiento técnico.
+- **Domain-Driven Design (DDD)**: El software se modela siguiendo los procesos de negocio reales y lenguajes ubicuos.
+- **Microservicios & GraphQL Federation**: Servicios desacoplados que exponen un grafo unificado de datos a través de Apollo Gateway.
+- **Multi-tenant & Multi-región**: Capacidad de servir a miles de organizaciones con aislamiento total de datos y latencia mínima.
+- **Offline-First & Edge Computing**: Aplicaciones móviles que funcionan sin conexión con sincronización delta bidireccional.
+
+### Desglose de Capas (Clean Architecture)
+
+| Capa               | Responsabilidad                                                                             | Restricciones Técnicas                                                 |
+| :----------------- | :------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------- |
+| **Domain**         | Corazón del negocio: Entidades, Value Objects, Domain Services y Repositorios (Interfaces). | **TypeScript Puro**. Prohibido importar frameworks (NestJS, MikroORM). |
+| **Application**    | Casos de uso (Use Cases), orquestación de servicios y DTOs de entrada.                      | Independiente de la capa de transporte (HTTP/GraphQL/gRPC).            |
+| **Infrastructure** | Implementaciones técnicas: MikroORM, adaptadores de API externos, drivers de DB.            | Contiene los detalles técnicos que el dominio no necesita conocer.     |
+| **Presentation**   | NestJS Controllers, GraphQL Resolvers y DTOs de salida.                                     | Adaptadores de entrada que validan y transforman datos externos.       |
 
 ---
 
 ## 📱 Ecosistema de Aplicaciones
 
-Virteex ofrece una experiencia omnicanal a través de diferentes plataformas:
+Virteex ofrece una experiencia omnicanal consistente en todas las plataformas:
 
-| Aplicación             | Tecnología        | Descripción                                                                           |
-| :--------------------- | :---------------- | :------------------------------------------------------------------------------------ |
-| **Web Portal**         | Angular           | Interfaz administrativa principal para escritorio y web.                              |
-| **Mobile App**         | Ionic / Capacitor | Aplicación híbrida optimizada para operaciones en campo con capacidades offline.      |
-| **Desktop App**        | Electron / Tauri  | Aplicación nativa de escritorio para tareas de alta intensidad y periféricos locales. |
-| **Background Workers** | NestJS            | Procesamiento asíncrono, tareas programadas y cálculos pesados.                       |
-| **Edge BFF**           | NestJS            | Backend-for-Frontend optimizado para baja latencia y seguridad en el borde.           |
+| Aplicación             | Tecnología          | Propósito y Capacidades                                                                                    |
+| :--------------------- | :------------------ | :--------------------------------------------------------------------------------------------------------- |
+| **Web Portal**         | Angular 19+         | Centro de administración principal con Dashboards avanzados y flujos complejos.                            |
+| **Mobile App**         | Ionic 8 / Capacitor | Operaciones en campo, almacén y ventas. Base de datos local (SQLite) para modo offline.                    |
+| **Desktop App**        | Electron / Tauri    | Aplicación nativa para entornos de alto rendimiento y acceso a periféricos locales (impresoras, scanners). |
+| **Background Workers** | NestJS / BullMQ     | Procesamiento de colas, tareas cron, reportes pesados y orquestación de eventos.                           |
+| **Edge BFF**           | NestJS / Fastify    | Backend-for-Frontend optimizado para seguridad en el borde y latencia ultra-baja.                          |
 
 ---
 
 ## 🧩 Módulos Funcionales
 
-La suite está compuesta por una amplia gama de módulos interconectados que cubren todas las áreas de la empresa:
+La suite Virteex es modular, permitiendo a las empresas activar solo lo que necesitan:
 
-| Módulo                 | Descripción                                                                         |
-| :--------------------- | :---------------------------------------------------------------------------------- |
-| **Identity & Access**  | Gestión de identidades, SSO (Keycloak), y control de acceso basado en roles (RBAC). |
-| **Accounting**         | Contabilidad general, libros oficiales y estados financieros.                       |
-| **Fiscal / Taxation**  | Localización fiscal para múltiples países, cálculo de impuestos y reportes legales. |
-| **Billing & POS**      | Facturación electrónica, puntos de venta y gestión de ingresos.                     |
-| **Purchasing**         | Ciclo de compras, gestión de proveedores y órdenes de compra.                       |
-| **Inventory**          | Control de existencias multi-bodega y trazabilidad de productos.                    |
-| **CRM**                | Gestión de relaciones con clientes y embudo de ventas.                              |
-| **Payroll**            | Nómina localizable, gestión de beneficios y cumplimiento laboral.                   |
-| **Treasury & FinOps**  | Flujo de caja, conciliación bancaria y optimización financiera.                     |
-| **Manufacturing**      | Planificación de producción y control de piso.                                      |
-| **Project Management** | Gestión de proyectos, hitos y seguimiento de tiempos.                               |
-
----
-
-## 🛠️ Stack Tecnológico
-
-### Backend & Core
-
-- **Framework**: NestJS (Node.js)
-- **API Layer**: GraphQL Federation (Apollo)
-- **Persistencia**: PostgreSQL, Redis, MikroORM
-- **Mensajería**: Kafka, BullMQ
-
-### Frontend & Client
-
-- **Framework**: Angular, Ionic
-- **State Management**: NgRx
-- **Comunicación**: Apollo Client (GraphQL)
-
-### Extensibilidad
-
-- **Plugin Runtime**: V8 Isolates (aislamiento seguro)
-- **Sandbox**: WebAssembly (WASM) para ejecución de código de terceros con alto rendimiento.
-
-### Infraestructura & DevOps
-
-- **Orquestación**: Kubernetes (K8s), Helm, Skaffold
-- **CI/CD**: GitHub Actions, Nx Monorepo Tools
-- **Observabilidad**: OpenTelemetry, Prometheus, Grafana
+| Módulo                    | Descripción Extendida                                                                          |
+| :------------------------ | :--------------------------------------------------------------------------------------------- |
+| **Identity & Access**     | SSO con Keycloak, MFA (WebAuthn), RBAC/ABAC y auditoría completa de accesos.                   |
+| **Accounting & FinOps**   | Contabilidad multi-compañía, estados financieros, conciliación bancaria y activos fijos.       |
+| **Billing & POS**         | Facturación masiva, POS táctil offline-ready, y gestión de suscripciones recurrentes.          |
+| **Inventory & Catalog**   | Gestión multi-bodega, trazabilidad por lotes/series, códigos de barra y catálogo de productos. |
+| **CRM & Sales**           | Gestión de leads, embudo de ventas, cotizaciones y automatización de marketing.                |
+| **Payroll & HR**          | Nómina localizable, gestión de beneficios, portal del empleado y cumplimiento laboral.         |
+| **Procurement**           | Ciclo completo de compras: requerimientos, órdenes de compra y recepción de mercancía.         |
+| **Manufacturing**         | Planificación de producción (MRP), órdenes de trabajo y control de calidad en línea.           |
+| **Project Management**    | Gestión de proyectos por hitos, seguimiento de tiempos (timesheets) y rentabilidad.            |
+| **Business Intelligence** | Dashboards interactivos (Highcharts), reportes customizados y analítica predictiva.            |
 
 ---
 
-## 🛡️ Seguridad y Gobernanza
+## 🌎 Localización Fiscal (Country Readiness)
 
-Virteex implementa un modelo de seguridad de "confianza cero" y gobernanza automatizada.
+Virteex está diseñado para la complejidad fiscal de las Américas:
 
-- **Cifrado E2E**: Los datos sensibles están protegidos tanto en tránsito como en reposo.
-- **Gobernanza por Código**: Reglas arquitectónicas validadas automáticamente (Linter de arquitectura).
-- **Software Bill of Materials (SBOM)**: Inventario detallado de todos los componentes de software para gestión de vulnerabilidades.
-- **Pipeline de Admisión de Plugins**: Los plugins pasan por un proceso de revisión y escaneo antes de ser publicados en el marketplace.
-- **Cumplimiento**: Diseñado para cumplir con estándares internacionales y regulaciones locales de datos.
+| País              | Status      | Provider Principal | Capacidades Incluidas                                           |
+| :---------------- | :---------- | :----------------- | :-------------------------------------------------------------- |
+| **México (MX)**   | **GA**      | Finkok PAC         | Factura 4.0, Complementos, Cancelación, Retenciones.            |
+| **Brasil (BR)**   | **Beta**    | SEFAZ Adapter      | NFe, CTe, MDFe, Homologación por unidad federativa (UF).        |
+| **Colombia (CO)** | **Beta**    | DIAN Adapter       | Facturación Electrónica, Nómina Electrónica, Documento Soporte. |
+| **USA (US)**      | **Beta**    | Tax Strategy       | Sales Tax dinámico por estado, Reconciliación 1099.             |
+| **Latam (Otros)** | **Roadmap** | Partners Locales   | DO (DGII), CL (SII), PE (SUNAT), AR (AFIP).                     |
 
 ---
 
-## 🔌 Marketplace y Extensibilidad
+## 🛠️ Stack Tecnológico de Vanguardia
 
-El sistema de plugins permite a partners y clientes extender la funcionalidad de Virteex sin comprometer la estabilidad del core.
+### Backend & Core Infrastructure
 
-1.  **Aislamiento**: Cada plugin corre en su propio entorno seguro (V8 Isolate).
-2.  **Marketplace**: Catálogo centralizado de soluciones verticales y conectores.
-3.  **Hooks & Eventos**: Puntos de extensión en toda la plataforma para personalizar flujos de trabajo.
+- **Lenguaje**: TypeScript / Node.js
+- **Framework**: **NestJS** (Arquitectura modular e inyección de dependencias)
+- **API Layer**: **GraphQL Federation** (Apollo Server/Gateway)
+- **Persistencia**: PostgreSQL (DB principal), Redis (Cache, Sessions, Queues)
+- **ORM**: **MikroORM** (Data Mapper pattern con soporte para RLS - Row Level Security)
+- **Mensajería**: **Kafka** para eventos distribuidos y **BullMQ** para trabajos asíncronos.
+
+### Frontend & Client-Side
+
+- **Framework**: **Angular 19** y Ionic 8
+- **State Management**: **NgRx** (Arquitectura reactiva y predecible)
+- **UI/UX**: Componentes customizados, Gridster2 para dashboards, Highcharts.
+- **Seguridad Client**: Encriptación local y Secure Storage para datos sensibles.
+
+### Extensibilidad (Plugin Engine)
+
+- **Runtime**: **V8 Isolates** (Aislamiento físico de memoria y CPU para plugins externos)
+- **Sandbox**: **WebAssembly (WASM)** para ejecutar lógica compleja con rendimiento nativo de forma segura.
+
+---
+
+## 🛡️ Seguridad, Calidad y Gobernanza Automatizada
+
+Virteex implementa un modelo de "Confianza Cero" (Zero-Trust) y gobernanza por código.
+
+- **Seguridad de Suministros**: Generación automática de **SBOM** (Software Bill of Materials) y firma de artefactos con **Cosign**.
+- **Políticas OPA**: Validación de políticas de infraestructura y acceso mediante Open Policy Agent.
+- **Observabilidad Total**: Instrumentación con **OpenTelemetry** (Trazas, Métricas, Logs) hacia Grafana/Prometheus.
+- **Gobernanza de Monorepo (Nx)**:
+  - `npm run arch:check`: Impone reglas de Clean Architecture automáticamente.
+  - `npm run doctor`: Diagnóstico completo de la salud del entorno de desarrollo.
+  - `npm run readiness:commercial`: Valida la consistencia entre código y promesas comerciales por país.
+
+---
+
+## 🔌 Marketplace y Ecosistema de Terceros
+
+El corazón de la extensibilidad de Virteex radica en su sistema de plugins:
+
+1.  **Aislamiento**: Los plugins no comparten memoria con el core, evitando "cascading failures".
+2.  **Marketplace**: Catálogo donde desarrolladores pueden publicar soluciones verticales (ej: Conector para Shopify).
+3.  **SDK**: Herramientas de desarrollo que permiten simular el entorno productivo localmente.
+4.  **Pipeline de Admisión**: Escaneo automático de seguridad y vulnerabilidades para cada plugin publicado.
