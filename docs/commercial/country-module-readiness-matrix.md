@@ -6,10 +6,10 @@ Fuente de verdad técnica: `config/readiness/commercial-eligibility.matrix.json`
 
 | País | Fiscal | Billing | Inventory | Marketplace | Manufacturing | Projects | Fixed Assets | Payroll |
 |---|---|---|---|---|---|---|---|---|
-| MX | GA | GA | GA | GA | GA | GA | - | - |
-| BR | GA | GA | GA | GA | GA | GA | - | - |
-| CO | GA | GA | GA | GA | GA | GA | - | - |
-| US | GA | GA | GA | GA | GA | GA | - | - |
+| MX | GA | GA | GA | Beta | GA | GA | GA | Beta |
+| BR | Beta | Beta | GA | Beta | GA | GA | - | - |
+| CO | Beta | Beta | GA | No listo | No listo | Beta | - | - |
+| US | Beta | GA | GA | Beta | GA | GA | Beta | No listo |
 | DO | GA | GA | GA | Beta | GA | GA | - | - |
 
 ## Reglas de activación y venta

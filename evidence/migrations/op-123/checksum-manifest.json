@@ -1,0 +1,31 @@
+{
+  "tenantId": "t-enterprise",
+  "operationId": "op-123",
+  "phase": "post-migration",
+  "operationRefs": {
+    "tenantId": "t-enterprise",
+    "operationId": "op-123",
+    "requestedAt": "2026-03-22T02:09:33.582Z",
+    "idempotencyKey": "key-2"
+  },
+  "generatedAt": "2026-03-22T02:09:33.582Z",
+  "checksums": {
+    "pre": {
+      "undefined": {
+        "count": 10,
+        "checksum": "0",
+        "structuralHash": "0"
+      }
+    },
+    "post": {
+      "undefined": {
+        "count": 10,
+        "checksum": "0",
+        "structuralHash": "0"
+      }
+    }
+  },
+  "integrityDigest": "242b856e62a9e2b9d8f534308f2313caa937d6afcf5f94587d0d346000da8684",
+  "signature": "000af7f9b76ae2c6f08eec4b3e121170df51567be301df6d54e520d804c03d7c",
+  "signatureAlgorithm": "HMAC-SHA256"
+}

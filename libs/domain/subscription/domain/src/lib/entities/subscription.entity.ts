@@ -14,45 +14,49 @@ export enum SubscriptionStatus {
 
 export class Subscription {
 
-  id: string = v4();
+  private id: string = v4();
 
+  private tenantId: string;
 
-    tenantId!: string;
+  private plan: SubscriptionPlan;
 
+  private status: SubscriptionStatus = SubscriptionStatus.ACTIVE;
 
-  plan!: SubscriptionPlan;
+  private externalSubscriptionId?: string;
 
+  private externalCustomerId?: string;
 
+  private currentPeriodEnd?: Date;
 
-  status: SubscriptionStatus = SubscriptionStatus.ACTIVE;
+  private cancelAtPeriodEnd = false;
 
+  private startDate: Date = new Date();
 
-    externalSubscriptionId?: string;
+  private endDate?: Date;
 
+  private createdAt: Date = new Date();
 
-    externalCustomerId?: string;
-
-
-    currentPeriodEnd?: Date;
-
-    cancelAtPeriodEnd = false;
-
-
-    startDate: Date = new Date();
-
-
-    endDate?: Date;
-
-
-    createdAt: Date = new Date();
-
-
-    updatedAt: Date = new Date();
+  private updatedAt: Date = new Date();
 
   constructor(tenantId: string, plan: SubscriptionPlan, status: SubscriptionStatus = SubscriptionStatus.ACTIVE) {
     this.tenantId = tenantId;
     this.plan = plan;
     this.status = status;
+  }
+
+  getId(): string { return this.id; }
+  getTenantId(): string { return this.tenantId; }
+  getPlan(): SubscriptionPlan { return this.plan; }
+  getStatus(): SubscriptionStatus { return this.status; }
+  getExternalSubscriptionId(): string | undefined { return this.externalSubscriptionId; }
+  getExternalCustomerId(): string | undefined { return this.externalCustomerId; }
+  getCurrentPeriodEnd(): Date | undefined { return this.currentPeriodEnd; }
+  isCancelAtPeriodEnd(): boolean { return this.cancelAtPeriodEnd; }
+  getStartDate(): Date { return this.startDate; }
+  getEndDate(): Date | undefined { return this.endDate; }
+
+  setExternalCustomerId(externalCustomerId: string) {
+    this.externalCustomerId = externalCustomerId;
   }
 
   isValid(): boolean {
@@ -74,6 +78,7 @@ export class Subscription {
     this.externalSubscriptionId = externalSubId;
     this.currentPeriodEnd = currentPeriodEnd;
     this.endDate = currentPeriodEnd;
+    this.updatedAt = new Date();
   }
 
   markAsCanceled(atPeriodEnd: boolean) {
@@ -82,5 +87,11 @@ export class Subscription {
       this.status = SubscriptionStatus.CANCELED;
       this.endDate = new Date();
     }
+    this.updatedAt = new Date();
+  }
+
+  changePlan(newPlan: SubscriptionPlan) {
+    this.plan = newPlan;
+    this.updatedAt = new Date();
   }
 }

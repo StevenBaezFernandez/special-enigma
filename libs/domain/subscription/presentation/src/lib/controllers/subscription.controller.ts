@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Query, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Query, Put, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentTenant } from '@virteex/shared-util-server-server-config';
 import { JwtAuthGuard, TenantGuard } from '@virteex/kernel-auth';
@@ -23,7 +23,7 @@ export class SubscriptionController {
   async subscribe(@Body() dto: SubscribeToPlanDto, @CurrentTenant() tenantId: string) {
     // Only allow tenantId from token
     if (!tenantId) {
-      throw new Error('Tenant ID is required from authentication token');
+      throw new BadRequestException('Tenant ID is required from authentication token');
     }
     dto.tenantId = tenantId;
     return await this.subscribeToPlanUseCase.execute(dto);
@@ -34,7 +34,7 @@ export class SubscriptionController {
   async changePlan(@Body() dto: ChangeSubscriptionPlanDto, @CurrentTenant() tenantId: string) {
     // Only allow tenantId from token
     if (!tenantId) {
-      throw new Error('Tenant ID is required from authentication token');
+      throw new BadRequestException('Tenant ID is required from authentication token');
     }
     dto.tenantId = tenantId;
     return await this.changeSubscriptionPlanUseCase.execute(dto);
@@ -45,7 +45,7 @@ export class SubscriptionController {
   async createCheckout(@Body() dto: CreateCheckoutSessionDto, @CurrentTenant() tenantId: string) {
     // Only allow tenantId from token
     if (!tenantId) {
-      throw new Error('Tenant ID is required from authentication token');
+      throw new BadRequestException('Tenant ID is required from authentication token');
     }
     dto.tenantId = tenantId;
     return { url: await this.createCheckoutSessionUseCase.execute(dto) };
@@ -61,7 +61,7 @@ export class SubscriptionController {
   @ApiOperation({ summary: 'Get subscription by tenant' })
   async findOne(@CurrentTenant() tenantId: string) {
     if (!tenantId) {
-      throw new Error('Tenant ID is required from authentication token');
+      throw new BadRequestException('Tenant ID is required from authentication token');
     }
     return await this.getSubscriptionUseCase.execute(tenantId);
   }

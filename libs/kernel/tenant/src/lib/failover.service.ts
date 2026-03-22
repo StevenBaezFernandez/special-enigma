@@ -336,7 +336,12 @@ export class FailoverService {
   private async recordDrillResult(result: DrillEvidence): Promise<void> {
 
       // Level 5: Cryptographic signing of evidence
-      const secret = process.env['EVIDENCE_SIGNING_SECRET'];
+      let secret = process.env['EVIDENCE_SIGNING_SECRET'];
+      if (!secret && (process.env['NODE_ENV'] === 'development' || process.env['STRICT_READINESS'] === 'false')) {
+          this.logger.warn('EVIDENCE_SIGNING_SECRET not found. Using development placeholder for signature.');
+          secret = 'dev-secret-placeholder';
+      }
+
       if (!secret) {
           throw new Error('EVIDENCE_SIGNING_SECRET is required to persist DR drill evidence.');
       }

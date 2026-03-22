@@ -2,3 +2,4 @@ export * from './lib/entities/tenant-config.entity';
 export * from './lib/ports/tenant-config.repository';
 export * from './lib/ports/integration-gateway.port';
 export * from './lib/ports/dashboard.gateway';
+export * from './lib/ports/database.port';

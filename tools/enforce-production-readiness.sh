@@ -35,7 +35,7 @@ check_required_paths() {
 check_pattern "sk_test_placeholder|SIMULATED_PRIVATE_KEY_CONTENT_FOR_DEMO|dev-secret-change-me-in-production" "libs apps -g !**/*.spec.ts -g !**/*.test.ts" "Detected embedded placeholder/test secrets in non-test source"
 check_pattern "KMS decryption requested .* placeholder|Placeholder for KMS decryption logic" "libs apps" "Detected KMS placeholder implementation"
 check_pattern "workflow_dispatch:\n  # CI/CD Triggers temporarily disabled" ".github/workflows/ci-cd.yml" "CI triggers appear disabled"
-check_pattern "MockFiscalProvider" "apps libs -g !**/*.spec.ts -g !**/*.test.ts -g !libs/domain/fiscal/infrastructure/src/lib/adapters/mock-fiscal-provider.adapter.ts" "Detected mock fiscal provider reference in runtime source"
+check_pattern "MockFiscalProvider" "apps libs -g !**/*.spec.ts -g !**/*.test.ts -g !libs/domain/fiscal/infrastructure/src/lib/test-utils/mock-fiscal-provider.adapter.ts" "Detected mock fiscal provider reference in runtime source"
 check_pattern "mock-jwt-token|Create Invoice Flow \(mocked\)" "apps/client/web apps/client/mobile apps/client/desktop libs/shared/ui -g !**/*.spec.ts -g !**/*.test.ts" "Detected mock UI data markers in runtime GA paths"
 check_pattern "simulation mode|demo[-_ ]?mode|fake provider|sample payload" "apps libs -g !**/*.spec.ts -g !**/*.test.ts -g !**/*e2e*" "Detected demo/simulation residue in production-scoped artifacts"
 

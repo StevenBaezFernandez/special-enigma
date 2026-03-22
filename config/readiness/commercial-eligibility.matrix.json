@@ -2,7 +2,7 @@
   "version": "2026.03-5.0-Hardened",
   "generatedFrom": {
     "source": "config/readiness/operational-readiness.sot.json",
-    "sha256": "5e25c741dd33c62c85ef47febd5578f9a7f6a5e636fe9d35256e5f02ee67cd98"
+    "sha256": "c7d9f46607f74b194bdd6d9de729cde164f264e5d27c2298d17ac1c4b89046ee"
   },
   "countries": [
     "MX",
@@ -48,6 +48,14 @@
         "provider": "STRIPE_TAX",
         "allowSimulation": false
       }
+    },
+    "payroll": {
+      "MX": { "status": "Beta", "allowSimulation": false },
+      "US": { "status": "No listo", "allowSimulation": false }
+    },
+    "fixed-assets": {
+      "MX": { "status": "GA", "allowSimulation": false },
+      "US": { "status": "Beta", "allowSimulation": false }
     },
     "billing": {
       "DO": {

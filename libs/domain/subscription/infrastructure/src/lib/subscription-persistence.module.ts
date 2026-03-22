@@ -13,4 +13,4 @@ import { SubscriptionSchema, SubscriptionPlanSchema } from './persistence/subscr
     CustomerIdentityService
   ]
 })
-export class SubscriptionDomainModule {}
+export class SubscriptionPersistenceModule {}

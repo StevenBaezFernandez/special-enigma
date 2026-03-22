@@ -36,6 +36,14 @@
       "CO": { "status": "Beta", "provider": "DIAN", "allowSimulation": false },
       "US": { "status": "Beta", "provider": "STRIPE_TAX", "allowSimulation": false }
     },
+    "payroll": {
+      "MX": { "status": "Beta", "allowSimulation": false },
+      "US": { "status": "No listo", "allowSimulation": false }
+    },
+    "fixed-assets": {
+      "MX": { "status": "GA", "allowSimulation": false },
+      "US": { "status": "Beta", "allowSimulation": false }
+    },
     "billing": {
       "DO": { "status": "GA", "allowSimulation": false },
       "MX": { "status": "GA", "allowSimulation": false },

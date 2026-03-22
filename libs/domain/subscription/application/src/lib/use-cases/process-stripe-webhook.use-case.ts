@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Injectable, Inject } from '@nestjs/common';
+import { EventBusPort, EVENT_BUS_PORT, LoggerPort, LOGGER_PORT } from '../ports';
 
 export interface StripeEvent {
   type: string;
@@ -10,12 +10,13 @@ export interface StripeEvent {
 
 @Injectable()
 export class ProcessStripeWebhookUseCase {
-  private readonly logger = new Logger(ProcessStripeWebhookUseCase.name);
-
-  constructor(private readonly eventEmitter: EventEmitter2) {}
+  constructor(
+    @Inject(EVENT_BUS_PORT) private readonly eventEmitter: EventBusPort,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort
+  ) {}
 
   async execute(event: StripeEvent): Promise<void> {
-    this.logger.log(`Processing Stripe event: ${event.type}`);
+    this.logger.log(`Processing Stripe event: ${event.type}`, 'ProcessStripeWebhookUseCase');
 
     // Emit events based on type. Listeners in different modules can react.
     // Use a naming convention that modules can subscribe to.
@@ -46,7 +47,7 @@ export class ProcessStripeWebhookUseCase {
         await this.eventEmitter.emitAsync('stripe.charge.dispute.closed', event.data.object);
         break;
       default:
-        this.logger.debug(`Unhandled event type: ${event.type}`);
+        this.logger.debug(`Unhandled event type: ${event.type}`, 'ProcessStripeWebhookUseCase');
     }
   }
 }

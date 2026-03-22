@@ -1,7 +1,8 @@
-import { Injectable, Logger, ConflictException } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MikroORM, EntityManager } from '@mikro-orm/core';
 import { TenantOperationService, TenantService, OperationType, OperationState, TenantMode } from '@virteex/kernel-tenant';
+import { DatabasePort, DATABASE_PORT } from '@virteex/domain-admin-domain';
+import { ConflictException } from '@virteex/kernel-exceptions';
 import Redis from 'ioredis';
 
 export enum ProvisioningStatus {
@@ -21,7 +22,7 @@ export class ProvisioningService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly orm: MikroORM,
+    @Inject(DATABASE_PORT) private readonly dbPort: DatabasePort,
     private readonly tenantService: TenantService,
     private readonly operationService: TenantOperationService
   ) {
@@ -55,12 +56,12 @@ export class ProvisioningService {
       await this.operationService.transitionState(operationId, OperationState.PREPARING, { status: ProvisioningStatus.DATABASE_CREATION });
 
       const config = await this.tenantService.getTenantConfig(tenantId);
-      const generator = this.orm.getSchemaGenerator();
+      const generator = this.dbPort.getSchemaGenerator();
 
       if (config.mode === TenantMode.SCHEMA) {
         await (generator as any).createSchema({ schema: config.schemaName });
       } else if (config.mode === TenantMode.DATABASE) {
-        const tenantEm = this.orm.em.fork();
+        const tenantEm = this.dbPort.forkEntityManager();
         await (tenantEm as any).getSchemaGenerator().createSchema();
       } else {
         await generator.updateSchema(); // SHARED mode
@@ -69,11 +70,11 @@ export class ProvisioningService {
       // 2. VALIDATING (Migrations)
       await this.operationService.transitionState(operationId, OperationState.VALIDATING, { status: ProvisioningStatus.SCHEMA_MIGRATION });
 
-      const migrator = this.orm.getMigrator();
+      const migrator = this.dbPort.getMigrator();
       if (config.mode === TenantMode.SCHEMA) {
           await migrator.up({ schema: [config.schemaName] } as any);
       } else if (config.mode === TenantMode.DATABASE) {
-          const tenantEm = this.orm.em.fork();
+          const tenantEm = this.dbPort.forkEntityManager();
           await (tenantEm as any).getMigrator().up();
       } else {
           await migrator.up();
@@ -103,7 +104,7 @@ export class ProvisioningService {
     this.logger.log(`Executing real data seeding for tenant ${tenantId}`);
 
     // Industrial seeding of base catalogs, fiscal settings, and admin user
-    const em = this.orm.em.fork();
+    const em = this.dbPort.forkEntityManager();
     if (config.mode === TenantMode.SCHEMA) {
         (em as any).schema = config.schemaName;
     }
@@ -134,7 +135,7 @@ export class ProvisioningService {
     this.logger.log(`Executing automated smoke tests for tenant ${tenantId}`);
 
     // Real health probes
-    const em = this.orm.em.fork();
+    const em = this.dbPort.forkEntityManager();
 
     // Probe 1: Data plane reachability
     const dbCheck = await em.getConnection().execute('SELECT 1');

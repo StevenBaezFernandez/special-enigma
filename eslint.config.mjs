@@ -63,7 +63,6 @@ export default [
               onlyDependOnLibsWithTags: [
                 'type:application',
                 'type:domain',
-                'type:infrastructure',
                 'type:contracts',
                 'type:util',
               ],
