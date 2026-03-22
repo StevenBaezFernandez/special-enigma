@@ -7,7 +7,7 @@ export class GetInvoicesUseCase {
     @Inject(INVOICE_REPOSITORY) private readonly invoiceRepository: InvoiceRepository
   ) {}
 
-  async execute(): Promise<Invoice[]> {
-    return this.invoiceRepository.findAll();
+  async execute(tenantId: string): Promise<Invoice[]> {
+    return this.invoiceRepository.findByTenantId(tenantId);
   }
 }

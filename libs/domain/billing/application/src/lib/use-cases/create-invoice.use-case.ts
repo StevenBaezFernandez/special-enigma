@@ -23,10 +23,10 @@ export class CreateInvoiceUseCase {
   ) {}
 
   async execute(dto: CreateInvoiceDto): Promise<Invoice> {
-    const tenantId = dto.tenantId || 'default-tenant';
+    const tenantId = dto.tenantId;
 
-    if (!tenantId) {
-      throw new DomainException('Tenant ID is required', 'TENANT_REQUIRED');
+    if (!tenantId || tenantId === 'default-tenant') {
+      throw new DomainException('Valid Tenant ID is required', 'TENANT_REQUIRED');
     }
 
     const subscription = await this.subscriptionRepository.findByTenantId(tenantId);

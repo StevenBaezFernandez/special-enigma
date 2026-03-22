@@ -1,5 +1,6 @@
 
 import { v4 } from 'uuid';
+import { Decimal } from 'decimal.js';
 
 export class VendorBill {
     id: string = v4();
@@ -35,13 +36,22 @@ export class VendorBill {
     this.issueDate = issueDate;
     this.dueDate = dueDate;
     this.lineItems = lineItems;
-    this.totalAmount = lineItems.reduce((sum: number, item: VendorBillLineItem) => sum + (item.quantity * item.price), 0).toFixed(2);
+    this.recalculateTotals();
+  }
+
+  recalculateTotals(): void {
+    const total = this.lineItems.reduce(
+      (sum: Decimal, item: VendorBillLineItem) => sum.plus(new Decimal(item.quantity).times(new Decimal(item.price))),
+      new Decimal(0)
+    );
+    this.totalAmount = total.toFixed(2);
   }
 }
 
 export interface VendorBillLineItem {
   description: string;
   quantity: number;
-  price: number;
-  taxAmount?: number;
+  price: number | string;
+  taxAmount?: number | string;
+  productId?: string;
 }

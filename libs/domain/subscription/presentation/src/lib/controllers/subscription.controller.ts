@@ -59,9 +59,11 @@ export class SubscriptionController {
 
   @Get()
   @ApiOperation({ summary: 'Get subscription by tenant' })
-  async findOne(@CurrentTenant() tenantId: string, @Query('tenantId') queryTenantId?: string) {
-    const tid = tenantId || queryTenantId || 'default-tenant';
-    return await this.getSubscriptionUseCase.execute(tid);
+  async findOne(@CurrentTenant() tenantId: string) {
+    if (!tenantId) {
+      throw new Error('Tenant ID is required from authentication token');
+    }
+    return await this.getSubscriptionUseCase.execute(tenantId);
   }
 
   @Get('plans')

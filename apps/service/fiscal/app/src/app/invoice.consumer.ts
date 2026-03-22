@@ -1,17 +1,17 @@
 import { Controller, Inject, Logger } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { FiscalProvider } from '@virteex/domain-fiscal-domain';
+import { FiscalProvider, FiscalInvoiceData } from '@virteex/domain-fiscal-domain';
 
 @Controller()
 export class InvoiceConsumer {
   private readonly logger = new Logger(InvoiceConsumer.name);
 
   constructor(
-    @Inject('FiscalProvider') private readonly fiscalProvider: any
+    @Inject('FiscalProvider') private readonly fiscalProvider: FiscalProvider
   ) {}
 
   @MessagePattern('billing.invoice.created')
-  async handleInvoiceCreated(@Payload() data: any) {
+  async handleInvoiceCreated(@Payload() data: FiscalInvoiceData) {
     this.logger.log(`Received invoice created event: ${JSON.stringify(data)}`);
 
     try {

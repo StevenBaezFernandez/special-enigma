@@ -22,8 +22,8 @@ export class BillingController {
   }
 
   @Get('invoices')
-  async findAll() {
-    return await this.getInvoicesUseCase.execute();
+  async findAll(@CurrentTenant() tenantId: string) {
+    return await this.getInvoicesUseCase.execute(tenantId);
   }
 
   @Get('plans')

@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { CurrentTenant, DomainException } from '@virteex/shared-util-server-server-config';
 import { StepUp, StepUpGuard } from '@virteex/kernel-auth';
 import { AddPaymentMethodUseCase, type AddPaymentMethodDto, GetPaymentMethodUseCase } from '@virteex/domain-billing-application';
 
@@ -21,8 +22,10 @@ export class PaymentMethodController {
 
   @Get()
   @ApiOperation({ summary: 'Get payment methods by tenant' })
-  async findAll(@Query('tenantId') tenantId: string) {
-    const tid = tenantId || 'default-tenant';
-    return await this.getPaymentMethodUseCase.execute(tid);
+  async findAll(@CurrentTenant() tenantId: string) {
+    if (!tenantId) {
+      throw new DomainException('Tenant ID is required', 'TENANT_REQUIRED');
+    }
+    return await this.getPaymentMethodUseCase.execute(tenantId);
   }
 }

@@ -2,7 +2,7 @@
   "rules": [
     {
       "pathRegex": "^apps/service/",
-      "allowedPrefixes": ["api-"]
+      "allowedPrefixes": ["api-", "service-"]
     },
     {
       "pathRegex": "^apps/client/web/",
@@ -22,14 +22,12 @@
     },
     {
       "pathRegex": "^apps/edge/",
-      "allowedPrefixes": ["bff-"]
+      "allowedPrefixes": ["bff-", "edge-"]
     },
     {
       "pathRegex": "^libs/domain/",
       "allowedPrefixes": ["domain-", "application-", "api-", "infra-"]
     }
   ],
-  "exceptions": {
-    "billing-contracts": "Legacy package name retained temporarily for external import compatibility."
-  }
+  "exceptions": {}
 }

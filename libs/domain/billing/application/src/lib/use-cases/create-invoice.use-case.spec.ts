@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
 import { Decimal } from 'decimal.js';
 import { FiscalStampingService, INVOICE_REPOSITORY, type InvoiceRepository, PRODUCT_REPOSITORY, type ProductRepository, TaxCalculatorService, TENANT_CONFIG_REPOSITORY, type TenantConfigRepository } from '@virteex/domain-billing-domain';
 import { CreateInvoiceUseCase } from './create-invoice.use-case';
@@ -10,69 +9,64 @@ import { SUBSCRIPTION_REPOSITORY } from '@virteex/domain-subscription-domain';
 
 describe('CreateInvoiceUseCase', () => {
   let useCase: CreateInvoiceUseCase;
-  let invoiceRepository: InvoiceRepository;
-  let integrationPublisher: InvoiceIntegrationPublisherPort;
+  let invoiceRepository: any;
+  let integrationPublisher: any;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CreateInvoiceUseCase,
-        PriceValidationPolicy,
-        InvoiceStampingOrchestrator,
-        {
-          provide: INVOICE_REPOSITORY,
-          useValue: {
-            save: vi.fn(),
-            countByTenantId: vi.fn().mockResolvedValue(0),
-            findByTenantAndDateRange: vi.fn(),
-          },
-        },
-        {
-          provide: PRODUCT_REPOSITORY,
-          useValue: {
-            findById: vi.fn().mockResolvedValue({ id: 'p1', price: 100 }),
-          } satisfies ProductRepository,
-        },
-        {
-          provide: TENANT_CONFIG_REPOSITORY,
-          useValue: {
-            getFiscalConfig: vi.fn().mockResolvedValue({ country: 'MX' }),
-          } satisfies Partial<TenantConfigRepository>,
-        },
-        {
-          provide: SUBSCRIPTION_REPOSITORY,
-          useValue: {
-            findByTenantId: vi.fn().mockResolvedValue({ plan: { limits: { invoices: 2 } } }),
-          },
-        },
-        {
-          provide: TaxCalculatorService,
-          useValue: {
-            calculateTax: vi.fn().mockImplementation((amount: number) => ({ totalTax: new Decimal(amount).times(0.16).toNumber() })),
-          },
-        },
-        {
-          provide: FiscalStampingService,
-          useValue: {
-            stampInvoice: vi.fn().mockResolvedValue({ uuid: 'uuid-1', xml: '<xml />', fechaTimbrado: new Date().toISOString() }),
-          },
-        },
-        {
-          provide: INVOICE_INTEGRATION_PUBLISHER,
-          useValue: {
-            publishInvoiceStamped: vi.fn(),
-          } satisfies InvoiceIntegrationPublisherPort,
-        },
-      ],
-    }).compile();
+  const mockInvoiceRepository = {
+    save: vi.fn(),
+    countByTenantId: vi.fn(),
+    findByTenantAndDateRange: vi.fn(),
+  };
+  const mockProductRepository = {
+    findById: vi.fn(),
+  };
+  const mockTenantConfigRepository = {
+    getFiscalConfig: vi.fn(),
+  };
+  const mockSubscriptionRepository = {
+    findByTenantId: vi.fn(),
+  };
+  const mockTaxCalculatorService = {
+    calculateTax: vi.fn(),
+  };
+  const mockFiscalStampingService = {
+    stampInvoice: vi.fn(),
+  };
+  const mockIntegrationPublisher = {
+    publishInvoiceStamped: vi.fn(),
+  };
 
-    useCase = module.get(CreateInvoiceUseCase);
-    invoiceRepository = module.get(INVOICE_REPOSITORY);
-    integrationPublisher = module.get(INVOICE_INTEGRATION_PUBLISHER);
+  beforeEach(() => {
+    vi.resetAllMocks();
+
+    const priceValidationPolicy = new PriceValidationPolicy();
+    const stampingOrchestrator = new InvoiceStampingOrchestrator(mockFiscalStampingService as any);
+
+    useCase = new CreateInvoiceUseCase(
+      mockInvoiceRepository as any,
+      mockProductRepository as any,
+      mockTenantConfigRepository as any,
+      mockTaxCalculatorService as any,
+      priceValidationPolicy,
+      stampingOrchestrator,
+      mockSubscriptionRepository as any,
+      mockIntegrationPublisher as any
+    );
+
+    invoiceRepository = mockInvoiceRepository;
+    integrationPublisher = mockIntegrationPublisher;
+
+    // Default mocks
+    mockInvoiceRepository.countByTenantId.mockResolvedValue(0);
+    mockProductRepository.findById.mockResolvedValue({ id: 'p1', price: 100 });
+    mockTenantConfigRepository.getFiscalConfig.mockResolvedValue({ country: 'MX' });
+    mockSubscriptionRepository.findByTenantId.mockResolvedValue({ plan: { limits: { invoices: 2 } } });
+    mockTaxCalculatorService.calculateTax.mockImplementation((amount: number) => ({ totalTax: new Decimal(amount).times(0.16).toNumber() }));
+    mockFiscalStampingService.stampInvoice.mockResolvedValue({ uuid: 'uuid-1', xml: '<xml />', fechaTimbrado: new Date().toISOString() });
   });
 
   it('should fail when invoice plan limit is reached', async () => {
-    (invoiceRepository.countByTenantId as any).mockResolvedValue(2);
+    mockInvoiceRepository.countByTenantId.mockResolvedValue(2);
 
     await expect(
       useCase.execute({

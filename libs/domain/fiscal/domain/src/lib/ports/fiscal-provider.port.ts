@@ -1,5 +1,7 @@
+import { FiscalInvoiceData } from '../entities/fiscal-invoice.entity';
+
 export interface FiscalProvider {
-  validateInvoice(invoice: any): Promise<boolean>;
-  signInvoice(invoice: any): Promise<string>;
-  transmitInvoice(invoice: any): Promise<void>;
+  validateInvoice(invoice: FiscalInvoiceData): Promise<boolean>;
+  signInvoice(invoice: FiscalInvoiceData): Promise<string>;
+  transmitInvoice(invoice: FiscalInvoiceData): Promise<void>;
 }

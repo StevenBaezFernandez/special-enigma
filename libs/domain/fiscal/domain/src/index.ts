@@ -34,11 +34,13 @@ export interface TenantFiscalConfig {
   fiscalAddress?: string;
 }
 
+import { FiscalInvoiceData } from './lib/entities/fiscal-invoice.entity';
+
 export interface FiscalProvider {
   send(document: any): Promise<any>;
-  validateInvoice(invoice: any): Promise<boolean>;
-  signInvoice(invoice: any): Promise<string>;
-  transmitInvoice(invoice: any): Promise<void>;
+  validateInvoice(invoice: FiscalInvoiceData): Promise<boolean>;
+  signInvoice(invoice: FiscalInvoiceData): Promise<string>;
+  transmitInvoice(invoice: FiscalInvoiceData): Promise<void>;
 }
 
 export interface FiscalStats {
@@ -119,3 +121,4 @@ export interface TenantConfigRepository {
 
 export * from './lib/fiscal-domain.service';
 export * from './lib/fiscal-domain.module';
+export * from './lib/entities/fiscal-invoice.entity';

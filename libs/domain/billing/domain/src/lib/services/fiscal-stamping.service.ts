@@ -1,4 +1,3 @@
-import { Inject } from '@nestjs/common';
 import { BadRequestException, EntityNotFoundException } from '@virteex/kernel-exceptions';
 import { Invoice } from '../entities/invoice.entity';
 import { FiscalStamp } from '../ports/pac-provider.port';
@@ -11,10 +10,10 @@ import { FiscalDocumentBuilderFactory, FISCAL_DOCUMENT_BUILDER_FACTORY } from '@
 
 export class FiscalStampingService {
   constructor(
-    @Inject(PAC_STRATEGY_FACTORY) private readonly pacStrategyFactory: PacStrategyFactory,
-    @Inject(TENANT_CONFIG_REPOSITORY) private readonly tenantConfigRepo: TenantConfigRepository,
-    @Inject(CUSTOMER_REPOSITORY) private readonly customerRepo: CustomerRepository,
-    @Inject(FISCAL_DOCUMENT_BUILDER_FACTORY) private readonly documentBuilderFactory: FiscalDocumentBuilderFactory
+    private readonly pacStrategyFactory: PacStrategyFactory,
+    private readonly tenantConfigRepo: TenantConfigRepository,
+    private readonly customerRepo: CustomerRepository,
+    private readonly documentBuilderFactory: FiscalDocumentBuilderFactory
   ) {}
 
   async stampInvoice(invoice: Invoice): Promise<FiscalStamp> {

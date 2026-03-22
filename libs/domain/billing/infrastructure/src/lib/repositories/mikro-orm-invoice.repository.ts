@@ -36,11 +36,6 @@ export class MikroOrmInvoiceRepository implements InvoiceRepository {
     return record ? InvoiceMapper.toDomain(record) : null;
   }
 
-  async findAll(): Promise<Invoice[]> {
-    const records = await this.repository.findAll({ populate: ['items'] });
-    return records.map((record) => InvoiceMapper.toDomain(record));
-  }
-
   async findByTenantId(tenantId: string): Promise<Invoice[]> {
     const records = await this.repository.find({ tenantId }, { populate: ['items'] });
     return records.map((record) => InvoiceMapper.toDomain(record));
