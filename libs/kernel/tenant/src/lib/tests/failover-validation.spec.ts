@@ -29,6 +29,7 @@ describe('Regional Failover Operational Validation', () => {
             return Promise.resolve([{ is_replica: false, lag_ms: '0' }]);
           })
       }),
+      findOne: vi.fn(),
       fork: vi.fn().mockReturnValue({
           getConnection: vi.fn().mockReturnValue({
               execute: vi.fn().mockResolvedValue([{ is_replica: false }])
@@ -48,6 +49,9 @@ describe('Regional Failover Operational Validation', () => {
     const mockFinOps = {
       recordOperationSlo: vi.fn().mockResolvedValue(undefined),
     };
+    const mockSecretManager = {
+      getSecret: vi.fn().mockReturnValue('mock-secret'),
+    };
     mockResidencyCompliance = {
       assertRegionAllowed: vi.fn().mockResolvedValue(undefined),
       authorizeReplication: vi.fn().mockResolvedValue({
@@ -58,7 +62,14 @@ describe('Regional Failover Operational Validation', () => {
       }),
     };
 
-    service = new FailoverService(mockEm as any, mockOpService as any, mockRoutingPlane as any, mockFinOps as any, mockResidencyCompliance as any);
+    service = new FailoverService(
+      mockEm as any,
+      mockOpService as any,
+      mockRoutingPlane as any,
+      mockFinOps as any,
+      mockResidencyCompliance as any,
+      mockSecretManager as any
+    );
   });
 
   it('SHOULD promote secondary region during failover', async () => {

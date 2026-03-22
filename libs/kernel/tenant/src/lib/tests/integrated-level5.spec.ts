@@ -72,6 +72,10 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
       releaseLock: vi.fn().mockResolvedValue(undefined),
     };
 
+    const mockSecretManager = {
+      getSecret: vi.fn().mockReturnValue('mock-secret'),
+    };
+
     mockRoutingPlane = {
       resolveRoute: vi.fn(),
       createSnapshot: vi.fn(),
@@ -161,7 +165,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
 
   describe('Flujo C — Regional Failover (Signed Snapshots & Freeze)', () => {
     it('SHOULD freeze writes, promote region, and sign snapshot', async () => {
-      const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance);
+      const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance, mockSecretManager as any);
 
       mockEm.findOneOrFail.mockResolvedValue({
           tenantId: 't1',
@@ -182,7 +186,7 @@ describe('Integrated E2E Validation - Multi-tenant / Multi-region Level 5', () =
     });
 
     it('SHOULD failover if target region health probes are successful', async () => {
-        const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance);
+        const service = new FailoverService(mockEm, mockOpService, mockRoutingPlane, mockFinOps, mockResidencyCompliance, mockSecretManager as any);
         mockEm.findOneOrFail.mockResolvedValue({ tenantId: 't1', secondaryRegion: 'sa-east-1', status: 'ACTIVE' });
 
         // Simulate healthy probes

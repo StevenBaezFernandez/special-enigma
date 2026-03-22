@@ -15,10 +15,11 @@ import { TenantCriticalConfigService } from './tenant-critical-config.service';
 import { ResidencyComplianceService } from './residency-compliance.service';
 import { ResidencyAuditorController } from './controllers/residency-auditor.controller';
 import { TelemetryModule } from '@virteex/kernel-telemetry';
+import { AuthModule } from '@virteex/kernel-auth';
 
 @Global()
 @Module({
-  imports: [TelemetryModule],
+  imports: [TelemetryModule, AuthModule],
   controllers: [ResidencyAuditorController],
   providers: [
     TenantService,

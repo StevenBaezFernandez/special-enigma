@@ -119,7 +119,7 @@ async function seedDatabaseDataset(client: Client) {
   );
 }
 
-describe.skip('Migration real DB suite (testcontainer-backed)', () => {
+describe('Migration real DB suite (testcontainer-backed)', () => {
   const sharedTc = new PostgresTestcontainer('virteex-shared-migration-tc', 55432, 'virteex');
   const dedicatedTc = new PostgresTestcontainer('virteex-dedicated-migration-tc', 55433, 'tenantdb');
   let sharedClient: Client;
@@ -135,8 +135,14 @@ describe.skip('Migration real DB suite (testcontainer-backed)', () => {
       return;
     }
 
-    sharedTc.start();
-    dedicatedTc.start();
+    try {
+      sharedTc.start();
+      dedicatedTc.start();
+    } catch (err) {
+      console.warn('Docker containers failed to start, skipping real DB tests:', err);
+      dockerAvailable = false;
+      return;
+    }
 
     sharedClient = new Client({ host: '127.0.0.1', port: 55432, database: 'virteex', user: 'postgres', password: 'postgres' });
     dedicatedClient = new Client({ host: '127.0.0.1', port: 55433, database: 'tenantdb', user: 'postgres', password: 'postgres' });

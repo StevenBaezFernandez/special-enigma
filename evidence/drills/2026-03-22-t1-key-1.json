@@ -2,7 +2,7 @@
   "tenantId": "t1",
   "drillId": "fail-123",
   "idempotencyKey": "key-1",
-  "environment": "development",
+  "environment": "test",
   "region": "sa-east-1",
   "scheduledBy": "scheduler/unknown",
   "inputs": {
@@ -11,7 +11,7 @@
     "probeInventorySource": "config/operations/regional-health-inventory.json"
   },
   "telemetry": {
-    "rtoMs": 13.94602900000018,
+    "rtoMs": 4.453505999999948,
     "rpoMs": 0,
     "backlogBefore": 0,
     "backlogAfter": 0
@@ -32,7 +32,7 @@
   "timeline": [
     {
       "step": "PREPARING",
-      "at": "2026-03-22T02:09:33.255Z",
+      "at": "2026-03-22T03:38:06.895Z",
       "status": "completed",
       "details": {
         "sourceRegion": "us-east-1",
@@ -41,32 +41,32 @@
     },
     {
       "step": "VALIDATING",
-      "at": "2026-03-22T02:09:33.255Z",
+      "at": "2026-03-22T03:38:06.895Z",
       "status": "started"
     },
     {
       "step": "VALIDATING",
-      "at": "2026-03-22T02:09:33.261Z",
+      "at": "2026-03-22T03:38:06.896Z",
       "status": "completed"
     },
     {
       "step": "RPO_VALIDATION",
-      "at": "2026-03-22T02:09:33.261Z",
+      "at": "2026-03-22T03:38:06.896Z",
       "status": "completed"
     },
     {
       "step": "SWITCHING",
-      "at": "2026-03-22T02:09:33.261Z",
+      "at": "2026-03-22T03:38:06.897Z",
       "status": "started"
     },
     {
       "step": "SWITCHING",
-      "at": "2026-03-22T02:09:33.262Z",
+      "at": "2026-03-22T03:38:06.897Z",
       "status": "completed"
     },
     {
       "step": "POST_PROMOTION_VALIDATION",
-      "at": "2026-03-22T02:09:33.263Z",
+      "at": "2026-03-22T03:38:06.898Z",
       "status": "completed",
       "details": {
         "integrityPostPromotion": true,
@@ -75,6 +75,6 @@
     }
   ],
   "status": "SUCCESS",
-  "executedAt": "2026-03-22T02:09:33.263Z",
-  "signature": "fd2f0a1152e22fcd22aa76a0213144b80c3357c6ea3c980d622683ea536f6922"
+  "executedAt": "2026-03-22T03:38:06.899Z",
+  "signature": "766d1728b650a61333bc9bfd0ed009d937f13e82d4ed405cddf66b2be4268911"
 }

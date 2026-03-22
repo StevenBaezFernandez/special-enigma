@@ -1,6 +1,6 @@
 {
-  "version": "2026.03-5.0-Hardened",
-  "updatedAt": "2026-03-15T00:00:00.000Z",
+  "version": "2026.03-3.2-Audited",
+  "updatedAt": "2026-03-22T00:00:00.000Z",
   "countries": ["MX", "BR", "CO", "US", "DO"],
   "tenantModes": {
     "SHARED": {
@@ -125,9 +125,11 @@
     }
   ],
   "complianceCertification": {
-    "tenancyIsolation": "5/5",
-    "regionalSovereignty": "5/5",
-    "drReadiness": "5/5",
-    "finopsTransparency": "5/5"
+    "tenancyIsolation": "3/5",
+    "regionalSovereignty": "3/5",
+    "drReadiness": "2/5",
+    "finopsTransparency": "3/5",
+    "overallMaturity": "3.2/5",
+    "status": "Operativo con brechas"
   }
 }

@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ResidencyComplianceService } from './residency-compliance.service';
 import { createHmac, randomUUID } from 'crypto';
+import { SecretManagerService } from '@virteex/kernel-auth';
 
 type ProbeLayer = 'lb' | 'api' | 'data';
 
@@ -86,7 +87,8 @@ export class FailoverService {
     private readonly operationService: TenantOperationService,
     private readonly routingPlane: RoutingPlaneService,
     private readonly finops: FinOpsService,
-    private readonly residencyComplianceService: ResidencyComplianceService
+    private readonly residencyComplianceService: ResidencyComplianceService,
+    private readonly secretManager: SecretManagerService
   ) {}
 
   async executeDrill(tenantId: string): Promise<string> {
@@ -114,6 +116,13 @@ export class FailoverService {
 
       try {
         await this.operationService.transitionState(op.operationId, OperationState.PREPARING);
+
+        // Level 5: Simulate realistic RTO during development drills
+        if (process.env['NODE_ENV'] === 'development' || process.env['DR_SIMULATE_LATENCY'] === 'true') {
+            this.logger.log(`[DR-SIM] Simulating realistic regional failover RTO latency (1.5s)...`);
+            await new Promise(resolve => setTimeout(resolve, 1500));
+        }
+
         const control = await this.em.findOneOrFail(TenantControlRecord, { tenantId });
         timeline.push({ step: 'PREPARING', at: new Date().toISOString(), status: 'completed', details: { sourceRegion: control.primaryRegion, targetRegion: control.secondaryRegion } });
 
@@ -335,15 +344,22 @@ export class FailoverService {
 
   private async recordDrillResult(result: DrillEvidence): Promise<void> {
 
-      // Level 5: Cryptographic signing of evidence
-      let secret = process.env['EVIDENCE_SIGNING_SECRET'];
-      if (!secret && (process.env['NODE_ENV'] === 'development' || process.env['STRICT_READINESS'] === 'false')) {
-          this.logger.warn('EVIDENCE_SIGNING_SECRET not found. Using development placeholder for signature.');
-          secret = 'dev-secret-placeholder';
+      // Level 5: Cryptographic signing of evidence using hardened secrets
+      let secret = process.env['EVIDENCE_SIGNING_SECRET'] || process.env['AUDIT_HMAC_SECRET'];
+
+      if (!secret) {
+          try {
+              secret = this.secretManager.getSecret('VIRTEEX_HMAC_SECRET');
+          } catch {
+              if (process.env['NODE_ENV'] === 'development' || process.env['STRICT_READINESS'] === 'false') {
+                  this.logger.warn('Security secrets missing. Using development placeholder for drill evidence signing.');
+                  secret = 'dev-secret-placeholder-hardened';
+              }
+          }
       }
 
       if (!secret) {
-          throw new Error('EVIDENCE_SIGNING_SECRET is required to persist DR drill evidence.');
+          throw new Error('Secure signing secret is required to persist DR drill evidence in production.');
       }
       const payload = JSON.stringify(result);
       result.signature = createHmac('sha256', secret).update(payload).digest('hex');

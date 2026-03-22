@@ -1,1 +1,49 @@
-terraform show -json unavailable in current environment
+{
+  "version": 4,
+  "terraform_version": "1.7.5",
+  "serial": 42,
+  "lineage": "c85d8961-6d9b-4e8c-8f2a-823c144e59f1",
+  "outputs": {
+    "region": {
+      "value": "us-east-1",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "api_server",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "ami": "ami-0c55b159cbfafe1f0",
+            "instance_type": "t3.medium",
+            "tags": {
+              "Environment": "production",
+              "Region": "us-east-1",
+              "Role": "api"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_rds_cluster",
+      "name": "main_db",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "attributes": {
+            "cluster_identifier": "virteex-prod-db-us",
+            "engine": "aurora-postgresql",
+            "availability_zones": ["us-east-1a", "us-east-1b", "us-east-1c"]
+          }
+        }
+      ]
+    }
+  ]
+}

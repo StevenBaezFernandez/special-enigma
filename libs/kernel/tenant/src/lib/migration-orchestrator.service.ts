@@ -206,10 +206,11 @@ export class MigrationOrchestratorService {
         [discoveredSchema]
       );
 
-      const tables = tablesResult.map((r: any) => r.table_name);
+      const tables = tablesResult.map((r: any) => r.table_name || r.TABLE_NAME || r.tableName);
       const stats: Record<string, any> = {};
 
       for (const table of tables) {
+          if (!table) continue;
           const tableName = schema ? `"${schema}"."${table}"` : `"${table}"`;
           const tableOnly = table;
           const columnsResult = await qb.execute(
@@ -223,7 +224,7 @@ export class MigrationOrchestratorService {
             [table, discoveredSchema]
           );
 
-          const columns = columnsResult.map((column: any) => column.column_name);
+          const columns = columnsResult.map((column: any) => column.column_name || column.COLUMN_NAME || column.columnName);
           const hasTenantFilter = columns.includes('tenant_id');
 
           if (columns.length === 0) {

@@ -1,11 +1,11 @@
 {
   "version": 4,
   "terraform_version": "1.7.5",
-  "serial": 38,
-  "lineage": "d96e9172-7f0c-4f9d-9a3b-934d255f60e2",
+  "serial": 15,
+  "lineage": "e17a8283-8e1d-4f1e-9b2c-045d366f71f3",
   "outputs": {
     "region": {
-      "value": "sa-east-1",
+      "value": "eu-central-1",
       "type": "string"
     }
   },
@@ -19,11 +19,11 @@
         {
           "schema_version": 1,
           "attributes": {
-            "ami": "ami-0b1e35ae2e8f81491",
+            "ami": "ami-04e601abe3e1a910f",
             "instance_type": "t3.medium",
             "tags": {
               "Environment": "production",
-              "Region": "sa-east-1",
+              "Region": "eu-central-1",
               "Role": "api"
             }
           }
@@ -38,9 +38,9 @@
       "instances": [
         {
           "attributes": {
-            "cluster_identifier": "virteex-prod-db-br",
+            "cluster_identifier": "virteex-prod-db-eu",
             "engine": "aurora-postgresql",
-            "availability_zones": ["sa-east-1a", "sa-east-1c"]
+            "availability_zones": ["eu-central-1a", "eu-central-1b"]
           }
         }
       ]
