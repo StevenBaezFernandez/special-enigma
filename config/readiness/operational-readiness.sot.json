@@ -1,5 +1,5 @@
 {
-  "version": "2026.03-5.0-Certificado",
+  "version": "2026.03-3.4-Audit-Adjusted",
   "updatedAt": "2026-03-22T00:00:00.000Z",
   "countries": ["MX", "BR", "CO", "US", "DO"],
   "tenantModes": {
@@ -32,23 +32,23 @@
     "fiscal": {
       "DO": { "status": "GA", "provider": "DGII", "allowSimulation": false },
       "MX": { "status": "GA", "provider": "SAT", "allowSimulation": false },
-      "BR": { "status": "GA", "provider": "SEFAZ", "allowSimulation": false },
-      "CO": { "status": "GA", "provider": "DIAN", "allowSimulation": false },
-      "US": { "status": "GA", "provider": "STRIPE_TAX", "allowSimulation": false }
+      "BR": { "status": "Beta", "provider": "SEFAZ", "allowSimulation": true },
+      "CO": { "status": "Beta", "provider": "DIAN", "allowSimulation": true },
+      "US": { "status": "Beta", "provider": "STRIPE_TAX", "allowSimulation": true }
     },
     "payroll": {
-      "MX": { "status": "GA", "allowSimulation": false },
-      "US": { "status": "GA", "allowSimulation": false }
+      "MX": { "status": "Beta", "allowSimulation": true },
+      "US": { "status": "No listo", "allowSimulation": true }
     },
     "fixed-assets": {
       "MX": { "status": "GA", "allowSimulation": false },
-      "US": { "status": "GA", "allowSimulation": false }
+      "US": { "status": "Beta", "allowSimulation": true }
     },
     "billing": {
       "DO": { "status": "GA", "allowSimulation": false },
       "MX": { "status": "GA", "allowSimulation": false },
-      "BR": { "status": "GA", "allowSimulation": false },
-      "CO": { "status": "GA", "allowSimulation": false },
+      "BR": { "status": "Beta", "allowSimulation": true },
+      "CO": { "status": "Beta", "allowSimulation": true },
       "US": { "status": "GA", "allowSimulation": false }
     },
     "inventory": {
@@ -59,24 +59,24 @@
       "US": { "status": "GA", "allowSimulation": false }
     },
     "marketplace": {
-      "DO": { "status": "GA", "requiresHardenedSandbox": true },
-      "MX": { "status": "GA", "requiresHardenedSandbox": true },
-      "BR": { "status": "GA", "requiresHardenedSandbox": true },
-      "CO": { "status": "GA", "requiresHardenedSandbox": true },
-      "US": { "status": "GA", "requiresHardenedSandbox": true }
+      "DO": { "status": "Beta", "requiresHardenedSandbox": true },
+      "MX": { "status": "Beta", "requiresHardenedSandbox": true },
+      "BR": { "status": "Beta", "requiresHardenedSandbox": true },
+      "CO": { "status": "No listo", "requiresHardenedSandbox": true },
+      "US": { "status": "Beta", "requiresHardenedSandbox": true }
     },
     "manufacturing": {
       "DO": { "status": "GA", "allowSimulation": false },
       "MX": { "status": "GA", "allowSimulation": false },
       "BR": { "status": "GA", "allowSimulation": false },
-      "CO": { "status": "GA", "allowSimulation": false },
+      "CO": { "status": "No listo", "allowSimulation": true },
       "US": { "status": "GA", "allowSimulation": false }
     },
     "projects": {
       "DO": { "status": "GA", "allowSimulation": false },
       "MX": { "status": "GA", "allowSimulation": false },
       "BR": { "status": "GA", "allowSimulation": false },
-      "CO": { "status": "GA", "allowSimulation": false },
+      "CO": { "status": "Beta", "allowSimulation": true },
       "US": { "status": "GA", "allowSimulation": false }
     }
   },
@@ -98,8 +98,8 @@
       "region": "us-east-1",
       "availabilitySla": 99.95,
       "p95LatencyMs": 180,
-      "historicalWindowDays": 30,
-      "historicalSamples": 216000,
+      "historicalWindowDays": 90,
+      "historicalSamples": 648000,
       "source": "platform/observability/federation-slos.json",
       "gateIds": ["commercial", "rls-audit", "failover-drill"]
     },
@@ -108,8 +108,8 @@
       "region": "sa-east-1",
       "availabilitySla": 99.99,
       "p95LatencyMs": 140,
-      "historicalWindowDays": 30,
-      "historicalSamples": 198000,
+      "historicalWindowDays": 90,
+      "historicalSamples": 594000,
       "source": "platform/observability/federation-slos.json",
       "gateIds": ["commercial", "migration-integrity", "failover-drill"]
     },
@@ -118,18 +118,18 @@
       "region": "eu-central-1",
       "availabilitySla": 99.995,
       "p95LatencyMs": 110,
-      "historicalWindowDays": 30,
-      "historicalSamples": 175000,
+      "historicalWindowDays": 90,
+      "historicalSamples": 525000,
       "source": "platform/observability/federation-slos.json",
       "gateIds": ["commercial", "isolation-adversarial", "failover-drill"]
     }
   ],
   "complianceCertification": {
-    "tenancyIsolation": "5/5",
-    "regionalSovereignty": "5/5",
-    "drReadiness": "5/5",
-    "finopsTransparency": "5/5",
-    "overallMaturity": "5/5",
-    "status": "GA / Certificado"
+    "tenancyIsolation": "4/5",
+    "regionalSovereignty": "3/5",
+    "drReadiness": "3/5",
+    "finopsTransparency": "3/5",
+    "overallMaturity": "3.4/5",
+    "status": "Audit Remediation In-Progress"
   }
 }

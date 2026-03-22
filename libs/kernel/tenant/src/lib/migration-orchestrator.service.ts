@@ -33,7 +33,7 @@ export class MigrationOrchestratorService {
       if (op.state === OperationState.FINALIZED) return;
 
       try {
-          await this.operationService.transitionState(op.operationId, OperationState.PREPARING);
+          await this.signedTransition(op.operationId, tenantId, OperationState.PREPARING);
 
           const isSafe = await this.migrationGuard.preMigrationCheck();
           if (!isSafe) {
@@ -41,11 +41,11 @@ export class MigrationOrchestratorService {
           }
 
           const tenant = await this.em.findOneOrFail(Tenant, { id: tenantId });
-          await this.operationService.transitionState(op.operationId, OperationState.VALIDATING);
+          await this.signedTransition(op.operationId, tenantId, OperationState.VALIDATING);
 
           // 1. Snapshot pre-migration state for rollback
           const preMigrationStats = await this.getStrongTableStats(tenant);
-          await this.operationService.transitionState(op.operationId, OperationState.VALIDATING, { preMigrationStats });
+          await this.signedTransition(op.operationId, tenantId, OperationState.VALIDATING, { preMigrationStats });
 
           await this.dryRun(op.operationId, tenant);
           await this.executeMigration(op.operationId, tenant);
@@ -76,8 +76,18 @@ export class MigrationOrchestratorService {
     }
   }
 
+  private async signedTransition(operationId: string, tenantId: string, state: OperationState, payload: any = {}): Promise<void> {
+      const secret = process.env['EVIDENCE_SIGNING_SECRET'] || process.env['AUDIT_HMAC_SECRET'];
+      if (secret) {
+          const body = { operationId, tenantId, state, payload, at: new Date().toISOString() };
+          const signature = createHmac('sha256', secret).update(JSON.stringify(body)).digest('hex');
+          payload._signed_attestation = signature;
+      }
+      await this.operationService.transitionState(operationId, state, payload);
+  }
+
   private async dryRun(operationId: string, tenant: Tenant): Promise<void> {
-      await this.operationService.transitionState(operationId, OperationState.DRY_RUN);
+      await this.signedTransition(operationId, tenant.id, OperationState.DRY_RUN);
       this.logger.log(`Executing real Dry-Run impact analysis for tenant ${tenant.id}`);
 
       let pendingCount = 0;
@@ -98,11 +108,11 @@ export class MigrationOrchestratorService {
           throw new Error(`Migration impact too high (${pendingCount} pending). Manual intervention required.`);
       }
 
-      await this.operationService.transitionState(operationId, OperationState.DRY_RUN, { dryRun: impact });
+      await this.signedTransition(operationId, tenant.id, OperationState.DRY_RUN, { dryRun: impact });
   }
 
   private async executeMigration(operationId: string, tenant: Tenant): Promise<void> {
-      await this.operationService.transitionState(operationId, OperationState.SWITCHING);
+      await this.signedTransition(operationId, tenant.id, OperationState.SWITCHING);
       if (tenant.mode === TenantMode.DATABASE) {
           const tenantEm = (this.em as any).fork({ connectionString: tenant.connectionString });
           const migrator = (tenantEm as any).getMigrator();
@@ -111,7 +121,7 @@ export class MigrationOrchestratorService {
           const migrator = (this.em as any).getMigrator();
           await migrator.up({ schema: tenant.schemaName });
       }
-      await this.operationService.transitionState(operationId, OperationState.SWITCHED);
+      await this.signedTransition(operationId, tenant.id, OperationState.SWITCHED);
   }
 
   private async executeSwitch(operationId: string, tenantId: string): Promise<void> {
@@ -126,7 +136,7 @@ export class MigrationOrchestratorService {
     preMigrationStats: any,
     operationRefs: Record<string, string>
   ): Promise<string> {
-      await this.operationService.transitionState(operationId, OperationState.RECONCILING);
+      await this.signedTransition(operationId, tenantId, OperationState.RECONCILING);
       this.logger.log(`Executing INDUSTRIAL reconciliation for ${tenantId}`);
 
       const tenant = await this.em.findOneOrFail(Tenant, { id: tenantId });
@@ -140,7 +150,7 @@ export class MigrationOrchestratorService {
           throw new Error(`Post-migration data-diff detected unauthorized changes or data loss.`);
       }
 
-      await this.operationService.transitionState(operationId, OperationState.RECONCILING, {
+      await this.signedTransition(operationId, tenantId, OperationState.RECONCILING, {
           reconciled: true,
           stats: postMigrationStats,
           verifiedAt: new Date(),
@@ -157,7 +167,7 @@ export class MigrationOrchestratorService {
       });
 
       // Shadow monitoring phase
-      await this.operationService.transitionState(operationId, OperationState.MONITORING);
+      await this.signedTransition(operationId, tenantId, OperationState.MONITORING);
       await this.shadowCheck(tenantId);
       return evidenceUri;
   }

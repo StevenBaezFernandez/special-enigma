@@ -1,0 +1,16 @@
+{
+  "tenantId": "t-integrity",
+  "operationId": "op-123",
+  "verifiedAt": "2026-03-22T04:40:34.038Z",
+  "verified": true,
+  "preMigrationStats": {},
+  "rollbackStats": {
+    "users": {
+      "count": 0,
+      "checksum": "0",
+      "structuralHash": "0"
+    }
+  },
+  "signature": "5d6ca57cb97ca594c0d1382a06a8eb5a763b963cdc4a1c5a3059c396a787dacb",
+  "signatureAlgorithm": "HMAC-SHA256"
+}

@@ -1,31 +1,31 @@
 {
-  "tenantId": "t-enterprise",
+  "tenantId": "t-lag",
   "operationId": "op-123",
   "phase": "post-migration",
   "operationRefs": {
-    "tenantId": "t-enterprise",
+    "tenantId": "t-lag",
     "operationId": "op-123",
-    "requestedAt": "2026-03-22T02:09:33.582Z",
-    "idempotencyKey": "key-2"
+    "requestedAt": "2026-03-22T04:40:34.043Z",
+    "idempotencyKey": "key-lag"
   },
-  "generatedAt": "2026-03-22T02:09:33.582Z",
+  "generatedAt": "2026-03-22T04:40:34.043Z",
   "checksums": {
     "pre": {
-      "undefined": {
+      "users": {
         "count": 10,
-        "checksum": "0",
-        "structuralHash": "0"
+        "checksum": "a",
+        "structuralHash": "b"
       }
     },
     "post": {
-      "undefined": {
+      "users": {
         "count": 10,
-        "checksum": "0",
-        "structuralHash": "0"
+        "checksum": "a",
+        "structuralHash": "b"
       }
     }
   },
-  "integrityDigest": "242b856e62a9e2b9d8f534308f2313caa937d6afcf5f94587d0d346000da8684",
-  "signature": "000af7f9b76ae2c6f08eec4b3e121170df51567be301df6d54e520d804c03d7c",
+  "integrityDigest": "564613ae6c121c417f95a083a49c4dfe34b67ec9c9f5063836aac3914d86c7bd",
+  "signature": "598881027bb7133d53f4da86f67af70e73d18232d50a83e4404d3c4b4f49ae15",
   "signatureAlgorithm": "HMAC-SHA256"
 }

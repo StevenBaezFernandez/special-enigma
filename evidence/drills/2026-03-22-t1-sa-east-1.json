@@ -1,0 +1,1 @@
+{"status": "simulated", "drillId": "drill-123", "tenantId": "t1", "targetRegion": "sa-east-1", "telemetry": {"rtoMs": 45.2, "rpoMs": 0}}

@@ -1,18 +1,18 @@
 {
   "releaseVersion": "DEV-SNAPSHOT",
-  "generatedAt": "2026-03-22T03:15:00.000Z",
+  "generatedAt": "2026-03-22T04:36:36.149Z",
   "artifacts": [
     {
       "path": "evidence/releases/DEV-SNAPSHOT/summary.json",
-      "sha256": "0ae0a51bd060c68be8a8293f336adc709b1fd9203c80c36126d5e3a104c99a25"
+      "sha256": "3d59e4297bf2f34f6f68293b1db653c1028749cba5ef35cec89aefab6c0f3c93"
     },
     {
       "path": "evidence/releases/DEV-SNAPSHOT/manifest.json",
-      "sha256": "252538129d0b8090594bf0268b73db6abbdbb90230286df94565604c3a5bc111"
+      "sha256": "93354cbbe232714f7d988d05823bac716c8e19b57daf69718b6352a02b54fca8"
     },
     {
       "path": "evidence/releases/DEV-SNAPSHOT/README.md",
-      "sha256": "c04e389fd36808d357ce7ac912b23a03fee1a6dab53835d365d5fbe46a156d60"
+      "sha256": "9ccb9217cc7c6a2895220628dead777235adebf75d2684da60b147314580bbd3"
     },
     {
       "path": "evidence/reports/RELEASE_READINESS_REPORT.md",

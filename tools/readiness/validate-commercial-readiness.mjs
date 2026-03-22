@@ -6,9 +6,20 @@ import crypto from 'node:crypto';
 const releaseVersion = process.env.RELEASE_VERSION || 'DEV-SNAPSHOT';
 const matrixPath = path.resolve('config/readiness/commercial-eligibility.matrix.json');
 const sotPath = path.resolve('config/readiness/operational-readiness.sot.json');
+const docsPath = path.resolve('docs/commercial/country-module-readiness-matrix.md');
+const sloHistoryPath = path.resolve('evidence/slo/slo-compliance-history.json');
+
 const matrix = JSON.parse(fs.readFileSync(matrixPath, 'utf8'));
 const sotRaw = fs.readFileSync(sotPath, 'utf8');
 const sot = JSON.parse(sotRaw);
+
+// 0. Documentation Cross-Check
+console.log('📖 Validating Documentation Alignment...');
+if (!fs.existsSync(docsPath)) {
+  console.error(`❌ docs/commercial/country-module-readiness-matrix.md is missing.`);
+  process.exit(1);
+}
+const docsContent = fs.readFileSync(docsPath, 'utf8');
 const sotHash = crypto.createHash('sha256').update(sotRaw).digest('hex');
 
 const allowedStatus = new Set(['GA', 'Beta', 'No listo']);
@@ -23,8 +34,27 @@ if (JSON.stringify(matrix.countries) !== JSON.stringify(sot.countries)) {
   violations.push('Country catalog differs between matrix and single source of truth.');
 }
 
+// SLO History check
+let sloHistory = { records: [] };
+if (fs.existsSync(sloHistoryPath)) {
+  sloHistory = JSON.parse(fs.readFileSync(sloHistoryPath, 'utf8'));
+}
+
 for (const [moduleName, countries] of Object.entries(matrix.modules ?? {})) {
   for (const [country, cfg] of Object.entries(countries)) {
+    // Cross-check with SOT
+    const sotModule = sot.modules?.[moduleName]?.[country];
+    if (!sotModule || sotModule.status !== cfg.status) {
+      violations.push(`${moduleName}/${country} status mismatch between Matrix (${cfg.status}) and SOT (${sotModule?.status ?? 'missing'}).`);
+    }
+
+    // Cross-check with Docs
+    const moduleLabel = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+    const docRegex = new RegExp(`\\|\\s*${country}\\s*\\|.*\\|\\s*${cfg.status}\\s*\\|`, 'i');
+    if (!docRegex.test(docsContent)) {
+       violations.push(`${moduleName}/${country} status '${cfg.status}' not found in docs/commercial/country-module-readiness-matrix.md. Documentation must match Source of Truth.`);
+    }
+
     if (!allowedStatus.has(cfg.status)) {
       violations.push(`${moduleName}/${country} has invalid status '${cfg.status}'.`);
     }
@@ -33,6 +63,16 @@ for (const [moduleName, countries] of Object.entries(matrix.modules ?? {})) {
     }
     if (cfg.status === 'GA' && cfg.allowSimulation === true) {
       violations.push(`${moduleName}/${country} is GA but allowSimulation=true.`);
+    }
+
+    // GA requirement: 90 days SLO history
+    if (cfg.status === 'GA') {
+        const requiredWindow = sot.slaByTenantModeRegion?.[0]?.historicalWindowDays || 90;
+        const relevantSlo = sloHistory.records.filter(r => r.status === 'compliant');
+        // Simple heuristic: check if we have enough historical context (simulated for now by checking metadata if it existed)
+        if (requiredWindow > 30 && sloHistory.retentionDays < requiredWindow) {
+             violations.push(`${moduleName}/${country} is GA but SLO history retention (${sloHistory.retentionDays} days) is less than required (${requiredWindow} days).`);
+        }
     }
   }
 }

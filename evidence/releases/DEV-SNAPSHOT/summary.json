@@ -1,33 +1,61 @@
 {
   "releaseVersion": "DEV-SNAPSHOT",
-  "generatedAt": "2026-03-22T03:10:00.000Z",
-  "readinessState": "ready-with-evidence",
-  "maturityScore": "5.0/5",
+  "generatedAt": "2026-03-22T04:36:36.149Z",
+  "readinessState": "blocked",
+  "maturityScore": "2.9/5",
   "gateResults": [
     {
       "id": "commercial",
+      "cmd": "node tools/readiness/validate-commercial-readiness.mjs",
+      "status": "passed"
+    },
+    {
+      "id": "consistency",
+      "cmd": "node tools/readiness/validate-readiness-consistency.mjs",
+      "status": "failed",
+      "stderr": "❌ Readiness consistency validation failed:\n - Inconsistency in docs/commercial/country-module-readiness-matrix.md for MX/fixedAssets: Doc=GA, SOT=-\n - Inconsistency in docs/commercial/country-module-readiness-matrix.md for US/fixedAssets: Doc=Beta, SOT=-\n - Readiness report is missing module row: payroll.\n - Readiness report is missing module row: fixed-assets.\n"
+    },
+    {
+      "id": "docs-consistency",
+      "cmd": "node tools/quality-gates/validate-docs-consistency.mjs",
+      "status": "passed"
+    },
+    {
+      "id": "plugin-isolation",
+      "cmd": "node tools/quality-gates/validate-plugin-isolation.mjs",
+      "status": "passed"
+    },
+    {
+      "id": "production-readiness",
+      "cmd": "bash ./tools/enforce-production-readiness.sh",
       "status": "passed"
     },
     {
       "id": "rls-audit",
-      "status": "passed"
+      "cmd": "node tools/quality-gates/check-rls.js",
+      "status": "failed",
+      "stderr": "❌ CRITICAL: Database probe could not be executed (no connectivity or missing URL). Real DB validation is MANDATORY for Level 5.\n"
     },
     {
       "id": "isolation-adversarial",
-      "status": "passed"
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/adversarial-isolation.spec.ts",
+      "status": "failed",
+      "stderr": "\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m libs/kernel/tenant/src/lib/tests/adversarial-isolation.spec.ts\u001b[2m [ libs/kernel/tenant/src/lib/tests/adversarial-isolation.spec.ts ]\u001b[22m\n\u001b[31m\u001b[1mError\u001b[22m: Cannot find package '@virteex/kernel-tenant-context' imported from '/app/libs/kernel/tenant/src/lib/interceptors/tenant-rls.interceptor.ts'\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m libs/kernel/tenant/src/lib/interceptors/tenant-rls.interceptor.ts:\u001b[2m5:1\u001b[22m\u001b[39m\n    \u001b[90m  3| \u001b[39m\u001b[35mimport\u001b[39m { \u001b[33mObservable\u001b[39m\u001b[33m,\u001b[39m \u001b[35mfrom\u001b[39m\u001b[33m,\u001b[39m lastValueFrom } \u001b[35mfrom\u001b[39m \u001b[32m'rxjs'\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m  4| \u001b[39m\u001b[35mimport\u001b[39m { tap\u001b[33m,\u001b[39m catchError } \u001b[35mfrom\u001b[39m \u001b[32m'rxjs/operators'\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m  5| \u001b[39m\u001b[35mimport\u001b[39m { getTenantContext } \u001b[35mfrom\u001b[39m \u001b[32m'@virteex/kernel-tenant-context'\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m   | \u001b[39m\u001b[31m^\u001b[39m\n    \u001b[90m  6| \u001b[39m\u001b[35mimport\u001b[39m { \u001b[33mTenantService\u001b[39m } \u001b[35mfrom\u001b[39m \u001b[32m'../tenant.service'\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m  7| \u001b[39mimport { TenantControlRecord } from '../entities/tenant-control-record…\n\u001b[90m \u001b[2m❯\u001b[22m libs/kernel/tenant/src/lib/tests/adversarial-isolation.spec.ts:\u001b[2m2:1\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m\n\n"
     },
     {
       "id": "migration-integrity",
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/migration-validation.spec.ts",
       "status": "passed"
     },
     {
       "id": "failover-drill",
+      "cmd": "npx vitest run libs/kernel/tenant/src/lib/tests/failover-validation.spec.ts",
       "status": "passed"
     }
   ],
   "evidence": {
     "commercialReadiness": {
-      "version": "2026.03-5.0-Hardened",
+      "version": "2026.03-3.4-Audit-Adjusted",
       "countries": [
         "MX",
         "BR",
@@ -41,6 +69,14 @@
           "MX": "GA",
           "BR": "Beta",
           "CO": "Beta",
+          "US": "Beta"
+        },
+        "payroll": {
+          "MX": "Beta",
+          "US": "No listo"
+        },
+        "fixed-assets": {
+          "MX": "GA",
           "US": "Beta"
         },
         "billing": {
@@ -77,14 +113,6 @@
           "BR": "GA",
           "CO": "Beta",
           "US": "GA"
-        },
-        "payroll": {
-          "MX": "Beta",
-          "US": "No listo"
-        },
-        "fixed-assets": {
-          "MX": "GA",
-          "US": "Beta"
         }
       }
     },

@@ -29,6 +29,7 @@ describe('TenantService', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
+    process.env['EVIDENCE_SIGNING_SECRET'] = 'test-secret';
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TenantService,
