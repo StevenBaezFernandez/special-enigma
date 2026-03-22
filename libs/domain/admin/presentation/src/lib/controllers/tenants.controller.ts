@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiHeader } from '@nestjs/sw
 import { TenantSupportService, ProvisioningService } from '@virteex/domain-admin-application';
 import { TenantService, TenantMode } from '@virteex/kernel-tenant';
 import { StepUp, StepUpGuard } from '@virteex/kernel-auth';
-import { CreateTenantRequest } from '@virteex/domain-admin-contracts';
+import { type CreateTenantRequest } from '@virteex/domain-admin-contracts';
 
 @ApiTags('Admin/Tenants')
 @ApiHeader({ name: 'X-MFA-Token', description: 'Mandatory Multi-Factor Authentication Token for Admin access' })

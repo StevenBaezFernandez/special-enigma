@@ -1,6 +1,6 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { DASHBOARD_GATEWAY, DashboardGateway } from '@virteex/domain-admin-domain';
+import { DASHBOARD_GATEWAY, type DashboardGateway } from '@virteex/domain-admin-domain';
 
 @ApiTags('Admin/Monitoring')
 @Controller('admin/monitoring')

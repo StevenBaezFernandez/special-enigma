@@ -34,10 +34,10 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "edge-portal:build:development-app"
+          "buildTarget": "edge-portal-app:build:development"
         },
         "production": {
-          "buildTarget": "edge-portal:build:production-app"
+          "buildTarget": "edge-portal-app:build:production"
         }
       }
     },

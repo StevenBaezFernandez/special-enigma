@@ -30,7 +30,7 @@ export class CreateInvoiceUseCase {
     }
 
     const subscription = await this.subscriptionRepository.findByTenantId(tenantId);
-    const limit = subscription?.plan?.limits?.invoices ?? 10;
+    const limit = subscription?.getPlan()?.limits?.invoices ?? 10;
     if (limit !== -1) {
       const currentCount = await this.invoiceRepository.countByTenantId(tenantId);
       if (currentCount >= limit) {

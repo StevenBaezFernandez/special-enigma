@@ -34,10 +34,10 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "edge-cms:build:development-app"
+          "buildTarget": "edge-cms-app:build:development"
         },
         "production": {
-          "buildTarget": "edge-cms:build:production-app"
+          "buildTarget": "edge-cms-app:build:production"
         }
       }
     },

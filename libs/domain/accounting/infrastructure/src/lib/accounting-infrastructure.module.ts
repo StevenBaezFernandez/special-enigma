@@ -4,7 +4,15 @@ import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY } from '@virteex/domain-ac
 import { MikroOrmAccountRepository } from './repositories/mikro-orm-account.repository';
 import { MikroOrmJournalEntryRepository } from './repositories/mikro-orm-journal-entry.repository';
 import { AccountSchema, JournalEntrySchema, JournalEntryLineSchema, FiscalYearSchema } from './persistence/mikro-orm.schemas';
-import { CreateAccountUseCase, RecordJournalEntryUseCase, GetAccountsUseCase, GetJournalEntriesUseCase, SetupChartOfAccountsUseCase } from '@virteex/domain-accounting-application';
+import {
+  CreateAccountUseCase,
+  RecordJournalEntryUseCase,
+  GetAccountsUseCase,
+  GetJournalEntriesUseCase,
+  SetupChartOfAccountsUseCase,
+  GenerateFinancialReportUseCase,
+  CloseFiscalPeriodUseCase,
+} from '@virteex/domain-accounting-application';
 
 @Global()
 @Module({

@@ -299,6 +299,9 @@
       "@virteex/kernel-audit": [
         "libs/kernel/audit/src/index.ts"
       ],
+      "@virteex/kernel-bff-core": [
+        "libs/kernel/bff-core/src/index.ts"
+      ],
       "@virteex/kernel-auth": [
         "libs/kernel/auth/src/index.ts"
       ],

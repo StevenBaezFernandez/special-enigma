@@ -34,10 +34,10 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "edge-wms:build:development-app"
+          "buildTarget": "edge-wms-app:build:development"
         },
         "production": {
-          "buildTarget": "edge-wms:build:production-app"
+          "buildTarget": "edge-wms-app:build:production"
         }
       }
     },

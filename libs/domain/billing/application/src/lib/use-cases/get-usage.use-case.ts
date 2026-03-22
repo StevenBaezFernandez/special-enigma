@@ -33,8 +33,8 @@ export class GetUsageUseCase {
       storage: this.configService.get<number>('DEFAULT_STORAGE_LIMIT', 50)
     };
 
-    if (subscription && subscription.isValid() && subscription.plan) {
-       limits = subscription.plan.limits;
+    if (subscription && subscription.isValid() && subscription.getPlan()) {
+       limits = subscription.getPlan().limits;
     }
 
     const isUnlimited = limits.invoices === -1;

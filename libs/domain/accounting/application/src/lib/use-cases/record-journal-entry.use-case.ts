@@ -8,7 +8,7 @@ export class RecordJournalEntryUseCase {
     private accountRepository: AccountRepository
   ) {}
 
-  async execute(dto: RecordJournalEntryDto & { tenantId: string }): Promise<JournalEntryDto> {
+  async execute(dto: RecordJournalEntryDto): Promise<JournalEntryDto> {
     const entry = new JournalEntry(dto.tenantId, dto.description, dto.date);
 
     for (const lineDto of dto.lines) {

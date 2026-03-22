@@ -6,6 +6,7 @@ export interface JournalEntryLineInputDto {
 }
 
 export interface RecordJournalEntryDto {
+  tenantId: string;
   date: Date;
   description: string;
   lines: JournalEntryLineInputDto[];

@@ -34,10 +34,10 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "edge-storefront:build:development-app"
+          "buildTarget": "edge-storefront-app:build:development"
         },
         "production": {
-          "buildTarget": "edge-storefront:build:production-app"
+          "buildTarget": "edge-storefront-app:build:production"
         }
       }
     },
