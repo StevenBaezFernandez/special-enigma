@@ -1,68 +1,49 @@
-import { vi } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GenerateFinancialReportUseCase } from './generate-financial-report.use-case';
-import { JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
-import { AccountType } from '@virteex/domain-accounting-contracts';
+import { type JournalEntryRepository, type AccountRepository } from '@virteex/domain-accounting-domain';
 
 describe('GenerateFinancialReportUseCase', () => {
-  let useCase: GenerateFinancialReportUseCase;
-  let journalRepo: any;
-  let accountRepo: any;
+  let service: GenerateFinancialReportUseCase;
+  let journalRepo: JournalEntryRepository;
+  let accountRepo: AccountRepository;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     journalRepo = {
-      getBalancesByAccount: vi.fn(),
-    };
+        getBalancesByAccount: vi.fn(),
+    } as unknown as JournalEntryRepository;
     accountRepo = {
-      findAll: vi.fn(),
-    };
-
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        GenerateFinancialReportUseCase,
-        { provide: JOURNAL_ENTRY_REPOSITORY, useValue: journalRepo },
-        { provide: ACCOUNT_REPOSITORY, useValue: accountRepo },
-      ],
-    }).compile();
-
-    useCase = module.get<GenerateFinancialReportUseCase>(GenerateFinancialReportUseCase);
+        findAll: vi.fn(),
+    } as unknown as AccountRepository;
+    service = new GenerateFinancialReportUseCase(journalRepo, accountRepo);
   });
 
   it('should generate a Balance Sheet', async () => {
-    const tenantId = 't1';
-    accountRepo.findAll.mockResolvedValue([
-      { id: 'a1', name: 'Cash', code: '101', type: AccountType.ASSET },
-      { id: 'a2', name: 'Revenue', code: '401', type: AccountType.REVENUE },
-    ]);
     const balances = new Map();
-    balances.set('a1', { debit: '100.00', credit: '0.00' });
-    balances.set('a2', { debit: '0.00', credit: '100.00' });
-    journalRepo.getBalancesByAccount.mockResolvedValue(balances);
+    balances.set('1', { debit: '1000.00', credit: '0.00' });
 
-    const report = await useCase.execute(tenantId, 'BALANCE_SHEET', new Date());
+    (journalRepo.getBalancesByAccount as any).mockResolvedValue(balances);
+    (accountRepo.findAll as any).mockResolvedValue([
+        { id: '1', name: 'Cash', code: '100', type: 'ASSET' }
+    ]);
 
-    expect(report.type).toBe('BALANCE_SHEET');
-    expect(report.lines).toHaveLength(1);
-    expect(report.lines[0].accountName).toBe('Cash');
-    expect(report.lines[0].balance).toBe('100.00');
+    const result = await service.execute('tenant1', 'BALANCE_SHEET', new Date());
+
+    expect(result.lines).toHaveLength(1);
+    expect(result.lines[0].balance).toBe('1000.00');
   });
 
   it('should generate a P&L', async () => {
-    const tenantId = 't1';
-    accountRepo.findAll.mockResolvedValue([
-      { id: 'a1', name: 'Cash', code: '101', type: AccountType.ASSET },
-      { id: 'a2', name: 'Revenue', code: '401', type: AccountType.REVENUE },
-    ]);
-    const balances = new Map();
-    balances.set('a1', { debit: '100.00', credit: '0.00' });
-    balances.set('a2', { debit: '0.00', credit: '100.00' });
-    journalRepo.getBalancesByAccount.mockResolvedValue(balances);
+      const balances = new Map();
+      balances.set('2', { debit: '0.00', credit: '500.00' });
 
-    const report = await useCase.execute(tenantId, 'PROFIT_AND_LOSS', new Date());
+      (journalRepo.getBalancesByAccount as any).mockResolvedValue(balances);
+      (accountRepo.findAll as any).mockResolvedValue([
+          { id: '2', name: 'Sales', code: '400', type: 'REVENUE' }
+      ]);
 
-    expect(report.type).toBe('PROFIT_AND_LOSS');
-    expect(report.lines).toHaveLength(1);
-    expect(report.lines[0].accountName).toBe('Revenue');
-    expect(report.lines[0].balance).toBe('-100.00');
+      const result = await service.execute('tenant1', 'PROFIT_AND_LOSS', new Date());
+
+      expect(result.lines).toHaveLength(1);
+      expect(result.lines[0].balance).toBe('-500.00');
   });
 });

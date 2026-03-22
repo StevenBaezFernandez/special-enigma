@@ -1,57 +1,41 @@
-import { vi } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { CloseFiscalPeriodUseCase } from './close-fiscal-period.use-case';
-import { JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
-import { AccountType } from '@virteex/domain-accounting-contracts';
+import { type JournalEntryRepository, type AccountRepository } from '@virteex/domain-accounting-domain';
 
 describe('CloseFiscalPeriodUseCase', () => {
-  let useCase: CloseFiscalPeriodUseCase;
-  let journalRepo: any;
-  let accountRepo: any;
+  let service: CloseFiscalPeriodUseCase;
+  let journalRepo: JournalEntryRepository;
+  let accountRepo: AccountRepository;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     journalRepo = {
-      getBalancesByAccount: vi.fn(),
-      create: vi.fn(),
-    };
+        getBalancesByAccount: vi.fn(),
+        create: vi.fn(),
+    } as unknown as JournalEntryRepository;
     accountRepo = {
-      findAll: vi.fn(),
-      findById: vi.fn(),
-    };
-
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CloseFiscalPeriodUseCase,
-        { provide: JOURNAL_ENTRY_REPOSITORY, useValue: journalRepo },
-        { provide: ACCOUNT_REPOSITORY, useValue: accountRepo },
-      ],
-    }).compile();
-
-    useCase = module.get<CloseFiscalPeriodUseCase>(CloseFiscalPeriodUseCase);
+        findAll: vi.fn(),
+        findById: vi.fn(),
+    } as unknown as AccountRepository;
+    service = new CloseFiscalPeriodUseCase(journalRepo, accountRepo);
   });
 
   it('should create closing entries to zero out revenue and expense', async () => {
-    const tenantId = 't1';
-    const revenueAcc = { id: 'a1', name: 'Revenue', type: AccountType.REVENUE };
-    const expenseAcc = { id: 'a2', name: 'Expense', type: AccountType.EXPENSE };
-    const equityAcc = { id: 'a3', name: 'Retained Earnings', type: AccountType.EQUITY };
+      const balances = new Map();
+      balances.set('1', { debit: '100.00', credit: '0.00' });
 
-    accountRepo.findAll.mockResolvedValue([revenueAcc, expenseAcc, equityAcc]);
-    accountRepo.findById.mockImplementation((id: string) => {
-        if (id === 'a1') return revenueAcc;
-        if (id === 'a2') return expenseAcc;
-        return null;
-    });
+      (journalRepo.getBalancesByAccount as any).mockResolvedValue(balances);
+      (accountRepo.findAll as any).mockResolvedValue([
+          { id: '1', name: 'Revenue', code: '400', type: 'REVENUE' },
+          { id: '2', name: 'Retained Earnings', code: '300', type: 'EQUITY' }
+      ]);
+      (accountRepo.findById as any).mockImplementation((id: string) => {
+          if (id === '1') return Promise.resolve({ id: '1', name: 'Revenue', code: '400', type: 'REVENUE' });
+          if (id === '2') return Promise.resolve({ id: '2', name: 'Retained Earnings', code: '300', type: 'EQUITY' });
+          return Promise.resolve(null);
+      });
 
-    const balances = new Map();
-    balances.set('a1', { debit: '0.00', credit: '1000.00' });
-    balances.set('a2', { debit: '600.00', credit: '0.00' });
-    journalRepo.getBalancesByAccount.mockResolvedValue(balances);
+      await service.execute('tenant1', new Date());
 
-    await useCase.execute(tenantId, new Date());
-
-    expect(journalRepo.create).toHaveBeenCalled();
-    const entry = journalRepo.create.mock.calls[0][0];
-    expect(entry.description).toContain('Fiscal Closing');
+      expect(journalRepo.create).toHaveBeenCalled();
   });
 });

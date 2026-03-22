@@ -3,3 +3,6 @@ export * from './lib/use-cases/create-account.use-case';
 export * from './lib/use-cases/record-journal-entry.use-case';
 export * from './lib/use-cases/get-accounts.use-case';
 export * from './lib/use-cases/get-journal-entries.use-case';
+export * from './lib/use-cases/setup-chart-of-accounts.use-case';
+export * from './lib/use-cases/generate-financial-report.use-case';
+export * from './lib/use-cases/close-fiscal-period.use-case';

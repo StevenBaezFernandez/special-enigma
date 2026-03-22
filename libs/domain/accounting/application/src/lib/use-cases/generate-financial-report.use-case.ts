@@ -1,5 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository, ACCOUNT_REPOSITORY, type AccountRepository } from '@virteex/domain-accounting-domain';
+import { type JournalEntryRepository, type AccountRepository } from '@virteex/domain-accounting-domain';
 import { Decimal } from 'decimal.js';
 
 export interface FinancialReport {
@@ -16,11 +15,11 @@ export interface FinancialReportLine {
   balance: string;
 }
 
-@Injectable()
+
 export class GenerateFinancialReportUseCase {
   constructor(
-    @Inject(JOURNAL_ENTRY_REPOSITORY) private journalEntryRepository: JournalEntryRepository,
-    @Inject(ACCOUNT_REPOSITORY) private accountRepository: AccountRepository
+    private journalEntryRepository: JournalEntryRepository,
+    private accountRepository: AccountRepository
   ) {}
 
   async execute(

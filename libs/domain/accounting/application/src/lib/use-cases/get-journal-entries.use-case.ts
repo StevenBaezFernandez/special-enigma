@@ -1,12 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository } from '@virteex/domain-accounting-domain';
 import { type JournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { JournalEntryMapper } from '../mappers/journal-entry.mapper';
+import { type JournalEntryRepository } from '@virteex/domain-accounting-domain';
 
-@Injectable()
 export class GetJournalEntriesUseCase {
   constructor(
-    @Inject(JOURNAL_ENTRY_REPOSITORY) private journalEntryRepository: JournalEntryRepository
+    private journalEntryRepository: JournalEntryRepository
   ) {}
 
   async execute(tenantId: string): Promise<JournalEntryDto[]> {

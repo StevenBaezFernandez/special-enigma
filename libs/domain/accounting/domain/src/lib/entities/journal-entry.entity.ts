@@ -1,5 +1,7 @@
-import { JournalEntryStatus } from '@virteex/domain-accounting-contracts';
+import { JournalEntryStatus } from '../enums/journal-entry-status.enum';
 import type { JournalEntryLine } from './journal-entry-line.entity';
+import { Decimal } from 'decimal.js';
+import { NegativeAmountError, JournalEntryNotBalancedError } from '../errors/accounting.errors';
 
 export class JournalEntry {
   id!: string;
@@ -18,5 +20,26 @@ export class JournalEntry {
   addLine(line: JournalEntryLine) {
     this.lines.push(line);
     line.journalEntry = this;
+  }
+
+  validateBalance() {
+    let totalDebit = new Decimal(0);
+    let totalCredit = new Decimal(0);
+
+    for (const line of this.lines) {
+      const debit = new Decimal(line.debit);
+      const credit = new Decimal(line.credit);
+
+      if (debit.isNegative() || credit.isNegative()) {
+         throw new NegativeAmountError();
+      }
+
+      totalDebit = totalDebit.plus(debit);
+      totalCredit = totalCredit.plus(credit);
+    }
+
+    if (!totalDebit.equals(totalCredit)) {
+       throw new JournalEntryNotBalancedError(totalDebit.toFixed(2), totalCredit.toFixed(2));
+    }
   }
 }

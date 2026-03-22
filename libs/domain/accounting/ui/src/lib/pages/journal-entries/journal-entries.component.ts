@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
+import { AccountingService } from '../../services/accounting.service';
+import { JournalEntryDto } from '@virteex/domain-accounting-contracts';
 
 @Component({
   selector: 'app-journal-entries',
@@ -41,13 +42,13 @@ import { catchError, of } from 'rxjs';
   `,
 })
 export class JournalEntriesComponent implements OnInit {
-  private http = inject(HttpClient);
-  entries: any[] = [];
+  private accountingService = inject(AccountingService);
+  entries: JournalEntryDto[] = [];
   loading = true;
   error = '';
 
   ngOnInit() {
-    this.http.get<any[]>('/api/accounting/journal-entries')
+    this.accountingService.getJournalEntries()
       .pipe(
         catchError(err => {
           this.error = 'Failed to load journal entries. Please try again later.';

@@ -1,5 +1,5 @@
 import { JournalEntry } from '@virteex/domain-accounting-domain';
-import { type JournalEntryDto, JournalEntryLineDto } from '@virteex/domain-accounting-contracts';
+import { type JournalEntryDto, JournalEntryLineDto, JournalEntryStatus as JournalEntryStatusDto } from '@virteex/domain-accounting-contracts';
 
 export class JournalEntryMapper {
   static toDto(entity: JournalEntry): JournalEntryDto {
@@ -16,7 +16,7 @@ export class JournalEntryMapper {
       tenantId: entity.tenantId,
       date: entity.date,
       description: entity.description,
-      status: entity.status,
+      status: entity.status as unknown as JournalEntryStatusDto,
       lines: lines
     };
   }
