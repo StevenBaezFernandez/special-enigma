@@ -5,6 +5,9 @@ module.exports = {
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }]
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(@scure|otplib|@noble|noble-base|@otplib)/)'
+  ],
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/virteex-accounting-service'
 };

@@ -8,7 +8,8 @@
     "scope:accounting",
     "type:ui",
     "platform:agnostic",
-    "criticality:medium"
+    "criticality:medium",
+    "compliance:fiscal"
   ],
   "targets": {
     "test": {

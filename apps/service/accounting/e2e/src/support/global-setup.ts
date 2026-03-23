@@ -1,7 +1,5 @@
 import { waitForPortOpen } from '@nx/node/utils';
 
-var __TEARDOWN_MESSAGE__: string;
-
 export default async function() {
   // Start services that that the app needs to run (e.g. database, docker-compose, etc.).
   console.log('\nSetting up...\n');

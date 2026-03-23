@@ -38,7 +38,7 @@ export class AccountingEventsController {
     const taxes = Number(event.taxAmount);
     const subtotal = total - taxes;
 
-    const dto: RecordJournalEntryDto = {
+    const dto: RecordJournalEntryDto & { tenantId: string } = {
         tenantId: event.tenantId,
         date: new Date(event.stampedAt),
         description: `Venta Factura ${event.id}`,

@@ -1,13 +1,34 @@
-export interface JournalEntryLineInputDto {
-  accountId: string;
-  debit: string;
-  credit: string;
+import { IsString, IsNotEmpty, IsDateString, IsArray, ValidateNested, IsOptional, IsUUID } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class JournalEntryLineInputDto {
+  @IsUUID()
+  @IsNotEmpty()
+  accountId!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  debit!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  credit!: string;
+
+  @IsOptional()
+  @IsString()
   description?: string;
 }
 
-export interface RecordJournalEntryDto {
-  tenantId: string;
-  date: Date;
-  description: string;
-  lines: JournalEntryLineInputDto[];
+export class RecordJournalEntryDto {
+  @IsDateString()
+  date!: Date;
+
+  @IsString()
+  @IsNotEmpty()
+  description!: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => JournalEntryLineInputDto)
+  lines!: JournalEntryLineInputDto[];
 }
