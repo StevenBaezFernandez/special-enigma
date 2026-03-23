@@ -4,7 +4,9 @@ describe('Accounting Service E2E', () => {
   const tenantId = 'test-tenant-123';
   const axiosConfig = {
     headers: {
-      'x-tenant-id': tenantId,
+      'x-virteex-tenant-id': tenantId,
+      'x-virteex-context': Buffer.from(JSON.stringify({ tenantId, userId: 'test-user' })).toString('base64'),
+      'x-virteex-signature': 'mock-signature', // In a real scenario, this should be a valid HMAC
     },
   };
 

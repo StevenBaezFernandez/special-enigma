@@ -12,7 +12,8 @@ export class AccountMapper {
       level: entity.level,
       isControl: entity.isControl,
       currency: entity.currency,
-      parentId: entity.parent?.id
+      parentId: entity.parent?.id,
+      balance: 0 // Default or placeholder balance
     };
   }
 }

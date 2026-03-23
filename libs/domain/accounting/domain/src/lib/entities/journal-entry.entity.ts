@@ -1,4 +1,5 @@
 import { JournalEntryStatus } from '../enums/journal-entry-status.enum';
+import { JournalEntryType } from '../enums/journal-entry-type.enum';
 import type { JournalEntryLine } from './journal-entry-line.entity';
 import { Decimal } from 'decimal.js';
 import { NegativeAmountError, JournalEntryNotBalancedError } from '../errors/accounting.errors';
@@ -9,6 +10,8 @@ export class JournalEntry {
   date!: Date;
   description!: string;
   status: JournalEntryStatus = JournalEntryStatus.DRAFT;
+  type: JournalEntryType = JournalEntryType.REGULAR;
+  reference?: string;
   lines: JournalEntryLine[] = [];
 
   constructor(tenantId: string, description: string, date: Date) {

@@ -1,6 +1,7 @@
 export * from './lib/journal-entry.contract';
 export * from './lib/dtos/account.dto';
 export * from './lib/dtos/create-account.dto';
+export * from './lib/dtos/accounting-ops.dto';
 export * from './lib/dtos/journal-entry.dto';
 export * from './lib/dtos/record-journal-entry.dto';
 export { type CreateAccountDto } from './lib/dtos/create-account.dto';

@@ -7,7 +7,9 @@ import depthLimit from 'graphql-depth-limit';
 import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AccountingInfrastructureModule } from '@virteex/domain-accounting-infrastructure';
+import { AccountingApplicationModule } from '@virteex/domain-accounting-application';
 import { AccountingPresentationModule } from '@virteex/domain-accounting-presentation';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
@@ -41,7 +43,9 @@ import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
       dbName: process.env.ACCOUNTING_DB_NAME,
       autoLoadEntities: true,
     }),
+    EventEmitterModule.forRoot(),
     AccountingInfrastructureModule,
+    AccountingApplicationModule,
     AccountingPresentationModule,
   ],
   controllers: [],

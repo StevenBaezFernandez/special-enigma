@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { catchError, of, forkJoin } from 'rxjs';
+import { AccountingService } from '../../services/accounting.service';
+import { JournalEntryStatus } from '@virteex/domain-accounting-contracts';
 
 @Component({
   selector: 'app-accounting-dashboard',
@@ -12,6 +13,14 @@ import { catchError, of, forkJoin } from 'rxjs';
       <h1 class="text-2xl font-bold mb-4">Accounting Dashboard</h1>
 
       <div *ngIf="loading" class="text-blue-500">Loading dashboard data...</div>
+
+      <div *ngIf="!loading && stats.totalAccounts === 0" class="mb-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+        <p class="font-bold">Initial Setup Required</p>
+        <p>No accounts found. Would you like to setup the default chart of accounts?</p>
+        <button (click)="setupChart()" class="mt-2 bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+          Setup Chart of Accounts
+        </button>
+      </div>
 
       <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-white p-4 rounded shadow">
@@ -33,7 +42,7 @@ import { catchError, of, forkJoin } from 'rxjs';
   `,
 })
 export class DashboardComponent implements OnInit {
-  private http = inject(HttpClient);
+  private accountingService = inject(AccountingService);
   loading = true;
   error = '';
   stats = {
@@ -43,20 +52,29 @@ export class DashboardComponent implements OnInit {
   };
 
   ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.loading = true;
     forkJoin({
-      accounts: this.http.get<any[]>('/api/accounting/accounts').pipe(catchError(() => of([]))),
-      entries: this.http.get<any[]>('/api/accounting/journal-entries').pipe(catchError(() => of([])))
+      accounts: this.accountingService.getAccounts().pipe(catchError(() => of([]))),
+      entries: this.accountingService.getJournalEntries().pipe(catchError(() => of([])))
     }).subscribe({
       next: (data) => {
         this.stats.totalAccounts = data.accounts.length;
-        this.stats.pendingEntries = data.entries.filter(e => e.status === 'DRAFT' || e.status === 'Draft').length;
+    this.stats.pendingEntries = data.entries.filter(e =>
+      e.status === JournalEntryStatus.DRAFT ||
+      (e.status as any) === 'DRAFT' ||
+      (e.status as any) === 'Draft'
+    ).length;
 
         // Robust logic for last closing
         const closingEntry = data.entries.find(e =>
-          e.type === 'CLOSING' ||
+      (e as any).type === 'CLOSING' ||
           (e.description && e.description.toLowerCase().includes('closing'))
         );
-        this.stats.lastClosing = closingEntry ? closingEntry.date : 'No closing found';
+    this.stats.lastClosing = closingEntry ? closingEntry.date.toString() : 'No closing found';
 
         this.loading = false;
       },
@@ -64,6 +82,12 @@ export class DashboardComponent implements OnInit {
         this.error = 'Failed to load some dashboard metrics.';
         this.loading = false;
       }
+    });
+  }
+
+  setupChart() {
+    this.accountingService.setupChartOfAccounts().subscribe(() => {
+      this.loadData();
     });
   }
 }

@@ -1,5 +1,5 @@
 import { EntitySchema } from '@mikro-orm/core';
-import { Account, JournalEntry, JournalEntryLine, FiscalYear, FiscalYearStatus } from '@virteex/domain-accounting-domain';
+import { Account, JournalEntry, JournalEntryLine, FiscalYear, FiscalYearStatus, AccountingPolicy } from '@virteex/domain-accounting-domain';
 import { AccountType, JournalEntryStatus } from '@virteex/domain-accounting-contracts';
 
 export const AccountSchema = new EntitySchema<Account>({
@@ -54,5 +54,16 @@ export const FiscalYearSchema = new EntitySchema<FiscalYear>({
     status: { enum: true, items: () => FiscalYearStatus, default: FiscalYearStatus.OPEN },
     startDate: { type: 'date' },
     endDate: { type: 'date' },
+  },
+});
+
+export const AccountingPolicySchema = new EntitySchema<AccountingPolicy>({
+  class: AccountingPolicy,
+  uniques: [{ properties: ['tenantId', 'type'] }],
+  properties: {
+    id: { primary: true, type: 'uuid' },
+    tenantId: { type: 'string', index: true },
+    type: { type: 'string' },
+    rules: { type: 'json' },
   },
 });
