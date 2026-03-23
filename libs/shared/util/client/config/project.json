@@ -1,6 +1,6 @@
 {
   "name": "shared-util-client-config",
-  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/util/client/config/src",
   "projectType": "library",
   "prefix": "virteex",
@@ -11,19 +11,13 @@
     "criticality:medium"
   ],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": [
-        "{options.outputFile}"
-      ]
-    },
     "test": {
       "executor": "@nx/vitest:test",
       "outputs": [
         "{options.reportsDirectory}"
       ],
       "options": {
-        "reportsDirectory": "../../../../../coverage/libs/shared/util/client/config"
+        "reportsDirectory": "../../../../../../coverage/libs/shared/util/client/config"
       }
     },
     "build": {

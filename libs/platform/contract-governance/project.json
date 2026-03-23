@@ -1,0 +1,39 @@
+{
+  "name": "platform-contract-governance",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/platform/contract-governance/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:platform",
+    "type:contract-governance",
+    "platform:agnostic",
+    "criticality:medium"
+  ],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../coverage/libs/platform/contract-governance"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/platform/contract-governance",
+        "main": "libs/platform/contract-governance/src/index.ts",
+        "tsConfig": "libs/platform/contract-governance/tsconfig.lib.json",
+        "assets": [
+          "libs/platform/contract-governance/*.md"
+        ],
+        "generateExportsField": true
+      }
+    }
+  }
+}

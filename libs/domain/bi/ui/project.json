@@ -1,12 +1,12 @@
 {
-  "name": "domain-fixed-assets-contracts",
+  "name": "domain-bi-ui",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/domain/fixed-assets/contracts/src",
+  "sourceRoot": "libs/domain/bi/ui/src",
   "projectType": "library",
   "prefix": "virteex",
   "tags": [
-    "scope:fixed-assets",
-    "type:contracts",
+    "scope:bi",
+    "type:ui",
     "platform:agnostic",
     "criticality:medium"
   ],
@@ -17,7 +17,7 @@
         "{options.reportsDirectory}"
       ],
       "options": {
-        "reportsDirectory": "../../../../coverage/libs/domain/fixed-assets/contracts"
+        "reportsDirectory": "../../../../coverage/libs/domain/bi/ui"
       }
     },
     "build": {
@@ -26,11 +26,11 @@
         "{options.outputPath}"
       ],
       "options": {
-        "outputPath": "dist/libs/domain/fixed-assets/contracts",
-        "main": "libs/domain/fixed-assets/contracts/src/index.ts",
-        "tsConfig": "libs/domain/fixed-assets/contracts/tsconfig.lib.json",
+        "outputPath": "dist/libs/domain/bi/ui",
+        "main": "libs/domain/bi/ui/src/index.ts",
+        "tsConfig": "libs/domain/bi/ui/tsconfig.lib.json",
         "assets": [
-          "libs/domain/fixed-assets/contracts/*.md"
+          "libs/domain/bi/ui/*.md"
         ],
         "generateExportsField": true
       }

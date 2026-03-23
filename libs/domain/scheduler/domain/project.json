@@ -1,12 +1,12 @@
 {
-  "name": "domain-fixed-assets-contracts",
+  "name": "domain-scheduler-domain",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/domain/fixed-assets/contracts/src",
+  "sourceRoot": "libs/domain/scheduler/domain/src",
   "projectType": "library",
   "prefix": "virteex",
   "tags": [
-    "scope:fixed-assets",
-    "type:contracts",
+    "scope:scheduler",
+    "type:domain",
     "platform:agnostic",
     "criticality:medium"
   ],
@@ -17,7 +17,7 @@
         "{options.reportsDirectory}"
       ],
       "options": {
-        "reportsDirectory": "../../../../coverage/libs/domain/fixed-assets/contracts"
+        "reportsDirectory": "../../../../coverage/libs/domain/scheduler/domain"
       }
     },
     "build": {
@@ -26,11 +26,11 @@
         "{options.outputPath}"
       ],
       "options": {
-        "outputPath": "dist/libs/domain/fixed-assets/contracts",
-        "main": "libs/domain/fixed-assets/contracts/src/index.ts",
-        "tsConfig": "libs/domain/fixed-assets/contracts/tsconfig.lib.json",
+        "outputPath": "dist/libs/domain/scheduler/domain",
+        "main": "libs/domain/scheduler/domain/src/index.ts",
+        "tsConfig": "libs/domain/scheduler/domain/tsconfig.lib.json",
         "assets": [
-          "libs/domain/fixed-assets/contracts/*.md"
+          "libs/domain/scheduler/domain/*.md"
         ],
         "generateExportsField": true
       }

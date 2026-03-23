@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "../../../dist/libs/shared/types",
+    "outDir": "../../../../dist/libs/domain/finops/infrastructure",
     "declaration": true,
     "types": [
       "node"

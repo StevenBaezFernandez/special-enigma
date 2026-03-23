@@ -1,5 +1,5 @@
 {
-  "name": "@virteex/shared-util/client/config",
+  "name": "@virteex/domain-finops-infrastructure",
   "version": "0.0.1",
   "private": true,
   "main": "./src/index.js",

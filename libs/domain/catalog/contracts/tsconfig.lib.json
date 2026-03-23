@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "../../../dist/libs/shared/types",
+    "outDir": "../../../../dist/libs/domain/catalog/contracts",
     "declaration": true,
     "types": [
       "node"
