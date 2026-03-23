@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StepConfiguration } from './step-configuration';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { CountryService } from '@virteex/shared-ui/lib/core/services/country.service';
+import { CountryService } from '@virteex/shared-ui';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { vi } from 'vitest';

@@ -10,4 +10,5 @@ export interface AccountDto {
   isControl: boolean;
   currency?: string;
   parentId?: string;
+  balance?: number;
 }

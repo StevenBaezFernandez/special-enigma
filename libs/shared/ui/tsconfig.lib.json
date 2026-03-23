@@ -1,18 +1,16 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "../../../dist/libs/shared/ui",
     "declaration": true,
     "skipLibCheck": true,
-    "rootDir": "../../../..",
     "types": [
       "node"
     ],
-    "moduleResolution": "node"
+    "moduleResolution": "bundler", "module": "esnext"
   },
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts"

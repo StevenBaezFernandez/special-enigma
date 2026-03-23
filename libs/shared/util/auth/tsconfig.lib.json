@@ -1,13 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "../../../../dist/libs/shared/util/auth",
     "declaration": true,
-    "rootDir": "../../../../",
     "types": [],
-    "moduleResolution": "node"
+    "moduleResolution": "bundler", "module": "esnext"
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }
