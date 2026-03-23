@@ -1,4 +1,4 @@
-import { JournalEntry, JournalEntryLine, type JournalEntryRepository, type AccountRepository, AccountNotFoundError, CrossTenantAccessError } from '@virteex/domain-accounting-domain';
+import { JournalEntry, JournalEntryLine, type JournalEntryRepository, type AccountRepository, AccountNotFoundError, CrossTenantAccessError, PeriodClosedError } from '@virteex/domain-accounting-domain';
 import { type RecordJournalEntryDto, type JournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { JournalEntryMapper } from '../mappers/journal-entry.mapper';
 
@@ -9,6 +9,11 @@ export class RecordJournalEntryUseCase {
   ) {}
 
   async execute(dto: RecordJournalEntryDto & { tenantId: string }): Promise<JournalEntryDto> {
+    const latestClosedDate = await this.journalEntryRepository.findLatestClosedDate(dto.tenantId);
+    if (latestClosedDate && new Date(dto.date) <= latestClosedDate) {
+      throw new PeriodClosedError(new Date(dto.date));
+    }
+
     const entry = new JournalEntry(dto.tenantId, dto.description, dto.date);
 
     for (const lineDto of dto.lines) {

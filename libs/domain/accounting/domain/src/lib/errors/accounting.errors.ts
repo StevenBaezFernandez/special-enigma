@@ -40,3 +40,9 @@ export class NegativeAmountError extends AccountingDomainError {
     super('Debit and Credit amounts must be non-negative');
   }
 }
+
+export class PeriodClosedError extends AccountingDomainError {
+  constructor(date: Date) {
+    super(`The period for date ${date.toISOString()} is already closed`);
+  }
+}

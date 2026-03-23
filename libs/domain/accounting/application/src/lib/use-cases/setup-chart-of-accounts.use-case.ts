@@ -25,8 +25,10 @@ export class SetupChartOfAccountsUseCase {
         { code: '601.01', name: 'Sueldos y Salarios', type: AccountType.EXPENSE },
     ];
 
-    for (const d of defaults) {
+    await this.accountRepository.transactional(async () => {
+      for (const d of defaults) {
         await this.accountRepository.create(new Account(tenantId, d.code, d.name, d.type));
-    }
+      }
+    });
   }
 }

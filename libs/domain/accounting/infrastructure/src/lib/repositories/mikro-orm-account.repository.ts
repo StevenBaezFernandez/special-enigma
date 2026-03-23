@@ -26,4 +26,8 @@ export class MikroOrmAccountRepository implements AccountRepository {
   async findAll(tenantId: string): Promise<Account[]> {
     return this.em.find(Account, { tenantId });
   }
+
+  async transactional<T>(cb: (em: any) => Promise<T>): Promise<T> {
+    return this.em.transactional(cb);
+  }
 }

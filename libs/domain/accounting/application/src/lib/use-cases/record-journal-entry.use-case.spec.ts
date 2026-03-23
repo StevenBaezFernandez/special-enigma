@@ -13,6 +13,7 @@ describe('RecordJournalEntryUseCase', () => {
       create: vi.fn(),
       findAll: vi.fn(),
       getBalancesByAccount: vi.fn(),
+      findLatestClosedDate: vi.fn().mockResolvedValue(null),
     } as unknown as JournalEntryRepository;
     accountRepo = {
       findById: vi.fn(),
@@ -53,6 +54,7 @@ describe('RecordJournalEntryUseCase', () => {
 
     const result = await service.execute(dto);
 
+    expect(journalRepo.findLatestClosedDate).toHaveBeenCalledWith('tenant1');
     expect(result.id).toBe('entry1');
     expect(result.lines).toHaveLength(2);
   });
@@ -96,6 +98,23 @@ describe('RecordJournalEntryUseCase', () => {
       account1.id = '1';
 
       (accountRepo.findById as any).mockResolvedValue(account1);
+
+      await expect(service.execute(dto)).rejects.toThrow();
+  });
+
+  it('should throw error if entry date is before latest closed date', async () => {
+      const closedDate = new Date('2023-12-31');
+      const entryDate = new Date('2023-12-15');
+      const dto = {
+        tenantId: 'tenant1',
+        date: entryDate,
+        description: 'Past Entry',
+        lines: [
+          { accountId: '1', debit: '100.00', credit: '100.00' },
+        ],
+      };
+
+      (journalRepo.findLatestClosedDate as any).mockResolvedValue(closedDate);
 
       await expect(service.execute(dto)).rejects.toThrow();
   });

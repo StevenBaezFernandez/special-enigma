@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { JournalEntry, type JournalEntryRepository } from '@virteex/domain-accounting-domain';
+import { JournalEntry, type JournalEntryRepository, JournalEntryType } from '@virteex/domain-accounting-domain';
 
 @Injectable()
 export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
@@ -54,5 +54,20 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
     });
 
     return balanceMap;
+  }
+
+  async findLatestClosedDate(tenantId: string): Promise<Date | null> {
+    const latestClosing = await this.em.findOne(
+      JournalEntry,
+      {
+        tenantId,
+        type: JournalEntryType.CLOSING,
+      } as any,
+      {
+        orderBy: { date: 'DESC' } as any,
+      }
+    );
+
+    return latestClosing ? latestClosing.date : null;
   }
 }

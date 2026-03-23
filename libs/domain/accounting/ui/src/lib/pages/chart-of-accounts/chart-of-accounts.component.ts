@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { AccountingService } from '../../services/accounting.service';
 import { AccountDto } from '@virteex/domain-accounting-contracts';
@@ -7,10 +8,15 @@ import { AccountDto } from '@virteex/domain-accounting-contracts';
 @Component({
   selector: 'app-chart-of-accounts',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `
     <div class="p-6">
-      <h1 class="text-2xl font-bold mb-4">Chart of Accounts</h1>
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Chart of Accounts</h1>
+        <button routerLink="/accounting/accounts/new" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          + New Account
+        </button>
+      </div>
 
       <div *ngIf="loading" class="text-blue-500">Loading accounts...</div>
       <div *ngIf="error" class="text-red-500 mb-4">{{ error }}</div>

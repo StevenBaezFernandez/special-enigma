@@ -71,8 +71,7 @@ export class DashboardComponent implements OnInit {
 
         // Robust logic for last closing
         const closingEntry = data.entries.find(e =>
-      (e as any).type === 'CLOSING' ||
-          (e.description && e.description.toLowerCase().includes('closing'))
+          (e as any).type === 'CLOSING'
         );
     this.stats.lastClosing = closingEntry ? closingEntry.date.toString() : 'No closing found';
 

@@ -3,7 +3,7 @@ import { Decimal } from 'decimal.js';
 
 export interface FinancialReport {
   tenantId: string;
-  type: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS';
+  type: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS' | 'TRIAL_BALANCE';
   generatedAt: Date;
   lines: FinancialReportLine[];
   dimensions?: Record<string, string>;
@@ -24,7 +24,7 @@ export class GenerateFinancialReportUseCase {
 
   async execute(
     tenantId: string,
-    type: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS',
+    type: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS' | 'TRIAL_BALANCE',
     endDate: Date,
     dimensions?: Record<string, string>
   ): Promise<FinancialReport> {
@@ -50,6 +50,12 @@ export class GenerateFinancialReportUseCase {
                 accountName: account.name,
                 accountCode: account.code,
                 balance: netBalance.toFixed(2)
+            });
+        } else if (type === 'TRIAL_BALANCE') {
+            reportLines.push({
+              accountName: account.name,
+              accountCode: account.code,
+              balance: netBalance.toFixed(2)
             });
         }
     }

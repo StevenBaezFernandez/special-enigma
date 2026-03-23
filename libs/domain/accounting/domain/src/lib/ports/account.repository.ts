@@ -6,6 +6,7 @@ export interface AccountRepository {
   findByIds(tenantId: string, ids: string[]): Promise<Account[]>;
   findByCode(tenantId: string, code: string): Promise<Account | null>;
   findAll(tenantId: string): Promise<Account[]>;
+  transactional<T>(cb: (em: any) => Promise<T>): Promise<T>;
 }
 
 export const ACCOUNT_REPOSITORY = 'ACCOUNT_REPOSITORY';
