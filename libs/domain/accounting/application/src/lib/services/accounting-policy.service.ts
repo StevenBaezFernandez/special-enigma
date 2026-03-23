@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, Optional } from '@nestjs/common';
+import { POLICY_REPOSITORY, type PolicyRepository } from '@virteex/domain-accounting-domain';
 
 @Injectable()
 export class AccountingPolicyService {
-  // TODO: Implement tenant-specific policies from database/config
+  constructor(
+    @Optional() @Inject(POLICY_REPOSITORY) private readonly policyRepository?: PolicyRepository
+  ) {}
+
   private readonly defaultPolicies: Record<string, any> = {
     invoice: {
       salesAccountCode: '401.01',
@@ -14,19 +18,30 @@ export class AccountingPolicyService {
       taxPayableAccountCode: '210.01',
       bankAccountCode: '102.01',
     },
+    closing: {
+      retainedEarningsAccountCode: '302.01',
+    },
   };
 
-  resolveAccountsForInvoice(tenantId: string) {
-    // For now, we return default policies, but we already have the tenantId to specialize later
+  async resolveAccountsForClosing(tenantId: string) {
+    return this.getPolicyForTenant(tenantId, 'closing');
+  }
+
+  async resolveAccountsForInvoice(tenantId: string) {
     return this.getPolicyForTenant(tenantId, 'invoice');
   }
 
-  resolveAccountsForPayroll(tenantId: string) {
+  async resolveAccountsForPayroll(tenantId: string) {
     return this.getPolicyForTenant(tenantId, 'payroll');
   }
 
-  private getPolicyForTenant(tenantId: string, type: 'invoice' | 'payroll') {
-    // Future logic: this.policyRepository.findByTenant(tenantId)
+  private async getPolicyForTenant(tenantId: string, type: 'invoice' | 'payroll' | 'closing') {
+    if (this.policyRepository) {
+      const tenantPolicy = await this.policyRepository.getPolicy(tenantId, type);
+      if (tenantPolicy) {
+        return { ...this.defaultPolicies[type], ...tenantPolicy };
+      }
+    }
     return this.defaultPolicies[type];
   }
 }

@@ -1,11 +1,13 @@
 import { type JournalEntryRepository, type AccountRepository, JournalEntry, JournalEntryLine } from '@virteex/domain-accounting-domain';
 import { Decimal } from 'decimal.js';
+import { AccountingPolicyService } from '../services/accounting-policy.service';
 
 
 export class CloseFiscalPeriodUseCase {
   constructor(
     private journalEntryRepository: JournalEntryRepository,
-    private accountRepository: AccountRepository
+    private accountRepository: AccountRepository,
+    private policyService: AccountingPolicyService
   ) {}
 
   async execute(tenantId: string, closingDate: Date): Promise<void> {
@@ -38,7 +40,9 @@ export class CloseFiscalPeriodUseCase {
         entry.addLine(new JournalEntryLine(account, debit, credit));
     }
 
-    const retainedEarningsAccount = (await this.accountRepository.findAll(tenantId)).find(a => a.name.includes('Retained Earnings'));
+    const policy = await this.policyService.resolveAccountsForClosing(tenantId);
+    const retainedEarningsAccount = await this.accountRepository.findByCode(tenantId, policy.retainedEarningsAccountCode);
+
     if (retainedEarningsAccount) {
         const debit = netIncome.isPositive() ? netIncome.abs().toFixed(2) : '0.00';
         const credit = netIncome.isPositive() ? '0.00' : netIncome.abs().toFixed(2);

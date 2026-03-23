@@ -4,9 +4,10 @@ import { AccountType, JournalEntryStatus } from '@virteex/domain-accounting-cont
 
 export const AccountSchema = new EntitySchema<Account>({
   class: Account,
+  uniques: [{ properties: ['tenantId', 'code'] }],
   properties: {
     id: { primary: true, type: 'uuid' },
-    tenantId: { type: 'string' },
+    tenantId: { type: 'string', index: true },
     code: { type: 'string' },
     name: { type: 'string' },
     type: { enum: true, items: () => AccountType },
@@ -21,8 +22,8 @@ export const JournalEntrySchema = new EntitySchema<JournalEntry>({
   class: JournalEntry,
   properties: {
     id: { primary: true, type: 'uuid' },
-    tenantId: { type: 'string' },
-    date: { type: 'date' },
+    tenantId: { type: 'string', index: true },
+    date: { type: 'date', index: true },
     description: { type: 'string' },
     status: { enum: true, items: () => JournalEntryStatus, default: JournalEntryStatus.DRAFT },
     lines: { kind: '1:m', entity: () => 'JournalEntryLine', mappedBy: 'journalEntry', orphanRemoval: true },
@@ -48,7 +49,7 @@ export const FiscalYearSchema = new EntitySchema<FiscalYear>({
   class: FiscalYear,
   properties: {
     id: { primary: true, type: 'uuid' },
-    tenantId: { type: 'string' },
+    tenantId: { type: 'string', index: true },
     year: { type: 'number' },
     status: { enum: true, items: () => FiscalYearStatus, default: FiscalYearStatus.OPEN },
     startDate: { type: 'date' },

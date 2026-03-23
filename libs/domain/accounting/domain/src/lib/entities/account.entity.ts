@@ -12,6 +12,11 @@ export class Account {
   currency?: string;
 
   constructor(tenantId: string, code: string, name: string, type: AccountType) {
+    if (!tenantId) throw new Error('TenantId is required');
+    if (!code) throw new Error('Account code is required');
+    if (!name) throw new Error('Account name is required');
+    if (!type) throw new Error('Account type is required');
+
     this.tenantId = tenantId;
     this.code = code;
     this.name = name;

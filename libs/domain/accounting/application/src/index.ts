@@ -6,3 +6,4 @@ export * from './lib/use-cases/get-journal-entries.use-case';
 export * from './lib/use-cases/setup-chart-of-accounts.use-case';
 export * from './lib/use-cases/generate-financial-report.use-case';
 export * from './lib/use-cases/close-fiscal-period.use-case';
+export * from './lib/services/accounting-policy.service';

@@ -30,10 +30,10 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@nx/vitest:test",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/domain/accounting/presentation/jest.config.cts",
+        "config": "libs/domain/accounting/presentation/vitest.config.ts",
         "passWithNoTests": true
       }
     }

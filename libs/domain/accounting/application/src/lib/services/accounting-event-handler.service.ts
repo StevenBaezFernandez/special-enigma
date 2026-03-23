@@ -33,7 +33,7 @@ export class AccountingEventHandlerService {
   async handleInvoiceStamped(event: InvoiceStampedEvent) {
     this.logger.log(`Processing accounting for Invoice ${event.invoiceId}`);
 
-    const policy = this.policyService.resolveAccountsForInvoice(event.tenantId);
+    const policy = await this.policyService.resolveAccountsForInvoice(event.tenantId);
 
     const salesAccount = await this.accountRepo.findByCode(event.tenantId, policy.salesAccountCode);
     const vatAccount = await this.accountRepo.findByCode(event.tenantId, policy.vatAccountCode);
@@ -61,7 +61,7 @@ export class AccountingEventHandlerService {
   async handlePayrollStamped(event: PayrollStampedEvent) {
     this.logger.log(`Processing accounting for Payroll ${event.payrollId}`);
 
-    const policy = this.policyService.resolveAccountsForPayroll(event.tenantId);
+    const policy = await this.policyService.resolveAccountsForPayroll(event.tenantId);
 
     const salaryExpenseAccount = await this.accountRepo.findByCode(event.tenantId, policy.salaryExpenseAccountCode);
     const taxPayableAccount = await this.accountRepo.findByCode(event.tenantId, policy.taxPayableAccountCode);

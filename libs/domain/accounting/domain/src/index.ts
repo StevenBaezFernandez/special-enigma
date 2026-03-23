@@ -6,4 +6,5 @@ export * from './lib/enums/account-type.enum';
 export * from './lib/enums/journal-entry-status.enum';
 export * from './lib/errors/accounting.errors';
 export * from './lib/ports/account.repository';
+export * from './lib/ports/policy.repository';
 export { type JournalEntryRepository, JOURNAL_ENTRY_REPOSITORY } from './lib/ports/journal-entry.repository';
