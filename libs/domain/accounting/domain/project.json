@@ -10,7 +10,7 @@
     "platform:agnostic",
     "criticality:high",
     "tenant-mode:schema",
-    "compliance:none",
+    "compliance:fiscal",
     "region:global"
   ],
   "targets": {

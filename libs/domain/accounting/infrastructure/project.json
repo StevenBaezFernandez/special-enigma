@@ -10,7 +10,7 @@
     "platform:nest",
     "criticality:high",
     "tenant-mode:schema",
-    "compliance:none",
+    "compliance:fiscal",
     "region:global"
   ],
   "targets": {
@@ -27,6 +27,14 @@
           "libs/domain/accounting/infrastructure/*.md"
         ],
         "generateExportsField": true
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/domain/accounting/infrastructure/jest.config.cts",
+        "passWithNoTests": true
       }
     }
   }
