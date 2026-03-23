@@ -15,4 +15,6 @@ export interface JournalEntryDto {
   description: string;
   status: JournalEntryStatus;
   lines: JournalEntryLineDto[];
+  reference?: string;
+  amount?: number;
 }

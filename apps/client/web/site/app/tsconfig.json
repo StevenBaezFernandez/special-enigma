@@ -1,5 +1,5 @@
 {
-  "extends": "../../../../tsconfig.base.json",
+  "extends": "../../../../../tsconfig.base.json",
   "compilerOptions": {
     "strict": true,
     "noImplicitOverride": true,
@@ -10,7 +10,7 @@
     "target": "es2022",
     "moduleResolution": "bundler",
     "emitDecoratorMetadata": false,
-    "module": "preserve"
+    "module": "esnext"
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -5,7 +5,7 @@ import { API_BASE_URL } from '../core/config/api-base-url.token';
 
 export interface ServiceHealth {
   name: string;
-  status: 'UP' | 'DOWN' | 'DEGRADED';
+  status: 'UP' | 'DOWN' | 'DEGRADED' | 'UNKNOWN';
   latency: number;
   version: string;
 }

@@ -1,17 +1,15 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "../../../../../dist/libs/shared/util/client/http",
     "declaration": true,
     "types": [
       "node"
     ],
-    "rootDir": "../../../../../",
-    "moduleResolution": "node"
+    "moduleResolution": "bundler", "module": "esnext"
   },
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "files": [],
   "exclude": [
     "src/**/*.spec.ts",

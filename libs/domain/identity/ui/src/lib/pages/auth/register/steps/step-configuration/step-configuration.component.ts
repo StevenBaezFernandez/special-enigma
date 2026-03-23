@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, inject, signal, effect, Destroy
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideAngularModule, Globe, CreditCard, Building2 } from 'lucide-angular';
-import { CountryService, CountryConfig } from '@virteex/shared-ui/lib/core/services/country.service';
+import { CountryService, CountryConfig } from '@virteex/shared-ui';
 import { debounceTime, switchMap, tap, filter, distinctUntilChanged, catchError } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
