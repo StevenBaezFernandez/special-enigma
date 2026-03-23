@@ -30,6 +30,8 @@ export class UserMapper {
     user.googleId = entity.googleId;
     user.microsoftId = entity.microsoftId;
     user.oktaId = entity.oktaId;
+    user.resetPasswordToken = entity.resetPasswordToken;
+    user.resetPasswordExpiresAt = entity.resetPasswordExpiresAt;
 
     if (entity.authenticators && entity.authenticators.isInitialized()) {
       user.authenticators = entity.authenticators.getItems().map(
@@ -77,6 +79,8 @@ export class UserMapper {
     entity.googleId = domain.googleId;
     entity.microsoftId = domain.microsoftId;
     entity.oktaId = domain.oktaId;
+    entity.resetPasswordToken = domain.resetPasswordToken;
+    entity.resetPasswordExpiresAt = domain.resetPasswordExpiresAt;
 
     if (domain.authenticators) {
       domain.authenticators.forEach((a) => {

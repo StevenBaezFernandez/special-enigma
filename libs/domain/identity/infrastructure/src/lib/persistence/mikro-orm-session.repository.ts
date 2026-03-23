@@ -28,4 +28,12 @@ export class MikroOrmSessionRepository implements SessionRepository {
           await this.repository.getEntityManager().removeAndFlush(session);
       }
   }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    const sessions = await this.findByUserId(userId);
+    for (const session of sessions) {
+      this.repository.getEntityManager().remove(session);
+    }
+    await this.repository.getEntityManager().flush();
+  }
 }

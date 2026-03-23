@@ -54,10 +54,6 @@ export class AuthService {
     return lastValueFrom(this.http.post(`${this.apiUrl}/passkey/login-verify`, asseResp));
   }
 
-  verify2fa(code: string, tempToken: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/verify-2fa`, { code, tempToken });
-  }
-
   initiateSignup(dto: InitiateSignupDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/signup/initiate`, dto);
   }

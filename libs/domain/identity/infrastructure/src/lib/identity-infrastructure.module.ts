@@ -49,7 +49,11 @@ import {
   GeneratePasskeyRegistrationOptionsUseCase,
   VerifyPasskeyRegistrationUseCase,
   GeneratePasskeyLoginOptionsUseCase,
-  VerifyPasskeyLoginUseCase
+  VerifyPasskeyLoginUseCase,
+  ForgotPasswordUseCase,
+  ResetPasswordUseCase,
+  SetPasswordUseCase,
+  GetSocialRegisterInfoUseCase
 } from '@virteex/domain-identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/platform-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
@@ -131,7 +135,11 @@ import { AuthModule } from '@virteex/kernel-auth';
     GeneratePasskeyRegistrationOptionsUseCase,
     VerifyPasskeyRegistrationUseCase,
     GeneratePasskeyLoginOptionsUseCase,
-    VerifyPasskeyLoginUseCase
+    VerifyPasskeyLoginUseCase,
+    ForgotPasswordUseCase,
+    ResetPasswordUseCase,
+    SetPasswordUseCase,
+    GetSocialRegisterInfoUseCase
   ],
   exports: [
     InitiateSignupUseCase,
@@ -156,6 +164,10 @@ import { AuthModule } from '@virteex/kernel-auth';
     VerifyPasskeyRegistrationUseCase,
     GeneratePasskeyLoginOptionsUseCase,
     VerifyPasskeyLoginUseCase,
+    ForgotPasswordUseCase,
+    ResetPasswordUseCase,
+    SetPasswordUseCase,
+    GetSocialRegisterInfoUseCase,
     StoragePort,
     UserRepository,
     CompanyRepository,

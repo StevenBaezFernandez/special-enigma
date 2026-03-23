@@ -47,4 +47,14 @@ export class MikroOrmUserRepository implements UserRepository {
     }, { populate: ['authenticators'] as any });
     return entity ? UserMapper.toDomain(entity) : null;
   }
+
+  async findByInvitationToken(token: string): Promise<User | null> {
+    const entity = await this.em.findOne(UserOrmEntity, { invitationToken: token }, { populate: ['authenticators'] as any });
+    return entity ? UserMapper.toDomain(entity) : null;
+  }
+
+  async findByResetPasswordToken(token: string): Promise<User | null> {
+    const entity = await this.em.findOne(UserOrmEntity, { resetPasswordToken: token }, { populate: ['authenticators'] as any });
+    return entity ? UserMapper.toDomain(entity) : null;
+  }
 }

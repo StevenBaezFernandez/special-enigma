@@ -36,6 +36,10 @@ export class User {
   // Passkey Authenticators
   authenticators: UserAuthenticator[] = [];
 
+  // Reset Password fields
+  resetPasswordToken?: string;
+  resetPasswordExpiresAt?: Date;
+
   createdAt: Date = new Date();
 
   updatedAt: Date = new Date();

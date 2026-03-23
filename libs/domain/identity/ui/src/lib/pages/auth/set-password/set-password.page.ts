@@ -77,15 +77,12 @@ export class SetPasswordPage implements OnInit {
 
     this.setPasswordForm = this.fb.group({
       passwordGroup: this.fb.group({
-        password: ['', [Validators.required, Validators.minLength(8), strongPasswordValidator()]],
+        password: ['', [Validators.required, Validators.minLength(12), strongPasswordValidator()]],
         confirmPassword: ['', Validators.required],
       }, { validators: passwordMatchValidator })
     });
 
-    if (this.token) {
-      // Optional: Check validity first or just let submit handle it
-      // this.authService.getInvitationDetails(this.token)...
-    } else {
+    if (!this.token) {
       this.errorMessage = 'Invalid Token';
     }
   }
@@ -114,7 +111,7 @@ export class SetPasswordPage implements OnInit {
         next: (token) => {
             this.authService.setPasswordFromInvitation(this.token!, password).subscribe({
                 next: () => {
-                    this.router.navigate(['/dashboard']);
+                    this.router.navigate(['/accounting']);
                 },
                 error: (err: any) => {
                     this.isLoading = false;

@@ -6,15 +6,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule, CheckCircle, BarChart2, Package, Check, ArrowLeft, ArrowRight, Rocket, AlertCircle } from 'lucide-angular';
 import { trigger, style, transition, animate } from '@angular/animations';
 import { AuthService } from '../../../services/auth.service';
-import { RegisterPayload } from '@virteex/shared-ui'; // Import from shared-ui
 import { StepAccountInfo } from './steps/step-account-info/step-account-info';
 import { StepBusiness } from './steps/step-business/step-business';
 import { StepConfiguration } from './steps/step-configuration/step-configuration';
 import { StepPlan } from './steps/step-plan/step-plan';
 import { strongPasswordValidator } from '@virteex/shared-ui';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module, ReCaptchaV3Service } from 'ng-recaptcha-19';
-import { APP_CONFIG, AppConfig } from '@virteex/shared-config';
-import { CountryService, LanguageService } from '@virteex/shared-ui';
+import { CountryService, LanguageService, OtpComponent } from '@virteex/shared-ui';
 import { AuthLayoutComponent } from '../components/auth-layout/auth-layout.component';
 import { AuthButtonComponent } from '../components/auth-button/auth-button.component';
 
@@ -43,6 +41,7 @@ export function passwordMatchValidator(
     RecaptchaV3Module,
     AuthLayoutComponent,
     AuthButtonComponent,
+    OtpComponent
   ],
   providers: [
     ReCaptchaV3Service,
@@ -96,7 +95,8 @@ export class RegisterPage implements OnInit {
   registerForm!: FormGroup;
   errorMessage = signal<string | null>(null);
   isRegistering = signal(false);
-  stepsCompleted = signal<boolean[]>(new Array(4).fill(false));
+  stepsCompleted = signal<boolean[]>(new Array(5).fill(false));
+  onboardingToken = signal<string | null>(null);
 
   // Configuración reactiva basada en el país
   currentCountryConfig = computed(() => this.countryService.currentCountry());
@@ -106,15 +106,11 @@ export class RegisterPage implements OnInit {
       this.translate.use(this.languageService.currentLang());
     });
 
-    // 1. Efecto: Actualizar validadores y valores cuando cambia la configuración del país
     effect(() => {
       const config = this.currentCountryConfig();
       if (config && this.registerForm) {
-
-        // Actualizar Regex del Tax ID (RNC/NIT/EIN)
         const taxIdControl = this.registerForm.get('configuration.taxId');
         if (taxIdControl) {
-          // Usamos el regex que viene del backend o uno permisivo por defecto
           const pattern = config.taxIdRegex || '^[A-Za-z0-9\\-\\s]+$';
           taxIdControl.setValidators([
             Validators.required,
@@ -123,13 +119,11 @@ export class RegisterPage implements OnInit {
           taxIdControl.updateValueAndValidity();
         }
 
-        // Actualizar Moneda
         const currencyControl = this.registerForm.get('configuration.currency');
         if (currencyControl) {
           currencyControl.setValue(config.currencyCode);
         }
 
-        // Actualizar Región Fiscal (SOLO si el backend envió un ID válido)
         const fiscalRegionIdControl = this.registerForm.get(
           'configuration.fiscalRegionId',
         );
@@ -137,14 +131,12 @@ export class RegisterPage implements OnInit {
           if (config.fiscalRegionId) {
             fiscalRegionIdControl.setValue(config.fiscalRegionId);
           } else {
-            // Si no hay región fiscal (ej. país no soportado completamente), limpiar
             fiscalRegionIdControl.setValue(null);
           }
         }
       }
     });
 
-    // 2. Efecto: Sincronizar el dropdown de país en el formulario
     effect(() => {
       const code = this.countryService.currentCountryCode();
       if (code && this.registerForm) {
@@ -164,12 +156,10 @@ export class RegisterPage implements OnInit {
       }
     });
 
-    // Check if we have a country in the route
     const routeCountry = this.activatedRoute.parent?.parent?.snapshot.paramMap.get('country') ||
                          this.activatedRoute.parent?.snapshot.paramMap.get('country');
 
     if (!routeCountry) {
-      // Iniciar detección de país only if not in a country-specific route
       this.countryService.detectAndSetCountry();
     }
 
@@ -189,7 +179,7 @@ export class RegisterPage implements OnInit {
               '',
               [
                 Validators.required,
-                Validators.minLength(8),
+                Validators.minLength(12),
                 strongPasswordValidator(),
               ],
             ],
@@ -198,14 +188,16 @@ export class RegisterPage implements OnInit {
           { validators: passwordMatchValidator },
         ),
       }),
-      // Paso 2: Configuración Fiscal (Dinámica)
+      // Step 2: OTP (Dynamic Step)
+      otp: ['', [Validators.minLength(6), Validators.maxLength(6)]],
+      // Paso 3: Configuración Fiscal (Dinámica)
       configuration: this.fb.group({
         country: ['DO', [Validators.required]],
         taxId: ['', [Validators.required]],
         fiscalRegionId: [null], // Se llena automáticamente vía Effect
         currency: ['DOP', [Validators.required]],
       }),
-      // Paso 3: Perfil de Negocio
+      // Paso 4: Perfil de Negocio
       business: this.fb.group({
         companyName: ['', [Validators.required]],
         industry: ['', [Validators.required]],
@@ -214,13 +206,12 @@ export class RegisterPage implements OnInit {
         website: [''],
         logoFile: [null],
       }),
-      // Paso 4: Términos
+      // Paso 5: Términos
       plan: this.fb.group({
         agreeToTerms: [false, [Validators.requiredTrue]],
       }),
     });
 
-    // Manejo de tokens de invitación/social
     this.activatedRoute.queryParams.subscribe((params) => {
       const token = params['token'];
       const socialRegistration = params['social_registration'];
@@ -255,11 +246,9 @@ export class RegisterPage implements OnInit {
     return this.registerForm.get('plan') as FormGroup;
   }
 
-  private getCurrentStepForm(): FormGroup | null {
-    const stepNames = ['accountInfo', 'configuration', 'business', 'plan'];
-    return this.registerForm.get(
-      stepNames[this.currentStep() - 1],
-    ) as FormGroup;
+  private getCurrentStepForm(): AbstractControl | null {
+    const stepNames = ['accountInfo', 'otp', 'configuration', 'business', 'plan'];
+    return this.registerForm.get(stepNames[this.currentStep() - 1]);
   }
 
   nextStep(): void {
@@ -272,8 +261,18 @@ export class RegisterPage implements OnInit {
       return;
     }
 
-    // Validación específica antes de pasar del paso 2 (Config)
+    if (this.currentStep() === 1) {
+        this.initiateSignup();
+        return;
+    }
+
     if (this.currentStep() === 2) {
+        // OTP is handled by onOtpVerify
+        return;
+    }
+
+    // Validación específica antes de pasar del paso 3 (Config)
+    if (this.currentStep() === 3) {
       const regionId = this.registerForm.get(
         'configuration.fiscalRegionId',
       )?.value;
@@ -281,7 +280,6 @@ export class RegisterPage implements OnInit {
         .currentCountryCode()
         .toUpperCase();
 
-      // Si estamos en DO/PA/US, DEBE haber una región fiscal cargada.
       if (['DO', 'PA', 'US', 'CO'].includes(currentCountry) && !regionId) {
         this.errorMessage.set(
           'Error de configuración: No se ha cargado la región fiscal. Por favor recarga la página o verifica tu conexión.',
@@ -296,7 +294,7 @@ export class RegisterPage implements OnInit {
       return newCompleted;
     });
 
-    if (this.currentStep() < 4) {
+    if (this.currentStep() < 5) {
       this.currentStep.update((step) => step + 1);
       this.errorMessage.set(null);
     }
@@ -317,8 +315,45 @@ export class RegisterPage implements OnInit {
     }
   }
 
+  initiateSignup(): void {
+      this.isRegistering.set(true);
+      this.errorMessage.set(null);
+      const { email, passwordGroup } = this.accountInfo.getRawValue();
+
+      this.authService.initiateSignup({ email, password: passwordGroup.password }).subscribe({
+          next: () => {
+              this.isRegistering.set(false);
+              this.stepsCompleted.update(c => { c[0] = true; return [...c]; });
+              this.currentStep.set(2);
+          },
+          error: (err) => {
+              this.errorMessage.set(err.error?.message || 'Error al iniciar registro.');
+              this.isRegistering.set(false);
+          }
+      });
+  }
+
+  onOtpVerify(otp: string): void {
+      this.isRegistering.set(true);
+      this.errorMessage.set(null);
+      const email = this.accountInfo.get('email')?.value;
+
+      this.authService.verifySignup({ email, otp }).subscribe({
+          next: (res) => {
+              this.onboardingToken.set(res.onboardingToken);
+              this.isRegistering.set(false);
+              this.stepsCompleted.update(c => { c[1] = true; return [...c]; });
+              this.currentStep.set(3);
+          },
+          error: (err) => {
+              this.errorMessage.set('Código inválido.');
+              this.isRegistering.set(false);
+          }
+      });
+  }
+
   onSubmit(): void {
-    if (this.isRegistering()) return;
+    if (this.isRegistering() || !this.onboardingToken()) return;
 
     this.isRegistering.set(true);
     this.errorMessage.set(null);
@@ -327,31 +362,24 @@ export class RegisterPage implements OnInit {
 
     this.recaptchaV3Service.execute('register').subscribe({
       next: (recaptchaToken) => {
-        // Limpieza final de datos
         const regionId = formValue.configuration.fiscalRegionId;
 
         const payload: any = {
+          onboardingToken: this.onboardingToken()!,
           firstName: formValue.accountInfo.firstName,
           lastName: formValue.accountInfo.lastName,
           email: formValue.accountInfo.email,
-          password: formValue.accountInfo.passwordGroup.password,
-          organizationName: formValue.business.companyName,
+          phone: formValue.accountInfo.phone,
           companyName: formValue.business.companyName,
           country: formValue.configuration.country,
-          // Datos fiscales
           taxId: formValue.configuration.taxId,
-          // Solo enviar fiscalRegionId si tiene valor real, sino undefined
           fiscalRegionId: regionId && regionId !== '' ? regionId : undefined,
-
-          recaptchaToken,
-
-          // Datos de perfilado
           industry: formValue.business.industry,
-          companySize: formValue.business.numberOfEmployees,
-          address: formValue.business.address,
+          regime: formValue.configuration.fiscalRegionId || 'standard', // Fallback or logic
+          recaptchaToken,
         };
 
-        this.authService.register(payload).subscribe({
+        this.authService.completeOnboarding(payload).subscribe({
           next: () => {
             this.isRegistering.set(false);
             this.router.navigate(['/auth/plan-selection']);

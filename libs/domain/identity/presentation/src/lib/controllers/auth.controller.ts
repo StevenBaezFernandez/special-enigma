@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException, UseGuards, Inject, Optional, Session, Logger } from '@nestjs/common';
+import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException, UseGuards, Inject, Optional, Session, Logger, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
     LoginUserUseCase,
@@ -13,9 +13,23 @@ import {
     GeneratePasskeyRegistrationOptionsUseCase,
     VerifyPasskeyRegistrationUseCase,
     GeneratePasskeyLoginOptionsUseCase,
-    VerifyPasskeyLoginUseCase
+    VerifyPasskeyLoginUseCase,
+    ForgotPasswordUseCase,
+    ResetPasswordUseCase,
+    SetPasswordUseCase,
+    GetSocialRegisterInfoUseCase
 } from '@virteex/domain-identity-application';
-import { LoginUserDto, VerifyMfaDto, RefreshTokenDto, InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto } from '@virteex/domain-identity-contracts';
+import {
+    LoginUserDto,
+    VerifyMfaDto,
+    RefreshTokenDto,
+    InitiateSignupDto,
+    VerifySignupDto,
+    CompleteOnboardingDto,
+    ForgotPasswordDto,
+    ResetPasswordDto,
+    SetPasswordDto
+} from '@virteex/domain-identity-contracts';
 import { Request, Response } from 'express';
 import { Public, JwtAuthGuard, SecretManagerService } from '@virteex/kernel-auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -44,6 +58,10 @@ export class AuthController {
     private readonly verifyPasskeyRegistrationUseCase: VerifyPasskeyRegistrationUseCase,
     private readonly generatePasskeyLoginOptionsUseCase: GeneratePasskeyLoginOptionsUseCase,
     private readonly verifyPasskeyLoginUseCase: VerifyPasskeyLoginUseCase,
+    private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
+    private readonly resetPasswordUseCase: ResetPasswordUseCase,
+    private readonly setPasswordUseCase: SetPasswordUseCase,
+    private readonly getSocialRegisterInfoUseCase: GetSocialRegisterInfoUseCase,
     private readonly requestContextService: RequestContextService,
     private readonly cookiePolicyService: CookiePolicyService,
     @Optional() private readonly secretManager?: SecretManagerService
@@ -170,6 +188,51 @@ export class AuthController {
       return (req as any).user;
   }
 
+  @Public()
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() dto: ForgotPasswordDto, @Req() req: Request) {
+      const context = {
+          ip: this.requestContextService.extractIp(req),
+          userAgent: req.headers['user-agent'] || 'unknown'
+      };
+      await this.forgotPasswordUseCase.execute(dto, context);
+      return { message: 'If the email exists, a reset link has been sent.' };
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() dto: ResetPasswordDto, @Req() req: Request) {
+      const context = {
+          ip: this.requestContextService.extractIp(req),
+          userAgent: req.headers['user-agent'] || 'unknown'
+      };
+      await this.resetPasswordUseCase.execute(dto, context);
+      return { message: 'Password has been reset successfully.' };
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
+  @Post('set-password')
+  @HttpCode(HttpStatus.OK)
+  async setPassword(@Body() dto: SetPasswordDto, @Req() req: Request) {
+      const context = {
+          ip: this.requestContextService.extractIp(req),
+          userAgent: req.headers['user-agent'] || 'unknown'
+      };
+      await this.setPasswordUseCase.execute(dto, context);
+      return { message: 'Password has been set successfully.' };
+  }
+
+  @Public()
+  @Get('social-register-info')
+  async getSocialRegisterInfo(@Query('token') token: string) {
+      return this.getSocialRegisterInfoUseCase.execute(token);
+  }
+
   // --- Social Login ---
 
   @Public()
@@ -223,7 +286,7 @@ export class AuthController {
     this.cookiePolicyService.setAuthCookies(res, result.accessToken!, result.refreshToken!);
 
     const frontendUrl = this.secretManager?.getSecret('FRONTEND_URL', 'http://localhost:4200');
-    res.redirect(`${frontendUrl}/dashboard`);
+    res.redirect(`${frontendUrl}/accounting`);
   }
 
   // --- Passkeys (WebAuthn) ---

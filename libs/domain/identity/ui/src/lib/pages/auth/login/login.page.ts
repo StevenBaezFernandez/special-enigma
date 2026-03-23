@@ -141,12 +141,12 @@ export class LoginPage implements OnInit {
 
         this.authService.login({ email, password, recaptchaToken: token, rememberMe }).subscribe({
           next: (response: any) => {
-            if (response && response.require2fa) {
+            if (response && response.mfaRequired) {
               this.tempToken.set(response.tempToken);
               this.show2faInput.set(true);
               this.isLoggingIn.set(false);
             } else {
-              this.handleSuccess(response); // response is User object here per AuthService logic
+              this.handleSuccess(response);
             }
           },
           error: (err) => {
@@ -163,7 +163,7 @@ export class LoginPage implements OnInit {
     });
   }
 
-  verify2fa(): void {
+  verifyMfa(): void {
     if (this.otpCodeControl.invalid || !this.tempToken()) return;
     this.onOtpVerify(this.otpCodeControl.value!);
   }
@@ -174,7 +174,7 @@ export class LoginPage implements OnInit {
     this.isLoggingIn.set(true);
     this.errorMessage.set(null);
 
-    this.authService.verify2fa(code, this.tempToken()!).subscribe({
+    this.authService.verifyMfa({ code, tempToken: this.tempToken()! }).subscribe({
       next: (user) => {
         this.handleSuccess(user);
       },
@@ -182,8 +182,6 @@ export class LoginPage implements OnInit {
         this.errorMessage.set('LOGIN.ERRORS.INVALID_CODE');
         this.isLoggingIn.set(false);
         if (this.otpComponent) {
-             // We can use the translation service here if needed, or pass the key.
-             // But handleError expects string.
              this.translate.get('LOGIN.ERRORS.INVALID_CODE').subscribe(res => {
                   this.otpComponent.handleError(res);
              });
@@ -196,7 +194,7 @@ export class LoginPage implements OnInit {
     if (user && user.preferredLanguage) {
       this.languageService.setLanguage(user.preferredLanguage);
     }
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/accounting']);
     this.isLoggingIn.set(false);
   }
 

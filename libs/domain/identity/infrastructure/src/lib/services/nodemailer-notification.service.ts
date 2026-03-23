@@ -53,8 +53,6 @@ export class NodemailerNotificationService implements NotificationService, OnMod
       });
     } catch (error: any) {
       this.logger.error(`Failed to queue welcome email for ${user.email}`, error.stack);
-      // We re-throw to ensure the caller knows something went wrong,
-      // though typically this should be handled by a DLQ mechanism in the queue processor.
       throw new Error(`Failed to queue welcome email: ${error.message}`);
     }
   }
@@ -109,6 +107,36 @@ export class NodemailerNotificationService implements NotificationService, OnMod
     } catch (error: any) {
       this.logger.error(`Failed to queue OTP email for ${email}`, error.stack);
       throw new Error(`Failed to queue OTP email: ${error.message}`);
+    }
+  }
+
+  async sendPasswordResetEmail(user: User, token: string): Promise<void> {
+    this.logger.log(`Queueing password reset email for ${user.email}`);
+
+    try {
+      const frontendUrl = this.configService.get('FRONTEND_URL') || 'http://localhost:4200';
+      const resetUrl = `${frontendUrl}/auth/reset-password?token=${token}`;
+
+      const htmlContent = `
+          <h1>Reset your password</h1>
+          <p>Hello,</p>
+          <p>We received a request to reset your password for your Virteex account.</p>
+          <p>Click the button below to reset your password:</p>
+          <p><a href="${resetUrl}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a></p>
+          <p>This link will expire in 1 hour.</p>
+          <p>If you did not request a password reset, please ignore this email.</p>
+      `;
+      const textContent = `Reset your password for Virteex: ${resetUrl}`;
+
+      await this.mailQueueProducer.addEmailJob({
+        to: user.email,
+        subject: 'Reset your password - Virteex',
+        text: textContent,
+        html: htmlContent,
+      });
+    } catch (error: any) {
+      this.logger.error(`Failed to queue password reset email for ${user.email}`, error.stack);
+      throw new Error(`Failed to queue password reset email: ${error.message}`);
     }
   }
 }

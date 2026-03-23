@@ -23,3 +23,7 @@ export * from './lib/use-cases/generate-passkey-registration-options.use-case';
 export * from './lib/use-cases/verify-passkey-registration.use-case';
 export * from './lib/use-cases/generate-passkey-login-options.use-case';
 export * from './lib/use-cases/verify-passkey-login.use-case';
+export * from './lib/use-cases/forgot-password.use-case';
+export * from './lib/use-cases/reset-password.use-case';
+export * from './lib/use-cases/set-password.use-case';
+export * from './lib/use-cases/get-social-register-info.use-case';

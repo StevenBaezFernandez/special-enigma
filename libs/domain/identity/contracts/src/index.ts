@@ -9,4 +9,7 @@ export * from './lib/dto/update-user.dto';
 export * from './lib/dto/user-response.dto';
 export * from './lib/dto/verify-mfa.dto';
 export * from './lib/dto/verify-signup.dto';
+export * from './lib/dto/forgot-password.dto';
+export * from './lib/dto/reset-password.dto';
+export * from './lib/dto/set-password.dto';
 export * from './lib/dtos/audit-log.dto';

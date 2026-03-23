@@ -83,6 +83,13 @@ export class UserOrmEntity {
   @Unique()
   oktaId?: string;
 
+  // Reset Password fields
+  @Property({ nullable: true })
+  resetPasswordToken?: string;
+
+  @Property({ nullable: true })
+  resetPasswordExpiresAt?: Date;
+
   // Passkey Authenticators
   @OneToMany(() => UserAuthenticatorOrmEntity, (a) => a.user, { orphanRemoval: true })
   authenticators = new Collection<UserAuthenticatorOrmEntity>(this);

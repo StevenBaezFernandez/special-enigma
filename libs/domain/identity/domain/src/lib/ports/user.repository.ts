@@ -7,4 +7,6 @@ export abstract class UserRepository {
   abstract findById(id: string): Promise<User | null>;
   abstract findBySocialId(provider: 'google' | 'microsoft' | 'okta', id: string): Promise<User | null>;
   abstract findByAuthenticatorCredentialId(credentialId: string): Promise<User | null>;
+  abstract findByInvitationToken(token: string): Promise<User | null>;
+  abstract findByResetPasswordToken(token: string): Promise<User | null>;
 }

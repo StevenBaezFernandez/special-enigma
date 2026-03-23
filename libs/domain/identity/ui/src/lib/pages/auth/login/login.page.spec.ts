@@ -28,7 +28,7 @@ class FakeLoader implements TranslateLoader {
 class MockAuthService {
   login = vi.fn().mockReturnValue(of({ user: { id: 1 }, accessToken: 'token' }));
   loginWithPasskey = vi.fn().mockReturnValue(Promise.resolve({ id: 1 }));
-  verify2fa = vi.fn().mockReturnValue(of({ user: { id: 1 } }));
+  verifyMfa = vi.fn().mockReturnValue(of({ user: { id: 1 } }));
 }
 class MockRecaptchaService {
   execute = vi.fn().mockReturnValue(of('mock-token'));

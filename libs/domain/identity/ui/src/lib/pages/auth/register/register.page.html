@@ -17,9 +17,9 @@
 
       <!-- Progress Bar Active -->
       <div class="progress-bar-active"
-           [style.width]="((currentStep() - 1) / 3) * 100 + '%'"></div>
+           [style.width]="((currentStep() - 1) / 4) * 100 + '%'"></div>
 
-      <ng-container *ngFor="let step of [1, 2, 3, 4]; let i = index">
+      <ng-container *ngFor="let step of [1, 2, 3, 4, 5]; let i = index">
         <div
           class="step-item"
           (click)="navigateToStep(step)"
@@ -49,18 +49,28 @@
         <virteex-step-account-info [group]="accountInfo"></virteex-step-account-info>
       </div>
 
-      <!-- Step 2: Configuration (Country/Tax) -->
+      <!-- Step 2: OTP Verification -->
       <div *ngIf="currentStep() === 2" [@stepAnimation] class="step-content">
+        <virteex-otp
+          [title]="'REGISTER.OTP_TITLE' | translate"
+          [description]="'REGISTER.OTP_SUBTITLE' | translate"
+          [otpLength]="6"
+          (verify)="onOtpVerify($event)">
+        </virteex-otp>
+      </div>
+
+      <!-- Step 3: Configuration (Country/Tax) -->
+      <div *ngIf="currentStep() === 3" [@stepAnimation] class="step-content">
         <virteex-step-configuration [group]="configuration"></virteex-step-configuration>
       </div>
 
-      <!-- Step 3: Business Info -->
-      <div *ngIf="currentStep() === 3" [@stepAnimation] class="step-content">
+      <!-- Step 4: Business Info -->
+      <div *ngIf="currentStep() === 4" [@stepAnimation] class="step-content">
         <virteex-step-business [group]="business"></virteex-step-business>
       </div>
 
-      <!-- Step 4: Plan / Confirmation -->
-      <div *ngIf="currentStep() === 4" [@stepAnimation] class="step-content">
+      <!-- Step 5: Plan / Confirmation -->
+      <div *ngIf="currentStep() === 5" [@stepAnimation] class="step-content">
         <virteex-step-plan [group]="plan"></virteex-step-plan>
       </div>
 
@@ -68,24 +78,25 @@
       <div class="navigation-buttons">
         <button
           type="button"
-          *ngIf="currentStep() > 1"
+          *ngIf="currentStep() > 1 && currentStep() !== 2"
           (click)="prevStep()"
           class="back-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           {{ 'REGISTER.BACK' | translate }}
         </button>
-        <div *ngIf="currentStep() === 1" class="spacer"></div> <!-- Spacer -->
+        <div *ngIf="currentStep() === 1 || currentStep() === 2" class="spacer"></div> <!-- Spacer -->
 
-        <div class="next-btn-container" *ngIf="currentStep() < 4">
+        <div class="next-btn-container" *ngIf="currentStep() < 5 && currentStep() !== 2">
             <virteex-auth-button
             (onClick)="nextStep()"
+            [loading]="isRegistering()"
             variant="primary">
             {{ 'REGISTER.NEXT' | translate }}
             <svg icon xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </virteex-auth-button>
         </div>
 
-        <div class="next-btn-container" *ngIf="currentStep() === 4">
+        <div class="next-btn-container" *ngIf="currentStep() === 5">
             <virteex-auth-button
             type="submit"
             variant="primary"
