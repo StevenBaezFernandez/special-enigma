@@ -5,6 +5,7 @@ export * from './lib/entities/audit-log.entity';
 export * from './lib/entities/session.entity';
 export * from './lib/entities/job-title.entity';
 export * from './lib/ports/user.repository';
+export * from './lib/ports/recaptcha.port';
 export * from './lib/ports/company.repository';
 export * from './lib/ports/audit-log.repository';
 export * from './lib/ports/session.repository';

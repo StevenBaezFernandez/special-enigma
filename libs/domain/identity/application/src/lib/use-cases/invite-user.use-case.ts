@@ -23,6 +23,7 @@ export class InviteUserUseCase {
     if (!currentUser) throw new Error('Inviter not found');
 
     const token = randomUUID();
+    const tokenHash = this.authService.hashToken(token);
     const passwordHash = await this.authService.hashPassword(randomUUID());
 
     const user = new User(
@@ -35,7 +36,7 @@ export class InviteUserUseCase {
     );
     user.role = dto.role;
     user.status = 'INVITED';
-    user.invitationToken = token;
+    user.invitationToken = tokenHash;
     user.invitationExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     await this.userRepository.save(user);

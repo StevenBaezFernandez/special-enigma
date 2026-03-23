@@ -2,7 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService, WebAuthnService } from '@virteex/domain-identity-domain';
+import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, RecaptchaPort, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService, WebAuthnService } from '@virteex/domain-identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
 import { UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema, UserAuthenticatorSchema } from './persistence/identity.schemas';
@@ -13,6 +13,7 @@ import { MikroOrmJobTitleRepository } from './persistence/mikro-orm-job-title.re
 
 import { Argon2AuthService } from './services/argon2-auth.service';
 import { KeycloakAuthService } from './services/keycloak-auth.service';
+import { RecaptchaService } from './services/recaptcha.service';
 import { WebAuthnService as InfrastructureWebAuthnService } from './services/webauthn.service';
 import { SessionSerializer } from './services/session.serializer';
 import { GoogleStrategy } from './strategies/google.strategy';
@@ -60,6 +61,7 @@ import { StorageAdapter } from './adapters/storage.adapter';
 import { RedisCacheModule } from '@virteex/platform-cache';
 import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
 import { AuthModule } from '@virteex/kernel-auth';
+import { HttpModule } from '@nestjs/axios';
 
 @Global()
 @Module({
@@ -67,6 +69,7 @@ import { AuthModule } from '@virteex/kernel-auth';
     ConfigModule,
     EventEmitterModule,
     AuthModule,
+    HttpModule,
     MikroOrmModule.forFeature([UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema, UserAuthenticatorSchema]),
     SharedInfrastructureStorageModule,
     RedisCacheModule.forRootAsync({
@@ -110,6 +113,7 @@ import { AuthModule } from '@virteex/kernel-auth';
     },
     { provide: NotificationService, useClass: NodemailerNotificationService },
     { provide: RiskEngineService, useClass: DefaultRiskEngineService },
+    { provide: RecaptchaPort, useClass: RecaptchaService },
     RiskEvaluatorService,
     { provide: StoragePort, useClass: StorageAdapter },
     { provide: GEO_IP_PORT, useClass: GeoIpLiteAdapter },
@@ -175,6 +179,7 @@ import { AuthModule } from '@virteex/kernel-auth';
     SessionRepository,
     JobTitleRepository,
     AuthService,
+    RecaptchaPort,
     WebAuthnService,
     RiskEngineService,
     RiskEvaluatorService,

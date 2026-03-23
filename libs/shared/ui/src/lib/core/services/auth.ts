@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, tap, map, catchError } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { API_URL } from '@virteex/shared-config';
 import { hasPermission } from '@virteex/shared-util-auth';
@@ -20,7 +20,16 @@ export class AuthService {
   constructor() {}
 
   login(credentials: any): Observable<any> {
-    return of({ user: { id: '1', email: credentials.email } });
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials, { withCredentials: true }).pipe(
+      tap(res => {
+        if (res.user) {
+          this._currentUser.set(res.user);
+        } else if (!res.mfaRequired) {
+          // If no user object but not MFA, try to get user info
+          this.checkAuthStatus().subscribe();
+        }
+      })
+    );
   }
 
   logout(redirect = true): void {
@@ -31,7 +40,14 @@ export class AuthService {
   }
 
   checkAuthStatus(): Observable<boolean> {
-    return of(this.isAuthenticated());
+    return this.http.get<any>(`${this.baseUrl}/auth/me`, { withCredentials: true }).pipe(
+      tap(user => this._currentUser.set(user)),
+      map(user => !!user),
+      catchError(() => {
+        this._currentUser.set(null);
+        return of(false);
+      })
+    );
   }
 
   refreshAccessToken(): Observable<string> {

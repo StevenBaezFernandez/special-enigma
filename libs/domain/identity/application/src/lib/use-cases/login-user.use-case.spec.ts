@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoginUserUseCase } from './login-user.use-case';
-import { UserRepository, AuditLogRepository, AuthService, RiskEngineService } from '@virteex/domain-identity-domain';
+import { UserRepository, AuditLogRepository, AuthService, RiskEngineService, RecaptchaPort } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
 import { UnauthorizedException, ForbiddenException } from '@virteex/kernel-exceptions';
 import { vi, Mock } from 'vitest';
@@ -12,6 +12,7 @@ describe('LoginUserUseCase', () => {
   let auditLogRepository: AuditLogRepository;
   let riskEngineService: RiskEngineService;
   let tokenGenerationService: TokenGenerationService;
+  let recaptchaService: RecaptchaPort;
 
   const mockUser = {
       id: '123',
@@ -58,6 +59,10 @@ describe('LoginUserUseCase', () => {
                   session: mockSession
               })
           }
+        },
+        {
+          provide: RecaptchaPort,
+          useValue: { verify: vi.fn().mockResolvedValue(true) }
         }
       ]
     }).compile();
@@ -68,17 +73,18 @@ describe('LoginUserUseCase', () => {
     auditLogRepository = module.get<AuditLogRepository>(AuditLogRepository);
     riskEngineService = module.get<RiskEngineService>(RiskEngineService);
     tokenGenerationService = module.get<TokenGenerationService>(TokenGenerationService);
+    recaptchaService = module.get<RecaptchaPort>(RecaptchaPort);
   });
 
   it('should allow valid login', async () => {
-    const dto = { email: 'test@test.com', password: 'pass' };
+    const dto = { email: 'test@test.com', password: 'pass', recaptchaToken: 'valid-token' };
     const result = await useCase.execute(dto);
     expect(result).toHaveProperty('accessToken', 'token');
     expect(result.mfaRequired).toBeFalsy();
   });
 
   it('should lock account after 3 failed attempts', async () => {
-      const dto = { email: 'test@test.com', password: 'wrong' };
+      const dto = { email: 'test@test.com', password: 'wrong', recaptchaToken: 'valid-token' };
       (authService.verifyPassword as Mock).mockResolvedValue(false);
 
       const userClone = { ...mockUser, failedLoginAttempts: 2 };
@@ -92,7 +98,7 @@ describe('LoginUserUseCase', () => {
   });
 
   it('should require MFA if risk score is high', async () => {
-      const dto = { email: 'test@test.com', password: 'pass' };
+      const dto = { email: 'test@test.com', password: 'pass', recaptchaToken: 'valid-token' };
       (riskEngineService.calculateRisk as Mock).mockResolvedValue(75);
 
       const result = await useCase.execute(dto);
@@ -102,7 +108,7 @@ describe('LoginUserUseCase', () => {
   });
 
   it('should block login if risk score is critical (> 90)', async () => {
-      const dto = { email: 'test@test.com', password: 'pass' };
+      const dto = { email: 'test@test.com', password: 'pass', recaptchaToken: 'valid-token' };
       (riskEngineService.calculateRisk as Mock).mockResolvedValue(95);
 
       await expect(useCase.execute(dto)).rejects.toThrow(ForbiddenException);

@@ -104,4 +104,8 @@ export class Argon2AuthService implements AuthService {
     decrypted += decipher.final('utf8');
     return decrypted;
   }
+
+  hashToken(token: string): string {
+    return crypto.createHash('sha256').update(token).digest('hex');
+  }
 }

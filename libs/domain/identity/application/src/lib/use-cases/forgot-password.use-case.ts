@@ -1,7 +1,9 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { UserRepository, NotificationService, AuditLogRepository, AuditLog } from '@virteex/domain-identity-domain';
+import { UserRepository, NotificationService, AuditLogRepository, AuditLog, AuthService } from '@virteex/domain-identity-domain';
 import { ForgotPasswordDto } from '@virteex/domain-identity-contracts';
 import { randomBytes } from 'crypto';
+import { BadRequestException } from '@virteex/kernel-exceptions';
+import { RecaptchaPort } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class ForgotPasswordUseCase {
@@ -11,9 +13,15 @@ export class ForgotPasswordUseCase {
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     @Inject(NotificationService) private readonly notificationService: NotificationService,
     @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
+    @Inject(AuthService) private readonly authService: AuthService,
+    @Inject(RecaptchaPort) private readonly recaptchaService: RecaptchaPort,
   ) {}
 
   async execute(dto: ForgotPasswordDto, context: { ip: string, userAgent: string }): Promise<void> {
+    if (!(await this.recaptchaService.verify(dto.recaptchaToken, 'forgotPassword'))) {
+        throw new BadRequestException('reCAPTCHA verification failed');
+    }
+
     const user = await this.userRepository.findByEmail(dto.email);
 
     if (!user) {
@@ -23,7 +31,7 @@ export class ForgotPasswordUseCase {
     }
 
     const token = randomBytes(32).toString('hex');
-    user.resetPasswordToken = token;
+    user.resetPasswordToken = this.authService.hashToken(token);
     user.resetPasswordExpiresAt = new Date(Date.now() + 3600000); // 1 hour
 
     await this.userRepository.save(user);

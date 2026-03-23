@@ -11,7 +11,8 @@ export class SetPasswordUseCase {
   ) {}
 
   async execute(dto: SetPasswordDto, context: { ip: string, userAgent: string }): Promise<void> {
-    const user = await this.userRepository.findByInvitationToken(dto.token);
+    const tokenHash = this.authService.hashToken(dto.token);
+    const user = await this.userRepository.findByInvitationToken(tokenHash);
 
     if (!user || !user.invitationExpiresAt || user.invitationExpiresAt < new Date()) {
       throw new BadRequestException('Invalid or expired invitation token');

@@ -2,7 +2,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { LoginUserDto, LoginResponseDto } from '@virteex/domain-identity-contracts';
 import { UserRepository, AuditLogRepository, AuditLog, RiskEngineService, AuthService } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
-import { UnauthorizedException, ForbiddenException } from '@virteex/kernel-exceptions';
+import { UnauthorizedException, ForbiddenException, BadRequestException } from '@virteex/kernel-exceptions';
+import { RecaptchaPort } from '@virteex/domain-identity-domain';
 
 export interface LoginContext {
   ip: string;
@@ -17,10 +18,15 @@ export class LoginUserUseCase {
     @Inject(AuthService) private readonly authService: AuthService,
     @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
     @Inject(RiskEngineService) private readonly riskEngineService: RiskEngineService,
-    @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService
+    @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService,
+    @Inject(RecaptchaPort) private readonly recaptchaService: RecaptchaPort
   ) {}
 
   async execute(dto: LoginUserDto, context: LoginContext = { ip: 'unknown', userAgent: 'unknown' }): Promise<LoginResponseDto> {
+    if (!(await this.recaptchaService.verify(dto.recaptchaToken, 'login'))) {
+      throw new BadRequestException('reCAPTCHA verification failed');
+    }
+
     const user = await this.userRepository.findByEmail(dto.email);
 
     if (!user) {
