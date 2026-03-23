@@ -18,6 +18,7 @@
         "{options.reportsDirectory}"
       ],
       "options": {
+        "config": "libs/domain/accounting/ui/vitest.config.ts",
         "reportsDirectory": "../../../../coverage/libs/domain/accounting/ui"
       }
     },

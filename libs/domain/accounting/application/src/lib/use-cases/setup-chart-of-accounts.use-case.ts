@@ -19,6 +19,7 @@ export class SetupChartOfAccountsUseCase {
         { code: '208.01', name: 'IVA por Pagar', type: AccountType.LIABILITY },
         { code: '210.01', name: 'Impuestos por Pagar (Nómina)', type: AccountType.LIABILITY },
         { code: '3000', name: 'Capital', type: AccountType.EQUITY },
+        { code: '302.01', name: 'Utilidades Retenidas', type: AccountType.EQUITY },
         { code: '4000', name: 'Ingresos', type: AccountType.REVENUE },
         { code: '401.01', name: 'Ventas Gravadas', type: AccountType.REVENUE },
         { code: '5000', name: 'Gastos', type: AccountType.EXPENSE },

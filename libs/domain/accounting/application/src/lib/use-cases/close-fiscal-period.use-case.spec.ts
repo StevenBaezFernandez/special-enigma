@@ -1,48 +1,74 @@
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CloseFiscalPeriodUseCase } from './close-fiscal-period.use-case';
-import { type JournalEntryRepository, type AccountRepository } from '@virteex/domain-accounting-domain';
-import { AccountingPolicyService } from '../services/accounting-policy.service';
+import { JournalEntry, JournalEntryType, Account, AccountType, AccountingDomainError } from '@virteex/domain-accounting-domain';
+import { Decimal } from 'decimal.js';
 
 describe('CloseFiscalPeriodUseCase', () => {
-  let service: CloseFiscalPeriodUseCase;
-  let journalRepo: JournalEntryRepository;
-  let accountRepo: AccountRepository;
-  let policyService: AccountingPolicyService;
+  let useCase: CloseFiscalPeriodUseCase;
+  let journalEntryRepository: any;
+  let accountRepository: any;
+  let policyService: any;
+
+  const tenantId = 'tenant-1';
+  const closingDate = new Date('2026-12-31');
 
   beforeEach(() => {
-    journalRepo = {
-        getBalancesByAccount: vi.fn(),
-        create: vi.fn(),
-    } as unknown as JournalEntryRepository;
-    accountRepo = {
-        findAll: vi.fn(),
-        findById: vi.fn(),
-        findByCode: vi.fn(),
-    } as unknown as AccountRepository;
+    journalEntryRepository = {
+      getBalancesByAccount: vi.fn(),
+      create: vi.fn(),
+    };
+    accountRepository = {
+      findAll: vi.fn(),
+      findById: vi.fn(),
+      findByCode: vi.fn(),
+    };
     policyService = {
-        resolveAccountsForClosing: vi.fn().mockResolvedValue({ retainedEarningsAccountCode: '300' }),
-    } as unknown as AccountingPolicyService;
-    service = new CloseFiscalPeriodUseCase(journalRepo, accountRepo, policyService);
+      resolveAccountsForClosing: vi.fn().mockResolvedValue({ retainedEarningsAccountCode: '302.01' }),
+    };
+
+    useCase = new CloseFiscalPeriodUseCase(journalEntryRepository, accountRepository, policyService);
   });
 
-  it('should create closing entries to zero out revenue and expense', async () => {
-      const balances = new Map();
-      balances.set('1', { debit: '100.00', credit: '0.00' });
+  it('should throw error if retained earnings account is missing and there is net income', async () => {
+    const revenueAccount = new Account(tenantId, '401', 'Sales', AccountType.REVENUE);
+    revenueAccount.id = 'acc-1';
 
-      (journalRepo.getBalancesByAccount as any).mockResolvedValue(balances);
-      (accountRepo.findAll as any).mockResolvedValue([
-          { id: '1', name: 'Revenue', code: '400', type: 'REVENUE', tenantId: 'tenant1' },
-          { id: '2', name: 'Retained Earnings', code: '300', type: 'EQUITY', tenantId: 'tenant1' }
-      ]);
-      (accountRepo.findByCode as any).mockResolvedValue({ id: '2', name: 'Retained Earnings', code: '300', type: 'EQUITY', tenantId: 'tenant1' });
-      (accountRepo.findById as any).mockImplementation((id: string) => {
-          if (id === '1') return Promise.resolve({ id: '1', name: 'Revenue', code: '400', type: 'REVENUE', tenantId: 'tenant1' });
-          if (id === '2') return Promise.resolve({ id: '2', name: 'Retained Earnings', code: '300', type: 'EQUITY', tenantId: 'tenant1' });
-          return Promise.resolve(null);
-      });
+    accountRepository.findAll.mockResolvedValue([revenueAccount]);
+    journalEntryRepository.getBalancesByAccount.mockResolvedValue(new Map([
+      ['acc-1', { debit: '0', credit: '1000' }]
+    ]));
+    accountRepository.findById.mockResolvedValue(revenueAccount);
+    accountRepository.findByCode.mockResolvedValue(null); // Missing retained earnings
 
-      await service.execute('tenant1', new Date());
+    await expect(useCase.execute(tenantId, closingDate))
+      .rejects.toThrow(AccountingDomainError);
 
-      expect(journalRepo.create).toHaveBeenCalled();
+    await expect(useCase.execute(tenantId, closingDate))
+      .rejects.toThrow('Retained earnings account with code 302.01 not found');
+  });
+
+  it('should validate balance before creating the entry', async () => {
+    const revenueAccount = new Account(tenantId, '401', 'Sales', AccountType.REVENUE);
+    revenueAccount.id = 'acc-1';
+    const equityAccount = new Account(tenantId, '302.01', 'Retained Earnings', AccountType.EQUITY);
+    equityAccount.id = 'acc-2';
+
+    accountRepository.findAll.mockResolvedValue([revenueAccount]);
+    journalEntryRepository.getBalancesByAccount.mockResolvedValue(new Map([
+      ['acc-1', { debit: '0', credit: '1000' }]
+    ]));
+    accountRepository.findById.mockResolvedValue(revenueAccount);
+    accountRepository.findByCode.mockResolvedValue(equityAccount);
+
+    // Mock validateBalance to throw error to test it's called
+    const originalValidate = JournalEntry.prototype.validateBalance;
+    JournalEntry.prototype.validateBalance = vi.fn().mockImplementation(() => {
+        throw new Error('Validation called');
+    });
+
+    await expect(useCase.execute(tenantId, closingDate))
+      .rejects.toThrow('Validation called');
+
+    JournalEntry.prototype.validateBalance = originalValidate;
   });
 });

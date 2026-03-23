@@ -28,6 +28,7 @@ export const JournalEntrySchema = new EntitySchema<JournalEntry>({
     status: { enum: true, items: () => JournalEntryStatus, default: JournalEntryStatus.DRAFT },
     type: { enum: true, items: () => JournalEntryType, default: JournalEntryType.REGULAR },
     reference: { type: 'string', nullable: true },
+    dimensions: { type: 'json', nullable: true },
     lines: { kind: '1:m', entity: () => 'JournalEntryLine', mappedBy: 'journalEntry', orphanRemoval: true },
   },
 });

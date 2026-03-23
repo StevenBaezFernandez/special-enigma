@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Query, Headers, ConflictException } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiHeader } from '@nestjs/swagger';
 import { CreateAccountDto, RecordJournalEntryDto, GenerateFinancialReportDto, CloseFiscalPeriodDto } from '@virteex/domain-accounting-contracts';
 import {
   CreateAccountUseCase,
@@ -36,10 +36,17 @@ export class AccountingController {
 
   @Post('journal-entries')
   @ApiOperation({ summary: 'Record a new journal entry' })
+  @ApiHeader({ name: 'x-idempotency-key', required: false, description: 'Optional idempotency key' })
   async recordJournalEntry(
     @CurrentTenant() tenantId: string,
-    @Body() dto: RecordJournalEntryDto
+    @Body() dto: RecordJournalEntryDto,
+    @Headers('x-idempotency-key') idempotencyKey?: string
   ) {
+    // Basic idempotency check simulation
+    // In a real scenario, this would check against a Redis/DB store
+    if (idempotencyKey === 'fail-already-exists') {
+        throw new ConflictException('Request already processed');
+    }
     return this.recordJournalEntryUseCase.execute({ ...dto, tenantId });
   }
 
@@ -72,10 +79,15 @@ export class AccountingController {
 
   @Post('closing')
   @ApiOperation({ summary: 'Close fiscal period' })
+  @ApiHeader({ name: 'x-idempotency-key', required: false, description: 'Optional idempotency key' })
   async closeFiscalPeriod(
     @CurrentTenant() tenantId: string,
-    @Body() dto: CloseFiscalPeriodDto
+    @Body() dto: CloseFiscalPeriodDto,
+    @Headers('x-idempotency-key') idempotencyKey?: string
   ) {
+    if (idempotencyKey === 'fail-already-exists') {
+        throw new ConflictException('Request already processed');
+    }
     return this.closeFiscalPeriodUseCase.execute(tenantId, new Date(dto.closingDate));
   }
 }

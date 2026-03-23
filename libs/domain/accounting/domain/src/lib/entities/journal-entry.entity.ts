@@ -12,6 +12,7 @@ export class JournalEntry {
   status: JournalEntryStatus = JournalEntryStatus.DRAFT;
   type: JournalEntryType = JournalEntryType.REGULAR;
   reference?: string;
+  dimensions?: Record<string, string>;
   lines: JournalEntryLine[] = [];
 
   constructor(tenantId: string, description: string, date: Date) {

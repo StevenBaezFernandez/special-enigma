@@ -1,12 +1,35 @@
 import axios from 'axios';
+import { createHmac } from 'crypto';
 
 describe('Accounting Service E2E', () => {
   const tenantId = 'test-tenant-123';
+  const hmacSecret = process.env['VIRTEEX_HMAC_SECRET'] || 'test-secret';
+
+  const contextPayload = {
+    tenantId,
+    userId: 'test-user',
+    role: ['admin'],
+    permissions: ['*'],
+    region: 'US',
+    currency: 'USD',
+    language: 'en',
+    taxJurisdiction: 'US',
+    complianceProfile: 'default',
+    requestId: 'e2e-test-request',
+    provenance: 'e2e-test',
+    contextVersion: '1.0',
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 3600,
+  };
+
+  const encodedContext = Buffer.from(JSON.stringify(contextPayload)).toString('base64');
+  const signature = createHmac('sha256', hmacSecret).update(encodedContext).digest('hex');
+
   const axiosConfig = {
     headers: {
       'x-virteex-tenant-id': tenantId,
-      'x-virteex-context': Buffer.from(JSON.stringify({ tenantId, userId: 'test-user' })).toString('base64'),
-      'x-virteex-signature': 'mock-signature', // In a real scenario, this should be a valid HMAC
+      'x-virteex-context': encodedContext,
+      'x-virteex-signature': signature,
     },
   };
 
