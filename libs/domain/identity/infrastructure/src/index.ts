@@ -6,3 +6,4 @@ export * from './lib/persistence/mikro-orm-session.repository';
 export * from './lib/services/argon2-auth.service';
 export * from './lib/services/nodemailer-notification.service';
 export * from './lib/services/risk-engine.service';
+export * from './lib/services/recaptcha.service';

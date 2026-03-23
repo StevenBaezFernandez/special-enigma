@@ -13,11 +13,6 @@ export class AuthService {
     return this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, dto);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  register(dto: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, dto);
-  }
-
   verifyMfa(dto: VerifyMfaDto): Observable<LoginResponseDto> {
     return this.http.post<LoginResponseDto>(`${this.apiUrl}/verify-mfa`, dto);
   }

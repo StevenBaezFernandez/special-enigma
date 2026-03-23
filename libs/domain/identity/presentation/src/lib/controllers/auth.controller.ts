@@ -245,8 +245,8 @@ export class AuthController {
   @Public()
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.handleSocialCallback(req, res);
+  async googleAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Query('state') state?: string) {
+    return this.handleSocialCallback(req, res, state);
   }
 
   @Public()
@@ -259,8 +259,8 @@ export class AuthController {
   @Public()
   @Get('microsoft/callback')
   @UseGuards(AuthGuard('microsoft'))
-  async microsoftAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.handleSocialCallback(req, res);
+  async microsoftAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Query('state') state?: string) {
+    return this.handleSocialCallback(req, res, state);
   }
 
   @Public()
@@ -273,11 +273,11 @@ export class AuthController {
   @Public()
   @Get('okta/callback')
   @UseGuards(AuthGuard('okta'))
-  async oktaAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.handleSocialCallback(req, res);
+  async oktaAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Query('state') state?: string) {
+    return this.handleSocialCallback(req, res, state);
   }
 
-  private async handleSocialCallback(req: Request, res: Response) {
+  private async handleSocialCallback(req: Request, res: Response, state?: string) {
     const context = {
         ip: this.requestContextService.extractIp(req),
         userAgent: req.headers['user-agent'] || 'unknown'
@@ -286,7 +286,20 @@ export class AuthController {
     this.cookiePolicyService.setAuthCookies(res, result.accessToken!, result.refreshToken!);
 
     const frontendUrl = this.secretManager?.getSecret('FRONTEND_URL', 'http://localhost:4200');
-    res.redirect(`${frontendUrl}/accounting`);
+    let redirectUrl = `${frontendUrl}/accounting`;
+
+    if (state) {
+        try {
+            const decodedState = JSON.parse(Buffer.from(state, 'base64').toString());
+            if (decodedState.returnUrl) {
+                redirectUrl = `${frontendUrl}${decodedState.returnUrl}`;
+            }
+        } catch (e) {
+            this.logger.error('Failed to parse social login state', e);
+        }
+    }
+
+    res.redirect(redirectUrl);
   }
 
   // --- Passkeys (WebAuthn) ---

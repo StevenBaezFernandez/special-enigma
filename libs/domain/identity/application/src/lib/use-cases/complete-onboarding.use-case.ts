@@ -19,7 +19,7 @@ import {
 import { Tenant, TenantMode } from '@virteex/kernel-tenant';
 import { TokenGenerationService } from '../services/token-generation.service';
 import { CompleteOnboardingDto } from '@virteex/domain-identity-contracts';
-import { TaxIdValidator } from '@virteex/domain-identity-domain';
+import { TaxIdValidator, RecaptchaPort } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class CompleteOnboardingUseCase {
@@ -37,10 +37,15 @@ export class CompleteOnboardingUseCase {
     @Inject(CachePort) private readonly cachePort: CachePort,
     @Inject(UNIT_OF_WORK_PORT) private readonly uow: UnitOfWorkPort,
     @Inject(TokenGenerationService) private readonly tokenGenerationService: TokenGenerationService,
-    private readonly eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
+    @Inject(RecaptchaPort) private readonly recaptchaService: RecaptchaPort
   ) {}
 
   async execute(dto: CompleteOnboardingDto, context: { ip: string, userAgent: string }) {
+    if (!(await this.recaptchaService.verify(dto.recaptchaToken, 'completeOnboarding'))) {
+        throw new DomainException('reCAPTCHA verification failed', 'INVALID_CAPTCHA');
+    }
+
     let email: string;
     try {
         const payload = await this.authService.verifyToken(dto.onboardingToken);

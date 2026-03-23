@@ -28,4 +28,8 @@ export class CompleteOnboardingDto {
 
   @IsString()
   industry!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  recaptchaToken!: string;
 }

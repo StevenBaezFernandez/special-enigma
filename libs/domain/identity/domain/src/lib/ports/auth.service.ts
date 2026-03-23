@@ -7,4 +7,5 @@ export abstract class AuthService {
   abstract verifyMfaToken(token: string, secret: string): boolean;
   abstract encrypt(text: string): Promise<string>;
   abstract decrypt(text: string): Promise<string>;
+  abstract hashToken(token: string): string;
 }
