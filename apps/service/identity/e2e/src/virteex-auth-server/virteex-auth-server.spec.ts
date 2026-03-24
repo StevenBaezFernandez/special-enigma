@@ -16,7 +16,8 @@ describe('Authentication E2E Tests', () => {
       try {
         await axios.post(`${BASE_URL}/auth/login`, {
           email: testUser.email,
-          password: 'WrongPassword'
+          password: 'WrongPassword',
+          recaptchaToken: 'mock-recaptcha-token'
         });
         throw new Error('Should have thrown 401');
       } catch (error: any) {
@@ -28,7 +29,8 @@ describe('Authentication E2E Tests', () => {
     it('should succeed with valid credentials', async () => {
       const res = await axios.post(`${BASE_URL}/auth/login`, {
         email: testUser.email,
-        password: testUser.password
+        password: testUser.password,
+        recaptchaToken: 'mock-recaptcha-token'
       });
 
       expect(res.status).toBe(200);
@@ -46,7 +48,8 @@ describe('Authentication E2E Tests', () => {
             try {
                 await axios.post(`${BASE_URL}/auth/login`, {
                     email: 'lockout-test@virteex.com',
-                    password: 'WrongPassword'
+                    password: 'WrongPassword',
+                    recaptchaToken: 'mock-recaptcha-token'
                 });
             } catch (error: any) {
                 // Ignore 401
@@ -56,7 +59,8 @@ describe('Authentication E2E Tests', () => {
         try {
             await axios.post(`${BASE_URL}/auth/login`, {
                 email: 'lockout-test@virteex.com',
-                password: 'AnyPassword'
+                password: 'AnyPassword',
+                recaptchaToken: 'mock-recaptcha-token'
             });
             throw new Error('Should have been locked');
         } catch (error: any) {
@@ -69,7 +73,7 @@ describe('Authentication E2E Tests', () => {
 
   describe('Token Rotation & Refresh', () => {
       it('should refresh access token using refresh token', async () => {
-          const loginRes = await axios.post(`${BASE_URL}/auth/login`, testUser);
+          const loginRes = await axios.post(`${BASE_URL}/auth/login`, { ...testUser, recaptchaToken: 'mock-recaptcha-token' });
           if (loginRes.data.mfaRequired) return;
 
           const cookies = loginRes.headers['set-cookie'] || [];
@@ -89,7 +93,7 @@ describe('Authentication E2E Tests', () => {
   describe('Audit Ledger Integrity', () => {
     it('should create audit logs with chained hashes', async () => {
         // Login to generate logs
-        const loginRes = await axios.post(`${BASE_URL}/auth/login`, testUser);
+        const loginRes = await axios.post(`${BASE_URL}/auth/login`, { ...testUser, recaptchaToken: 'mock-recaptcha-token' });
         if (loginRes.data.mfaRequired) return;
 
         const cookies = loginRes.headers['set-cookie'] || [];
@@ -130,7 +134,8 @@ describe('Authentication E2E Tests', () => {
       it('should require MFA if enabled', async () => {
           const res = await axios.post(`${BASE_URL}/auth/login`, {
               email: 'mfa-user@virteex.com',
-              password: 'Password123!'
+              password: 'Password123!',
+              recaptchaToken: 'mock-recaptcha-token'
           });
 
           expect(res.status).toBe(200);

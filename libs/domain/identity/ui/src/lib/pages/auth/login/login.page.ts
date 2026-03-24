@@ -2,8 +2,7 @@ import { Component, OnInit, inject, signal, ViewChild, effect } from '@angular/c
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../services/auth.service';
-import { LanguageService, CountryService } from '@virteex/shared-ui';
+import { AuthService, LanguageService, CountryService } from '@virteex/shared-ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RecaptchaV3Module, ReCaptchaV3Service, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-19';
 import { RECAPTCHA_SITE_KEY } from '@virteex/shared-ui';

@@ -45,20 +45,21 @@ export class KeycloakAuthService implements AuthService {
 
   async verifyToken(token: string): Promise<any> {
       try {
-          // In a real production OIDC setup, we would use a JWKS client to fetch
-          // public keys from ${this.issuer}/protocol/openid-connect/certs
-          // and verify the token signature using RS256.
-          // For now, we allow HS256 with clientSecret or RS256 with a configured publicKey.
-          const verificationKey = this.secretManager.getSecret('KEYCLOAK_PUBLIC_KEY', this.clientSecret);
-          const audience = this.secretManager.getSecret('KEYCLOAK_AUDIENCE', 'virteex-api');
+        const isProd = this.secretManager.getSecret('NODE_ENV', 'development') === 'production';
+        const publicKey = this.secretManager.getSecret('KEYCLOAK_PUBLIC_KEY', '');
 
-          // SECURITY: await verifyToken if we were using JwtTokenService,
-          // but here we use jwt.verify directly.
-          // In any case, we should align with JwtTokenService hardening if possible.
+        if (isProd && !publicKey) {
+            throw new Error('KEYCLOAK_PUBLIC_KEY must be configured in production');
+        }
+
+        const verificationKey = publicKey || this.clientSecret;
+          const audience = this.secretManager.getSecret('KEYCLOAK_AUDIENCE', 'virteex-api');
+        const allowedAlgorithms: jwt.Algorithm[] = isProd ? ['RS256'] : ['HS256', 'RS256'];
+
           return jwt.verify(token, verificationKey, {
               issuer: this.issuer,
               audience: audience,
-              algorithms: ['HS256', 'RS256']
+            algorithms: allowedAlgorithms
           });
       } catch (e: any) {
           this.logger.error(`Keycloak token verification failed: ${e.message}`);

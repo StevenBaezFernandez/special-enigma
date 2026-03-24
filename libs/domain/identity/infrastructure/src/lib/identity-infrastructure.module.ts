@@ -54,7 +54,17 @@ import {
   ForgotPasswordUseCase,
   ResetPasswordUseCase,
   SetPasswordUseCase,
-  GetSocialRegisterInfoUseCase
+  GetSocialRegisterInfoUseCase,
+  GetSessionsUseCase,
+  RevokeSessionUseCase,
+  ImpersonateUserUseCase,
+  ChangePasswordUseCase,
+  Disable2faUseCase,
+  GenerateBackupCodesUseCase,
+  Send2faEmailVerificationUseCase,
+  Verify2faEmailVerificationUseCase,
+  SetupMfaUseCase,
+  ConfirmMfaUseCase
 } from '@virteex/domain-identity-application';
 import { SharedInfrastructureStorageModule } from '@virteex/platform-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
@@ -143,7 +153,17 @@ import { HttpModule } from '@nestjs/axios';
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
     SetPasswordUseCase,
-    GetSocialRegisterInfoUseCase
+    GetSocialRegisterInfoUseCase,
+    GetSessionsUseCase,
+    RevokeSessionUseCase,
+    ImpersonateUserUseCase,
+    ChangePasswordUseCase,
+    Disable2faUseCase,
+    GenerateBackupCodesUseCase,
+    Send2faEmailVerificationUseCase,
+    Verify2faEmailVerificationUseCase,
+    SetupMfaUseCase,
+    ConfirmMfaUseCase
   ],
   exports: [
     InitiateSignupUseCase,
@@ -172,6 +192,16 @@ import { HttpModule } from '@nestjs/axios';
     ResetPasswordUseCase,
     SetPasswordUseCase,
     GetSocialRegisterInfoUseCase,
+    GetSessionsUseCase,
+    RevokeSessionUseCase,
+    ImpersonateUserUseCase,
+    ChangePasswordUseCase,
+    Disable2faUseCase,
+    GenerateBackupCodesUseCase,
+    Send2faEmailVerificationUseCase,
+    Verify2faEmailVerificationUseCase,
+    SetupMfaUseCase,
+    ConfirmMfaUseCase,
     StoragePort,
     UserRepository,
     CompanyRepository,

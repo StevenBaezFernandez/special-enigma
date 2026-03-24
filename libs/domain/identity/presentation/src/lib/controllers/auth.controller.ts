@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException, UseGuards, Inject, Optional, Session, Logger, Query } from '@nestjs/common';
+import { Controller, Post, Get, Body, HttpCode, HttpStatus, Req, Res, UnauthorizedException, UseGuards, Inject, Optional, Session, Logger, Query, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
     LoginUserUseCase,
@@ -17,7 +17,17 @@ import {
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
     SetPasswordUseCase,
-    GetSocialRegisterInfoUseCase
+    GetSocialRegisterInfoUseCase,
+    GetSessionsUseCase,
+    RevokeSessionUseCase,
+    ImpersonateUserUseCase,
+    ChangePasswordUseCase,
+    SetupMfaUseCase,
+    ConfirmMfaUseCase,
+    Disable2faUseCase,
+    GenerateBackupCodesUseCase,
+    Send2faEmailVerificationUseCase,
+    Verify2faEmailVerificationUseCase
 } from '@virteex/domain-identity-application';
 import {
     LoginUserDto,
@@ -62,6 +72,16 @@ export class AuthController {
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
     private readonly setPasswordUseCase: SetPasswordUseCase,
     private readonly getSocialRegisterInfoUseCase: GetSocialRegisterInfoUseCase,
+    private readonly getSessionsUseCase: GetSessionsUseCase,
+    private readonly revokeSessionUseCase: RevokeSessionUseCase,
+    private readonly impersonateUserUseCase: ImpersonateUserUseCase,
+    private readonly changePasswordUseCase: ChangePasswordUseCase,
+    private readonly setupMfaUseCase: SetupMfaUseCase,
+    private readonly confirmMfaUseCase: ConfirmMfaUseCase,
+    private readonly disable2faUseCase: Disable2faUseCase,
+    private readonly generateBackupCodesUseCase: GenerateBackupCodesUseCase,
+    private readonly send2faEmailVerificationUseCase: Send2faEmailVerificationUseCase,
+    private readonly verify2faEmailVerificationUseCase: Verify2faEmailVerificationUseCase,
     private readonly requestContextService: RequestContextService,
     private readonly cookiePolicyService: CookiePolicyService,
     @Optional() private readonly secretManager?: SecretManagerService
@@ -361,6 +381,80 @@ export class AuthController {
           urlCountry: body.urlCountry,
           ip
       });
+  }
+
+  @Get('sessions')
+  async getSessions(@Req() req: Request) {
+      const user = (req as any).user;
+      return this.getSessionsUseCase.execute(user.sub);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('sessions/:id/revoke') // or DELETE 'sessions/:id'
+  async revokeSession(@Req() req: Request, @Param('id') sessionId: string) {
+      const user = (req as any).user;
+      return this.revokeSessionUseCase.execute(user.sub, sessionId);
+  }
+
+  @Post('impersonate')
+  @HttpCode(HttpStatus.OK)
+  async impersonate(@Body() body: { userId: string }, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+      const adminUser = (req as any).user;
+      const context = {
+          ip: this.requestContextService.extractIp(req),
+          userAgent: req.headers['user-agent'] || 'unknown'
+      };
+      const result = await this.impersonateUserUseCase.execute(adminUser.sub, body.userId, context);
+      this.cookiePolicyService.setAuthCookies(res, result.accessToken, result.refreshToken);
+      return { expiresIn: result.expiresIn };
+  }
+
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  async changePassword(@Body() dto: any, @Req() req: Request) {
+      const user = (req as any).user;
+      await this.changePasswordUseCase.execute(user.sub, dto);
+      return { message: 'Password changed successfully' };
+  }
+
+  @Post('2fa/generate')
+  async generate2faSecret(@Req() req: Request) {
+      const user = (req as any).user;
+      return this.setupMfaUseCase.execute(user.sub);
+  }
+
+  @Post('2fa/enable')
+  async enable2fa(@Body() body: { token: string }, @Req() req: Request) {
+      const user = (req as any).user;
+      const success = await this.confirmMfaUseCase.execute(user.sub, body.token);
+      return { success, backupCodes: [] }; // Backup codes generation can be added here
+  }
+
+  @Post('2fa/disable')
+  async disable2fa(@Req() req: Request) {
+      const user = (req as any).user;
+      await this.disable2faUseCase.execute(user.sub);
+      return { message: '2FA disabled' };
+  }
+
+  @Post('2fa/backup-codes/generate')
+  async generateBackupCodes(@Req() req: Request) {
+      const user = (req as any).user;
+      return this.generateBackupCodesUseCase.execute(user.sub);
+  }
+
+  @Post('2fa/send-email-verification')
+  async sendEmailVerification(@Req() req: Request) {
+      const user = (req as any).user;
+      await this.send2faEmailVerificationUseCase.execute(user.sub);
+      return { message: 'Verification email sent' };
+  }
+
+  @Post('2fa/verify-email-verification')
+  async verifyEmailVerification(@Body() body: { code: string }, @Req() req: Request) {
+      const user = (req as any).user;
+      await this.verify2faEmailVerificationUseCase.execute(user.sub, body.code);
+      return { message: 'Email verified' };
   }
 
   @Public()

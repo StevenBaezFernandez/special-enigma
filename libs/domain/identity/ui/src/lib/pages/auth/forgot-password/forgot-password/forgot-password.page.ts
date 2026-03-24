@@ -7,8 +7,7 @@ import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module, ReCaptchaV3Service } from 'ng
 import { RECAPTCHA_SITE_KEY } from '@virteex/shared-ui';
 import { switchMap } from 'rxjs';
 
-import { AuthService } from '../../../../services/auth.service';
-import { LanguageService } from '@virteex/shared-ui';
+import { AuthService, LanguageService } from '@virteex/shared-ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 // Shared Components

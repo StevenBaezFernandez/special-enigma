@@ -66,9 +66,9 @@ export class AuthService {
     );
   }
 
-  refreshAccessToken(): Observable<string> {
+  refreshAccessToken(): Observable<void> {
     return this.http.post<any>(`${this.baseUrl}/refresh`, {}, { withCredentials: true }).pipe(
-      map(res => res.accessToken),
+      map(() => undefined),
       catchError(err => {
         this.logout();
         throw err;
