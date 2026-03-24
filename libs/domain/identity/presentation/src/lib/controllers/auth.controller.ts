@@ -238,13 +238,19 @@ export class AuthController {
   @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post('set-password')
   @HttpCode(HttpStatus.OK)
-  async setPassword(@Body() dto: SetPasswordDto, @Req() req: Request) {
+  async setPassword(@Body() dto: SetPasswordDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
       const context = {
           ip: this.requestContextService.extractIp(req),
           userAgent: req.headers['user-agent'] || 'unknown'
       };
-      await this.setPasswordUseCase.execute(dto, context);
-      return { message: 'Password has been set successfully.' };
+      const result = await this.setPasswordUseCase.execute(dto, context);
+
+      this.cookiePolicyService.setAuthCookies(res, result.accessToken!, result.refreshToken!);
+
+      return {
+          expiresIn: result.expiresIn,
+          mfaRequired: false
+      };
   }
 
   @Public()

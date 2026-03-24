@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '@virteex/shared-ui';
 import { ReCaptchaV3Service, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-19';
 import { of, Observable } from 'rxjs';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -13,6 +13,7 @@ import { AuthInputComponent } from '../components/auth-input/auth-input.componen
 import { AuthButtonComponent } from '../components/auth-button/auth-button.component';
 import { PasswordValidatorComponent } from '../components/password-validator/password-validator.component';
 import { vi } from 'vitest';
+import { signal } from '@angular/core';
 
 class FakeLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<any> {
@@ -21,6 +22,7 @@ class FakeLoader implements TranslateLoader {
 }
 
 class MockAuthService {
+  currentUser = signal<any>(null);
   setPasswordFromInvitation = vi.fn().mockReturnValue(of({ user: {} }));
   getInvitationDetails = vi.fn().mockReturnValue(of({ firstName: 'John' }));
 }

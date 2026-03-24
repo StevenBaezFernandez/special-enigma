@@ -85,7 +85,9 @@ export class AuthService {
   }
 
   setPasswordFromInvitation(token: string, password: string, recaptchaToken: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/set-password`, { token, password, recaptchaToken });
+    return this.http.post(`${this.baseUrl}/set-password`, { token, password, recaptchaToken }).pipe(
+      tap(() => this.checkAuthStatus().subscribe())
+    );
   }
 
   getSocialRegisterInfo(token: string): Observable<any> {

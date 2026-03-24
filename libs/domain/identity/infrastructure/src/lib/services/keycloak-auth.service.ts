@@ -3,6 +3,7 @@ import { AuthService } from '@virteex/domain-identity-domain';
 import { JwtTokenService, SecretManagerService, MfaHelperService } from '@virteex/kernel-auth';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class KeycloakAuthService implements AuthService {
@@ -26,11 +27,20 @@ export class KeycloakAuthService implements AuthService {
   }
 
   async hashPassword(password: string): Promise<string> {
-      throw new Error('Method not implemented: Keycloak handles password hashing.');
+      return argon2.hash(password, {
+          type: argon2.argon2id,
+          memoryCost: 2 ** 16, // 64 MB
+          timeCost: 3,
+          parallelism: 1,
+      });
   }
 
   async verifyPassword(password: string, hash: string): Promise<boolean> {
-      throw new Error('Method not implemented: Keycloak handles password verification via OIDC flow.');
+      try {
+          return await argon2.verify(hash, password);
+      } catch (err) {
+          return false;
+      }
   }
 
   async generateToken(payload: any, options?: { tokenType?: "access" | "refresh" | "service" | "plugin" | "stepup"; expiresIn?: string | number; audience?: string; issuer?: string; subject?: string }): Promise<string> {
@@ -96,5 +106,9 @@ export class KeycloakAuthService implements AuthService {
     let decrypted = decipher.update(encryptedHex, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return decrypted;
+  }
+
+  hashToken(token: string): string {
+      return crypto.createHash('sha256').update(token).digest('hex');
   }
 }

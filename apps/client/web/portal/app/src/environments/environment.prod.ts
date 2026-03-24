@@ -4,7 +4,7 @@ export const environment: AppConfig = {
   production: true,
   apiUrl: (window as any)['env']?.['apiUrl'] || 'https://api.virteex.com/api',
   recaptcha: {
-    siteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' // This should ideally be an env var but for now static
+    siteKey: (window as any)['env']?.['recaptchaSiteKey'] || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
   },
   vapidPublicKey: (window as any)['env']?.['vapidPublicKey'] || ''
 };

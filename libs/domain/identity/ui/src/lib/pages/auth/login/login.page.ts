@@ -108,7 +108,7 @@ export class LoginPage implements OnInit {
       this.onLoginWithPasskey();
       return;
     }
-    const apiUrl = `${window.location.origin}/api/auth`;
+    const apiUrl = (this.authService as any).baseUrl || `${window.location.origin}/api/auth`;
     window.location.href = `${apiUrl}/${provider}`;
   }
 
