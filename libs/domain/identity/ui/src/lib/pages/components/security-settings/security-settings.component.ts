@@ -16,7 +16,7 @@ import { TwoFactorAuthComponent } from '../../profile/components/two-factor-auth
     TwoFactorAuthComponent
   ],
   templateUrl: './security-settings.component.html',
-  styleUrls: ['./security-settings.component.scss'],
+  styleUrl: './security-settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SecuritySettingsComponent {

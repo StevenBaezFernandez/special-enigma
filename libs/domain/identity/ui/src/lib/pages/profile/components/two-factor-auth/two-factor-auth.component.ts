@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Shield, ShieldCheck, ShieldAlert, Key, Smartphone, Mail, Copy, Check, AlertTriangle, RefreshCw } from 'lucide-angular';
+import { LucideAngularModule, Shield, ShieldCheck, ShieldAlert, Key, Smartphone, Mail, Copy, Check, AlertTriangle, RefreshCw, XCircle } from 'lucide-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService, ToastService } from '@virteex/shared-ui';
 
@@ -10,7 +10,7 @@ import { AuthService, ToastService } from '@virteex/shared-ui';
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './two-factor-auth.component.html',
-  styleUrls: ['./two-factor-auth.component.scss']
+  styleUrl: './two-factor-auth.component.scss'
 })
 export class TwoFactorAuthComponent implements OnInit {
   private authService = inject(AuthService);
@@ -25,7 +25,7 @@ export class TwoFactorAuthComponent implements OnInit {
   isVerifying = signal(false);
   isLoading = signal(false);
 
-  readonly icons = { Shield, ShieldCheck, ShieldAlert, Key, Smartphone, Mail, Copy, Check, AlertTriangle, RefreshCw };
+  readonly icons = { Shield, ShieldCheck, ShieldAlert, Key, Smartphone, Mail, Copy, Check, AlertTriangle, RefreshCw, XCircle };
 
   ngOnInit() {
     this.checkMfaStatus();

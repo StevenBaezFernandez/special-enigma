@@ -59,7 +59,8 @@
         <div class="space-y-4">
           <input
             type="text"
-            [(ngModel)]="verificationCode"
+            [ngModel]="verificationCode()"
+            (ngModelChange)="verificationCode.set($event)"
             maxlength="6"
             placeholder="000000"
             class="w-full text-center text-3xl tracking-[0.5em] font-bold p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none"

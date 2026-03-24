@@ -9,7 +9,7 @@ import { AuthService, ToastService } from '@virteex/shared-ui';
   standalone: true,
   imports: [CommonModule, LucideAngularModule, TranslateModule],
   templateUrl: './session-management.component.html',
-  styleUrls: ['./session-management.component.scss']
+  styleUrl: './session-management.component.scss'
 })
 export class SessionManagementComponent implements OnInit {
   private authService = inject(AuthService);
