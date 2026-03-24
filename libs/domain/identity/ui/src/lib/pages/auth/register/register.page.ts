@@ -368,7 +368,7 @@ export class RegisterPage implements OnInit {
 
     const formValue = this.registerForm.getRawValue();
 
-    this.recaptchaV3Service.execute('register').subscribe({
+    this.recaptchaV3Service.execute('completeOnboarding').subscribe({
       next: (recaptchaToken) => {
         const regionId = formValue.configuration.fiscalRegionId;
 

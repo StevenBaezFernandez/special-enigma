@@ -24,6 +24,7 @@ export * from './lib/core/models/finance';
 export * from './lib/services/modal.interface';
 export * from './lib/components/ui/modal';
 export * from './lib/core/guards/public.guard';
+export * from './lib/core/guards/auth-guard';
 export * from './lib/core/api/roles.service';
 export * from './lib/core/api/users.service';
 export * from './lib/core/tokens/recaptcha.tokens';

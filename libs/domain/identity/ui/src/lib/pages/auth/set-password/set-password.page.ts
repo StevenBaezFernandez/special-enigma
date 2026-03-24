@@ -113,7 +113,7 @@ export class SetPasswordPage implements OnInit {
                 },
                 error: (err: any) => {
                     this.isLoading = false;
-                    this.errorMessage = err.message || 'Error setting password';
+                    this.errorMessage = err.error?.message || err.message || 'Error setting password';
                 }
             });
         },
