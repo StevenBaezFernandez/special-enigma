@@ -4,9 +4,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { LucideAngularModule, User as UserIcon, Mail, Phone, Building2, Save, Image, Shield, Check } from 'lucide-angular';
-import { UsersService } from '@virteex/identity-ui';
-import { AuthService, FileUtil } from '@virteex/shared-ui';
-import { NotificationService } from '@virteex/domain-identity-domain';
+import { UsersService } from '../../users.service';
+import { AuthService, FileUtil, ToastService } from '@virteex/shared-ui';
 import { SecuritySettingsComponent } from '../components/security-settings/security-settings.component';
 import { PhoneVerificationModalComponent } from '../components/phone-verification-modal/phone-verification-modal.component';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -42,7 +41,7 @@ export class MyProfilePage implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private usersService = inject(UsersService);
-  private notificationService = inject(NotificationService);
+  private toastService = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
@@ -70,9 +69,9 @@ export class MyProfilePage implements OnInit {
   // Job Titles List (Loaded from backend) with Error Handling
   jobTitles = toSignal(
     this.usersService.getJobTitles().pipe(
-      catchError((err) => {
+      catchError((err: any) => {
         console.error('Failed to load job titles', err);
-        this.notificationService.showError('SETTINGS.PROFILE.ERRORS.LOAD_JOB_TITLES');
+        this.toastService.showError('SETTINGS.PROFILE.ERRORS.LOAD_JOB_TITLES');
         return of([] as string[]);
       })
     ),
@@ -110,7 +109,7 @@ export class MyProfilePage implements OnInit {
       // 10/10: Use shared utility for validation and reading
       const error = FileUtil.validateImage(file, 2); // 2MB limit
       if (error) {
-          this.notificationService.showError(error); // Should ideally be a translation key
+          this.toastService.showError(error); // Should ideally be a translation key
           return;
       }
 
@@ -123,17 +122,17 @@ export class MyProfilePage implements OnInit {
       this.usersService.uploadAvatar(file)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
-          next: (res) => {
-              this.notificationService.showSuccess('SETTINGS.PROFILE.AVATAR_UPDATED');
+          next: () => {
+              this.toastService.showSuccess('SETTINGS.PROFILE.AVATAR_UPDATED');
               this.authService.checkAuthStatus().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
           },
           error: (error: HttpErrorResponse) => {
               if (error.status === 413) {
-                 this.notificationService.showError('SETTINGS.PROFILE.ERRORS.FILE_TOO_LARGE');
+                 this.toastService.showError('SETTINGS.PROFILE.ERRORS.FILE_TOO_LARGE');
               } else if (error.status === 400 && error.error?.message?.includes('image')) {
-                 this.notificationService.showError('SETTINGS.PROFILE.ERRORS.INVALID_FORMAT');
+                 this.toastService.showError('SETTINGS.PROFILE.ERRORS.INVALID_FORMAT');
               } else {
-                 this.notificationService.showError('SETTINGS.PROFILE.ERRORS.AVATAR_UPLOAD');
+                 this.toastService.showError('SETTINGS.PROFILE.ERRORS.AVATAR_UPLOAD');
               }
           }
       });
@@ -167,15 +166,15 @@ export class MyProfilePage implements OnInit {
 
       this.usersService.updateProfile(payload).subscribe({
         next: () => {
-          this.notificationService.showSuccess('SETTINGS.PROFILE.UPDATED');
+          this.toastService.showSuccess('SETTINGS.PROFILE.UPDATED');
           this.authService.checkAuthStatus().subscribe();
           this.profileForm.markAsPristine();
           this.isLoading = false;
           this.cdr.markForCheck();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error(err);
-          this.notificationService.showError('SETTINGS.PROFILE.ERRORS.UPDATE_FAILED');
+          this.toastService.showError('SETTINGS.PROFILE.ERRORS.UPDATE_FAILED');
           this.isLoading = false;
           this.cdr.markForCheck();
         }
@@ -189,17 +188,17 @@ export class MyProfilePage implements OnInit {
         this.passwordForm.value.newPassword !==
         this.passwordForm.value.confirmPassword
       ) {
-        this.notificationService.showError('SETTINGS.PROFILE.ERRORS.PASSWORDS_DO_NOT_MATCH');
+        this.toastService.showError('SETTINGS.PROFILE.ERRORS.PASSWORDS_DO_NOT_MATCH');
         return;
       }
 
       this.authService.changePassword(this.passwordForm.value).subscribe({
           next: () => {
-              this.notificationService.showSuccess('SETTINGS.PROFILE.PASSWORD_CHANGED');
+              this.toastService.showSuccess('SETTINGS.PROFILE.PASSWORD_CHANGED');
               this.passwordForm.reset();
           },
-          error: (err) => {
-              this.notificationService.showError('SETTINGS.PROFILE.ERRORS.PASSWORD_CHANGE_FAILED');
+          error: (err: any) => {
+              this.toastService.showError('SETTINGS.PROFILE.ERRORS.PASSWORD_CHANGE_FAILED');
           }
       });
     }

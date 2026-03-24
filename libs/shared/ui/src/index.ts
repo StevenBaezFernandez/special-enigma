@@ -26,3 +26,4 @@ export * from './lib/components/ui/modal';
 export * from './lib/core/guards/public.guard';
 export * from './lib/core/api/roles.service';
 export * from './lib/core/api/users.service';
+export * from './lib/core/tokens/recaptcha.tokens';

@@ -49,7 +49,7 @@ export class LanguageService {
         // 2c. Sincroniza con el backend si hay un usuario logueado.
         // `untracked` evita que el efecto se vuelva a ejecutar si `currentUser` cambia,
         // solo nos interesa reaccionar a cambios de `currentLang`.
-        const currentUser = untracked(this.authService.currentUser);
+        const currentUser = untracked(() => this.authService.currentUser());
         if (currentUser && currentUser.preferredLanguage !== lang) {
           this.syncWithUserProfile(currentUser.id, lang);
         }

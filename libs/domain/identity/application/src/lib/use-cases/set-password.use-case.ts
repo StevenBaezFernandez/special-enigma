@@ -1,5 +1,5 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import { UserRepository, AuthService, AuditLogRepository, AuditLog } from '@virteex/domain-identity-domain';
+import { UserRepository, AuthService, AuditLogRepository, AuditLog, RecaptchaPort } from '@virteex/domain-identity-domain';
 import { SetPasswordDto } from '@virteex/domain-identity-contracts';
 
 @Injectable()
@@ -8,9 +8,14 @@ export class SetPasswordUseCase {
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     @Inject(AuthService) private readonly authService: AuthService,
     @Inject(AuditLogRepository) private readonly auditLogRepository: AuditLogRepository,
+    @Inject(RecaptchaPort) private readonly recaptchaService: RecaptchaPort
   ) {}
 
   async execute(dto: SetPasswordDto, context: { ip: string, userAgent: string }): Promise<void> {
+    if (!(await this.recaptchaService.verify(dto.recaptchaToken, 'setPassword'))) {
+        throw new BadRequestException('reCAPTCHA verification failed');
+    }
+
     const tokenHash = this.authService.hashToken(dto.token);
     const user = await this.userRepository.findByInvitationToken(tokenHash);
 

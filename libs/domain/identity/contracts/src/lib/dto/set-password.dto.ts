@@ -10,4 +10,8 @@ export class SetPasswordDto {
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'Password too weak' })
   @IsNotEmpty()
   password!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  recaptchaToken!: string;
 }

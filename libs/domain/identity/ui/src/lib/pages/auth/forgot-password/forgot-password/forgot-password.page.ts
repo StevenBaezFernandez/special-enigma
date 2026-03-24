@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module, ReCaptchaV3Service } from 'ng-recaptcha-19';
+import { RECAPTCHA_SITE_KEY } from '@virteex/shared-ui';
 import { switchMap } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
@@ -32,7 +33,7 @@ import { AuthButtonComponent } from '../../components/auth-button/auth-button.co
     ReCaptchaV3Service,
     {
       provide: RECAPTCHA_V3_SITE_KEY,
-      useValue: 'RECAPTCHA_SITE_KEY_REQUIRED' // Should be provided at app level
+      useExisting: RECAPTCHA_SITE_KEY
     }
   ],
   templateUrl: './forgot-password.page.html'

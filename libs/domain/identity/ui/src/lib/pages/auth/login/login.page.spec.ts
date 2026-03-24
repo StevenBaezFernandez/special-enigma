@@ -65,11 +65,11 @@ describe('LoginPage', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
-        { provide: AuthService, useClass: MockAuthService },
+        { provide: AuthService, useValue: { login: vi.fn().mockReturnValue(of({ user: { id: 1 }, accessToken: 'token' })), loginWithPasskey: vi.fn().mockReturnValue(Promise.resolve({ id: 1 })), verifyMfa: vi.fn().mockReturnValue(of({ user: { id: 1 } })), currentUser: () => ({ id: 1, preferredLanguage: 'es' }), isAuthenticated: () => true } },
         { provide: ReCaptchaV3Service, useClass: MockRecaptchaService },
         { provide: RECAPTCHA_V3_SITE_KEY, useValue: 'mock-key' },
-        { provide: CountryService, useClass: MockCountryService },
-        { provide: LanguageService, useClass: MockLanguageService },
+        { provide: CountryService, useValue: { currentCountry: () => ({ code: 'DO', currencyCode: 'DOP', name: 'Dominican Republic' }), detectAndSetCountry: vi.fn(), currentCountryCode: () => 'DO' } },
+        { provide: LanguageService, useValue: { currentLang: () => 'es', setLanguage: vi.fn(), getInitialLanguage: () => 'es' } },
       ]
     }).compileComponents();
 

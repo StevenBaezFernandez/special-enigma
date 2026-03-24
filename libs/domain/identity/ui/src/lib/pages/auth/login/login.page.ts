@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { LanguageService, CountryService } from '@virteex/shared-ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RecaptchaV3Module, ReCaptchaV3Service, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-19';
+import { RECAPTCHA_SITE_KEY } from '@virteex/shared-ui';
 import { LucideAngularModule, Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle, ShieldCheck } from 'lucide-angular';
 
 // Shared Components
@@ -35,7 +36,7 @@ import { OtpComponent } from '@virteex/shared-ui';
     ReCaptchaV3Service,
     {
         provide: RECAPTCHA_V3_SITE_KEY,
-        useValue: 'RECAPTCHA_SITE_KEY_REQUIRED'
+        useExisting: RECAPTCHA_SITE_KEY
     }
   ],
   templateUrl: './login.page.html',

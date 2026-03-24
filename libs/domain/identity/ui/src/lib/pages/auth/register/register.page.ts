@@ -5,14 +5,14 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule, CheckCircle, BarChart2, Package, Check, ArrowLeft, ArrowRight, Rocket, AlertCircle } from 'lucide-angular';
 import { trigger, style, transition, animate } from '@angular/animations';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '@virteex/shared-ui';
 import { StepAccountInfo } from './steps/step-account-info/step-account-info';
 import { StepBusiness } from './steps/step-business/step-business';
 import { StepConfiguration } from './steps/step-configuration/step-configuration';
 import { StepPlan } from './steps/step-plan/step-plan';
 import { strongPasswordValidator } from '@virteex/shared-ui';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module, ReCaptchaV3Service } from 'ng-recaptcha-19';
-import { CountryService, LanguageService, OtpComponent } from '@virteex/shared-ui';
+import { CountryService, LanguageService, OtpComponent, RECAPTCHA_SITE_KEY } from '@virteex/shared-ui';
 import { AuthLayoutComponent } from '../components/auth-layout/auth-layout.component';
 import { AuthButtonComponent } from '../components/auth-button/auth-button.component';
 
@@ -47,7 +47,7 @@ export function passwordMatchValidator(
     ReCaptchaV3Service,
     {
         provide: RECAPTCHA_V3_SITE_KEY,
-        useValue: 'RECAPTCHA_SITE_KEY_REQUIRED'
+        useExisting: RECAPTCHA_SITE_KEY
     }
   ],
   templateUrl: './register.page.html',
@@ -320,16 +320,24 @@ export class RegisterPage implements OnInit {
       this.errorMessage.set(null);
       const { email, passwordGroup } = this.accountInfo.getRawValue();
 
-      this.authService.initiateSignup({ email, password: passwordGroup.password }).subscribe({
-          next: () => {
-              this.isRegistering.set(false);
-              this.stepsCompleted.update(c => { c[0] = true; return [...c]; });
-              this.currentStep.set(2);
-          },
-          error: (err) => {
-              this.errorMessage.set(err.error?.message || 'Error al iniciar registro.');
-              this.isRegistering.set(false);
-          }
+      this.recaptchaV3Service.execute('signup').subscribe({
+        next: (recaptchaToken) => {
+          this.authService.initiateSignup({ email, password: passwordGroup.password, recaptchaToken }).subscribe({
+            next: () => {
+                this.isRegistering.set(false);
+                this.stepsCompleted.update(c => { c[0] = true; return [...c]; });
+                this.currentStep.set(2);
+            },
+            error: (err) => {
+                this.errorMessage.set(err.error?.message || 'Error al iniciar registro.');
+                this.isRegistering.set(false);
+            }
+          });
+        },
+        error: () => {
+          this.errorMessage.set('Error al validar seguridad (reCAPTCHA).');
+          this.isRegistering.set(false);
+        }
       });
   }
 
