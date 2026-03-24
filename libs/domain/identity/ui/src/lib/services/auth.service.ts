@@ -1,20 +1,26 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, from, lastValueFrom } from 'rxjs';
+import { Observable, from, lastValueFrom, tap } from 'rxjs';
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
 import { LoginUserDto, RegisterUserDto, LoginResponseDto, VerifyMfaDto, InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto } from '@virteex/domain-identity-contracts';
+import { SessionService } from '@virteex/shared-util-client-auth';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = '/api/auth';
   private http = inject(HttpClient);
+  private sessionService = inject(SessionService);
 
   login(dto: LoginUserDto & { recaptchaToken?: string }): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, dto);
+    return this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, dto).pipe(
+      tap(() => this.sessionService.login())
+    );
   }
 
   verifyMfa(dto: VerifyMfaDto): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(`${this.apiUrl}/verify-mfa`, dto);
+    return this.http.post<LoginResponseDto>(`${this.apiUrl}/verify-mfa`, dto).pipe(
+      tap(() => this.sessionService.login())
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,6 +64,8 @@ export class AuthService {
   }
 
   completeOnboarding(dto: CompleteOnboardingDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup/complete`, dto);
+    return this.http.post(`${this.apiUrl}/signup/complete`, dto).pipe(
+      tap(() => this.sessionService.login())
+    );
   }
 }

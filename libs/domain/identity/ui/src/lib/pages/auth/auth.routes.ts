@@ -96,6 +96,7 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'set-password',
     title: 'Configurar Contraseña',
+    canActivate: [publicGuard],
     loadComponent: () =>
       import('./set-password/set-password.page').then((m) => m.SetPasswordPage),
     providers: [
@@ -115,10 +116,15 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'plan-selection',
     title: 'Seleccionar Plan | FacturaPRO',
+    canActivate: [publicGuard],
     loadComponent: () =>
       import('./plan-selection/plan-selection.component').then(
         (m) => m.PlanSelectionComponent
       ),
+  },
+  {
+    path: 'invite',
+    redirectTo: 'set-password',
   },
   {
     path: '',

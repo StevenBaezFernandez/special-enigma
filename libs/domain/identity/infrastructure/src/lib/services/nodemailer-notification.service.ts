@@ -62,7 +62,7 @@ export class NodemailerNotificationService implements NotificationService, OnMod
 
     try {
       const frontendUrl = this.configService.get('FRONTEND_URL') || 'http://localhost:4200';
-      const inviteUrl = `${frontendUrl}/auth/invite?token=${token}`;
+      const inviteUrl = `${frontendUrl}/auth/set-password?token=${token}`;
 
       const htmlContent = `
           <h1>You have been invited to Virteex ERP</h1>
