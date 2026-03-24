@@ -1,0 +1,37 @@
+<div class="session-management">
+  <h3 class="text-lg font-medium mb-4" translate>SETTINGS.SECURITY.SESSIONS.TITLE</h3>
+  <div *ngIf="isLoading()" class="flex justify-center p-4">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+  <div *ngIf="!isLoading()" class="space-y-4">
+    <div *ngFor="let session of sessions()" class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+      <div class="flex items-center space-x-4">
+        <div class="p-2 bg-white rounded-full text-gray-400">
+          <lucide-icon [name]="getDeviceIcon(session.userAgent)" [size]="24"></lucide-icon>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-medium text-gray-900">{{ session.deviceName || session.userAgent }}</span>
+            <span *ngIf="session.isCurrent" class="px-2 py-0.5 text-xs font-semibold bg-green-100 text-green-800 rounded-full" translate>SETTINGS.SECURITY.SESSIONS.CURRENT</span>
+          </div>
+          <div class="text-sm text-gray-500 flex items-center space-x-2">
+            <lucide-icon [name]="icons.Globe" [size]="14"></lucide-icon>
+            <span>{{ session.ipAddress }} • {{ session.location }}</span>
+          </div>
+          <div class="text-xs text-gray-400 flex items-center space-x-1 mt-1">
+             <lucide-icon [name]="icons.Clock" [size]="12"></lucide-icon>
+             <span translate [translateParams]="{ date: session.lastActivityAt | date: 'medium' }">SETTINGS.SECURITY.SESSIONS.LAST_ACTIVITY</span>
+          </div>
+        </div>
+      </div>
+      <button
+        *ngIf="!session.isCurrent"
+        (click)="revokeSession(session.id)"
+        class="text-red-600 hover:text-red-800 transition-colors p-2 rounded-lg hover:bg-red-50"
+        [title]="'SETTINGS.SECURITY.SESSIONS.REVOKE' | translate"
+      >
+        <lucide-icon [name]="icons.XCircle" [size]="20"></lucide-icon>
+      </button>
+    </div>
+  </div>
+</div>

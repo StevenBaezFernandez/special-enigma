@@ -139,4 +139,32 @@ export class AuthService {
   changePassword(data: any): Observable<any> {
     return this.http.post<any>(`${this._baseUrl}/change-password`, data, { withCredentials: true });
   }
+
+  getSessions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this._baseUrl}/sessions`, { withCredentials: true });
+  }
+
+  revokeSession(sessionId: string): Observable<void> {
+    return this.http.post<void>(`${this._baseUrl}/sessions/${sessionId}/revoke`, {}, { withCredentials: true });
+  }
+
+  generateMfaSecret(): Observable<{ secret: string; qrCodeUrl: string }> {
+    return this.http.post<{ secret: string; qrCodeUrl: string }>(`${this._baseUrl}/2fa/generate`, {}, { withCredentials: true });
+  }
+
+  enableMfa(token: string): Observable<{ success: boolean; backupCodes: string[] }> {
+    return this.http.post<{ success: boolean; backupCodes: string[] }>(`${this._baseUrl}/2fa/enable`, { token }, { withCredentials: true });
+  }
+
+  disableMfa(): Observable<void> {
+    return this.http.post<void>(`${this._baseUrl}/2fa/disable`, {}, { withCredentials: true });
+  }
+
+  generateBackupCodes(): Observable<string[]> {
+    return this.http.post<string[]>(`${this._baseUrl}/2fa/backup-codes/generate`, {}, { withCredentials: true });
+  }
+
+  getOnboardingStatus(): Observable<{ step: string; isCompleted: boolean }> {
+    return this.http.get<{ step: string; isCompleted: boolean }>(`${this._baseUrl}/onboarding-status`, { withCredentials: true });
+  }
 }

@@ -194,7 +194,9 @@ export class LoginPage implements OnInit {
     if (user && user.preferredLanguage) {
       this.languageService.setLanguage(user.preferredLanguage);
     }
-    this.router.navigate(['/accounting']);
+    const lang = this.languageService.currentLang();
+    const country = this.countryService.currentCountryCode();
+    this.router.navigate(['/', lang, country, 'accounting']);
     this.isLoggingIn.set(false);
   }
 

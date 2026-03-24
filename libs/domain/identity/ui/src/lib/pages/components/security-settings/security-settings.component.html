@@ -1,0 +1,30 @@
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+  <div class="flex items-center space-x-3 mb-6">
+    <div class="p-2 bg-primary/10 text-primary rounded-lg">
+      <lucide-icon [name]="icons.Shield" [size]="24"></lucide-icon>
+    </div>
+    <div>
+      <h2 class="text-xl font-bold text-gray-900" translate>SETTINGS.SECURITY.TITLE</h2>
+      <p class="text-sm text-gray-500" translate>SETTINGS.SECURITY.DESCRIPTION</p>
+    </div>
+  </div>
+
+  <!-- Two Factor Authentication -->
+  <section class="space-y-4">
+     <virteex-two-factor-auth></virteex-two-factor-auth>
+  </section>
+
+  <!-- Session Management -->
+  <section class="space-y-4 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+     <virteex-session-management></virteex-session-management>
+  </section>
+
+  <!-- Security Context Check Information -->
+  <section class="p-4 bg-blue-50 border border-blue-100 rounded-xl flex items-start space-x-3">
+    <lucide-icon [name]="icons.Globe" [size]="20" class="text-blue-600 mt-0.5"></lucide-icon>
+    <div>
+       <h4 class="text-sm font-semibold text-blue-900" translate>SETTINGS.SECURITY.CONTEXT.TITLE</h4>
+       <p class="text-xs text-blue-700 mt-1" translate>SETTINGS.SECURITY.CONTEXT.DESCRIPTION</p>
+    </div>
+  </section>
+</div>

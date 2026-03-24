@@ -20,6 +20,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { MicrosoftStrategy } from './strategies/microsoft.strategy';
 import { OktaStrategy } from './strategies/okta.strategy';
 import { NodemailerNotificationService } from './services/nodemailer-notification.service';
+import { ConfigurationValidatorService } from './services/configuration-validator.service';
 import { DefaultRiskEngineService } from './services/risk-engine.service';
 import { MailQueueProducer } from './services/mail-queue.producer';
 import { MailProcessor } from './services/mail.processor';
@@ -42,6 +43,7 @@ import {
   CompleteOnboardingUseCase,
   UpdateSubscriptionUseCase,
   GetSubscriptionStatusUseCase,
+  GetOnboardingStatusUseCase,
   TokenGenerationService,
   GetJobTitlesUseCase,
   CheckSecurityContextUseCase,
@@ -101,6 +103,7 @@ import { HttpModule } from '@nestjs/axios';
     MailQueueProducer,
     MailProcessor,
     UserInvitedListener,
+    ConfigurationValidatorService,
     { provide: UserRepository, useClass: MikroOrmUserRepository },
     { provide: CompanyRepository, useClass: MikroOrmCompanyRepository },
     { provide: AuditLogRepository, useClass: MikroOrmAuditLogRepository },
@@ -141,6 +144,8 @@ import { HttpModule } from '@nestjs/axios';
     RefreshTokenUseCase,
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
+    GetOnboardingStatusUseCase,
+    GetOnboardingStatusUseCase,
       TokenGenerationService,
     GetJobTitlesUseCase,
     CheckSecurityContextUseCase,

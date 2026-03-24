@@ -108,7 +108,8 @@ export class ResetPasswordPage implements OnInit {
       next: () => {
         this.isLoading = false;
         this.successMessage = 'RESET_PASSWORD.SUCCESS';
-        setTimeout(() => this.router.navigate(['/', this.languageService.currentLang(), 'auth', 'login']), 3000);
+        const lang = this.languageService.currentLang();
+        setTimeout(() => this.router.navigate(['/', lang, 'auth', 'login']), 3000);
       },
       error: (err) => {
         this.isLoading = false;

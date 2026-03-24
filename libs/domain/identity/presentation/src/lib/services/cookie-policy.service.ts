@@ -1,6 +1,7 @@
 import { Injectable, Optional } from '@nestjs/common';
 import { Response } from 'express';
 import { SecretManagerService, buildAccessCookieOptions, buildRefreshCookieOptions } from '@virteex/kernel-auth';
+import { CriticalConfigurationException } from '@virteex/kernel-exceptions';
 
 @Injectable()
 export class CookiePolicyService {
@@ -22,6 +23,14 @@ export class CookiePolicyService {
 
   getCookieContext() {
       const isProd = this.secretManager?.getSecret('NODE_ENV', 'development') === 'production' || process.env['NODE_ENV'] === 'production';
+
+      if (isProd) {
+          const sessionSecret = this.secretManager?.getSecret('SESSION_SECRET', '');
+          if (!sessionSecret) {
+              throw new CriticalConfigurationException('SESSION_SECRET must be defined in production environment');
+          }
+      }
+
       const secure = this.secretManager?.getSecret('COOKIE_SECURE', String(isProd)) === 'true';
       const sameSite = (this.secretManager?.getSecret('COOKIE_SAME_SITE', 'lax') as 'lax' | 'strict' | 'none') || 'lax';
       const domain = this.secretManager?.getSecret('COOKIE_DOMAIN', '');

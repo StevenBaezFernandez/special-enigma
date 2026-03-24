@@ -24,6 +24,7 @@ import {
     ChangePasswordUseCase,
     SetupMfaUseCase,
     ConfirmMfaUseCase,
+    GetOnboardingStatusUseCase,
     Disable2faUseCase,
     GenerateBackupCodesUseCase,
     Send2faEmailVerificationUseCase,
@@ -79,6 +80,7 @@ export class AuthController {
     private readonly changePasswordUseCase: ChangePasswordUseCase,
     private readonly setupMfaUseCase: SetupMfaUseCase,
     private readonly confirmMfaUseCase: ConfirmMfaUseCase,
+    private readonly getOnboardingStatusUseCase: GetOnboardingStatusUseCase,
     private readonly disable2faUseCase: Disable2faUseCase,
     private readonly generateBackupCodesUseCase: GenerateBackupCodesUseCase,
     private readonly send2faEmailVerificationUseCase: Send2faEmailVerificationUseCase,
@@ -214,6 +216,12 @@ export class AuthController {
   @Get('me')
   async getMe(@Req() req: Request) {
       return (req as any).user;
+  }
+
+  @Get('onboarding-status')
+  async getOnboardingStatus(@Req() req: Request) {
+      const user = (req as any).user;
+      return this.getOnboardingStatusUseCase.execute(user.sub);
   }
 
   @Public()

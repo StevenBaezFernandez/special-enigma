@@ -23,6 +23,33 @@ export class NodemailerNotificationService implements NotificationService, OnMod
     }
   }
 
+  async verifyConnection(): Promise<boolean> {
+    const smtpHost = this.configService.get<string>('SMTP_HOST');
+    const smtpPort = this.configService.get<number>('SMTP_PORT');
+    const smtpUser = this.configService.get<string>('SMTP_USER');
+    const smtpPass = this.configService.get<string>('SMTP_PASSWORD');
+    const smtpSecure = this.configService.get<boolean>('SMTP_SECURE') ?? false;
+
+    const { createTransport } = await import('nodemailer');
+    const transporter = createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpSecure,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+    });
+
+    try {
+      await transporter.verify();
+      return true;
+    } catch (error) {
+      this.logger.error('SMTP connection verification failed', error);
+      return false;
+    }
+  }
+
   async sendWelcomeEmail(user: User, tempPassword?: string): Promise<void> {
     this.logger.log(`Queueing welcome email for ${user.email}`);
 

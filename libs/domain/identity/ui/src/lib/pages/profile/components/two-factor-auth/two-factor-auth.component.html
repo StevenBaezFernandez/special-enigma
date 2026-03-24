@@ -1,0 +1,127 @@
+<div class="two-factor-auth p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center space-x-3">
+      <div [class]="mfaEnabled() ? 'p-2 bg-green-100 text-green-600 rounded-lg' : 'p-2 bg-amber-100 text-amber-600 rounded-lg'">
+        <lucide-icon [name]="mfaEnabled() ? icons.ShieldCheck : icons.ShieldAlert" [size]="24"></lucide-icon>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900" translate>SETTINGS.SECURITY.MFA.TITLE</h3>
+        <p class="text-sm text-gray-500" translate>SETTINGS.SECURITY.MFA.DESCRIPTION</p>
+      </div>
+    </div>
+    <div [class]="mfaEnabled() ? 'px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full uppercase' : 'px-3 py-1 bg-gray-100 text-gray-800 text-xs font-bold rounded-full uppercase'">
+      {{ (mfaEnabled() ? 'SETTINGS.SECURITY.MFA.ENABLED_LABEL' : 'SETTINGS.SECURITY.MFA.DISABLED_LABEL') | translate }}
+    </div>
+  </div>
+
+  <!-- Setup Section -->
+  <div *ngIf="!mfaEnabled() && !mfaSecret()" class="bg-gray-50 p-6 rounded-xl border border-dashed border-gray-300 text-center">
+    <div class="max-w-md mx-auto">
+      <lucide-icon [name]="icons.Smartphone" [size]="48" class="mx-auto text-gray-400 mb-4"></lucide-icon>
+      <h4 class="text-base font-medium mb-2" translate>SETTINGS.SECURITY.MFA.PROMPT_TITLE</h4>
+      <p class="text-sm text-gray-500 mb-6" translate>SETTINGS.SECURITY.MFA.PROMPT_DESC</p>
+      <button (click)="setupMfa()" [disabled]="isLoading()" class="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-all disabled:opacity-50 flex items-center justify-center space-x-2">
+        <lucide-icon *ngIf="isLoading()" [name]="icons.RefreshCw" [size]="18" class="animate-spin"></lucide-icon>
+        <span translate>SETTINGS.SECURITY.MFA.SETUP_BTN</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Configuration Step -->
+  <div *ngIf="!mfaEnabled() && mfaSecret()" class="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      <!-- Step 1: Scan QR -->
+      <div class="space-y-4">
+        <div class="flex items-center space-x-2 text-primary font-semibold">
+           <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">1</span>
+           <span translate>SETTINGS.SECURITY.MFA.SCAN_QR_TITLE</span>
+        </div>
+        <p class="text-sm text-gray-600" translate>SETTINGS.SECURITY.MFA.SCAN_QR_DESC</p>
+        <div class="bg-white p-4 inline-block border border-gray-200 rounded-xl shadow-inner">
+           <img [src]="qrCodeUrl()" alt="MFA QR Code" class="w-48 h-48 mx-auto" />
+        </div>
+        <div class="flex items-center space-x-2 p-3 bg-blue-50 text-blue-800 rounded-lg text-xs border border-blue-100">
+           <lucide-icon [name]="icons.Key" [size]="14"></lucide-icon>
+           <span class="font-mono">{{ mfaSecret() }}</span>
+           <button (click)="copyToClipboard(mfaSecret()!)" class="p-1 hover:bg-blue-100 rounded">
+             <lucide-icon [name]="icons.Copy" [size]="14"></lucide-icon>
+           </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Verify -->
+      <div class="space-y-4">
+        <div class="flex items-center space-x-2 text-primary font-semibold">
+           <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">2</span>
+           <span translate>SETTINGS.SECURITY.MFA.VERIFY_TITLE</span>
+        </div>
+        <p class="text-sm text-gray-600" translate>SETTINGS.SECURITY.MFA.VERIFY_DESC</p>
+        <div class="space-y-4">
+          <input
+            type="text"
+            [(ngModel)]="verificationCode"
+            maxlength="6"
+            placeholder="000000"
+            class="w-full text-center text-3xl tracking-[0.5em] font-bold p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+          />
+          <button
+            (click)="enableMfa()"
+            [disabled]="verificationCode().length !== 6 || isVerifying()"
+            class="w-full py-3 bg-primary text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center space-x-2 disabled:opacity-50"
+          >
+            <lucide-icon *ngIf="isVerifying()" [name]="icons.RefreshCw" [size]="18" class="animate-spin"></lucide-icon>
+            <span translate>SETTINGS.SECURITY.MFA.ENABLE_BTN</span>
+          </button>
+          <button (click)="mfaSecret.set(null)" class="w-full text-sm text-gray-500 hover:text-gray-700 font-medium" translate>COMMON.CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enabled Management -->
+  <div *ngIf="mfaEnabled()" class="space-y-6">
+    <div class="p-4 bg-green-50 border border-green-100 rounded-xl flex items-start space-x-3">
+       <lucide-icon [name]="icons.Check" [size]="20" class="text-green-600 mt-0.5"></lucide-icon>
+       <div>
+         <p class="text-sm font-medium text-green-900" translate>SETTINGS.SECURITY.MFA.SECURE_MSG</p>
+         <p class="text-xs text-green-700 mt-1" translate>SETTINGS.SECURITY.MFA.SECURE_DESC</p>
+       </div>
+    </div>
+
+    <div class="flex flex-wrap gap-4">
+       <button (click)="generateBackupCodes()" class="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+         <lucide-icon [name]="icons.Key" [size]="18"></lucide-icon>
+         <span translate>SETTINGS.SECURITY.MFA.BACKUP_CODES_BTN</span>
+       </button>
+       <button (click)="disableMfa()" class="flex items-center space-x-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors">
+         <lucide-icon [name]="icons.ShieldAlert" [size]="18"></lucide-icon>
+         <span translate>SETTINGS.SECURITY.MFA.DISABLE_BTN</span>
+       </button>
+    </div>
+
+    <!-- Backup Codes View -->
+    <div *ngIf="showBackupCodes()" class="bg-gray-900 text-white p-6 rounded-xl space-y-4 animate-in zoom-in-95">
+       <div class="flex items-center justify-between">
+         <h4 class="font-bold flex items-center space-x-2">
+           <lucide-icon [name]="icons.AlertTriangle" [size]="20" class="text-amber-400"></lucide-icon>
+           <span translate>SETTINGS.SECURITY.MFA.BACKUP_CODES_TITLE</span>
+         </h4>
+         <button (click)="showBackupCodes.set(false)" class="text-gray-400 hover:text-white">
+           <lucide-icon [name]="icons.XCircle" [size]="20"></lucide-icon>
+         </button>
+       </div>
+       <p class="text-xs text-gray-400" translate>SETTINGS.SECURITY.MFA.BACKUP_CODES_WARNING</p>
+       <div class="grid grid-cols-2 gap-2 font-mono text-sm bg-black/30 p-4 rounded-lg">
+          <div *ngFor="let code of backupCodes()" class="flex items-center justify-between border-b border-white/10 pb-1">
+             <span>{{ code }}</span>
+          </div>
+       </div>
+       <div class="flex justify-center space-x-4 pt-2">
+          <button (click)="copyToClipboard(backupCodes().join('\n'))" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded flex items-center space-x-2">
+             <lucide-icon [name]="icons.Copy" [size]="14"></lucide-icon>
+             <span translate>COMMON.COPY_ALL</span>
+          </button>
+       </div>
+    </div>
+  </div>
+</div>

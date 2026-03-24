@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
+import { CriticalConfigurationException } from '@virteex/kernel-exceptions';
 import { lastValueFrom } from 'rxjs';
 import { RecaptchaPort } from '@virteex/domain-identity-domain';
 
@@ -19,6 +20,11 @@ export class RecaptchaService implements RecaptchaPort {
 
     if (this.enabled && !this.secretKey) {
       this.logger.warn('RECAPTCHA_SECRET_KEY is not defined but reCAPTCHA is enabled');
+    }
+
+    const isProd = this.configService.get<string>('NODE_ENV') === 'production';
+    if (isProd && !this.enabled) {
+      throw new CriticalConfigurationException('reCAPTCHA cannot be disabled in production');
     }
   }
 

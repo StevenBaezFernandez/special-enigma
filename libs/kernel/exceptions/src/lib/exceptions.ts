@@ -20,3 +20,4 @@ export class UnauthorizedException extends BaseException {}
 export class ForbiddenException extends BaseException {}
 export class ConflictException extends BaseException {}
 export class InternalServerErrorException extends BaseException {}
+export class CriticalConfigurationException extends BaseException {}

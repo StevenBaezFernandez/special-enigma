@@ -390,7 +390,9 @@ export class RegisterPage implements OnInit {
         this.authService.completeOnboarding(payload).subscribe({
           next: () => {
             this.isRegistering.set(false);
-            this.router.navigate(['/auth/plan-selection']);
+            const lang = this.languageService.currentLang();
+            const country = this.countryService.currentCountryCode();
+            this.router.navigate(['/', lang, country, 'auth', 'plan-selection']);
           },
           error: (err) => {
             let msg = 'Error desconocido en el registro.';

@@ -3,7 +3,7 @@ import { Component, OnInit, inject, effect } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService, LanguageService, RECAPTCHA_SITE_KEY } from '@virteex/shared-ui';
+import { AuthService, LanguageService, CountryService, RECAPTCHA_SITE_KEY } from '@virteex/shared-ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ReCaptchaV3Service, RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-19';
 
@@ -58,6 +58,7 @@ export class SetPasswordPage implements OnInit {
   private recaptchaV3Service = inject(ReCaptchaV3Service);
   private translate = inject(TranslateService);
   public languageService = inject(LanguageService);
+  public countryService = inject(CountryService);
 
   constructor() {
     effect(() => {
@@ -109,7 +110,9 @@ export class SetPasswordPage implements OnInit {
         next: (recaptchaToken) => {
             this.authService.setPasswordFromInvitation(this.token!, password, recaptchaToken).subscribe({
                 next: () => {
-                    this.router.navigate(['/accounting']);
+                    const lang = this.languageService.currentLang();
+                    const country = this.countryService.currentCountryCode();
+                    this.router.navigate(['/', lang, country, 'accounting']);
                 },
                 error: (err: any) => {
                     this.isLoading = false;
