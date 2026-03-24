@@ -20,7 +20,7 @@ export function buildRefreshCookieOptions(context: CookiePolicyContext, remember
     httpOnly: true,
     secure: context.secure,
     sameSite: context.sameSite,
-    path: '/auth/refresh',
+    path: '/api/auth/refresh',
     domain: context.domain,
     maxAge: rememberMe ? 7 * 24 * 3600 * 1000 : 24 * 3600 * 1000,
   } as const;

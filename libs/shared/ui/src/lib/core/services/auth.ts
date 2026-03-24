@@ -51,7 +51,13 @@ export class AuthService {
   }
 
   refreshAccessToken(): Observable<string> {
-    return of('invalid-token-fallback');
+    return this.http.post<any>(`${this.baseUrl}/auth/refresh`, {}, { withCredentials: true }).pipe(
+      map(res => res.accessToken),
+      catchError(err => {
+        this.logout();
+        throw err;
+      })
+    );
   }
 
   hasPermissions(requiredPermissions: string[]): boolean {

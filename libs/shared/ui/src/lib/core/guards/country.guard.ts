@@ -16,8 +16,8 @@ export class CountryGuard implements CanActivate {
     // For now, call backend /auth/location or similar if exists, or check localStorage
 
     // Simulating check: if not allowed country, redirect to block page.
-    // Assuming backend endpoint /api/auth/check-location exists (from IntentDetectionService context)
-    return this.http.get<{ allowed: boolean }>('/api/auth/check-location').pipe(
+    // Assuming backend endpoint /api/auth/security/context-check exists
+    return this.http.post<{ allowed: boolean }>('/api/auth/security/context-check', { urlCountry: 'global' }).pipe(
         map(response => {
             if (response.allowed) return true;
             return this.router.createUrlTree(['/not-allowed-country']);

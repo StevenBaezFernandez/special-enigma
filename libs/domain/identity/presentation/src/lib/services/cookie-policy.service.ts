@@ -17,7 +17,7 @@ export class CookiePolicyService {
   clearAuthCookies(res: Response) {
       const cookieContext = this.getCookieContext();
       res.clearCookie('access_token', { path: '/', domain: cookieContext.domain });
-      res.clearCookie('refresh_token', { path: '/auth/refresh', domain: cookieContext.domain });
+      res.clearCookie('refresh_token', { path: '/api/auth/refresh', domain: cookieContext.domain });
   }
 
   getCookieContext() {

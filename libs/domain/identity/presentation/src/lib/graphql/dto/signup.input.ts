@@ -61,4 +61,8 @@ export class CompleteOnboardingInput {
   @Field()
   @IsString()
   industry!: string;
+
+  @Field()
+  @IsNotEmpty()
+  recaptchaToken!: string;
 }

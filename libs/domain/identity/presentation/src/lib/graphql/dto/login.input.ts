@@ -15,4 +15,8 @@ export class LoginInput {
   @IsOptional()
   @IsBoolean()
   rememberMe?: boolean;
+
+  @Field()
+  @IsNotEmpty()
+  recaptchaToken!: string;
 }

@@ -4,10 +4,11 @@ import { Observable, from, lastValueFrom, tap } from 'rxjs';
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
 import { LoginUserDto, RegisterUserDto, LoginResponseDto, VerifyMfaDto, InitiateSignupDto, VerifySignupDto, CompleteOnboardingDto } from '@virteex/domain-identity-contracts';
 import { SessionService } from '@virteex/shared-util-client-auth';
+import { API_URL } from '@virteex/shared-config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = '/api/auth';
+  private apiUrl = inject(API_URL, { optional: true }) ? `${inject(API_URL)}/auth` : '/api/auth';
   private http = inject(HttpClient);
   private sessionService = inject(SessionService);
 

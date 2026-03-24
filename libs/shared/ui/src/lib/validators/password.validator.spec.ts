@@ -1,4 +1,4 @@
-import { strongPasswordValidator } from '../../src/lib/validators/password.validator';
+import { strongPasswordValidator } from './password.validator';
 import { FormControl } from '@angular/forms';
 
 describe('strongPasswordValidator', () => {
