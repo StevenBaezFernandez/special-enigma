@@ -11,6 +11,7 @@ export class Company {
   regime?: string; // Simplified, Ordinary, Gran Contribuyente
   postalCode?: string;
   currency = 'USD'; // Default, adaptive based on country
+  plan?: string;
   settings?: Record<string, any>; // For tax configurations
   metadata?: Record<string, any>;
   users: User[] = [];

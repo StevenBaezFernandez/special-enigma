@@ -40,7 +40,7 @@ async function bootstrap() {
   app.use(
     session({
       store: redisStore,
-      secret: sessionSecret || 'virteex-dev-secret-session',
+      secret: process.env.NODE_ENV === 'production' ? sessionSecret! : (sessionSecret || 'virteex-dev-secret-session'),
       resave: false,
       saveUninitialized: false,
       cookie: {

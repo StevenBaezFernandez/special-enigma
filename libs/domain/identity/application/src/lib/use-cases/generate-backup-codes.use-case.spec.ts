@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GenerateBackupCodesUseCase } from './generate-backup-codes.use-case';
-import { UserRepository, AuditLogRepository } from '@virteex/domain-identity-domain';
+import { UserRepository, AuditLogRepository, AuthService } from '@virteex/domain-identity-domain';
 
 describe('GenerateBackupCodesUseCase', () => {
   let useCase: GenerateBackupCodesUseCase;
   const mockUserRepo = { findById: vi.fn(), update: vi.fn() };
   const mockAuditRepo = { save: vi.fn() };
+  const mockAuthService = { hashToken: vi.fn(t => `hashed-${t}`) };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,6 +14,7 @@ describe('GenerateBackupCodesUseCase', () => {
         GenerateBackupCodesUseCase,
         { provide: UserRepository, useValue: mockUserRepo },
         { provide: AuditLogRepository, useValue: mockAuditRepo },
+        { provide: AuthService, useValue: mockAuthService },
       ],
     }).compile();
     useCase = module.get<GenerateBackupCodesUseCase>(GenerateBackupCodesUseCase);

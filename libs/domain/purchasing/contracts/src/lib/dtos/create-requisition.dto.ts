@@ -2,5 +2,5 @@ export interface CreateRequisitionDto {
   requester: string;
   department: string;
   date: string;
-  items: { description: string; quantity: number; unitPrice: number }[];
+  items: { productId: string; description: string; quantity: number; unitPrice: number }[];
 }

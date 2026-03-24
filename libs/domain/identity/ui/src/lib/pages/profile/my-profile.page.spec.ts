@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MyProfilePage } from './my-profile.page';
 import { UsersService, SecurityService } from '@virteex/identity-ui';
-import { AuthService } from '@virteex/shared-ui';
+import { AuthService, ToastService } from '@virteex/shared-ui';
 import { NotificationService } from '@virteex/domain-identity-domain';
 import { of } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,6 +22,7 @@ const mockAuthService = {
   generateMfaSecret: vi.fn(() => of({ secret: 'secret', qrCodeUrl: 'qr' })),
   enableMfa: vi.fn(() => of({ backupCodes: [] })),
   checkAuthStatus: vi.fn(() => of({}))
+  revokeSession: vi.fn(() => of({}))
 };
 const mockUsersService = {
   updateProfile: vi.fn(() => of({})),
@@ -33,6 +34,10 @@ const mockSecurityService = {
   enableMfa: vi.fn(() => of({}))
 };
 const mockNotificationService = {
+  showSuccess: vi.fn(),
+  showError: vi.fn()
+};
+const mockToastService = {
   showSuccess: vi.fn(),
   showError: vi.fn()
 };
@@ -56,7 +61,8 @@ describe('MyProfilePage', () => {
         { provide: AuthService, useValue: mockAuthService },
         { provide: UsersService, useValue: mockUsersService },
         { provide: SecurityService, useValue: mockSecurityService },
-        { provide: NotificationService, useValue: mockNotificationService }
+        { provide: NotificationService, useValue: mockNotificationService },
+        { provide: ToastService, useValue: mockToastService }
       ]
     }).compileComponents();
 

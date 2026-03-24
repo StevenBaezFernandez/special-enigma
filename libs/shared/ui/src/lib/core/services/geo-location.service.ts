@@ -29,7 +29,7 @@ export class GeoLocationService {
   }
 
   getGeoLocation(): Observable<GeoLocationResponse> {
-    return this.http.get<GeoLocationResponse>(`${this.config.apiUrl}/geo/location`).pipe(
+    return this.http.get<GeoLocationResponse>(`${this.config.apiUrl}/auth/location`).pipe(
         catchError(() => {
             return of({ country: null, ip: '' });
         })

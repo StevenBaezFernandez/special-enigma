@@ -6,7 +6,9 @@ import { provideRouter, ActivatedRoute } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthService } from '@virteex/shared-ui';
 import { of, Observable } from 'rxjs';
-import { LanguageService } from '@virteex/shared-ui';
+import { LanguageService, CountryService } from '@virteex/shared-ui';
+import { signal, computed } from '@angular/core';
+import { APP_CONFIG } from '@virteex/shared-config';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { AuthLayoutComponent } from '../../components/auth-layout/auth-layout.component';
 import { AuthInputComponent } from '../../components/auth-input/auth-input.component';
@@ -24,7 +26,11 @@ class MockAuthService {
   resetPassword = vi.fn().mockReturnValue(of({}));
 }
 class MockLanguageService {
-    currentLang = vi.fn().mockReturnValue('es');
+    currentLang = signal('es');
+}
+class MockCountryService {
+    currentCountry = signal({ code: 'DO' });
+    currentCountryCode = computed(() => 'do');
 }
 
 describe('ResetPasswordPage', () => {
@@ -60,6 +66,8 @@ describe('ResetPasswordPage', () => {
         },
         { provide: AuthService, useClass: MockAuthService },
         { provide: LanguageService, useClass: MockLanguageService },
+        { provide: CountryService, useClass: MockCountryService },
+        { provide: APP_CONFIG, useValue: { apiUrl: 'http://localhost:3000' } },
       ]
     }).compileComponents();
 
