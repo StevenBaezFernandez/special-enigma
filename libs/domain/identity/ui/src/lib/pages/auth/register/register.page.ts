@@ -171,7 +171,7 @@ export class RegisterPage implements OnInit {
         lastName: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         jobTitle: [''],
-        phone: [''],
+        phone: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
         avatarUrl: [null],
         passwordGroup: this.fb.group(
           {

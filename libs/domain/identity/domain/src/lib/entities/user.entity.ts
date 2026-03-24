@@ -40,6 +40,14 @@ export class User {
   resetPasswordToken?: string;
   resetPasswordExpiresAt?: Date;
 
+  // Backup Codes (stored as hashes with metadata)
+  backupCodes: {
+    hash: string;
+    isUsed: boolean;
+    createdAt: Date;
+    expiresAt?: Date;
+  }[] = [];
+
   createdAt: Date = new Date();
 
   updatedAt: Date = new Date();

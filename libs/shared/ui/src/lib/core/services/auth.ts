@@ -1,6 +1,8 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { LanguageService } from './language';
+import { CountryService } from './country.service';
 import { Observable, of, tap, map, catchError, lastValueFrom } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { API_URL } from '@virteex/shared-config';
@@ -11,6 +13,8 @@ import { startRegistration, startAuthentication } from '@simplewebauthn/browser'
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private languageService = inject(LanguageService);
+  private countryService = inject(CountryService);
   private readonly _baseUrl = inject(API_URL, { optional: true }) ? `${inject(API_URL)}/auth` : '/api/auth';
 
   public get baseUrl(): string {
@@ -55,7 +59,9 @@ export class AuthService {
 
     this._currentUser.set(null);
     if (redirect) {
-      this.router.navigate(['/auth/login']);
+      const lang = this.languageService.currentLang();
+      const country = this.countryService.currentCountryCode();
+      this.router.navigate(['/', lang, country, 'auth', 'login']);
     }
   }
 

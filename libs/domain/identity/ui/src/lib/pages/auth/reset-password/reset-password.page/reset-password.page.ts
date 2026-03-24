@@ -2,7 +2,7 @@ import { Component, OnInit, inject, effect } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService, LanguageService } from '@virteex/shared-ui';
+import { AuthService, LanguageService, CountryService } from '@virteex/shared-ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 // Shared
@@ -52,6 +52,7 @@ export class ResetPasswordPage implements OnInit {
   private route = inject(ActivatedRoute);
   private translate = inject(TranslateService);
   public languageService = inject(LanguageService);
+  public countryService = inject(CountryService);
 
   constructor() {
     effect(() => {
@@ -109,7 +110,8 @@ export class ResetPasswordPage implements OnInit {
         this.isLoading = false;
         this.successMessage = 'RESET_PASSWORD.SUCCESS';
         const lang = this.languageService.currentLang();
-        setTimeout(() => this.router.navigate(['/', lang, 'auth', 'login']), 3000);
+        const country = this.countryService.currentCountryCode();
+        setTimeout(() => this.router.navigate(['/', lang, country, 'auth', 'login']), 3000);
       },
       error: (err) => {
         this.isLoading = false;

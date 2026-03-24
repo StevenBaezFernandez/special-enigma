@@ -13,7 +13,9 @@ import { AuthInputComponent } from '../components/auth-input/auth-input.componen
 import { AuthButtonComponent } from '../components/auth-button/auth-button.component';
 import { PasswordValidatorComponent } from '../components/password-validator/password-validator.component';
 import { vi } from 'vitest';
-import { signal } from '@angular/core';
+import { signal, computed } from '@angular/core';
+import { APP_CONFIG } from '@virteex/shared-config';
+import { LanguageService, CountryService } from '@virteex/shared-ui';
 
 class FakeLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<any> {
@@ -28,6 +30,13 @@ class MockAuthService {
 }
 class MockRecaptchaService {
   execute = vi.fn().mockReturnValue(of('mock-token'));
+}
+class MockLanguageService {
+    currentLang = signal('es');
+}
+class MockCountryService {
+    currentCountry = signal({ code: 'DO' });
+    currentCountryCode = computed(() => 'do');
 }
 
 describe('SetPasswordPage', () => {
@@ -65,6 +74,9 @@ describe('SetPasswordPage', () => {
         { provide: ReCaptchaV3Service, useClass: MockRecaptchaService },
         // Override the token to avoid environment access
         { provide: RECAPTCHA_V3_SITE_KEY, useValue: 'mock-key' },
+        { provide: APP_CONFIG, useValue: { apiUrl: 'http://localhost:3000' } },
+        { provide: LanguageService, useClass: MockLanguageService },
+        { provide: CountryService, useClass: MockCountryService },
       ]
     })
     .overrideComponent(SetPasswordPage, {

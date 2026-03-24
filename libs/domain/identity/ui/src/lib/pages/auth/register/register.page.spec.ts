@@ -119,6 +119,9 @@ describe('RegisterPage', () => {
     emailControl?.setAsyncValidators(null);
     emailControl?.updateValueAndValidity();
 
+    // Patch phone with a valid E.164 number
+    accountInfo.patchValue({ phone: '+1234567890' });
+
     expect(accountInfo.valid).toBeTruthy();
   });
 });
