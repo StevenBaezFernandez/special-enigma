@@ -7,6 +7,7 @@ export * from './lib/dto/refresh-token.dto';
 export * from './lib/dto/register-user.dto';
 export * from './lib/dto/update-user.dto';
 export * from './lib/dto/user-response.dto';
+export * from './lib/dto/change-password.dto';
 export * from './lib/dto/verify-mfa.dto';
 export * from './lib/dto/verify-signup.dto';
 export * from './lib/dto/forgot-password.dto';

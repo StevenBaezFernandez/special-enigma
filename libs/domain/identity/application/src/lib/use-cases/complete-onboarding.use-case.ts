@@ -109,14 +109,14 @@ export class CompleteOnboardingUseCase {
 
         const rawSecret = this.authService.generateMfaSecret();
         user.mfaSecret = await this.authService.encrypt(rawSecret);
-        user.mfaEnabled = true;
+        user.mfaEnabled = false;
 
         await this.userRepository.save(user);
 
         return { user, company, rawSecret };
     });
 
-    const { user } = result;
+    const { user, rawSecret } = result;
 
     await this.cachePort.del(key);
 
@@ -136,6 +136,7 @@ export class CompleteOnboardingUseCase {
         accessToken,
         refreshToken,
         expiresIn,
+        mfaSecret: rawSecret,
         user: {
             id: user.id,
             email: user.email,

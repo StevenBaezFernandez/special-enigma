@@ -38,7 +38,8 @@ import {
     CompleteOnboardingDto,
     ForgotPasswordDto,
     ResetPasswordDto,
-    SetPasswordDto
+    SetPasswordDto,
+    ChangePasswordDto
 } from '@virteex/domain-identity-contracts';
 import { Request, Response } from 'express';
 import { Public, JwtAuthGuard, SecretManagerService } from '@virteex/kernel-auth';
@@ -105,6 +106,8 @@ export class AuthController {
     this.cookiePolicyService.setAuthCookies(res, result.accessToken!, result.refreshToken!, dto.rememberMe);
 
     return {
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
         expiresIn: result.expiresIn,
         mfaRequired: false
     };
@@ -119,6 +122,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('signup/verify')
   @HttpCode(HttpStatus.OK)
   async verifySignup(@Body() dto: VerifySignupDto) {
@@ -138,6 +142,8 @@ export class AuthController {
       this.cookiePolicyService.setAuthCookies(res, result.accessToken, result.refreshToken);
 
       return {
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
           expiresIn: result.expiresIn
       };
   }
@@ -156,6 +162,8 @@ export class AuthController {
     this.cookiePolicyService.setAuthCookies(res, result.accessToken!, result.refreshToken!);
 
     return {
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
         expiresIn: result.expiresIn,
         mfaRequired: false
     };
@@ -248,6 +256,8 @@ export class AuthController {
       this.cookiePolicyService.setAuthCookies(res, result.accessToken!, result.refreshToken!);
 
       return {
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
           expiresIn: result.expiresIn,
           mfaRequired: false
       };
@@ -417,7 +427,7 @@ export class AuthController {
 
   @Post('change-password')
   @HttpCode(HttpStatus.OK)
-  async changePassword(@Body() dto: any, @Req() req: Request) {
+  async changePassword(@Body() dto: ChangePasswordDto, @Req() req: Request) {
       const user = (req as any).user;
       await this.changePasswordUseCase.execute(user.sub, dto);
       return { message: 'Password changed successfully' };

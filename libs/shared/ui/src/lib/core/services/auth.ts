@@ -11,7 +11,11 @@ import { startRegistration, startAuthentication } from '@simplewebauthn/browser'
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private readonly baseUrl = inject(API_URL, { optional: true }) ? `${inject(API_URL)}/auth` : '/api/auth';
+  private readonly _baseUrl = inject(API_URL, { optional: true }) ? `${inject(API_URL)}/auth` : '/api/auth';
+
+  public get baseUrl(): string {
+      return this._baseUrl;
+  }
 
   private _currentUser = signal<any>(null);
   public readonly currentUser = computed(() => this._currentUser());
@@ -21,7 +25,7 @@ export class AuthService {
   constructor() {}
 
   login(credentials: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, credentials, { withCredentials: true }).pipe(
+    return this.http.post<any>(`${this._baseUrl}/login`, credentials, { withCredentials: true }).pipe(
       tap(res => {
         if (res.user) {
           this._currentUser.set(res.user);
@@ -33,7 +37,7 @@ export class AuthService {
   }
 
   verifyMfa(dto: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/verify-mfa`, dto, { withCredentials: true }).pipe(
+    return this.http.post<any>(`${this._baseUrl}/verify-mfa`, dto, { withCredentials: true }).pipe(
       tap(res => {
         if (res.user) {
           this._currentUser.set(res.user);
@@ -45,7 +49,7 @@ export class AuthService {
   }
 
   logout(redirect = true): void {
-    this.http.post(`${this.baseUrl}/logout`, {}, { withCredentials: true }).pipe(
+    this.http.post(`${this._baseUrl}/logout`, {}, { withCredentials: true }).pipe(
         catchError(() => of(null))
     ).subscribe();
 
@@ -56,7 +60,7 @@ export class AuthService {
   }
 
   checkAuthStatus(): Observable<boolean> {
-    return this.http.get<any>(`${this.baseUrl}/me`, { withCredentials: true }).pipe(
+    return this.http.get<any>(`${this._baseUrl}/me`, { withCredentials: true }).pipe(
       tap(user => this._currentUser.set(user)),
       map(user => !!user),
       catchError(() => {
@@ -67,7 +71,7 @@ export class AuthService {
   }
 
   refreshAccessToken(): Observable<void> {
-    return this.http.post<any>(`${this.baseUrl}/refresh`, {}, { withCredentials: true }).pipe(
+    return this.http.post<any>(`${this._baseUrl}/refresh`, {}, { withCredentials: true }).pipe(
       map(() => undefined),
       catchError(err => {
         this.logout();
@@ -77,47 +81,47 @@ export class AuthService {
   }
 
   forgotPassword(email: string, recaptchaToken: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/forgot-password`, { email, recaptchaToken });
+    return this.http.post(`${this._baseUrl}/forgot-password`, { email, recaptchaToken });
   }
 
   resetPassword(token: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/reset-password`, { token, password });
+    return this.http.post(`${this._baseUrl}/reset-password`, { token, password });
   }
 
   setPasswordFromInvitation(token: string, password: string, recaptchaToken: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/set-password`, { token, password, recaptchaToken }).pipe(
+    return this.http.post(`${this._baseUrl}/set-password`, { token, password, recaptchaToken }).pipe(
       tap(() => this.checkAuthStatus().subscribe())
     );
   }
 
   getSocialRegisterInfo(token: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/social-register-info?token=${token}`);
+    return this.http.get(`${this._baseUrl}/social-register-info?token=${token}`);
   }
 
   async registerPasskey(): Promise<any> {
-    const options = await lastValueFrom(this.http.get<any>(`${this.baseUrl}/passkey/register-options`, { withCredentials: true }));
+    const options = await lastValueFrom(this.http.get<any>(`${this._baseUrl}/passkey/register-options`, { withCredentials: true }));
     const attResp = await startRegistration({ optionsJSON: options });
-    return lastValueFrom(this.http.post(`${this.baseUrl}/passkey/register-verify`, attResp, { withCredentials: true }));
+    return lastValueFrom(this.http.post(`${this._baseUrl}/passkey/register-verify`, attResp, { withCredentials: true }));
   }
 
   async loginWithPasskey(email?: string): Promise<any> {
-    const options = await lastValueFrom(this.http.post<any>(`${this.baseUrl}/passkey/login-options`, { email }));
+    const options = await lastValueFrom(this.http.post<any>(`${this._baseUrl}/passkey/login-options`, { email }));
     const asseResp = await startAuthentication({ optionsJSON: options });
-    const response = await lastValueFrom(this.http.post<any>(`${this.baseUrl}/passkey/login-verify`, asseResp, { withCredentials: true }));
+    const response = await lastValueFrom(this.http.post<any>(`${this._baseUrl}/passkey/login-verify`, asseResp, { withCredentials: true }));
     this.checkAuthStatus().subscribe();
     return response;
   }
 
   initiateSignup(dto: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/signup/initiate`, dto);
+    return this.http.post(`${this._baseUrl}/signup/initiate`, dto);
   }
 
   verifySignup(dto: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/signup/verify`, dto);
+    return this.http.post(`${this._baseUrl}/signup/verify`, dto);
   }
 
   completeOnboarding(dto: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/signup/complete`, dto, { withCredentials: true }).pipe(
+    return this.http.post<any>(`${this._baseUrl}/signup/complete`, dto, { withCredentials: true }).pipe(
       tap(() => this.checkAuthStatus().subscribe())
     );
   }
@@ -127,12 +131,12 @@ export class AuthService {
   }
 
   impersonate(userId: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/impersonate`, { userId }, { withCredentials: true }).pipe(
+    return this.http.post<any>(`${this._baseUrl}/impersonate`, { userId }, { withCredentials: true }).pipe(
       tap(() => this.checkAuthStatus().subscribe())
     );
   }
 
   changePassword(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/change-password`, data, { withCredentials: true });
+    return this.http.post<any>(`${this._baseUrl}/change-password`, data, { withCredentials: true });
   }
 }
