@@ -166,4 +166,13 @@ export class NodemailerNotificationService implements NotificationService, OnMod
       throw new Error(`Failed to queue password reset email: ${error.message}`);
     }
   }
+
+  async sendNotification(userId: string, options: any): Promise<void> {
+    this.logger.log(`Sending notification to user ${userId} with options: ${JSON.stringify(options)}`);
+    // Generic notification dispatcher, for now just logging or routing based on type
+    if (options.type === 'email') {
+        // In a real scenario, we would find the user and send the email using a template
+        this.logger.log(`Notification of type email requested for user ${userId}`);
+    }
+  }
 }

@@ -17,4 +17,8 @@ export class MikroOrmProductionOrderRepository implements ProductionOrderReposit
   async findAll(): Promise<ProductionOrder[]> {
     return this.repository.findAll();
   }
+
+  async transactional<T>(fn: () => Promise<T>): Promise<T> {
+    return this.repository.getEntityManager().transactional(fn);
+  }
 }

@@ -11,6 +11,10 @@ export class InitiateSignupInput {
   @IsNotEmpty()
   @MinLength(12)
   password!: string;
+
+  @Field()
+  @IsNotEmpty()
+  recaptchaToken!: string;
 }
 
 @InputType()

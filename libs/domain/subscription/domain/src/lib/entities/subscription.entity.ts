@@ -14,29 +14,29 @@ export enum SubscriptionStatus {
 
 export class Subscription {
 
-  private id: string = v4();
+  public id: string = v4();
 
-  private tenantId: string;
+  public tenantId: string;
 
-  private plan: SubscriptionPlan;
+  public plan: SubscriptionPlan;
 
-  private status: SubscriptionStatus = SubscriptionStatus.ACTIVE;
+  public status: SubscriptionStatus = SubscriptionStatus.ACTIVE;
 
-  private externalSubscriptionId?: string;
+  public externalSubscriptionId?: string;
 
-  private externalCustomerId?: string;
+  public externalCustomerId?: string;
 
-  private currentPeriodEnd?: Date;
+  public currentPeriodEnd?: Date;
 
-  private cancelAtPeriodEnd = false;
+  public cancelAtPeriodEnd = false;
 
-  private startDate: Date = new Date();
+  public startDate: Date = new Date();
 
-  private endDate?: Date;
+  public endDate?: Date;
 
-  private createdAt: Date = new Date();
+  public createdAt: Date = new Date();
 
-  private updatedAt: Date = new Date();
+  public updatedAt: Date = new Date();
 
   constructor(tenantId: string, plan: SubscriptionPlan, status: SubscriptionStatus = SubscriptionStatus.ACTIVE) {
     this.tenantId = tenantId;

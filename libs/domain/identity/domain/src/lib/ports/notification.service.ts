@@ -5,4 +5,5 @@ export abstract class NotificationService {
   abstract sendInvitationEmail(user: User, token: string): Promise<void>;
   abstract sendOtp(email: string, otp: string): Promise<void>;
   abstract sendPasswordResetEmail(user: User, token: string): Promise<void>;
+  abstract sendNotification(userId: string, options: any): Promise<void>;
 }

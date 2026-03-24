@@ -10,7 +10,7 @@ export const PluginSchema = new EntitySchema<Plugin>({
     description: { type: 'string', nullable: true },
     author: { type: 'string', nullable: true },
     status: { enum: true, items: () => PluginStatus, default: PluginStatus.ACTIVE },
-    versions: { reference: '1:m', entity: 'PluginVersion', mappedBy: 'plugin' },
+    versions: { kind: '1:m', entity: 'PluginVersion', mappedBy: 'plugin' },
     createdAt: { type: 'datetime', onCreate: () => new Date() },
     updatedAt: { type: 'datetime', onCreate: () => new Date(), onUpdate: () => new Date() },
   },
@@ -21,7 +21,7 @@ export const PluginVersionSchema = new EntitySchema<PluginVersion>({
   schema: 'catalog',
   properties: {
     id: { primary: true, type: 'string' },
-    plugin: { reference: 'm:1', entity: 'Plugin' },
+    plugin: { kind: 'm:1', entity: 'Plugin' },
     version: { type: 'string' },
     code: { type: 'text' },
     capabilities: { type: t.json, nullable: true },
