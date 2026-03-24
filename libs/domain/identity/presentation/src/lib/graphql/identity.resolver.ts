@@ -20,8 +20,15 @@ export class IdentityResolver {
   }
 
   @Mutation(() => LoginResponse)
-  async login(@Args('input') input: LoginInput): Promise<LoginResponse> {
-      return this.loginUserUseCase.execute(input);
+  async login(
+      @Args('input') input: LoginInput,
+      @Context() context: any
+  ): Promise<LoginResponse> {
+      const req = context.req || context.request;
+      const ip = req?.ip || req?.connection?.remoteAddress || '127.0.0.1';
+      const userAgent = req?.headers?.['user-agent'] || 'unknown';
+
+      return this.loginUserUseCase.execute(input, { ip, userAgent });
   }
 
   @Mutation(() => InitiateSignupResponse)
