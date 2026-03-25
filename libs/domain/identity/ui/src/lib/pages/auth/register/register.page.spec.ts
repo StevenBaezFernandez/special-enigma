@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthService } from '@virteex/shared-ui';
 import { ReCaptchaV3Service, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha-19';
 import { of, Observable } from 'rxjs';
-import { UsersService } from '@virteex/identity-ui';
+import { ProfileService } from '@virteex/identity-ui';
 import { CountryService, LanguageService, GeoLocationService, ConfigService } from '@virteex/shared-ui';
 import { APP_CONFIG } from '@virteex/shared-config';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -36,7 +36,7 @@ class MockCountryService {
   getCountryConfig = vi.fn().mockReturnValue(of({}));
   lookupTaxId = vi.fn().mockReturnValue(of(null));
 }
-class MockUsersService {
+class MockProfileService {
     updateUser = vi.fn().mockReturnValue(of({}));
 }
 class MockLanguageService {
@@ -76,7 +76,7 @@ describe('RegisterPage', () => {
         { provide: ReCaptchaV3Service, useClass: MockRecaptchaService },
         { provide: RECAPTCHA_V3_SITE_KEY, useValue: 'mock-key' },
         { provide: CountryService, useClass: MockCountryService },
-        { provide: UsersService, useClass: MockUsersService },
+        { provide: ProfileService, useClass: MockProfileService },
         { provide: LanguageService, useClass: MockLanguageService },
         { provide: GeoLocationService, useClass: MockGeoLocationService },
         { provide: ConfigService, useClass: MockConfigService },

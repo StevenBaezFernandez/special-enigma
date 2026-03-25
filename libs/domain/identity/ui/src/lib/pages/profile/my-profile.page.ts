@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { LucideAngularModule, User as UserIcon, Mail, Phone, Building2, Save, Image, Shield, Check } from 'lucide-angular';
-import { UsersService } from '../../users.service';
+import { ProfileService } from '../../profile.service';
 import { AuthService, FileUtil, ToastService } from '@virteex/shared-ui';
 import { SecuritySettingsComponent } from '../components/security-settings/security-settings.component';
 import { PhoneVerificationModalComponent } from '../components/phone-verification-modal/phone-verification-modal.component';
@@ -40,7 +40,7 @@ interface ProfileForm {
 export class MyProfilePage implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService) as any;
-  private usersService = inject(UsersService) as any;
+  private profileService = inject(ProfileService) as any;
   private toastService = inject(ToastService) as any;
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
@@ -68,7 +68,7 @@ export class MyProfilePage implements OnInit {
 
   // Job Titles List (Loaded from backend) with Error Handling
   jobTitles = toSignal<string[], string[]>(
-    this.usersService.getJobTitles().pipe(
+    this.profileService.getJobTitles().pipe(
       catchError((err: HttpErrorResponse) => {
         console.error('Failed to load job titles', err);
         this.toastService.showError('SETTINGS.PROFILE.ERRORS.LOAD_JOB_TITLES');
@@ -119,7 +119,7 @@ export class MyProfilePage implements OnInit {
       }).catch(err => console.error('Error reading file', err));
 
       // Upload via UsersService
-      this.usersService.uploadAvatar(file)
+      this.profileService.uploadAvatar(file)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
@@ -164,7 +164,7 @@ export class MyProfilePage implements OnInit {
           jobTitle: jobTitle!
       };
 
-      this.usersService.updateProfile(payload).subscribe({
+      this.profileService.updateProfile(payload).subscribe({
         next: () => {
           this.toastService.showSuccess('SETTINGS.PROFILE.UPDATED');
           this.authService.checkAuthStatus().subscribe();

@@ -5,7 +5,7 @@ import { API_URL } from '@virteex/shared-config';
 import { UserResponseDto, UpdateUserDto, AuditLogDto } from '@virteex/domain-identity-contracts';
 
 @Injectable({ providedIn: 'root' })
-export class UsersService {
+export class ProfileService {
   private http = inject(HttpClient);
   private readonly baseUrl = inject(API_URL, { optional: true } as any) ? `${inject(API_URL as any)}/users` : '/api/users';
 
