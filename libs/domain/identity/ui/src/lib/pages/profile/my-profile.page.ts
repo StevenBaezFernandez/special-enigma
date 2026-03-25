@@ -67,15 +67,15 @@ export class MyProfilePage implements OnInit {
   showPhoneModal = signal(false);
 
   // Job Titles List (Loaded from backend) with Error Handling
-  jobTitles = toSignal(
+  jobTitles = toSignal<string[], string[]>(
     this.usersService.getJobTitles().pipe(
-      catchError((err: any) => {
+      catchError((err: HttpErrorResponse) => {
         console.error('Failed to load job titles', err);
         this.toastService.showError('SETTINGS.PROFILE.ERRORS.LOAD_JOB_TITLES');
         return of([] as string[]);
       })
     ),
-    { initialValue: [] }
+    { initialValue: [] as string[] }
   );
 
   ngOnInit(): void {
