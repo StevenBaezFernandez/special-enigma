@@ -42,7 +42,22 @@
           "includePaths": [
             "libs/shared/ui/src/lib/styles"
           ]
-        }
+        },
+        "externalDependencies": [
+          "class-transformer/storage",
+          "dustjs-linkedin",
+          "atpl",
+          "jazz",
+          "hamljs",
+          "hamlet",
+          "haml-coffee",
+          "hogan.js",
+          "templayed",
+          "walrus",
+          "plates",
+          "teacup/lib/express",
+          "twing"
+        ]
       },
       "configurations": {
         "production": {
