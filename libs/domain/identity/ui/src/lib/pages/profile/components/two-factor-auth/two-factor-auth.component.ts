@@ -39,7 +39,7 @@ export class TwoFactorAuthComponent implements OnInit {
   setupMfa() {
     this.isLoading.set(true);
     this.authService.generateMfaSecret().subscribe({
-      next: (res) => {
+      next: (res: { secret: string; qrCodeUrl: string }) => {
         this.mfaSecret.set(res.secret);
         this.qrCodeUrl.set(res.qrCodeUrl);
         this.isLoading.set(false);
@@ -55,7 +55,7 @@ export class TwoFactorAuthComponent implements OnInit {
     if (this.verificationCode().length !== 6) return;
     this.isVerifying.set(true);
     this.authService.enableMfa(this.verificationCode()).subscribe({
-      next: (res) => {
+      next: (res: { success: boolean; backupCodes: string[] }) => {
         this.mfaEnabled.set(true);
         this.backupCodes.set(res.backupCodes);
         this.showBackupCodes.set(true);
@@ -88,7 +88,7 @@ export class TwoFactorAuthComponent implements OnInit {
 
   generateBackupCodes() {
     this.authService.generateBackupCodes().subscribe({
-      next: (codes) => {
+      next: (codes: string[]) => {
         this.backupCodes.set(codes);
         this.showBackupCodes.set(true);
       },

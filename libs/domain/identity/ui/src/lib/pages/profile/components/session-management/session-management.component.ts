@@ -4,6 +4,16 @@ import { LucideAngularModule, Monitor, Smartphone, Globe, XCircle, Clock } from 
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService, ToastService } from '@virteex/shared-ui';
 
+export interface Session {
+  id: string;
+  userAgent: string;
+  deviceName?: string;
+  isCurrent: boolean;
+  ipAddress: string;
+  location: string;
+  lastActivityAt: string;
+}
+
 @Component({
   selector: 'virteex-session-management',
   standalone: true,
@@ -15,7 +25,7 @@ export class SessionManagementComponent implements OnInit {
   private authService = inject(AuthService) as any;
   private toastService = inject(ToastService) as any;
 
-  sessions = signal<any[]>([]);
+  sessions = signal<Session[]>([]);
   isLoading = signal(false);
 
   readonly icons = { Monitor, Smartphone, Globe, XCircle, Clock };
@@ -27,7 +37,7 @@ export class SessionManagementComponent implements OnInit {
   loadSessions() {
     this.isLoading.set(true);
     this.authService.getSessions().subscribe({
-      next: (sessions) => {
+      next: (sessions: Session[]) => {
         this.sessions.set(sessions);
         this.isLoading.set(false);
       },
