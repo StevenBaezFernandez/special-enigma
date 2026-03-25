@@ -23,11 +23,11 @@ import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs'
 export class UserManagementPage implements OnInit, OnDestroy {
   // Servicios
   private fb = inject(FormBuilder);
-  private usersService = inject(UsersService) as any;
-  private rolesService = inject(RolesService) as any;
-  private toastService = inject(ToastService) as any;
-  private webSocketService = inject(WebSocketService) as any;
-  public authService = inject(AuthService) as any;
+  private usersService = inject(UsersService);
+  private rolesService = inject(RolesService);
+  private toastService = inject(ToastService);
+  private webSocketService = inject(WebSocketService);
+  public authService = inject(AuthService);
 
   // Iconos
   protected readonly UserPlusIcon = UserPlus;
@@ -349,7 +349,7 @@ export class UserManagementPage implements OnInit, OnDestroy {
 
   sortTable(column: string): void {
     if (this.sortColumn() === column) {
-      this.sortDirection.update((dir) => (dir === 'ASC' ? 'ASC' : 'DESC'));
+      this.sortDirection.update((dir) => (dir === 'ASC' ? 'DESC' : 'ASC'));
     } else {
       this.sortColumn.set(column);
       this.sortDirection.set('ASC');
