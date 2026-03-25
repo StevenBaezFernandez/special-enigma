@@ -21,10 +21,10 @@ const mockRoles: Role[] = [
 describe('UserManagementPage', () => {
   let component: UserManagementPage;
   let fixture: ComponentFixture<UserManagementPage>;
-  let usersService: UsersService;
+  let usersService: ProfileService;
   let toastService: ToastService;
 
-  const mockUsersService = {
+  const mockProfileService = {
     getUsers: vi.fn(() => of({ data: mockUsers, total: mockUsers.length })),
     inviteUser: vi.fn(() => of(mockUsers[0])),
     updateUser: vi.fn(() => of(mockUsers[0])),
@@ -66,7 +66,7 @@ describe('UserManagementPage', () => {
       ],
       providers: [
         provideZonelessChangeDetection(),
-        { provide: UsersService, useValue: mockUsersService },
+        { provide: ProfileService, useValue: mockProfileService },
         { provide: RolesService, useValue: mockRolesService },
         { provide: ToastService, useValue: mockToastService },
         { provide: WebSocketService, useValue: mockWebSocketService },
@@ -86,7 +86,7 @@ describe('UserManagementPage', () => {
   });
 
   it('should load users on init', () => {
-    expect(mockUsersService.getUsers).toHaveBeenCalled();
+    expect(mockProfileService.getUsers).toHaveBeenCalled();
     expect(component.users().length).toBe(2);
     expect(component.totalUsers()).toBe(2);
   });
@@ -123,9 +123,9 @@ describe('UserManagementPage', () => {
         email: 'test@user.com',
         roleId: '1',
     };
-    expect(mockUsersService.inviteUser).toHaveBeenCalledWith(payload);
+    expect(mockProfileService.inviteUser).toHaveBeenCalledWith(payload);
     expect(mockToastService.showSuccess).toHaveBeenCalledWith('Usuario invitado con éxito.');
-    expect(mockUsersService.getUsers).toHaveBeenCalledTimes(2); // 1 on init, 1 after save
+    expect(mockProfileService.getUsers).toHaveBeenCalledTimes(2); // 1 on init, 1 after save
   });
 
   it('should update an existing user', () => {
@@ -145,9 +145,9 @@ describe('UserManagementPage', () => {
         email: 'john.updated@doe.com',
         roleId: '2',
     };
-    expect(mockUsersService.updateUser).toHaveBeenCalledWith(userToEdit.id, payload);
+    expect(mockProfileService.updateUser).toHaveBeenCalledWith(userToEdit.id, payload);
     expect(mockToastService.showSuccess).toHaveBeenCalledWith('Usuario actualizado con éxito.');
-    expect(mockUsersService.getUsers).toHaveBeenCalledTimes(2);
+    expect(mockProfileService.getUsers).toHaveBeenCalledTimes(2);
   });
 
   it('should delete a user', () => {
@@ -158,8 +158,8 @@ describe('UserManagementPage', () => {
 
     component.confirmDelete();
 
-    expect(mockUsersService.deleteUser).toHaveBeenCalledWith(userToDelete.id);
+    expect(mockProfileService.deleteUser).toHaveBeenCalledWith(userToDelete.id);
     expect(mockToastService.showSuccess).toHaveBeenCalledWith('Usuario eliminado con éxito.');
-    expect(mockUsersService.getUsers).toHaveBeenCalledTimes(2);
+    expect(mockProfileService.getUsers).toHaveBeenCalledTimes(2);
   });
 });
