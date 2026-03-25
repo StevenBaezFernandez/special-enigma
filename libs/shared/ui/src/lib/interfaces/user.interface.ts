@@ -1,5 +1,5 @@
 import { UserStatus } from '../enums/user-status.enum';
-import { User as AuthUser } from '@virteex/shared-util-auth';
+import { User as AuthUser } from '@virteex/shared-types';
 
 export interface Organization {
   id: string;

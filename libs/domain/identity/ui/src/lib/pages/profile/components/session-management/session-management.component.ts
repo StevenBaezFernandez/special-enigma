@@ -12,8 +12,8 @@ import { AuthService, ToastService } from '@virteex/shared-ui';
   styleUrl: './session-management.component.scss'
 })
 export class SessionManagementComponent implements OnInit {
-  private authService = inject(AuthService);
-  private toastService = inject(ToastService);
+  private authService = inject(AuthService) as any;
+  private toastService = inject(ToastService) as any;
 
   sessions = signal<any[]>([]);
   isLoading = signal(false);

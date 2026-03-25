@@ -25,7 +25,7 @@ export default defineConfig({
       '@virteex/shared-config': resolve(__dirname, '../../../../libs/shared/config/src/index.ts'),
       '@virteex/identity-ui': resolve(__dirname, './src/index.ts'),
       '@virteex/domain-identity-contracts': resolve(__dirname, '../../../../libs/domain/identity/contracts/src/index.ts'),
-      '@virteex/shared-util-auth': resolve(__dirname, '../../../../libs/shared/util/client/auth/src/index.ts'),
+      '@virteex/shared-ui': resolve(__dirname, '../../../../libs/shared/util/client/auth/src/index.ts'),
       '@ngx-translate/core': resolve(__dirname, '../../../../node_modules/@ngx-translate/core/fesm2022/ngx-translate-core.mjs')
     },
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],

@@ -6,7 +6,7 @@ import { CountryService } from './country.service';
 import { Observable, of, tap, map, catchError, lastValueFrom } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { API_URL } from '@virteex/shared-config';
-import { hasPermission } from '@virteex/shared-util-auth';
+import { hasPermission } from '@virteex/shared-types';
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
 
 @Injectable({ providedIn: 'root' })

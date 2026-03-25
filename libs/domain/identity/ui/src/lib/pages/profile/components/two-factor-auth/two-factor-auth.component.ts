@@ -13,8 +13,8 @@ import { AuthService, ToastService } from '@virteex/shared-ui';
   styleUrl: './two-factor-auth.component.scss'
 })
 export class TwoFactorAuthComponent implements OnInit {
-  private authService = inject(AuthService);
-  private toastService = inject(ToastService);
+  private authService = inject(AuthService) as any;
+  private toastService = inject(ToastService) as any;
 
   mfaEnabled = signal(false);
   mfaSecret = signal<string | null>(null);

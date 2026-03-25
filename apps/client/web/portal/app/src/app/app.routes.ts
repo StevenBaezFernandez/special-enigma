@@ -1,6 +1,5 @@
 import { Route } from '@angular/router';
-import { MainLayoutComponent } from '@virteex/shared-ui';
-import { authGuard } from '@virteex/shared-util-auth';
+import { MainLayoutComponent, authGuard } from '@virteex/shared-ui';
 
 export const appRoutes: Route[] = [
   // Country specific auth (e.g., /es/co/auth/...)

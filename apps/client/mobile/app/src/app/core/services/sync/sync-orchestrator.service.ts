@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { TokenService } from '@virteex/shared-util-auth';
+import { TokenService } from '@virteex/shared-ui';
 import { SyncQueueService } from './sync-queue.service';
 import { SyncItem } from './sync.types';
 

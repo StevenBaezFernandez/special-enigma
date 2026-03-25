@@ -23,8 +23,8 @@ export interface ContextAnalysis {
 })
 export class IntentDetectionService {
   private http = inject(HttpClient);
-  private toast = inject(ToastService);
-  private apiUrl = inject(API_URL);
+  private toast = inject(ToastService) as any;
+  private apiUrl = inject(API_URL) as any;
 
   analyzeContext(urlCountry: string): Observable<ContextAnalysis> {
     return this.http.post<ContextAnalysis>(`${this.apiUrl}/auth/security/context-check`, { urlCountry }).pipe(

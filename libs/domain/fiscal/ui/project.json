@@ -32,7 +32,8 @@
         "assets": [
           "libs/domain/fiscal/ui/*.md"
         ],
-        "generateExportsField": true
+        "generateExportsField": true,
+        "rootDir": "."
       }
     }
   }

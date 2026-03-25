@@ -39,9 +39,9 @@ interface ProfileForm {
 })
 export class MyProfilePage implements OnInit {
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private usersService = inject(UsersService);
-  private toastService = inject(ToastService);
+  private authService = inject(AuthService) as any;
+  private usersService = inject(UsersService) as any;
+  private toastService = inject(ToastService) as any;
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 

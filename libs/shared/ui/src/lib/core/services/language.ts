@@ -1,4 +1,4 @@
-import { Injectable, signal, effect, Inject, PLATFORM_ID, inject, untracked } from '@angular/core';
+import { Injectable, signal, effect, Inject, PLATFORM_ID, inject, untracked, Injector } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -19,7 +19,8 @@ export class LanguageService {
   // --- Inyección de Dependencias ---
   private translate = inject(TranslateService);
   private usersService: any = null;
-  private authService = inject(AuthService);
+  private injector = inject(Injector);
+
 
   /**
    * Signal que almacena el idioma actual de la UI.
@@ -49,10 +50,13 @@ export class LanguageService {
         // 2c. Sincroniza con el backend si hay un usuario logueado.
         // `untracked` evita que el efecto se vuelva a ejecutar si `currentUser` cambia,
         // solo nos interesa reaccionar a cambios de `currentLang`.
-        const currentUser = untracked(() => this.authService.currentUser());
-        if (currentUser && currentUser.preferredLanguage !== lang) {
-          this.syncWithUserProfile(currentUser.id, lang);
-        }
+        setTimeout(() => {
+          const authService = this.injector.get(AuthService);
+          const currentUser = untracked(() => authService.currentUser());
+          if (currentUser && currentUser.preferredLanguage !== lang) {
+            this.syncWithUserProfile(currentUser.id, lang);
+          }
+        });
       }
     });
   }

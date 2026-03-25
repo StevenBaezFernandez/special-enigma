@@ -3,7 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { defineCustomElements as jeepSqlite } from 'jeep-sqlite/loader';
 import { v4 as uuidv4 } from 'uuid';
-import { SecureStorageService } from '@virteex/shared-util-auth';
+import { SecureStorageService } from '@virteex/shared-ui';
 
 jeepSqlite(window);
 

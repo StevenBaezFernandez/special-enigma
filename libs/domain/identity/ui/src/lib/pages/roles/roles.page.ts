@@ -23,8 +23,8 @@ interface PermissionGroup {
 })
 export class RolesManagementPage implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly rolesService = inject(RolesService);
-  private readonly notificationService = inject(NotificationService);
+  private readonly rolesService = inject(RolesService) as any;
+  private readonly notificationService = inject(NotificationService) as any;
 
   /** Iconos */
   protected readonly PlusIcon = Plus;

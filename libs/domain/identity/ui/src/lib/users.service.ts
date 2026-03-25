@@ -7,7 +7,7 @@ import { UserResponseDto, UpdateUserDto, AuditLogDto } from '@virteex/domain-ide
 @Injectable({ providedIn: 'root' })
 export class UsersService {
   private http = inject(HttpClient);
-  private readonly baseUrl = inject(API_URL, { optional: true }) ? `${inject(API_URL)}/users` : '/api/users';
+  private readonly baseUrl = inject(API_URL, { optional: true } as any) ? `${inject(API_URL as any)}/users` : '/api/users';
 
   updateProfile(dto: UpdateUserDto): Observable<UserResponseDto> {
     return this.http.patch<UserResponseDto>(`${this.baseUrl}/profile`, dto);

@@ -7,6 +7,27 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/virteex-web',
+  resolve: {
+    alias: {
+      'class-transformer/storage': 'class-transformer',
+    },
+  },
+  optimizeDeps: {
+    exclude: [
+      'dustjs-linkedin',
+      'atpl',
+      'jazz',
+      'hamljs',
+      'hamlet',
+      'haml-coffee',
+      'hogan.js',
+      'templayed',
+      'walrus',
+      'plates',
+      'teacup/lib/express',
+      'twing',
+    ],
+  },
   plugins: [angular(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
   // Uncomment this if you are using workers.
   // worker: {

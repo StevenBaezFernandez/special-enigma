@@ -9,7 +9,7 @@ import {
 import { inject, Injector } from '@angular/core';
 import { Observable, throwError, timer } from 'rxjs';
 import { catchError, switchMap, retry } from 'rxjs/operators';
-import { AuthService } from '@virteex/shared-ui';
+import { AuthService } from '../services/auth';
 import { AuthQueueService } from '../services/auth-queue.service';
 // import { IS_PUBLIC_API } from '../tokens/http-context.tokens';
 import { HttpContextToken } from '@angular/common/http';

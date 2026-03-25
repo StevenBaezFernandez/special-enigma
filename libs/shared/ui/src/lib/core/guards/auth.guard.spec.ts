@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { AuthService, LanguageService } from '@virteex/shared-ui';
-import { authGuard } from './auth-guard';
+import { AuthService } from '../services/auth';
+import { LanguageService } from '../services/language';
+import { authGuard } from './auth.guard';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
 

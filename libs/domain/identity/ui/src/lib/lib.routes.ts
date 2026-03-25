@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { AUTH_ROUTES } from './pages/auth/auth.routes';
-import { authGuard } from '@virteex/shared-util-auth';
+import { authGuard } from '@virteex/shared-ui';
 
 // Public authentication routes
 export const authRoutes: Route[] = [

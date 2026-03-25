@@ -1,18 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": ".",
     "outDir": "../../../../dist/libs/domain/identity/ui",
     "declaration": true,
-    "types": [
-      "node"
-    ],
-    "moduleResolution": "bundler", "module": "esnext"
+    "types": ["node"]
   },
   "include": ["src/**/*.ts"],
   "files": [],
-  "exclude": [
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ]
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

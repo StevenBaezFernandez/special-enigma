@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule, Building, Users, Globe, Briefcase } from 'lucide-angular';
 import { ConfigService, RegistrationOptions } from '@virteex/shared-ui';
-import { ConfigService, RegistrationOptions } from '@virteex/shared-ui';
 
 @Component({
   selector: 'virteex-step-business',
@@ -102,7 +101,7 @@ export class StepBusiness implements OnInit {
   protected readonly GlobeIcon = Globe;
   protected readonly BriefcaseIcon = Briefcase;
 
-  private configService = inject(ConfigService);
+  private configService = inject(ConfigService) as any;
 
   industries = signal<string[]>([]);
   companySizes = signal<string[]>([]);

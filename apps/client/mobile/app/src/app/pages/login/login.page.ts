@@ -5,8 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { API_URL } from '@virteex/shared-config';
-import { SessionService } from '@virteex/shared-util-auth';
-import { SecureStorageService } from '@virteex/shared-util-auth';
+import { SessionService } from '@virteex/shared-ui';
+import { SecureStorageService } from '@virteex/shared-ui';
 
 @Component({
   selector: 'virteex-mobile-login',
