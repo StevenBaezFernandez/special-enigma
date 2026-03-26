@@ -18,6 +18,7 @@
     "quality:check-format": "prettier --check .",
     "quality:dep-graph": "depcruise --validate .dependency-cruiser.js libs apps",
     "quality:docs": "node tools/quality-gates/validate-docs-consistency.mjs",
+    "docs:generate-map": "./tools/generate-project-map.sh",
     "quality:e2e-coverage": "node tools/quality-gates/validate-e2e-coverage.mjs",
     "test:unit": "nx run-many --target=test --all",
     "test:e2e": "nx run-many --target=e2e --all",
