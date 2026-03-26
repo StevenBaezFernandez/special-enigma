@@ -25,7 +25,7 @@ services:
 
   # API GATEWAY (Monolith)
   api-gateway:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-api-gateway
     working_dir: /app
     volumes:
@@ -51,7 +51,7 @@ services:
 
   # IDENTITY SERVICE
   identity-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-identity-service
     working_dir: /app
     volumes:
@@ -75,7 +75,7 @@ services:
 
   # INVENTORY SERVICE
   inventory-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-inventory-service
     working_dir: /app
     volumes:
@@ -99,7 +99,7 @@ services:
 
   # BILLING SERVICE
   billing-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-billing-service
     working_dir: /app
     volumes:
@@ -123,7 +123,7 @@ services:
 
   # CRM SERVICE
   crm-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-crm-service
     working_dir: /app
     volumes:
@@ -147,7 +147,7 @@ services:
 
   # FISCAL SERVICE
   fiscal-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-fiscal-service
     working_dir: /app
     volumes:
@@ -171,7 +171,7 @@ services:
 
   # SCHEDULER SERVICE
   scheduler-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-scheduler-service
     working_dir: /app
     volumes:
@@ -186,7 +186,7 @@ services:
 
   # ACCOUNTING SERVICE
   accounting-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-accounting-service
     working_dir: /app
     volumes:
@@ -210,7 +210,7 @@ services:
 
   # PAYROLL SERVICE
   payroll-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-payroll-service
     working_dir: /app
     volumes:
@@ -234,7 +234,7 @@ services:
 
   # PROJECTS SERVICE
   projects-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-projects-service
     working_dir: /app
     volumes:
@@ -258,7 +258,7 @@ services:
 
   # MANUFACTURING SERVICE
   manufacturing-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-manufacturing-service
     working_dir: /app
     volumes:
@@ -282,7 +282,7 @@ services:
 
   # TREASURY SERVICE
   treasury-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-treasury-service
     working_dir: /app
     volumes:
@@ -306,7 +306,7 @@ services:
 
   # PURCHASING SERVICE
   purchasing-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-purchasing-service
     working_dir: /app
     volumes:
@@ -330,7 +330,7 @@ services:
 
   # BI SERVICE
   bi-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-bi-service
     working_dir: /app
     volumes:
@@ -354,7 +354,7 @@ services:
 
   # ADMIN SERVICE
   admin-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-admin-service
     working_dir: /app
     volumes:
@@ -378,7 +378,7 @@ services:
 
   # FIXED ASSETS SERVICE
   fixed-assets-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-fixed-assets-service
     working_dir: /app
     volumes:
@@ -402,7 +402,7 @@ services:
 
   # CATALOG SERVICE (Subgraph)
   catalog-service:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-catalog-service
     working_dir: /app
     volumes:
@@ -424,7 +424,7 @@ services:
 
   # GATEWAY (Apollo)
   gateway:
-    image: node:20.18-alpine@sha256:b88333c42c23fbd91596ebd7fd10de239cedab9617de04142dde7315e3bc0afa
+    image: node:22.12.0-alpine
     container_name: virteex-gateway
     working_dir: /app
     volumes:
