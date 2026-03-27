@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from './auth';
-import { UsersService } from './api/users.service';
+import { UsersService } from '../api/users.service';
 
 // Clave estandarizada para guardar el idioma en el almacenamiento local del navegador.
 const UI_LANG_KEY = 'ui_lang';

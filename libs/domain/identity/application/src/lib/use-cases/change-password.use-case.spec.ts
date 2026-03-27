@@ -29,7 +29,7 @@ describe('ChangePasswordUseCase', () => {
     mockAuthService.verifyPassword.mockResolvedValue(true);
     mockAuthService.hashPassword.mockResolvedValue('new-hash');
 
-    await useCase.execute('u1', { oldPassword: 'old', newPassword: 'new' });
+    await useCase.execute('u1', { currentPassword: 'old', newPassword: 'new' });
 
     expect(mockUserRepo.save).toHaveBeenCalled();
     expect(mockSessionRepo.deleteByUserId).toHaveBeenCalledWith('u1');
@@ -39,6 +39,6 @@ describe('ChangePasswordUseCase', () => {
   it('should throw if old password is wrong', async () => {
     mockUserRepo.findById.mockResolvedValue({ id: 'u1', passwordHash: 'old' });
     mockAuthService.verifyPassword.mockResolvedValue(false);
-    await expect(useCase.execute('u1', { oldPassword: 'wrong', newPassword: 'new' })).rejects.toThrow(UnauthorizedException);
+    await expect(useCase.execute('u1', { currentPassword: 'wrong', newPassword: 'new' })).rejects.toThrow(UnauthorizedException);
   });
 });

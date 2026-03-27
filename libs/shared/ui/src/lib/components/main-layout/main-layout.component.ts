@@ -18,20 +18,20 @@ export class MainLayoutComponent {
   currentYear = new Date().getFullYear();
 
   navItems = [
-    { path: '/accounting', label: 'Accounting', icon: 'icon-accounting' },
-    { path: '/inventory', label: 'Inventory', icon: 'icon-inventory' },
-    { path: '/payroll', label: 'Payroll', icon: 'icon-payroll' },
-    { path: '/crm', label: 'CRM', icon: 'icon-crm' },
-    { path: '/purchasing', label: 'Purchasing', icon: 'icon-purchasing' },
-    { path: '/treasury', label: 'Treasury', icon: 'icon-treasury' },
-    { path: '/fixed-assets', label: 'Fixed Assets', icon: 'icon-fixed-assets' },
-    { path: '/projects', label: 'Projects', icon: 'icon-projects' },
-    { path: '/manufacturing', label: 'Manufacturing', icon: 'icon-manufacturing' },
-    { path: '/billing', label: 'Billing', icon: 'icon-billing' },
-    { path: '/catalog', label: 'Catalog', icon: 'icon-catalog' },
-    { path: '/bi', label: 'BI', icon: 'icon-bi' },
-    { path: '/admin', label: 'Admin', icon: 'icon-admin' },
-    { path: '/fiscal', label: 'Fiscal', icon: 'icon-fiscal' },
+    { path: 'accounting', label: 'Accounting', icon: 'icon-accounting' },
+    { path: 'inventory', label: 'Inventory', icon: 'icon-inventory' },
+    { path: 'payroll', label: 'Payroll', icon: 'icon-payroll' },
+    { path: 'crm', label: 'CRM', icon: 'icon-crm' },
+    { path: 'purchasing', label: 'Purchasing', icon: 'icon-purchasing' },
+    { path: 'treasury', label: 'Treasury', icon: 'icon-treasury' },
+    { path: 'fixed-assets', label: 'Fixed Assets', icon: 'icon-fixed-assets' },
+    { path: 'projects', label: 'Projects', icon: 'icon-projects' },
+    { path: 'manufacturing', label: 'Manufacturing', icon: 'icon-manufacturing' },
+    { path: 'billing', label: 'Billing', icon: 'icon-billing' },
+    { path: 'catalog', label: 'Catalog', icon: 'icon-catalog' },
+    { path: 'bi', label: 'BI', icon: 'icon-bi' },
+    { path: 'admin', label: 'Admin', icon: 'icon-admin' },
+    { path: 'fiscal', label: 'Fiscal', icon: 'icon-fiscal' },
   ];
 
   toggleSidebar() {

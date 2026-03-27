@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsEnum } from 'class-validator';
 
 export class UpdateUserDto {
   @IsString()
@@ -14,6 +14,7 @@ export class UpdateUserDto {
   phone?: string;
 
   @IsString()
+  @IsEnum(['en', 'es'])
   @IsOptional()
   preferredLanguage?: string;
 }

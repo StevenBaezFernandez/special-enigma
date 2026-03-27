@@ -1,8 +1,9 @@
 import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { LucideAngularModule, Globe, ChevronUp, Check } from 'lucide-angular';
+import { LanguageService } from '@virteex/shared-ui';
 
 @Component({
   selector: 'virteex-auth-footer',
@@ -17,7 +18,7 @@ import { LucideAngularModule, Globe, ChevronUp, Check } from 'lucide-angular';
   styleUrls: ['./auth-footer.component.scss']
 })
 export class AuthFooterComponent {
-  private translate = inject(TranslateService);
+  private languageService = inject(LanguageService);
 
   readonly icons = { Globe, ChevronUp, Check };
   readonly currentYear = new Date().getFullYear();
@@ -30,7 +31,7 @@ export class AuthFooterComponent {
   ];
 
   get currentLang(): string {
-    return this.translate.currentLang || 'es';
+    return this.languageService.currentLang();
   }
 
   get currentLangLabel(): string {
@@ -44,8 +45,7 @@ export class AuthFooterComponent {
   }
 
   changeLang(langCode: string) {
-    this.translate.use(langCode);
-    localStorage.setItem('lang', langCode);
+    this.languageService.setLanguage(langCode);
     this.isLangDropdownOpen = false;
   }
 

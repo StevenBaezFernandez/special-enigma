@@ -12,11 +12,11 @@ export class LocalizationController {
   async getConfig(@Param('code') code: string) {
     // Basic mock implementation based on frontend expectations
     const configs: Record<string, any> = {
-      'DO': { currencyCode: 'DOP', taxIdRegex: '^[0-9]{9,11}$', fiscalRegionId: 'DO-MAIN' },
-      'MX': { currencyCode: 'MXN', taxIdRegex: '^[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{3}$', fiscalRegionId: 'MX-FED' },
-      'US': { currencyCode: 'USD', taxIdRegex: '^[0-9]{2}-[0-9]{7}$', fiscalRegionId: 'US-GEN' },
+      'DO': { countryCode: 'DO', name: 'República Dominicana', currency: 'DOP', locale: 'es-DO', taxIdRegex: '^[0-9]{9,11}$', fiscalRegionId: 'DO-MAIN' },
+      'MX': { countryCode: 'MX', name: 'México', currency: 'MXN', locale: 'es-MX', taxIdRegex: '^[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{3}$', fiscalRegionId: 'MX-FED' },
+      'US': { countryCode: 'US', name: 'United States', currency: 'USD', locale: 'en-US', taxIdRegex: '^[0-9]{2}-[0-9]{7}$', fiscalRegionId: 'US-GEN' },
     };
-    return configs[code.toUpperCase()] || { currencyCode: 'USD', taxIdRegex: '^[A-Za-z0-9\\-\\s]+$' };
+    return configs[code.toUpperCase()] || { countryCode: code.toUpperCase(), name: code.toUpperCase(), currency: 'USD', locale: 'en-US', taxIdRegex: '^[A-Za-z0-9\\-\\s]+$' };
   }
 
   @Public()
