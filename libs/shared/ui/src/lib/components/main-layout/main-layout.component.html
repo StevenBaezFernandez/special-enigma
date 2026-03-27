@@ -14,7 +14,7 @@
         <li class="shell__nav-item">
           <a routerLink="/" class="shell__nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
             <i class="shell__nav-icon home-icon"></i>
-            <span class="shell__nav-label">Home</span>
+            <span class="shell__nav-label">{{ 'MAIN_LAYOUT.NAV.HOME' | translate }}</span>
           </a>
         </li>
 
@@ -32,7 +32,7 @@
     <div class="shell__footer">
       <a routerLink="auth/login" class="shell__logout">
         <i class="shell__nav-icon logout-icon"></i>
-        <span class="shell__nav-label">Logout</span>
+        <span class="shell__nav-label">{{ 'MAIN_LAYOUT.NAV.LOGOUT' | translate }}</span>
       </a>
     </div>
   </aside>
@@ -41,12 +41,12 @@
   <div class="shell__main">
     <header class="shell__header mica">
       <div class="shell__header-left">
-        <button (click)="toggleSidebar()" class="shell__toggle" aria-label="Toggle Sidebar">
+        <button (click)="toggleSidebar()" class="shell__toggle" [attr.aria-label]="'MAIN_LAYOUT.ARIA.TOGGLE_SIDEBAR' | translate">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor">
             <path d="M2 4H14M2 8H14M2 12H14" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-        <h1 class="shell__title">Dashboard</h1>
+        <h1 class="shell__title">{{ 'MAIN_LAYOUT.HEADER.DASHBOARD' | translate }}</h1>
       </div>
 
       <div class="shell__header-right">
@@ -88,7 +88,7 @@
         </nav>
       </div>
       <div class="footer-right">
-        <span class="copyright">&copy; {{ currentYear }} Virteex. Todos los derechos reservados.</span>
+        <span class="copyright">&copy; {{ currentYear }} Virteex. {{ 'MAIN_LAYOUT.FOOTER.COPYRIGHT' | translate }}</span>
       </div>
     </footer>
   </div>

@@ -63,7 +63,27 @@
     },
     "PLAN_SELECTION": {
         "TITLE": "Selecciona tu plan",
-        "SUBTITLE": "Elige el plan que mejor se adapte a las necesidades de tu negocio"
+        "SUBTITLE": "Elige el plan que mejor se adapte a las necesidades de tu negocio",
+        "BASIC": {
+            "TITLE": "Plan Básico"
+        },
+        "MONTH": "mes",
+        "SELECT": "Seleccionar"
+    },
+    "MAIN_LAYOUT": {
+        "NAV": {
+            "HOME": "Inicio",
+            "LOGOUT": "Cerrar sesión"
+        },
+        "HEADER": {
+            "DASHBOARD": "Tablero"
+        },
+        "ARIA": {
+            "TOGGLE_SIDEBAR": "Alternar barra lateral"
+        },
+        "FOOTER": {
+            "COPYRIGHT": "Todos los derechos reservados."
+        }
     },
     "SETTINGS": {
         "PROFILE": {

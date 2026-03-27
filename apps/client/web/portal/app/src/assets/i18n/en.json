@@ -63,7 +63,27 @@
     },
     "PLAN_SELECTION": {
         "TITLE": "Select your plan",
-        "SUBTITLE": "Choose the plan that best fits your business needs"
+        "SUBTITLE": "Choose the plan that best fits your business needs",
+        "BASIC": {
+            "TITLE": "Basic Plan"
+        },
+        "MONTH": "month",
+        "SELECT": "Select"
+    },
+    "MAIN_LAYOUT": {
+        "NAV": {
+            "HOME": "Home",
+            "LOGOUT": "Logout"
+        },
+        "HEADER": {
+            "DASHBOARD": "Dashboard"
+        },
+        "ARIA": {
+            "TOGGLE_SIDEBAR": "Toggle Sidebar"
+        },
+        "FOOTER": {
+            "COPYRIGHT": "All rights reserved."
+        }
     },
     "SETTINGS": {
         "PROFILE": {

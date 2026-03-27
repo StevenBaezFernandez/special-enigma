@@ -19,6 +19,7 @@ export class UpdateUserUseCase {
     if (dto.lastName) user.lastName = dto.lastName;
     if (dto.phone) user.phone = dto.phone;
     if (dto.preferredLanguage) user.preferredLanguage = dto.preferredLanguage;
+    if (dto.status) user.status = dto.status;
 
     await this.userRepository.save(user);
     return user;

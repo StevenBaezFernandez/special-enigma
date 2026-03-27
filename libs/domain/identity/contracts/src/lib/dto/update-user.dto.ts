@@ -17,4 +17,8 @@ export class UpdateUserDto {
   @IsEnum(['en', 'es'])
   @IsOptional()
   preferredLanguage?: string;
+
+  @IsString()
+  @IsOptional()
+  status?: string;
 }

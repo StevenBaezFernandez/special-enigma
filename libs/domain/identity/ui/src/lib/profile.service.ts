@@ -20,7 +20,7 @@ export class ProfileService {
   uploadAvatar(file: File): Observable<{ url: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<{ url: string }>(`${this.baseUrl}/avatar`, formData);
+    return this.http.post<{ url: string }>(`${this.baseUrl}/profile/avatar`, formData);
   }
 
   getAuditLogs(): Observable<AuditLogDto[]> {

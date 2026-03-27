@@ -2,7 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, RecaptchaPort, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService, WebAuthnService } from '@virteex/domain-identity-domain';
+import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, RecaptchaPort, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService, WebAuthnService, LocalizationPort } from '@virteex/domain-identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
 import { UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema, UserAuthenticatorSchema } from './persistence/identity.schemas';
@@ -50,6 +50,7 @@ import {
   GetSubscriptionStatusUseCase,
   GetOnboardingStatusUseCase,
   TokenGenerationService,
+  LocalizationService,
   GetJobTitlesUseCase,
   CheckSecurityContextUseCase,
   LogoutUserUseCase,
@@ -136,6 +137,7 @@ import { HttpModule } from '@nestjs/axios';
     { provide: StoragePort, useClass: StorageAdapter },
     { provide: GEO_IP_PORT, useClass: GeoIpLiteAdapter },
     { provide: CachePort, useClass: RedisCacheAdapter },
+    { provide: LocalizationPort, useClass: LocalizationService },
     InitiateSignupUseCase,
     VerifySignupUseCase,
     CompleteOnboardingUseCase,
@@ -154,7 +156,6 @@ import { HttpModule } from '@nestjs/axios';
     RefreshTokenUseCase,
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
-    GetOnboardingStatusUseCase,
     GetOnboardingStatusUseCase,
       TokenGenerationService,
     GetJobTitlesUseCase,
@@ -200,6 +201,7 @@ import { HttpModule } from '@nestjs/axios';
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
       TokenGenerationService,
+    LocalizationPort,
     GetJobTitlesUseCase,
     CheckSecurityContextUseCase,
     LogoutUserUseCase,

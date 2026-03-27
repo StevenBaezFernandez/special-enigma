@@ -20,6 +20,7 @@ export * from './lib/use-cases/update-subscription.use-case';
 export * from './lib/use-cases/get-subscription-status.use-case';
 export * from './lib/use-cases/get-onboarding-status.use-case';
 export * from './lib/services/token-generation.service';
+export * from './lib/services/localization.service';
 export * from './lib/use-cases/get-job-titles.use-case';
 export * from './lib/use-cases/check-security-context.use-case';
 export * from './lib/use-cases/logout-user.use-case';
