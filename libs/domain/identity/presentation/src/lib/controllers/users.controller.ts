@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Post, Delete, Body, Param, Query, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Patch, Put, Post, Delete, Body, Param, Query, UseGuards, UseInterceptors, UploadedFile, Req } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
     GetUserProfileUseCase,
@@ -11,7 +11,9 @@ import {
     DeleteUserUseCase,
     UpdateUserUseCase,
     BlockUserUseCase,
-    ForceLogoutUseCase
+    ForceLogoutUseCase,
+    ForgotPasswordUseCase,
+    UserRepository
 } from '@virteex/domain-identity-application';
 import { UpdateUserDto, InviteUserDto, PaginatedUsersResponse } from '@virteex/domain-identity-contracts';
 import { JwtAuthGuard, CurrentUser, StepUp, StepUpGuard } from '@virteex/kernel-auth';
@@ -33,7 +35,9 @@ export class UsersController {
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly blockUserUseCase: BlockUserUseCase,
-    private readonly forceLogoutUseCase: ForceLogoutUseCase
+    private readonly forceLogoutUseCase: ForceLogoutUseCase,
+    private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
+    private readonly userRepository: UserRepository
   ) {}
 
   @Get()
@@ -122,6 +126,29 @@ export class UsersController {
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
   async blockAndLogout(@Param('id') id: string): Promise<void> {
     await this.blockUserUseCase.execute(id);
+  }
+
+  @Put(':id/status')
+  @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
+  async setUserStatus(@Param('id') id: string, @Body() body: { isOnline: boolean }): Promise<UserResponseDto> {
+    // Mapping isOnline to a status string for simplicity, or we could add isOnline to the entity.
+    // Given the FE sends isOnline, we'll use that to update the user.
+    const userEntity = await this.updateUserUseCase.execute(id, { status: body.isOnline ? 'ONLINE' : 'OFFLINE' } as any);
+    return UserMapper.toDto(userEntity);
+  }
+
+  @Post(':id/reset-password')
+  @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
+  async sendPasswordReset(@Param('id') id: string, @Req() req: any): Promise<{ message: string }> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+        throw new Error('User not found');
+    }
+    await this.forgotPasswordUseCase.execute({ email: user.email, recaptchaToken: '' }, {
+        ip: req.ip,
+        userAgent: req.headers['user-agent']
+    }, true);
+    return { message: 'Password reset email sent' };
   }
 
   @Post('profile/avatar')

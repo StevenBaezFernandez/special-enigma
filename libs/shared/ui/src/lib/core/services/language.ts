@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from './auth';
 import { UsersService } from '../api/users.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 // Clave estandarizada para guardar el idioma en el almacenamiento local del navegador.
 const UI_LANG_KEY = 'ui_lang';
@@ -21,6 +22,7 @@ export class LanguageService {
   private translate = inject(TranslateService);
   private usersService = inject(UsersService);
   private injector = inject(Injector);
+  private router = inject(Router);
 
 
   /**
@@ -58,8 +60,27 @@ export class LanguageService {
             this.syncWithUserProfile(currentUser.id, lang);
           }
         });
+
+        // 2d. Sincroniza la URL con el nuevo idioma.
+        this.updateUrl(lang);
       }
     });
+  }
+
+  /**
+   * Actualiza el segmento ':lang' de la URL actual para reflejar el cambio de idioma.
+   * @param lang El nuevo idioma a reflejar en la URL.
+   */
+  private updateUrl(lang: string): void {
+    const url = this.router.url;
+    const urlSegments = url.split('/');
+
+    // Se asume que el idioma es el primer segmento de la URL si coincide con los soportados.
+    // Ej: /es/dashboard -> /en/dashboard
+    if (urlSegments.length > 1 && this.supportedLangs.includes(urlSegments[1])) {
+      urlSegments[1] = lang;
+      this.router.navigateByUrl(urlSegments.join('/'));
+    }
   }
 
   /**

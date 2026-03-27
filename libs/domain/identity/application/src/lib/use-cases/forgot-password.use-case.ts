@@ -17,8 +17,8 @@ export class ForgotPasswordUseCase {
     @Inject(RecaptchaPort) private readonly recaptchaService: RecaptchaPort,
   ) {}
 
-  async execute(dto: ForgotPasswordDto, context: { ip: string, userAgent: string }): Promise<void> {
-    if (!(await this.recaptchaService.verify(dto.recaptchaToken, 'forgotPassword'))) {
+  async execute(dto: ForgotPasswordDto, context: { ip: string, userAgent: string }, bypassRecaptcha = false): Promise<void> {
+    if (!bypassRecaptcha && !(await this.recaptchaService.verify(dto.recaptchaToken, 'forgotPassword'))) {
         throw new BadRequestException('reCAPTCHA verification failed');
     }
 
