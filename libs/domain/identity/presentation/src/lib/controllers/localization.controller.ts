@@ -10,6 +10,11 @@ export class LocalizationController {
     'DO': { countryCode: 'DO', name: 'República Dominicana', currency: 'DOP', locale: 'es-DO', taxIdRegex: '^[0-9]{9,11}$', fiscalRegionId: 'DO-MAIN' },
     'MX': { countryCode: 'MX', name: 'México', currency: 'MXN', locale: 'es-MX', taxIdRegex: '^[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{3}$', fiscalRegionId: 'MX-FED' },
     'US': { countryCode: 'US', name: 'United States', currency: 'USD', locale: 'en-US', taxIdRegex: '^[0-9]{2}-[0-9]{7}$', fiscalRegionId: 'US-GEN' },
+    'CO': { countryCode: 'CO', name: 'Colombia', currency: 'COP', locale: 'es-CO', taxIdRegex: '^[0-9]{9,10}-[0-9]$', fiscalRegionId: 'CO-GEN' },
+    'PA': { countryCode: 'PA', name: 'Panamá', currency: 'PAB', locale: 'es-PA', taxIdRegex: '^[0-9A-Z\\-]+$', fiscalRegionId: 'PA-GEN' },
+    'CR': { countryCode: 'CR', name: 'Costa Rica', currency: 'CRC', locale: 'es-CR', taxIdRegex: '^[0-9]{9,12}$', fiscalRegionId: 'CR-GEN' },
+    'PE': { countryCode: 'PE', name: 'Perú', currency: 'PEN', locale: 'es-PE', taxIdRegex: '^[0-9]{11}$', fiscalRegionId: 'PE-GEN' },
+    'CL': { countryCode: 'CL', name: 'Chile', currency: 'CLP', locale: 'es-CL', taxIdRegex: '^[0-9]{7,8}-[0-9Kk]$', fiscalRegionId: 'CL-GEN' },
   };
 
   private readonly fiscalRegions: FiscalRegionDto[] = [
@@ -17,7 +22,10 @@ export class LocalizationController {
     { id: 'MX-FED', name: 'México - Federal' },
     { id: 'CO-GEN', name: 'Colombia - General' },
     { id: 'PA-GEN', name: 'Panamá - General' },
-    { id: 'US-GEN', name: 'United States - General' }
+    { id: 'US-GEN', name: 'United States - General' },
+    { id: 'CR-GEN', name: 'Costa Rica - General' },
+    { id: 'PE-GEN', name: 'Perú - General' },
+    { id: 'CL-GEN', name: 'Chile - General' }
   ];
 
   @Public()
@@ -40,10 +48,37 @@ export class LocalizationController {
   @ApiOperation({ summary: 'Lookup entity information by Tax ID' })
   @ApiResponse({ type: Object, description: 'TaxLookupDto' })
   async lookup(@Param('taxId') taxId: string, @Query('country') country: string): Promise<TaxLookupDto> {
+    // Simulate a more realistic validation
+    // For demo purposes:
+    // - Tax IDs starting with '000' are considered invalid.
+
+    if (taxId.startsWith('000')) {
+      return {
+        taxId,
+        country,
+        name: '',
+        isValid: false
+      };
+    }
+
+    const config = this.configs[country.toUpperCase()];
+    if (config && config.taxIdRegex) {
+        const regex = new RegExp(config.taxIdRegex);
+        if (!regex.test(taxId)) {
+            return {
+                taxId,
+                country,
+                name: '',
+                isValid: false
+            };
+        }
+    }
+
     return {
       taxId,
       country,
-      name: `Entity for ${taxId} in ${country}`,
+      name: `Empresa Simulada (${taxId})`,
+      industry: 'Tecnología y Servicios',
       isValid: true
     };
   }

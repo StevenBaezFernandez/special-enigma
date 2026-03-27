@@ -1,7 +1,19 @@
-import { Controller, Get, Patch, Post, Body, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Patch, Post, Delete, Body, Param, Query, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { GetUserProfileUseCase, UpdateUserProfileUseCase, InviteUserUseCase, UploadAvatarUseCase, GetJobTitlesUseCase, GetAuditLogsUseCase } from '@virteex/domain-identity-application';
-import { UpdateUserDto, InviteUserDto } from '@virteex/domain-identity-contracts';
+import {
+    GetUserProfileUseCase,
+    UpdateUserProfileUseCase,
+    InviteUserUseCase,
+    UploadAvatarUseCase,
+    GetJobTitlesUseCase,
+    GetAuditLogsUseCase,
+    ListUsersUseCase,
+    DeleteUserUseCase,
+    UpdateUserUseCase,
+    BlockUserUseCase,
+    ForceLogoutUseCase
+} from '@virteex/domain-identity-application';
+import { UpdateUserDto, InviteUserDto, PaginatedUsersResponse } from '@virteex/domain-identity-contracts';
 import { JwtAuthGuard, CurrentUser, StepUp, StepUpGuard } from '@virteex/kernel-auth';
 import { UserMapper } from '../mappers/user.mapper';
 import { AuditLogMapper } from '../mappers/audit-log.mapper';
@@ -16,8 +28,41 @@ export class UsersController {
     private readonly inviteUser: InviteUserUseCase,
     private readonly uploadAvatar: UploadAvatarUseCase,
     private readonly getJobTitlesUseCase: GetJobTitlesUseCase,
-    private readonly getAuditLogsUseCase: GetAuditLogsUseCase
+    private readonly getAuditLogsUseCase: GetAuditLogsUseCase,
+    private readonly listUsersUseCase: ListUsersUseCase,
+    private readonly deleteUserUseCase: DeleteUserUseCase,
+    private readonly updateUserUseCase: UpdateUserUseCase,
+    private readonly blockUserUseCase: BlockUserUseCase,
+    private readonly forceLogoutUseCase: ForceLogoutUseCase
   ) {}
+
+  @Get()
+  @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
+  async listUsers(
+    @CurrentUser() user: any,
+    @Query('page') page = 1,
+    @Query('pageSize') pageSize = 10,
+    @Query('searchTerm') searchTerm?: string,
+    @Query('statusFilter') statusFilter?: string,
+    @Query('sortColumn') sortColumn?: string,
+    @Query('sortDirection') sortDirection?: 'ASC' | 'DESC'
+  ): Promise<PaginatedUsersResponse> {
+    const tenantId = user?.tenantId;
+    const result = await this.listUsersUseCase.execute({
+      page: Number(page),
+      pageSize: Number(pageSize),
+      searchTerm,
+      statusFilter,
+      sortColumn,
+      sortDirection,
+      tenantId
+    });
+
+    return {
+      data: result.data.map(u => UserMapper.toDto(u)),
+      total: result.total
+    };
+  }
 
   @Get('job-titles')
   async getJobTitles(): Promise<string[]> {
@@ -46,12 +91,37 @@ export class UsersController {
     return UserMapper.toDto(userEntity);
   }
 
+  @Patch(':id')
+  @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
+  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<UserResponseDto> {
+    const userEntity = await this.updateUserUseCase.execute(id, dto);
+    return UserMapper.toDto(userEntity);
+  }
+
+  @Delete(':id')
+  @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
+  async delete(@Param('id') id: string): Promise<void> {
+    await this.deleteUserUseCase.execute(id);
+  }
+
   @Post('invite')
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
   async invite(@CurrentUser() user: any, @Body() dto: InviteUserDto): Promise<UserResponseDto> {
     const currentUserId = user?.sub;
     const userEntity = await this.inviteUser.execute(dto, currentUserId);
     return UserMapper.toDto(userEntity);
+  }
+
+  @Post(':id/force-logout')
+  @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
+  async forceLogout(@Param('id') id: string): Promise<void> {
+    await this.forceLogoutUseCase.execute(id);
+  }
+
+  @Post(':id/block-and-logout')
+  @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
+  async blockAndLogout(@Param('id') id: string): Promise<void> {
+    await this.blockUserUseCase.execute(id);
   }
 
   @Post('profile/avatar')

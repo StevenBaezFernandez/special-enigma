@@ -9,4 +9,14 @@ export abstract class UserRepository {
   abstract findByAuthenticatorCredentialId(credentialId: string): Promise<User | null>;
   abstract findByInvitationToken(token: string): Promise<User | null>;
   abstract findByResetPasswordToken(token: string): Promise<User | null>;
+  abstract findAll(options: {
+    page: number;
+    pageSize: number;
+    searchTerm?: string;
+    statusFilter?: string;
+    sortColumn?: string;
+    sortDirection?: 'ASC' | 'DESC';
+    tenantId?: string;
+  }): Promise<{ data: User[]; total: number }>;
+  abstract delete(id: string): Promise<void>;
 }

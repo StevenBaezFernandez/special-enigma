@@ -34,6 +34,9 @@ export class UserOrmEntity {
   avatarUrl?: string;
 
   @Property()
+  preferredLanguage = 'es';
+
+  @Property()
   role = 'user'; // 'admin', 'user', etc.
 
   @ManyToOne('Company')
