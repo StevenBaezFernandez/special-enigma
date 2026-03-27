@@ -15,7 +15,7 @@ export class UpdateUserProfileUseCase {
       throw new DomainException('User not found', 'ENTITY_NOT_FOUND');
     }
 
-    user.updateProfile(dto.firstName, dto.lastName, dto.phone);
+    user.updateProfile(dto.firstName, dto.lastName, dto.phone, dto.preferredLanguage);
 
     await this.userRepository.save(user);
     return user;

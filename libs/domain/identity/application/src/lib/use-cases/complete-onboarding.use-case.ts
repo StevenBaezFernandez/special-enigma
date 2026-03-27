@@ -75,14 +75,19 @@ export class CompleteOnboardingUseCase {
 
     const result = await this.uow.runInTransaction(async () => {
         const company = new Company(dto.companyName, dto.taxId, dto.country);
+        const baseSettings: any = { fiscalRegime: dto.regime };
+        if (dto.fiscalRegionId) {
+            baseSettings.fiscalRegionId = dto.fiscalRegionId;
+        }
+
         if (dto.country === 'CO') {
-            company.settings = { fiscalRegime: dto.regime, taxProvider: 'DIAN' };
+            company.settings = { ...baseSettings, taxProvider: 'DIAN' };
             company.currency = 'COP';
         } else if (dto.country === 'MX') {
-             company.settings = { fiscalRegime: dto.regime, taxProvider: 'SAT' };
+             company.settings = { ...baseSettings, taxProvider: 'SAT' };
              company.currency = 'MXN';
         } else {
-             company.settings = { fiscalRegime: dto.regime };
+             company.settings = baseSettings;
              company.currency = 'USD';
         }
 

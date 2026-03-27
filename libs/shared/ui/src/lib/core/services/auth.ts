@@ -5,6 +5,8 @@ import { LanguageService } from './language';
 import { CountryService } from './country.service';
 import { Observable, of, tap, map, catchError, lastValueFrom } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { HttpContext } from '@angular/common/http';
+import { IS_PUBLIC_API } from '../interceptors/auth.interceptor';
 import { API_URL } from '@virteex/shared-config';
 import { hasPermission } from '@virteex/shared-types';
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
@@ -29,7 +31,10 @@ export class AuthService {
   constructor() {}
 
   login(credentials: any): Observable<any> {
-    return this.http.post<any>(`${this._baseUrl}/login`, credentials, { withCredentials: true }).pipe(
+    return this.http.post<any>(`${this._baseUrl}/login`, credentials, {
+        withCredentials: true,
+        context: new HttpContext().set(IS_PUBLIC_API, true)
+    }).pipe(
       tap(res => {
         if (res.user) {
           this._currentUser.set(res.user);
@@ -87,15 +92,21 @@ export class AuthService {
   }
 
   forgotPassword(email: string, recaptchaToken: string): Observable<any> {
-    return this.http.post(`${this._baseUrl}/forgot-password`, { email, recaptchaToken });
+    return this.http.post(`${this._baseUrl}/forgot-password`, { email, recaptchaToken }, {
+        context: new HttpContext().set(IS_PUBLIC_API, true)
+    });
   }
 
   resetPassword(token: string, password: string): Observable<any> {
-    return this.http.post(`${this._baseUrl}/reset-password`, { token, password });
+    return this.http.post(`${this._baseUrl}/reset-password`, { token, password }, {
+        context: new HttpContext().set(IS_PUBLIC_API, true)
+    });
   }
 
   setPasswordFromInvitation(token: string, password: string, recaptchaToken: string): Observable<any> {
-    return this.http.post(`${this._baseUrl}/set-password`, { token, password, recaptchaToken }).pipe(
+    return this.http.post(`${this._baseUrl}/set-password`, { token, password, recaptchaToken }, {
+        context: new HttpContext().set(IS_PUBLIC_API, true)
+    }).pipe(
       tap(() => this.checkAuthStatus().subscribe())
     );
   }
@@ -119,15 +130,22 @@ export class AuthService {
   }
 
   initiateSignup(dto: any): Observable<any> {
-    return this.http.post(`${this._baseUrl}/signup/initiate`, dto);
+    return this.http.post(`${this._baseUrl}/signup/initiate`, dto, {
+        context: new HttpContext().set(IS_PUBLIC_API, true)
+    });
   }
 
   verifySignup(dto: any): Observable<any> {
-    return this.http.post(`${this._baseUrl}/signup/verify`, dto);
+    return this.http.post(`${this._baseUrl}/signup/verify`, dto, {
+        context: new HttpContext().set(IS_PUBLIC_API, true)
+    });
   }
 
   completeOnboarding(dto: any): Observable<any> {
-    return this.http.post<any>(`${this._baseUrl}/signup/complete`, dto, { withCredentials: true }).pipe(
+    return this.http.post<any>(`${this._baseUrl}/signup/complete`, dto, {
+        withCredentials: true,
+        context: new HttpContext().set(IS_PUBLIC_API, true)
+    }).pipe(
       tap(() => this.checkAuthStatus().subscribe())
     );
   }

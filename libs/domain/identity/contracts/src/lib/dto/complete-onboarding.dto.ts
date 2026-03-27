@@ -43,6 +43,10 @@ export class CompleteOnboardingDto {
   regime!: string;
 
   @IsString()
+  @IsOptional()
+  fiscalRegionId?: string;
+
+  @IsString()
   @IsNotEmpty()
   industry!: string;
 

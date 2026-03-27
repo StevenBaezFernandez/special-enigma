@@ -42,7 +42,7 @@ export class SecurityService {
   }
 
   revokeSession(sessionId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/sessions/${sessionId}`);
+    return this.http.post<void>(`${this.apiUrl}/sessions/${sessionId}/revoke`, {});
   }
 
   generate2faSecret(): Observable<TwoFactorSetupResponse> {

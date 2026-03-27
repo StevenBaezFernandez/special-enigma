@@ -7,6 +7,7 @@ export class UserResponseDto {
   timezone!: string;
   phone?: string;
   avatarUrl?: string;
+  preferredLanguage!: string;
   role!: string;
   companyName?: string;
   companyId?: string;

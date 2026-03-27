@@ -13,6 +13,7 @@ export class User {
   timezone!: string;
   phone?: string;
   avatarUrl?: string;
+  preferredLanguage = 'es';
   role = 'user'; // 'admin', 'user', etc.
   company!: Company;
   isActive = true;
@@ -62,10 +63,11 @@ export class User {
     this.timezone = 'UTC';
   }
 
-  updateProfile(firstName?: string, lastName?: string, phone?: string): void {
+  updateProfile(firstName?: string, lastName?: string, phone?: string, preferredLanguage?: string): void {
     if (firstName) this.firstName = firstName;
     if (lastName) this.lastName = lastName;
     if (phone) this.phone = phone;
+    if (preferredLanguage) this.preferredLanguage = preferredLanguage;
   }
 
   activate(): void {

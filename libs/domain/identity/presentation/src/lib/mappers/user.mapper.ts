@@ -12,6 +12,7 @@ export class UserMapper {
     dto.timezone = user.timezone;
     dto.phone = user.phone;
     dto.avatarUrl = user.avatarUrl;
+    dto.preferredLanguage = user.preferredLanguage;
     dto.role = user.role;
     dto.isActive = user.isActive;
     dto.status = user.status;

@@ -54,7 +54,7 @@ export class UsersController {
     return UserMapper.toDto(userEntity);
   }
 
-  @Post('avatar')
+  @Post('profile/avatar')
   @UseInterceptors(FileInterceptor('file'))
   async upload(@CurrentUser() user: any, @UploadedFile() file: any): Promise<{ url: string }> {
     if (!file) {

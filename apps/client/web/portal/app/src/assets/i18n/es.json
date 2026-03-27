@@ -20,5 +20,34 @@
         "TOTAL": "Total",
         "NOTES": "Notas",
         "STOCK_ERROR": "Stock insuficiente"
+    },
+    "LOGIN": {
+        "TITLE": "Inicia sesión en tu cuenta",
+        "EMAIL": "Correo electrónico",
+        "PASSWORD": "Contraseña",
+        "SIGN_IN": "Iniciar sesión",
+        "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+        "FOOTER": {
+            "TERMS": "Términos de servicio",
+            "PRIVACY": "Política de privacidad",
+            "SECURITY": "Seguridad",
+            "CONTACT": "Contacto"
+        }
+    },
+    "REGISTER": {
+        "TITLE": "Crear una cuenta",
+        "TERMS_AGREEMENT_1": "Acepto los",
+        "TERMS": "Términos de servicio",
+        "AND": "y la",
+        "PRIVACY": "Política de privacidad",
+        "ERRORS": {
+            "TERMS_REQUIRED": "Debes aceptar los términos."
+        }
+    },
+    "SETTINGS": {
+        "PROFILE": {
+            "TITLE": "Mi perfil",
+            "UPDATED": "Perfil actualizado con éxito"
+        }
     }
 }

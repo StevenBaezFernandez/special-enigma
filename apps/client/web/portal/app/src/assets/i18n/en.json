@@ -20,5 +20,34 @@
         "TOTAL": "Total",
         "NOTES": "Notes",
         "STOCK_ERROR": "Insufficient stock"
+    },
+    "LOGIN": {
+        "TITLE": "Sign in to your account",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "SIGN_IN": "Sign In",
+        "FORGOT_PASSWORD": "Forgot password?",
+        "FOOTER": {
+            "TERMS": "Terms of Service",
+            "PRIVACY": "Privacy Policy",
+            "SECURITY": "Security",
+            "CONTACT": "Contact"
+        }
+    },
+    "REGISTER": {
+        "TITLE": "Create an account",
+        "TERMS_AGREEMENT_1": "I agree to the",
+        "TERMS": "Terms of Service",
+        "AND": "and",
+        "PRIVACY": "Privacy Policy",
+        "ERRORS": {
+            "TERMS_REQUIRED": "You must agree to the terms."
+        }
+    },
+    "SETTINGS": {
+        "PROFILE": {
+            "TITLE": "My Profile",
+            "UPDATED": "Profile updated successfully"
+        }
     }
 }

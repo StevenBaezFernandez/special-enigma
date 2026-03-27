@@ -12,4 +12,8 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   phone?: string;
+
+  @IsString()
+  @IsOptional()
+  preferredLanguage?: string;
 }

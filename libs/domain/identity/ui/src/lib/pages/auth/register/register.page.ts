@@ -383,7 +383,7 @@ export class RegisterPage implements OnInit {
           taxId: formValue.configuration.taxId,
           fiscalRegionId: regionId && regionId !== '' ? regionId : undefined,
           industry: formValue.business.industry,
-          regime: formValue.configuration.fiscalRegionId || 'standard', // Fallback or logic
+          regime: 'standard', // In a real scenario, this would be a separate field in the form
           recaptchaToken,
         };
 

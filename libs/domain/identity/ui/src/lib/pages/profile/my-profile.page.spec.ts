@@ -21,7 +21,7 @@ const mockAuthService = {
   getSessions: vi.fn(() => of([])),
   generateMfaSecret: vi.fn(() => of({ secret: 'secret', qrCodeUrl: 'qr' })),
   enableMfa: vi.fn(() => of({ backupCodes: [] })),
-  checkAuthStatus: vi.fn(() => of({}))
+  checkAuthStatus: vi.fn(() => of({})),
   revokeSession: vi.fn(() => of({}))
 };
 const mockProfileService = {
