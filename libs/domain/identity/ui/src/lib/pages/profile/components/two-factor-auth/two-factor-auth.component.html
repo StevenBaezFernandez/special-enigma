@@ -94,6 +94,10 @@
          <lucide-icon [name]="icons.Key" [size]="18"></lucide-icon>
          <span translate>SETTINGS.SECURITY.MFA.BACKUP_CODES_BTN</span>
        </button>
+       <button (click)="registerPasskey()" [disabled]="isRegisteringPasskey()" class="flex items-center space-x-2 px-4 py-2 border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50">
+         <lucide-icon [name]="isRegisteringPasskey() ? icons.RefreshCw : icons.Fingerprint" [size]="18" [class.animate-spin]="isRegisteringPasskey()"></lucide-icon>
+         <span translate>SETTINGS.SECURITY.PASSKEY.REGISTER_BTN</span>
+       </button>
        <button (click)="disableMfa()" class="flex items-center space-x-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors">
          <lucide-icon [name]="icons.ShieldAlert" [size]="18"></lucide-icon>
          <span translate>SETTINGS.SECURITY.MFA.DISABLE_BTN</span>

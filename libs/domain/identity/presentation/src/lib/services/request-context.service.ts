@@ -29,6 +29,7 @@ export class RequestContextService {
         const isProd = this.secretManager?.getSecret('NODE_ENV', 'development') === 'production' || process.env['NODE_ENV'] === 'production';
         if (!isProd) {
             return {
+                country: 'MX',
                 country_code: 'MX',
                 city: 'Development City',
                 region: 'DEV',
@@ -36,10 +37,11 @@ export class RequestContextService {
                 ip
             };
         }
-        return { country_code: null, city: 'Unknown', ip };
+        return { country: null, country_code: null, city: 'Unknown', ip };
     }
 
     return {
+        country: geo.country,
         country_code: geo.country,
         city: geo.city,
         region: geo.region,

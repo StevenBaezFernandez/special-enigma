@@ -43,7 +43,7 @@ export class GeoMismatchModalComponent {
       const newUrl = segments.join('/');
       this.document.location.href = newUrl;
     } else {
-        // Fallback if URL structure is weird (e.g. at root with query params? Unlikely given CountryGuard)
+        // Fallback if URL structure is weird (e.g. at root with query params?)
         // Just reload to root
         this.close();
     }

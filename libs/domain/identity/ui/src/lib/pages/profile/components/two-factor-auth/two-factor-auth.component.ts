@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Shield, ShieldCheck, ShieldAlert, Key, Smartphone, Mail, Copy, Check, AlertTriangle, RefreshCw, XCircle } from 'lucide-angular';
+import { LucideAngularModule, Shield, ShieldCheck, ShieldAlert, Key, Smartphone, Mail, Copy, Check, AlertTriangle, RefreshCw, XCircle, Fingerprint } from 'lucide-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService, ToastService } from '@virteex/shared-ui';
 
@@ -24,8 +24,9 @@ export class TwoFactorAuthComponent implements OnInit {
   verificationCode = signal('');
   isVerifying = signal(false);
   isLoading = signal(false);
+  isRegisteringPasskey = signal(false);
 
-  readonly icons = { Shield, ShieldCheck, ShieldAlert, Key, Smartphone, Mail, Copy, Check, AlertTriangle, RefreshCw, XCircle };
+  readonly icons = { Shield, ShieldCheck, ShieldAlert, Key, Smartphone, Mail, Copy, Check, AlertTriangle, RefreshCw, XCircle, Fingerprint };
 
   ngOnInit() {
     this.checkMfaStatus();
@@ -101,5 +102,20 @@ export class TwoFactorAuthComponent implements OnInit {
   copyToClipboard(text: string) {
     navigator.clipboard.writeText(text);
     this.toastService.showSuccess('COMMON.COPIED');
+  }
+
+  registerPasskey() {
+    this.isRegisteringPasskey.set(true);
+    this.authService.registerPasskey()
+      .then(() => {
+        this.toastService.showSuccess('SETTINGS.SECURITY.PASSKEY.REGISTERED');
+      })
+      .catch((err: any) => {
+        console.error('Passkey registration failed', err);
+        this.toastService.showError('SETTINGS.SECURITY.PASSKEY.ERROR');
+      })
+      .finally(() => {
+        this.isRegisteringPasskey.set(false);
+      });
   }
 }

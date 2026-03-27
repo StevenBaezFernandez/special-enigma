@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MyProfilePage } from './my-profile.page';
-import { ProfileService, SecurityService } from '@virteex/identity-ui';
+import { ProfileService } from '@virteex/identity-ui';
 import { AuthService, ToastService } from '@virteex/shared-ui';
 import { NotificationService } from '@virteex/domain-identity-domain';
 import { of } from 'rxjs';
@@ -27,11 +27,6 @@ const mockAuthService = {
 const mockProfileService = {
   updateProfile: vi.fn(() => of({})),
   getJobTitles: vi.fn(() => of(['Developer', 'Manager']))
-};
-const mockSecurityService = {
-  getSecuritySettings: vi.fn(() => of({ mfaEnabled: false })),
-  generateMfaSecret: vi.fn(() => of({ secret: 'secret', qrCode: 'qr' })),
-  enableMfa: vi.fn(() => of({}))
 };
 const mockNotificationService = {
   showSuccess: vi.fn(),
@@ -60,7 +55,6 @@ describe('MyProfilePage', () => {
         provideHttpClientTesting(),
         { provide: AuthService, useValue: mockAuthService },
         { provide: ProfileService, useValue: mockProfileService },
-        { provide: SecurityService, useValue: mockSecurityService },
         { provide: NotificationService, useValue: mockNotificationService },
         { provide: ToastService, useValue: mockToastService }
       ]

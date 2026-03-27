@@ -1,4 +1,21 @@
 {
+    "COMMON": {
+        "CANCEL": "Cancelar",
+        "CONFIRM": "Confirmar",
+        "SAVE": "Guardar",
+        "DELETE": "Eliminar",
+        "EDIT": "Editar",
+        "BACK": "Volver",
+        "NEXT": "Siguiente",
+        "COPY_ALL": "Copiar Todo",
+        "COPIED": "Copiado al portapapeles",
+        "ERROR": "Ha ocurrido un error",
+        "SUCCESS": "Operación exitosa"
+    },
+    "AUTH": {
+        "NEED_HELP": "¿Necesitas ayuda?",
+        "SUPPORT_CENTER": "Centro de soporte"
+    },
     "INVOICE": {
         "NEW_TITLE": "Crear Nueva Factura",
         "CANCEL": "Cancelar",
@@ -44,10 +61,52 @@
             "TERMS_REQUIRED": "Debes aceptar los términos."
         }
     },
+    "PLAN_SELECTION": {
+        "TITLE": "Selecciona tu plan",
+        "SUBTITLE": "Elige el plan que mejor se adapte a las necesidades de tu negocio"
+    },
     "SETTINGS": {
         "PROFILE": {
             "TITLE": "Mi perfil",
-            "UPDATED": "Perfil actualizado con éxito"
+            "UPDATED": "Perfil actualizado con éxito",
+            "PERSONAL_INFO": "Información Personal",
+            "FIRST_NAME": "Nombre",
+            "LAST_NAME": "Apellido",
+            "EMAIL": "Correo Electrónico",
+            "PHONE": "Número de Teléfono",
+            "VERIFY": "Verificar",
+            "JOB_TITLE": "Puesto de Trabajo",
+            "SELECT_JOB_TITLE": "Selecciona un puesto",
+            "SAVE_CHANGES": "Guardar Cambios",
+            "CHANGE_AVATAR": "Cambiar Avatar",
+            "SECURITY": "Configuración de Seguridad",
+            "CURRENT_PASSWORD": "Contraseña Actual",
+            "NEW_PASSWORD": "Nueva Contraseña",
+            "CONFIRM_PASSWORD": "Confirmar Nueva Contraseña",
+            "UPDATE_PASSWORD": "Actualizar Contraseña"
+        },
+        "SECURITY": {
+            "TITLE": "Configuración de Seguridad",
+            "MFA": {
+                "TITLE": "Autenticación de Dos Factores",
+                "DESCRIPTION": "Agrega una capa extra de seguridad a tu cuenta",
+                "ENABLED": "2FA está activado",
+                "DISABLED": "2FA está desactivado",
+                "SETUP": "Configurar 2FA",
+                "DISABLE": "Desactivar 2FA",
+                "INVALID_CODE": "Código de verificación inválido",
+                "SETUP_ERROR": "Error al configurar 2FA",
+                "DISABLE_ERROR": "Error al desactivar 2FA",
+                "BACKUP_CODES": "Códigos de Respaldo",
+                "BACKUP_CODES_DESC": "Guarda estos códigos en un lugar seguro. Pueden ser usados para acceder a tu cuenta si pierdes tu teléfono.",
+                "GENERATE_BACKUP_CODES": "Generar Códigos de Respaldo",
+                "BACKUP_CODES_ERROR": "Error al generar códigos de respaldo"
+            },
+            "PASSKEY": {
+                "REGISTER_BTN": "Registrar Passkey",
+                "REGISTERED": "Passkey registrado con éxito",
+                "ERROR": "Error al registrar passkey"
+            }
         }
     }
 }

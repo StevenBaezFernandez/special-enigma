@@ -452,7 +452,13 @@ export class AuthController {
   async enable2fa(@Body() body: { token: string }, @Req() req: Request) {
       const user = (req as any).user;
       const success = await this.confirmMfaUseCase.execute(user.sub, body.token);
-      return { success, backupCodes: [] }; // Backup codes generation can be added here
+
+      let backupCodes: string[] = [];
+      if (success) {
+          backupCodes = await this.generateBackupCodesUseCase.execute(user.sub);
+      }
+
+      return { success, backupCodes };
   }
 
   @Post('2fa/disable')

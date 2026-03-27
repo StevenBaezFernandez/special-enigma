@@ -1,4 +1,21 @@
 {
+    "COMMON": {
+        "CANCEL": "Cancel",
+        "CONFIRM": "Confirm",
+        "SAVE": "Save",
+        "DELETE": "Delete",
+        "EDIT": "Edit",
+        "BACK": "Back",
+        "NEXT": "Next",
+        "COPY_ALL": "Copy All",
+        "COPIED": "Copied to clipboard",
+        "ERROR": "An error occurred",
+        "SUCCESS": "Operation successful"
+    },
+    "AUTH": {
+        "NEED_HELP": "Need help?",
+        "SUPPORT_CENTER": "Support Center"
+    },
     "INVOICE": {
         "NEW_TITLE": "Create New Invoice",
         "CANCEL": "Cancel",
@@ -44,10 +61,52 @@
             "TERMS_REQUIRED": "You must agree to the terms."
         }
     },
+    "PLAN_SELECTION": {
+        "TITLE": "Select your plan",
+        "SUBTITLE": "Choose the plan that best fits your business needs"
+    },
     "SETTINGS": {
         "PROFILE": {
             "TITLE": "My Profile",
-            "UPDATED": "Profile updated successfully"
+            "UPDATED": "Profile updated successfully",
+            "PERSONAL_INFO": "Personal Information",
+            "FIRST_NAME": "First Name",
+            "LAST_NAME": "Last Name",
+            "EMAIL": "Email",
+            "PHONE": "Phone Number",
+            "VERIFY": "Verify",
+            "JOB_TITLE": "Job Title",
+            "SELECT_JOB_TITLE": "Select a job title",
+            "SAVE_CHANGES": "Save Changes",
+            "CHANGE_AVATAR": "Change Avatar",
+            "SECURITY": "Security Settings",
+            "CURRENT_PASSWORD": "Current Password",
+            "NEW_PASSWORD": "New Password",
+            "CONFIRM_PASSWORD": "Confirm New Password",
+            "UPDATE_PASSWORD": "Update Password"
+        },
+        "SECURITY": {
+            "TITLE": "Security Settings",
+            "MFA": {
+                "TITLE": "Two-Factor Authentication",
+                "DESCRIPTION": "Add an extra security layer to your account",
+                "ENABLED": "2FA is enabled",
+                "DISABLED": "2FA is disabled",
+                "SETUP": "Set up 2FA",
+                "DISABLE": "Disable 2FA",
+                "INVALID_CODE": "Invalid verification code",
+                "SETUP_ERROR": "Error setting up 2FA",
+                "DISABLE_ERROR": "Error disabling 2FA",
+                "BACKUP_CODES": "Backup Codes",
+                "BACKUP_CODES_DESC": "Save these codes in a safe place. They can be used to access your account if you lose your phone.",
+                "GENERATE_BACKUP_CODES": "Generate Backup Codes",
+                "BACKUP_CODES_ERROR": "Error generating backup codes"
+            },
+            "PASSKEY": {
+                "REGISTER_BTN": "Register Passkey",
+                "REGISTERED": "Passkey registered successfully",
+                "ERROR": "Failed to register passkey"
+            }
         }
     }
 }

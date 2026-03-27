@@ -191,4 +191,16 @@ export class AuthService {
   getOnboardingStatus(): Observable<{ step: string; isCompleted: boolean }> {
     return this.http.get<{ step: string; isCompleted: boolean }>(`${this._baseUrl}/onboarding-status`, { withCredentials: true });
   }
+
+  sendEmailVerification(): Observable<void> {
+    return this.http.post<void>(`${this._baseUrl}/2fa/send-email-verification`, {}, { withCredentials: true });
+  }
+
+  verifyEmailVerification(code: string): Observable<void> {
+    return this.http.post<void>(`${this._baseUrl}/2fa/verify-email-verification`, { code }, { withCredentials: true });
+  }
+
+  getActiveSessions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this._baseUrl}/sessions`, { withCredentials: true });
+  }
 }
