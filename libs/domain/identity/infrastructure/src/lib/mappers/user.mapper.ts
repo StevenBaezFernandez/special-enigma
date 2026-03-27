@@ -16,6 +16,7 @@ export class UserMapper {
     user.timezone = entity.timezone;
     user.phone = entity.phone;
     user.avatarUrl = entity.avatarUrl;
+    user.preferredLanguage = entity.preferredLanguage;
     user.role = entity.role;
     user.isActive = entity.isActive;
     user.status = entity.status;
@@ -65,6 +66,7 @@ export class UserMapper {
     entity.timezone = domain.timezone;
     entity.phone = domain.phone;
     entity.avatarUrl = domain.avatarUrl;
+    entity.preferredLanguage = domain.preferredLanguage;
     entity.role = domain.role;
     entity.isActive = domain.isActive;
     entity.status = domain.status;

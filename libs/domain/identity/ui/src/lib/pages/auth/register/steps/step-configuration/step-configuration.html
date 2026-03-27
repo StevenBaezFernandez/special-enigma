@@ -33,14 +33,26 @@
   </div>
 
   <!-- Tax ID -->
-  <virteex-auth-input
-    formControlName="taxId"
-    [label]="countryService.currentCountry()?.formSchema?.taxId?.label || ('REGISTER.TAX_ID' | translate)"
-    [placeholder]="countryService.currentCountry()?.formSchema?.taxId?.placeholder || ''"
-    [required]="true"
-    [hasIcon]="true"
-    [errorMessage]="getTaxIdError()">
-    <svg icon xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-  </virteex-auth-input>
+  <div class="relative">
+    <virteex-auth-input
+      formControlName="taxId"
+      [label]="countryService.currentCountry()?.formSchema?.taxId?.label || ('REGISTER.TAX_ID' | translate)"
+      [placeholder]="countryService.currentCountry()?.formSchema?.taxId?.placeholder || ''"
+      [required]="true"
+      [hasIcon]="true"
+      [errorMessage]="getTaxIdError()">
+      <svg icon xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+    </virteex-auth-input>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="isValidating()" class="absolute top-9 right-3 flex items-center">
+      <div class="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full"></div>
+    </div>
+  </div>
+
+  <div *ngIf="isValidTaxId()" class="p-3 bg-primary/5 rounded-lg border border-primary/20 animate-in fade-in slide-in-from-top-1">
+    <p class="text-sm text-text-primary"><strong>Razón Social:</strong> {{ foundCompany()?.name }}</p>
+    <p *ngIf="foundCompany()?.industry" class="text-xs text-text-secondary mt-1"><strong>Industria:</strong> {{ foundCompany()?.industry }}</p>
+  </div>
 
 </form>

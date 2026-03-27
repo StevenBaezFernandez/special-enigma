@@ -61,7 +61,7 @@
 
       <!-- Step 3: Configuration (Country/Tax) -->
       <div *ngIf="currentStep() === 3" [@stepAnimation] class="step-content">
-        <virteex-step-configuration [group]="configuration"></virteex-step-configuration>
+        <virteex-step-configuration [group]="configuration" [parentForm]="registerForm"></virteex-step-configuration>
       </div>
 
       <!-- Step 4: Business Info -->

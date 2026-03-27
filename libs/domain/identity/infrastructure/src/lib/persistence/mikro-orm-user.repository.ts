@@ -57,4 +57,53 @@ export class MikroOrmUserRepository implements UserRepository {
     const entity = await this.em.findOne(UserOrmEntity, { resetPasswordToken: token }, { populate: ['authenticators'] as any });
     return entity ? UserMapper.toDomain(entity) : null;
   }
+
+  async findAll(options: {
+    page: number;
+    pageSize: number;
+    searchTerm?: string;
+    statusFilter?: string;
+    sortColumn?: string;
+    sortDirection?: 'ASC' | 'DESC';
+    tenantId?: string;
+  }): Promise<{ data: User[]; total: number }> {
+    const { page, pageSize, searchTerm, statusFilter, sortColumn, sortDirection, tenantId } = options;
+
+    const where: any = {};
+
+    if (tenantId) {
+      where.company = tenantId;
+    }
+
+    if (statusFilter && statusFilter !== 'all') {
+      where.status = statusFilter;
+    }
+
+    if (searchTerm) {
+      where.$or = [
+        { firstName: { $ilike: `%${searchTerm}%` } },
+        { lastName: { $ilike: `%${searchTerm}%` } },
+        { email: { $ilike: `%${searchTerm}%` } },
+      ];
+    }
+
+    const [entities, total] = await this.em.findAndCount(UserOrmEntity, where, {
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+      orderBy: sortColumn ? { [sortColumn]: sortDirection || 'ASC' } : { createdAt: 'DESC' },
+      populate: ['company'] as any,
+    });
+
+    return {
+      data: entities.map((e) => UserMapper.toDomain(e)),
+      total,
+    };
+  }
+
+  async delete(id: string): Promise<void> {
+    const entity = await this.em.findOne(UserOrmEntity, { id });
+    if (entity) {
+      await this.em.removeAndFlush(entity);
+    }
+  }
 }
