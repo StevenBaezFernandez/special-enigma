@@ -330,7 +330,8 @@ export class AuthController {
     this.cookiePolicyService.setAuthCookies(res, result.accessToken!, result.refreshToken!);
 
     const frontendUrl = this.secretManager?.getSecret('FRONTEND_URL', 'http://localhost:4200');
-    let redirectUrl = `${frontendUrl}/accounting`;
+    const lang = (req.user as any)?.preferredLanguage || 'es';
+    let redirectUrl = `${frontendUrl}/${lang}/accounting`;
 
     if (state) {
         try {

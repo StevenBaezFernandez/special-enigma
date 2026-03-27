@@ -18,7 +18,7 @@ export class ChangePasswordUseCase {
 
     // Since we are likely using OIDC/Keycloak in production as per audit,
     // this might be handled there, but for the Argon2 fallback or internal management:
-    const isValid = await this.authService.verifyPassword(dto.oldPassword, user.passwordHash);
+    const isValid = await this.authService.verifyPassword(dto.currentPassword, user.passwordHash);
     if (!isValid) {
         throw new UnauthorizedException('Invalid old password');
     }

@@ -25,6 +25,8 @@ export * from './lib/services/modal.interface';
 export * from './lib/components/ui/modal';
 export * from './lib/core/guards/public.guard';
 export * from './lib/core/guards/auth.guard';
+export * from './lib/core/guards/language-init.guard';
+export * from './lib/core/guards/language-redirect.guard';
 export * from './lib/core/interceptors/auth.interceptor';
 export * from './lib/core/services/auth-queue.service';
 export * from './lib/core/services/secure-storage.service';
