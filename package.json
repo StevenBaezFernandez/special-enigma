@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky",
-    "postinstall": "node tools/patches/fix-angular-build-vite.mjs && electron-builder install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "nx": "nx",
     "arch:check": "node tools/validate-architecture-boundaries.mjs",
     "arch:validate-tags": "node tools/validate-project-tags.mjs",
