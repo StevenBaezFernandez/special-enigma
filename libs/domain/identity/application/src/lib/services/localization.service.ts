@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { LocalizationConfigDto, TaxLookupDto, FiscalRegionDto } from '@virteex/domain-identity-contracts';
+import { Injectable, Logger } from '@nestjs/common';
+import { LocalizationConfigDto, TaxLookupDto } from '@virteex/domain-identity-contracts';
 import { LocalizationPort } from '@virteex/domain-identity-domain';
 import * as countries from './countries.json';
 import { TaxProviderFactory } from './tax-providers/tax-provider-factory';
 
 @Injectable()
 export class LocalizationService extends LocalizationPort {
+  private readonly logger = new Logger(LocalizationService.name);
   private readonly configs: Record<string, LocalizationConfigDto> = countries;
 
   async getConfig(code: string): Promise<LocalizationConfigDto> {
@@ -46,14 +47,14 @@ export class LocalizationService extends LocalizationPort {
 
         return result;
     } catch (error) {
-        console.error(`[LocalizationService] Error performing tax lookup for ${country}:`, error);
+        this.logger.error(`Error performing tax lookup for ${country}:`, error);
 
-        // Fallback for unexpected provider errors if it passed regex
+        // Fallback for unexpected provider errors: Fail safe (isValid: false)
         return {
             taxId,
             country,
             name: '',
-            isValid: true // We assume it's valid if regex passed but provider failed
+            isValid: false
         };
     }
   }

@@ -47,4 +47,14 @@ describe('LocalizationService', () => {
     const lookup = await service.lookup('000123456', 'DO');
     expect(lookup.isValid).toBe(false);
   });
+
+  it('should return invalid for unknown countries (GenericTaxProvider)', async () => {
+    const lookup = await service.lookup('ABC-123', 'FR');
+    expect(lookup.isValid).toBe(false);
+  });
+
+  it('should return invalid for unknown taxId in known country', async () => {
+    const lookup = await service.lookup('999999999', 'DO');
+    expect(lookup.isValid).toBe(false);
+  });
 });
