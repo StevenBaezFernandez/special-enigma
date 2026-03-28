@@ -1,0 +1,23 @@
+{
+  "name": "domain-accounting",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "interface",
+  "sourceRoot": "libs/domain/accounting",
+  "tags": ["scope:accounting", "type:domain-root"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["libs/domain/accounting/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run-many --target=test --projects=tag:scope:accounting"
+        ]
+      }
+    }
+  }
+}
