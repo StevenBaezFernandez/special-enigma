@@ -70,17 +70,15 @@ export class CountryService {
       map(backendConfig => {
         // Mapeo robusto de la respuesta del backend
         const config: CountryConfig = {
-           code: backendConfig.countryCode || code.toUpperCase(),
-           name: backendConfig.name || code.toUpperCase(),
-           currencyCode: backendConfig.currency || 'USD',
+           code: backendConfig.countryCode,
+           name: backendConfig.name,
+           currencyCode: backendConfig.currency,
            currencySymbol: backendConfig.currency === 'USD' ? '$' : (backendConfig.currency === 'DOP' ? 'RD$' : '$'),
-           locale: backendConfig.locale || 'es-419', // Default LatAm Spanish
-           phoneCode: backendConfig.phoneCode || '',
-           taxIdLabel: backendConfig.taxIdLabel || 'Tax ID',
-           taxIdRegex: backendConfig.taxIdRegex || '.*',
-           taxIdMask: backendConfig.taxIdMask || '',
-           // CRÍTICO: Aquí asignamos el UUID real que viene de la BD.
-           // Si es undefined, el formulario no enviará basura.
+           locale: backendConfig.locale,
+           phoneCode: backendConfig.phoneCode,
+           taxIdLabel: backendConfig.taxIdLabel,
+           taxIdRegex: backendConfig.taxIdRegex,
+           taxIdMask: backendConfig.taxIdMask,
            fiscalRegionId: backendConfig.fiscalRegionId,
            formSchema: backendConfig.formSchema || {}
         };

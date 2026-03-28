@@ -5,7 +5,17 @@
     "currency": "DOP",
     "locale": "es-DO",
     "taxIdRegex": "^[0-9]{9,11}$",
-    "fiscalRegionId": "DO-MAIN"
+    "fiscalRegionId": "DO-MAIN",
+    "taxIdLabel": "RNC",
+    "taxIdMask": "000-00000-0",
+    "phoneCode": "+1",
+    "formSchema": {
+        "taxId": {
+            "label": "RNC (Registro Nacional de Contribuyente)",
+            "placeholder": "9 o 11 dígitos",
+            "errorMessage": "RNC debe tener 9 o 11 dígitos numéricos"
+        }
+    }
   },
   "MX": {
     "countryCode": "MX",
@@ -13,7 +23,17 @@
     "currency": "MXN",
     "locale": "es-MX",
     "taxIdRegex": "^[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{3}$",
-    "fiscalRegionId": "MX-FED"
+    "fiscalRegionId": "MX-FED",
+    "taxIdLabel": "RFC",
+    "taxIdMask": "AAAA000000-XXX",
+    "phoneCode": "+52",
+    "formSchema": {
+        "taxId": {
+            "label": "RFC (Registro Federal de Contribuyentes)",
+            "placeholder": "Ej: VECJ880326XXX",
+            "errorMessage": "Formato de RFC inválido"
+        }
+    }
   },
   "US": {
     "countryCode": "US",
@@ -21,7 +41,17 @@
     "currency": "USD",
     "locale": "en-US",
     "taxIdRegex": "^[0-9]{2}-[0-9]{7}$",
-    "fiscalRegionId": "US-GEN"
+    "fiscalRegionId": "US-GEN",
+    "taxIdLabel": "EIN",
+    "taxIdMask": "00-0000000",
+    "phoneCode": "+1",
+    "formSchema": {
+        "taxId": {
+            "label": "EIN (Employer Identification Number)",
+            "placeholder": "12-3456789",
+            "errorMessage": "EIN must follow 00-0000000 format"
+        }
+    }
   },
   "CO": {
     "countryCode": "CO",
@@ -29,7 +59,17 @@
     "currency": "COP",
     "locale": "es-CO",
     "taxIdRegex": "^[0-9]{9,10}-[0-9]$",
-    "fiscalRegionId": "CO-GEN"
+    "fiscalRegionId": "CO-GEN",
+    "taxIdLabel": "NIT",
+    "taxIdMask": "000.000.000-0",
+    "phoneCode": "+57",
+    "formSchema": {
+        "taxId": {
+            "label": "NIT (Número de Identificación Tributaria)",
+            "placeholder": "900.123.456-7",
+            "errorMessage": "NIT inválido"
+        }
+    }
   },
   "PA": {
     "countryCode": "PA",
@@ -37,7 +77,17 @@
     "currency": "PAB",
     "locale": "es-PA",
     "taxIdRegex": "^[0-9A-Z\\-]+$",
-    "fiscalRegionId": "PA-GEN"
+    "fiscalRegionId": "PA-GEN",
+    "taxIdLabel": "RUC",
+    "taxIdMask": "",
+    "phoneCode": "+507",
+    "formSchema": {
+        "taxId": {
+            "label": "RUC (Registro Único de Contribuyente)",
+            "placeholder": "Ej: 8-NT-1-1234",
+            "errorMessage": "RUC inválido"
+        }
+    }
   },
   "CR": {
     "countryCode": "CR",
@@ -45,7 +95,17 @@
     "currency": "CRC",
     "locale": "es-CR",
     "taxIdRegex": "^[0-9]{9,12}$",
-    "fiscalRegionId": "CR-GEN"
+    "fiscalRegionId": "CR-GEN",
+    "taxIdLabel": "Cédula Jurídica",
+    "taxIdMask": "0-000-000000",
+    "phoneCode": "+506",
+    "formSchema": {
+        "taxId": {
+            "label": "Cédula Jurídica / Física",
+            "placeholder": "10 o 12 dígitos",
+            "errorMessage": "Cédula inválida"
+        }
+    }
   },
   "PE": {
     "countryCode": "PE",
@@ -53,7 +113,17 @@
     "currency": "PEN",
     "locale": "es-PE",
     "taxIdRegex": "^[0-9]{11}$",
-    "fiscalRegionId": "PE-GEN"
+    "fiscalRegionId": "PE-GEN",
+    "taxIdLabel": "RUC",
+    "taxIdMask": "00000000000",
+    "phoneCode": "+51",
+    "formSchema": {
+        "taxId": {
+            "label": "RUC (Registro Único de Contribuyentes)",
+            "placeholder": "11 dígitos",
+            "errorMessage": "RUC debe tener 11 dígitos"
+        }
+    }
   },
   "CL": {
     "countryCode": "CL",
@@ -61,6 +131,16 @@
     "currency": "CLP",
     "locale": "es-CL",
     "taxIdRegex": "^[0-9]{7,8}-[0-9Kk]$",
-    "fiscalRegionId": "CL-GEN"
+    "fiscalRegionId": "CL-GEN",
+    "taxIdLabel": "RUT",
+    "taxIdMask": "00.000.000-K",
+    "phoneCode": "+56",
+    "formSchema": {
+        "taxId": {
+            "label": "RUT (Rol Único Tributario)",
+            "placeholder": "12.345.678-9",
+            "errorMessage": "RUT inválido"
+        }
+    }
   }
 }

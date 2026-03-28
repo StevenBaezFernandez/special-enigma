@@ -31,11 +31,13 @@ describe('LocalizationService', () => {
     expect(config.fiscalRegionId).toBe('GEN');
   });
 
-  it('should validate taxId correctly according to regex', async () => {
+  it('should validate taxId correctly according to regex and use provider', async () => {
     // DO regex is ^[0-9]{9,11}$
-    const validLookup = await service.lookup('131401301', 'DO');
+    // 101010101 is a known taxId in DominicanRepublicTaxProvider
+    const validLookup = await service.lookup('101010101', 'DO');
     expect(validLookup.isValid).toBe(true);
-    expect(validLookup.name).toBe(''); // Should be empty now
+    expect(validLookup.name).toBe('VIRTEEX DOMINICANA SRL');
+    expect(validLookup.legalName).toBe('VIRTEEX DOMINICANA SRL');
 
     const invalidLookup = await service.lookup('ABC', 'DO');
     expect(invalidLookup.isValid).toBe(false);

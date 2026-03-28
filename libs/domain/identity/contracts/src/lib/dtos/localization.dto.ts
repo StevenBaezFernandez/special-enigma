@@ -27,6 +27,25 @@ export class LocalizationConfigDto {
   @ApiProperty({ example: 'DO-MAIN' })
   @IsString()
   fiscalRegionId!: string;
+
+  @ApiProperty({ example: 'RNC' })
+  @IsString()
+  @IsOptional()
+  taxIdLabel?: string;
+
+  @ApiProperty({ example: '000-00000-0' })
+  @IsString()
+  @IsOptional()
+  taxIdMask?: string;
+
+  @ApiProperty({ example: '+1' })
+  @IsString()
+  @IsOptional()
+  phoneCode?: string;
+
+  @ApiProperty({ example: { fields: [] } })
+  @IsOptional()
+  formSchema?: any;
 }
 
 export class TaxLookupDto {
@@ -41,6 +60,16 @@ export class TaxLookupDto {
   @ApiProperty()
   @IsString()
   name!: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  legalName?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  status?: string;
 
   @ApiProperty()
   @IsBoolean()

@@ -23,6 +23,7 @@ export * from './lib/models/user-dtos';
 export * from './lib/core/models/finance';
 export * from './lib/services/modal.interface';
 export * from './lib/components/ui/modal';
+export * from './lib/components/language-selector/language-selector';
 export * from './lib/core/guards/public.guard';
 export * from './lib/core/guards/auth.guard';
 export * from './lib/core/guards/language-init.guard';

@@ -27,4 +27,5 @@ export abstract class WebAuthnService {
 export * from './lib/events/user-invited.event';
 export * from './lib/ports/cache.port';
 export * from './lib/ports/localization.port';
+export * from './lib/ports/tax-provider.port';
 export * from './lib/services/risk-evaluator.service';
