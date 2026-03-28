@@ -1,10 +1,10 @@
-import { Injectable, signal, effect, Inject, PLATFORM_ID, inject, untracked, Injector } from '@angular/core';
+import { Injectable, signal, effect, Inject, PLATFORM_ID, inject, untracked, Injector, runInInjectionContext } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from './auth';
 import { UsersService } from '../api/users.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 // Clave estandarizada para guardar el idioma en el almacenamiento local del navegador.
 const UI_LANG_KEY = 'ui_lang';
@@ -53,8 +53,8 @@ export class LanguageService {
         // 2c. Sincroniza con el backend si hay un usuario logueado.
         // `untracked` evita que el efecto se vuelva a ejecutar si `currentUser` cambia,
         // solo nos interesa reaccionar a cambios de `currentLang`.
-        setTimeout(() => {
-          const authService = this.injector.get(AuthService);
+        runInInjectionContext(this.injector, () => {
+          const authService = inject(AuthService);
           const currentUser = untracked(() => authService.currentUser());
           if (currentUser && currentUser.preferredLanguage !== lang) {
             this.syncWithUserProfile(currentUser.id, lang);

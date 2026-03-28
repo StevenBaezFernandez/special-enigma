@@ -5,13 +5,13 @@ export class GenericTaxProvider implements TaxProviderPort {
   constructor(private readonly countryCode: string) {}
 
   async lookup(taxId: string): Promise<TaxLookupDto> {
-    // Basic implementation that just returns valid if called
-    // In a real world, this could call a generic international tax API
+    // Basic implementation that just returns invalid by default
+    // Generic provider doesn't have real verification logic
     return {
       taxId,
       country: this.countryCode,
       name: '',
-      isValid: true,
+      isValid: false,
     };
   }
 

@@ -3,7 +3,8 @@ import { LanguageService } from './language';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { UsersService } from '../api/users.service';
-import { PLATFORM_ID } from '@angular/core';
+import { AuthService } from './auth';
+import { PLATFORM_ID, signal } from '@angular/core';
 import { of } from 'rxjs';
 
 describe('LanguageService', () => {
@@ -11,6 +12,7 @@ describe('LanguageService', () => {
   let translateService: any;
   let router: any;
   let usersService: any;
+  let authService: any;
 
   beforeEach(() => {
     translateService = {
@@ -26,6 +28,9 @@ describe('LanguageService', () => {
     usersService = {
       updateProfile: vi.fn().mockReturnValue(of({}))
     };
+    authService = {
+      currentUser: signal(null)
+    };
 
     TestBed.configureTestingModule({
       providers: [
@@ -33,6 +38,7 @@ describe('LanguageService', () => {
         { provide: TranslateService, useValue: translateService },
         { provide: Router, useValue: router },
         { provide: UsersService, useValue: usersService },
+        { provide: AuthService, useValue: authService },
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     });
@@ -51,10 +57,23 @@ describe('LanguageService', () => {
   });
 
   it('should not update URL if current language is same', () => {
-    router.navigateByUrl.mockClear();
     service.setLanguage('es'); // Default is 'es'
     TestBed.flushEffects();
+    router.navigateByUrl.mockClear();
+
+    service.setLanguage('es');
+    TestBed.flushEffects();
     expect(router.navigateByUrl).not.toHaveBeenCalled();
+  });
+
+  it('should sync with user profile if logged in', () => {
+    const user = { id: '1', preferredLanguage: 'es' };
+    authService.currentUser.set(user);
+
+    service.setLanguage('en');
+    TestBed.flushEffects();
+
+    expect(usersService.updateProfile).toHaveBeenCalledWith({ preferredLanguage: 'en' });
   });
 });
 
