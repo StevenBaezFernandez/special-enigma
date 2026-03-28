@@ -92,8 +92,8 @@
       "@virteex/domain-catalog-presentation": [
         "libs/domain/catalog/presentation/src/index.ts"
       ],
-      "@virteex/domain-catalog-ui-store": [
-        "libs/domain/catalog/ui-store/src/index.ts"
+      "@virteex/domain-catalog-ui": [
+        "libs/domain/catalog/ui/src/index.ts"
       ],
       "@virteex/domain-crm-application": [
         "libs/domain/crm/application/src/index.ts"
@@ -450,7 +450,7 @@
         "libs/domain/billing/ui/src/index.ts"
       ],
       "@virteex/catalog-ui": [
-        "libs/domain/catalog/ui-store/src/index.ts"
+        "libs/domain/catalog/ui/src/index.ts"
       ],
       "@virteex/bi-ui": [
         "libs/domain/bi/ui/src/index.ts"

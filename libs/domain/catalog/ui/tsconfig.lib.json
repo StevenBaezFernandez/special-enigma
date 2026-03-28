@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../../../dist/libs/domain/catalog/ui",
+    "declaration": true,
+    "types": [
+      "node"
+    ],
+    "moduleResolution": "bundler", "module": "esnext"
+  },
+  "include": ["src/**/*.ts"],
+  "files": [],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
+}
