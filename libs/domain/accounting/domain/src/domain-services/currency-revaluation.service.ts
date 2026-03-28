@@ -1,4 +1,4 @@
-import { Decimal } from 'decimal.js';
+import { Money } from '../value-objects/money.vo';
 
 export interface ExchangeRate {
     from: string;
@@ -8,9 +8,9 @@ export interface ExchangeRate {
 
 export class CurrencyRevaluationService {
   revalue(balance: string, oldRate: string, newRate: string): { newValue: string, gainLoss: string } {
-    const amountInBase = new Decimal(balance).dividedBy(new Decimal(oldRate));
-    const newVal = amountInBase.times(new Decimal(newRate));
-    const gainLoss = newVal.minus(new Decimal(balance));
+    const amountInBase = new Money(balance).dividedBy(oldRate);
+    const newVal = amountInBase.times(newRate);
+    const gainLoss = newVal.minus(new Money(balance));
 
     return {
       newValue: newVal.toFixed(2),

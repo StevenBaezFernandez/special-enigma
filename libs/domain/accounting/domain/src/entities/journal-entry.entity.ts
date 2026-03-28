@@ -1,7 +1,7 @@
 import { JournalEntryStatus } from '../value-objects/journal-entry-status.enum';
 import { JournalEntryType } from '../value-objects/journal-entry-type.enum';
 import type { JournalEntryLine } from './journal-entry-line.entity';
-import { Decimal } from 'decimal.js';
+import { Money } from '../value-objects/money.vo';
 import { NegativeAmountError, JournalEntryNotBalancedError } from '../errors/accounting.errors';
 
 export class JournalEntry {
@@ -27,12 +27,12 @@ export class JournalEntry {
   }
 
   validateBalance() {
-    let totalDebit = new Decimal(0);
-    let totalCredit = new Decimal(0);
+    let totalDebit = Money.zero();
+    let totalCredit = Money.zero();
 
     for (const line of this.lines) {
-      const debit = new Decimal(line.debit);
-      const credit = new Decimal(line.credit);
+      const debit = new Money(line.debit);
+      const credit = new Money(line.credit);
 
       if (debit.isNegative() || credit.isNegative()) {
          throw new NegativeAmountError();

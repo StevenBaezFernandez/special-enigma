@@ -6,13 +6,13 @@ This domain is being migrated to the standardized architecture defined in `docs/
 ## Progress
 - [x] Phase 1: Structural Alignment
   - [x] Metadata files (README, OWNERS, CHANGELOG)
-  - [ ] Canonical folder structure for Domain
-  - [ ] Canonical folder structure for Application
-  - [ ] Canonical folder structure for Contracts
-  - [ ] Canonical folder structure for Infrastructure
-  - [ ] Canonical folder structure for Presentation
-  - [ ] Canonical folder structure for UI
-- [ ] Phase 2: Enforcement
+  - [x] Canonical folder structure for Domain
+  - [x] Canonical folder structure for Application
+  - [x] Canonical folder structure for Contracts
+  - [x] Canonical folder structure for Infrastructure
+  - [x] Canonical folder structure for Presentation
+  - [x] Canonical folder structure for UI
+- [x] Phase 2: Enforcement (Partial - Dependency isolation and barrel refinement)
 - [ ] Phase 3: Hardening
 
 ## Specific Notes
