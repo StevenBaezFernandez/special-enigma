@@ -7,7 +7,7 @@ export class AccountingPolicyService {
     @Optional() @Inject(POLICY_REPOSITORY) private readonly policyRepository?: PolicyRepository
   ) {}
 
-  private readonly defaultPolicies: Record<string, any> = {
+  private readonly defaultPolicies: Record<string, Record<string, string>> = {
     invoice: {
       salesAccountCode: '401.01',
       vatAccountCode: '208.01',
@@ -38,7 +38,7 @@ export class AccountingPolicyService {
   private async getPolicyForTenant(tenantId: string, type: 'invoice' | 'payroll' | 'closing') {
     if (this.policyRepository) {
       const tenantPolicy = await this.policyRepository.getPolicy(tenantId, type);
-      if (tenantPolicy) {
+      if (tenantPolicy && typeof tenantPolicy === 'object') {
         return { ...this.defaultPolicies[type], ...tenantPolicy };
       }
     }

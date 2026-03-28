@@ -1,0 +1,10 @@
+{
+  "ACCOUNTING": {
+    "TITLE": "Contabilidad",
+    "CHART_OF_ACCOUNTS": "Plan de Cuentas",
+    "JOURNAL_ENTRIES": "Asientos Contables",
+    "CREATE_ACCOUNT": "Crear Cuenta",
+    "RECORD_ENTRY": "Registrar Asiento",
+    "REVALUATION": "Revalorización"
+  }
+}

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, AccountRepository, JournalEntryRepository, PolicyRepository, POLICY_REPOSITORY } from '@virteex/domain-accounting-domain';
+import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, AccountRepository, JournalEntryRepository } from '@virteex/domain-accounting-domain';
 import { AccountingPolicyService } from './services/accounting-policy.service';
 import { AccountingEventHandlerService } from './services/accounting-event-handler.service';
 import { AccountingListener } from './handlers/accounting.listener';

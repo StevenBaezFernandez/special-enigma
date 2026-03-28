@@ -1,5 +1,4 @@
 import { defineConfig } from '@mikro-orm/postgresql';
-import { Account, JournalEntry, JournalEntryLine, FiscalYear, AccountingPolicy } from '@virteex/domain-accounting-domain';
 import { AccountSchema, JournalEntrySchema, JournalEntryLineSchema, FiscalYearSchema, AccountingPolicySchema } from './mikro-orm.schemas';
 
 export default defineConfig({

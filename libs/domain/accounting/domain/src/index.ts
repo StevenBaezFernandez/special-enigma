@@ -14,5 +14,6 @@ export * from './errors/accounting.errors';
 export { type AccountRepository, ACCOUNT_REPOSITORY } from './repository-ports/account.repository';
 export { type PolicyRepository, POLICY_REPOSITORY } from './repository-ports/policy.repository';
 export { type JournalEntryRepository, JOURNAL_ENTRY_REPOSITORY } from './repository-ports/journal-entry.repository';
+export const OUTBOX_REPOSITORY = 'OUTBOX_REPOSITORY';
 
 export { CurrencyRevaluationService } from './domain-services/currency-revaluation.service';

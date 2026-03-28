@@ -1,4 +1,4 @@
-import { Account, AccountType } from '@virteex/domain-accounting-domain';
+import { Account } from '@virteex/domain-accounting-domain';
 import { type AccountDto, AccountType as AccountTypeDto } from '@virteex/domain-accounting-contracts';
 
 export class AccountMapper {

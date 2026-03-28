@@ -14,3 +14,5 @@ export * from './shared/journal-entry.contract';
 export * from './shared/enums/account-type.enum';
 export * from './shared/enums/journal-entry-status.enum';
 export * from './shared/enums/journal-entry-type.enum';
+export * from './events/v1/account-created.event';
+export * from './compatibility/v1-to-v2.mapper';

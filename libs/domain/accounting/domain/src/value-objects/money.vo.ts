@@ -40,7 +40,7 @@ export class Money {
         return this.value.equals(other.value);
     }
 
-    toFixed(decimalPlaces: number = 2): string {
+    toFixed(decimalPlaces = 2): string {
         return this.value.toFixed(decimalPlaces);
     }
 
