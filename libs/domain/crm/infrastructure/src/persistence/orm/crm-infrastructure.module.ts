@@ -1,13 +1,13 @@
 import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { HttpModule } from '@nestjs/axios';
-import { SaleSchema, SaleItemSchema } from './entities/sale.schema';
-import { CustomerSchema } from './entities/customer.schema';
-import { OpportunitySchema } from './entities/opportunity.schema';
-import { MikroOrmSaleRepository } from './repositories/mikro-orm-sale.repository';
-import { MikroOrmCustomerRepository } from './repositories/mikro-orm-customer.repository';
-import { HttpInventoryAdapter } from './adapters/http-inventory.adapter';
-import { HttpCatalogAdapter } from './adapters/http-catalog.adapter';
+import { SaleSchema, SaleItemSchema } from '../persistence/entities/sale.schema';
+import { CustomerSchema } from '../persistence/entities/customer.schema';
+import { OpportunitySchema } from '../persistence/entities/opportunity.schema';
+import { MikroOrmSaleRepository } from '../persistence/repositories/mikro-orm-sale.repository';
+import { MikroOrmCustomerRepository } from '../persistence/repositories/mikro-orm-customer.repository';
+import { HttpInventoryAdapter } from '../integrations/http/http-inventory.adapter';
+import { HttpCatalogAdapter } from '../integrations/http/http-catalog.adapter';
 
 @Global()
 @Module({

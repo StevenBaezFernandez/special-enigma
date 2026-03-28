@@ -1,2 +1,3 @@
-export * from './lib/enums/customer-type.enum';
-export * from './lib/enums/opportunity-stage.enum';
+export * from './shared/customer-type.enum';
+export * from './shared/opportunity-stage.enum';
+export * from './api/v1/responses/customer.model';
