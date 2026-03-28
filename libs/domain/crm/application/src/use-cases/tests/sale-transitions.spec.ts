@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { ApproveSaleUseCase } from './approve-sale.use-case';
-import { CancelSaleUseCase } from './cancel-sale.use-case';
-import { CompleteSaleUseCase } from './complete-sale.use-case';
+import { ApproveSaleUseCase } from '../commands/approve-sale.use-case';
+import { CancelSaleUseCase } from '../commands/cancel-sale.use-case';
+import { CompleteSaleUseCase } from '../commands/complete-sale.use-case';
 
 vi.mock('@virteex/shared-util-server-server-config', () => ({
   DomainException: class extends Error {
