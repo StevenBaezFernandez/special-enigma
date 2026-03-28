@@ -7,6 +7,7 @@
   "tags": [
     "scope:catalog",
     "type:domain",
+    "profile:service-domain",
     "platform:agnostic",
     "criticality:high",
     "tenant-mode:schema",
