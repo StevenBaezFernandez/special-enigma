@@ -16,4 +16,4 @@ export { type PolicyRepository, POLICY_REPOSITORY } from './repository-ports/pol
 export { type JournalEntryRepository, JOURNAL_ENTRY_REPOSITORY } from './repository-ports/journal-entry.repository';
 export const OUTBOX_REPOSITORY = 'OUTBOX_REPOSITORY';
 
-export { CurrencyRevaluationService } from './domain-services/currency-revaluation.service';
+export type { CurrencyRevaluationService } from './domain-services/currency-revaluation.service';

@@ -12,11 +12,11 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
   }
 
   async findById(id: string): Promise<JournalEntry | null> {
-    return this.em.findOne(JournalEntry, { id } as any, { populate: ['lines'] as any });
+    return this.em.findOne(JournalEntry, { id } as any, { populate: ['lines'] });
   }
 
   async findAll(tenantId: string): Promise<JournalEntry[]> {
-    return this.em.find(JournalEntry, { tenantId } as any, { populate: ['lines'] as any });
+    return this.em.find(JournalEntry, { tenantId } as any, { populate: ['lines'] });
   }
 
   async count(tenantId: string): Promise<number> {
@@ -43,10 +43,10 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
 
     qb.groupBy('l.account_id');
 
-    const results = await qb.execute();
+    const results: { account_id: string; total_debit: string; total_credit: string }[] = await qb.execute();
     const balanceMap = new Map<string, { debit: string; credit: string }>();
 
-    results.forEach((row: any) => {
+    results.forEach((row) => {
         balanceMap.set(row.account_id, {
             debit: row.total_debit || '0',
             credit: row.total_credit || '0'

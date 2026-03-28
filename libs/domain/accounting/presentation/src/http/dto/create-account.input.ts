@@ -1,25 +1,17 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { AccountType } from '@virteex/domain-accounting-contracts';
-import { IsString, IsNotEmpty, IsEnum, IsOptional, IsUUID } from 'class-validator';
+import { AccountType, CreateAccountDto } from '@virteex/domain-accounting-contracts';
 
 @InputType()
-export class CreateAccountInput {
+export class CreateAccountInput extends CreateAccountDto {
   @Field()
-  @IsString()
-  @IsNotEmpty()
-  code!: string;
+  override code!: string;
 
   @Field()
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
+  override name!: string;
 
   @Field(() => AccountType)
-  @IsEnum(AccountType)
-  type!: AccountType;
+  override type!: AccountType;
 
   @Field({ nullable: true })
-  @IsOptional()
-  @IsUUID()
-  parentId?: string;
+  override parentId?: string;
 }

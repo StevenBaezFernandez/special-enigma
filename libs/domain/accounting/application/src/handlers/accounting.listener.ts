@@ -25,7 +25,7 @@ export class AccountingListener {
   }
 
   @OnEvent('invoice.stamped')
-  async handleInvoiceStamped(event: any) {
+  async handleInvoiceStamped(event: { invoiceId: string; tenantId: string; total: number; taxes: number; date: Date }) {
     try {
         await this.eventHandlerService.handleInvoiceStamped(event);
         this.logger.log(`Journal Entry created for Invoice ${event.invoiceId}`);
@@ -36,7 +36,7 @@ export class AccountingListener {
   }
 
   @OnEvent('payroll.stamped')
-  async handlePayrollStamped(event: any) {
+  async handlePayrollStamped(event: { payrollId: string; tenantId: string; netPay: number; taxes: number; date: Date }) {
     try {
         await this.eventHandlerService.handlePayrollStamped(event);
         this.logger.log(`Journal Entry created for Payroll ${event.payrollId}`);
