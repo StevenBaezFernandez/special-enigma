@@ -1,4 +1,4 @@
-import { JournalEntryStatus } from '../enums/journal-entry-status.enum';
+import { JournalEntryStatus } from './enums/journal-entry-status.enum';
 
 export interface JournalEntry {
     id: string;

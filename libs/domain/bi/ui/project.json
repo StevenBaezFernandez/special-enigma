@@ -1,0 +1,37 @@
+{
+  "name": "domain-bi-ui",
+  "sourceRoot": "libs/domain/bi/ui/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:bi",
+    "type:ui",
+    "platform:web"
+  ],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/bi/ui"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/domain/bi/ui",
+        "main": "libs/domain/bi/ui/src/index.ts",
+        "tsConfig": "libs/domain/bi/ui/tsconfig.lib.json",
+        "assets": [
+          "libs/domain/bi/ui/*.md"
+        ],
+        "generateExportsField": true
+      }
+    }
+  }
+}

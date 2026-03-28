@@ -1,6 +1,12 @@
 import { signal, computed } from '@angular/core';
+import { AccountDto, JournalEntryDto } from '@virteex/domain-accounting-contracts';
 
-export const accountingState = signal({
+export const accountingState = signal<{
+  accounts: AccountDto[];
+  journalEntries: JournalEntryDto[];
+  isLoading: boolean;
+  error: string | null;
+}>({
   accounts: [],
   journalEntries: [],
   isLoading: false,
