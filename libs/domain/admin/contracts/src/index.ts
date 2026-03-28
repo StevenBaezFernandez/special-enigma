@@ -1,1 +1,1 @@
-export * from './lib/admin-contracts';
+export * from './shared/admin-contracts';

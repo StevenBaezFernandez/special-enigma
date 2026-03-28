@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AdminDashboardService } from '../../../../application/src/lib/services/admin-dashboard.service';
+import { AdminDashboardService } from '../../../../application/src/services/admin-dashboard.service';
 
 @ApiTags('Admin')
 @Controller('admin/dashboard')
