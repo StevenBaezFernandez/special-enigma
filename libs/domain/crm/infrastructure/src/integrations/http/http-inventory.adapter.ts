@@ -22,7 +22,7 @@ export class HttpInventoryAdapter implements InventoryService {
         this.httpService.get(`${this.inventoryServiceUrl}/inventory/check/${warehouseId}/${productSku}`, { params: { quantity } })
       );
       return data.available;
-    } catch (error: any) {
+    } catch (error  : any) {
       if (error.response?.status === 404) {
           return false;
       }
@@ -41,7 +41,7 @@ export class HttpInventoryAdapter implements InventoryService {
           reference
         })
       );
-    } catch (error: any) {
+    } catch (error  : any) {
       this.logger.error(`Failed to reserve stock for ${productSku}: ${error.message}`);
       throw new Error(`Failed to reserve stock for ${productSku}: ${error.response?.data?.message || error.message}`);
     }
@@ -55,7 +55,7 @@ export class HttpInventoryAdapter implements InventoryService {
                   reference
               })
           );
-      } catch (error: any) {
+      } catch (error  : any) {
           this.logger.error(`Failed to reserve batch stock: ${error.message}`);
           throw new Error(`Failed to reserve batch stock: ${error.response?.data?.message || error.message}`);
       }
@@ -67,7 +67,7 @@ export class HttpInventoryAdapter implements InventoryService {
               this.httpService.get(`${this.inventoryServiceUrl}/inventory/warehouses/${id}`)
           );
           return data;
-      } catch (error: any) {
+      } catch (error  : any) {
           if (error.response?.status === 404) return null;
           this.logger.error(`Failed to fetch warehouse ${id}: ${error.message}`);
           throw new Error(`Failed to fetch warehouse ${id}`);
@@ -80,7 +80,7 @@ export class HttpInventoryAdapter implements InventoryService {
               this.httpService.get(`${this.inventoryServiceUrl}/inventory/warehouses`, { params: { tenantId } })
           );
           return data || [];
-      } catch (error: any) {
+      } catch (error  : any) {
           this.logger.error(`Failed to fetch warehouses: ${error.message}`);
           throw new Error(`Failed to fetch warehouses: ${error.message}`);
       }

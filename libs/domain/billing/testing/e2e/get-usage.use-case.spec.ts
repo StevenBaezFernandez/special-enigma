@@ -15,7 +15,7 @@ const mockSubscriptionRepository = {
 };
 
 const mockConfigService = {
-  get: vi.fn((key: string, defaultValue: unknown) => defaultValue),
+  get: vi.fn((key: string, defaultValue : any) => defaultValue),
 };
 
 describe('GetUsageUseCase', () => {

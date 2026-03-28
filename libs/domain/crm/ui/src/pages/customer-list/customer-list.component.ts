@@ -46,7 +46,7 @@ import { catchError, of } from 'rxjs';
 })
 export class CustomerListComponent implements OnInit {
   private http = inject(HttpClient);
-  customers: any[] = [];
+  customers  : any[] = [];
   loading = true;
   error = '';
 

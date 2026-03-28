@@ -47,7 +47,7 @@ import { catchError, of } from 'rxjs';
 })
 export class LeadPipelineComponent implements OnInit {
   private http = inject(HttpClient);
-  pipeline: any[] = [];
+  pipeline  : any[] = [];
   loading = true;
   error = '';
 

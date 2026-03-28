@@ -64,7 +64,7 @@ export class TenantsController {
   @Get()
   @ApiOperation({ summary: 'Search for tenants in the ecosystem' })
   @ApiQuery({ name: 'query', required: false })
-  async searchTenants(@Query('query') query: string = '') {
+  async searchTenants(@Query('query') query = '') {
       this.logger.log(`Admin search for tenants: ${query}`);
       return this.supportService.searchTenants(query);
   }

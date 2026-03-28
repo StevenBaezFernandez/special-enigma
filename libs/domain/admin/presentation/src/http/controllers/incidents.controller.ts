@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Param, Logger } from '@nestjs/common';
+import { Controller, Get, Patch, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { IncidentService } from '@virteex/domain-admin-application';
 

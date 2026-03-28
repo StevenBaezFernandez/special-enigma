@@ -19,7 +19,7 @@ export class OperationsController {
     // REAL: Fetch backup-related operations from the database
     // In our domain, we'd look for TenantOperations with specific types or metadata
     const ops = await this.em.find(TenantOperation, {
-      type: { $in: ['BACKUP', 'SNAPSHOT'] as any }
+      type: { $in: ['BACKUP', 'SNAPSHOT'] }
     }, { orderBy: { startedAt: 'DESC' }, limit: 10 });
 
     return ops.length > 0 ? ops : [
@@ -31,8 +31,8 @@ export class OperationsController {
   @ApiOperation({ summary: 'Monitor background jobs and message queues' })
   async listQueues() {
     // REAL: Monitor the status of TenantOperations which act as our job queue records
-    const pendingCount = await this.em.count(TenantOperation, { state: 'requested' as any });
-    const processingCount = await this.em.count(TenantOperation, { state: 'switching' as any }); // 'switching' as proxy for processing
+    const pendingCount = await this.em.count(TenantOperation, { state: 'requested' });
+    const processingCount = await this.em.count(TenantOperation, { state: 'switching' }); // 'switching' as proxy for processing
 
     return [
       { name: 'tenant.provisioning', pending: pendingCount, processing: processingCount, failed: 0, status: pendingCount > 10 ? 'BUSY' : 'HEALTHY' },

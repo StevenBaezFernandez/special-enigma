@@ -29,7 +29,7 @@ export class CatalogResolver {
 
   @Query(() => [Product], { name: 'products' })
   @UseGuards(JwtAuthGuard)
-  async products(@Context() context: any) {
+  async products(@Context() context  : any) {
     const req = context.req;
     const tenantId = req.user?.tenantId || req.headers['x-virteex-tenant-id'];
 

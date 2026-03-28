@@ -5,7 +5,7 @@ export interface DashboardMetrics {
   suspendedTenants: number;
   provisioningTenants: number;
   churnRate: number;
-  recentActivity: any[];
+  recentActivity  : any[];
 }
 
 export interface DashboardGateway {

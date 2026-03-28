@@ -26,7 +26,7 @@ export const CustomerSchema = new EntitySchema<Customer>({
     updatedAt: { type: 'Date', onCreate: () => new Date(), onUpdate: () => new Date() },
   },
   hooks: {
-    beforeCreate: [(ent: any) => ent.validateTaxId()],
-    beforeUpdate: [(ent: any) => ent.validateTaxId()],
+    beforeCreate: [(ent  : any) => ent.validateTaxId()],
+    beforeUpdate: [(ent  : any) => ent.validateTaxId()],
   },
 });

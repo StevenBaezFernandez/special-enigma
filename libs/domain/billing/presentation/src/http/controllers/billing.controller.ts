@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CurrentTenant } from '@virteex/shared-util-server-server-config';
 import { CreateInvoiceUseCase, CreateInvoiceDto, GetInvoicesUseCase, GetPaymentHistoryUseCase, GetUsageUseCase } from '@virteex/domain-billing-application';

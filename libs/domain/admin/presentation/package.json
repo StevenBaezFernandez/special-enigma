@@ -10,9 +10,16 @@
     "@nestjs/common": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "@virteex/domain-admin-application": "*",
+    "@virteex/domain-admin-domain": "*",
+    "@virteex/domain-admin-contracts": "*",
+    "@virteex/kernel-auth": "*",
+    "@virteex/kernel-tenant": "*",
+    "@mikro-orm/core": "^6.6.7",
     "@nestjs/swagger": "^11.2.6",
     "express": "^4.21.2",
-    "multer": "2.0.2"
+    "multer": "2.0.2",
+    "vitest": "^4.0.18",
+    "@nx/vite": "22.5.3"
   },
   "exports": {
     ".": {

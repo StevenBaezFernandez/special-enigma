@@ -26,14 +26,14 @@ export class DataImportService {
         throw new Error('Workbook has no worksheets');
     }
 
-    const data: any[] = [];
+    const data  : any[] = [];
     const headerRow = worksheet.getRow(1);
     const headers = headerRow.values as string[];
 
     worksheet.eachRow((row, rowNumber) => {
         if (rowNumber === 1) return; // Skip header
 
-        const rowData: any = {};
+        const rowData  : any = {};
         row.eachCell((cell, colNumber) => {
             const header = headers[colNumber];
             if (header) {
@@ -52,7 +52,7 @@ export class DataImportService {
         try {
             await this.importRow(row, dataType);
             processed++;
-        } catch (e: any) {
+        } catch (e  : any) {
             this.logger.error(`Failed to import row for ${dataType}: ${e.message}`, e.stack);
             failed++;
         }
@@ -61,7 +61,7 @@ export class DataImportService {
     return { processed, failed };
   }
 
-  private async importRow(row: any, dataType: string) {
+  private async importRow(row  : any, dataType: string) {
       if (!row) throw new Error('Empty row');
 
       switch (dataType) {

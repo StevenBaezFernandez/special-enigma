@@ -25,6 +25,8 @@ export default [
               sourceTag: 'type:domain',
               onlyDependOnLibsWithTags: [
                 'type:util',
+                'type:contracts',
+                'type:domain',
               ],
             },
             {
@@ -94,7 +96,7 @@ export default [
             },
             {
               sourceTag: 'scope:billing',
-              onlyDependOnLibsWithTags: ['scope:billing', 'scope:shared', 'scope:kernel']
+              onlyDependOnLibsWithTags: ['scope:billing', 'scope:shared', 'scope:kernel', 'scope:subscription', 'scope:fiscal']
             },
             {
               sourceTag: 'scope:purchasing',
@@ -106,7 +108,7 @@ export default [
             },
             {
               sourceTag: 'scope:bi',
-              onlyDependOnLibsWithTags: ['scope:bi', 'scope:shared', 'scope:kernel']
+              onlyDependOnLibsWithTags: ['scope:bi', 'scope:shared', 'scope:kernel', 'scope:accounting']
             },
             {
               sourceTag: 'scope:payroll',

@@ -129,16 +129,16 @@ export class CreateSaleUseCase {
             eventType: 'SaleApproved',
             payload: { status: sale.status }
         });
-    } catch (error: any) {
-        this.logger.error(`Stock reservation failed for sale ${sale.id}: ${error.message}`);
+    } catch (error : any) {
+        this.logger.error(`Stock reservation failed for sale ${sale.id}: ${(error as Error).message}`);
 
         // Compensating action: Cancel the sale
         sale.status = SaleStatus.CANCELLED;
         // Mandatorily persist the cancellation state to avoid zombie records
         try {
             await this.saleRepository.create(sale);
-        } catch (e: any) {
-            this.logger.error(`CRITICAL: Failed to cancel sale ${sale.id} after reservation failure: ${e.message}. Manual reconciliation required.`);
+        } catch (e : any) {
+            this.logger.error(`CRITICAL: Failed to cancel sale ${sale.id} after reservation failure: ${(e as Error).message}. Manual reconciliation required.`);
             // Critical: We have a zombie state (Draft but failed).
             // Alerting/Monitoring would pick this up via logs.
         }

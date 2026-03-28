@@ -28,7 +28,7 @@ export class HttpCatalogAdapter implements CatalogService {
           sku: data.sku,
           price: data.price
       };
-    } catch (error: any) {
+    } catch (error  : any) {
       if (error.response?.status === 404) {
           return null;
       }

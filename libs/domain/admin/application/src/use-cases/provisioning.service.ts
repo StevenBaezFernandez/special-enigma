@@ -92,7 +92,7 @@ export class ProvisioningService {
       await this.operationService.transitionState(operationId, OperationState.FINALIZED, { status: ProvisioningStatus.COMPLETED });
       await this.tenantService.activateTenant(tenantId);
 
-    } catch (error: any) {
+    } catch (error  : any) {
       this.logger.error(`Saga Step Failed for ${tenantId}: ${error.message}`);
       await this.operationService.transitionState(operationId, OperationState.ROLLBACK, { error: error.message, status: ProvisioningStatus.FAILED });
     } finally {
@@ -100,7 +100,7 @@ export class ProvisioningService {
     }
   }
 
-  private async seedTenantData(tenantId: string, config: any) {
+  private async seedTenantData(tenantId: string, config  : any) {
     this.logger.log(`Executing real data seeding for tenant ${tenantId}`);
 
     // Industrial seeding of base catalogs, fiscal settings, and admin user
@@ -131,7 +131,7 @@ export class ProvisioningService {
     }
   }
 
-  private async runSmokeTests(tenantId: string, config: any) {
+  private async runSmokeTests(tenantId: string, config  : any) {
     this.logger.log(`Executing automated smoke tests for tenant ${tenantId}`);
 
     // Real health probes

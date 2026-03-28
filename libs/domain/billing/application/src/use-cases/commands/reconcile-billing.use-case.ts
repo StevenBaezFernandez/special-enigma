@@ -1,6 +1,5 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { INVOICE_REPOSITORY, type InvoiceRepository, TENANT_CONFIG_REPOSITORY, type TenantConfigRepository } from '@virteex/domain-billing-domain';
-import { FISCAL_DOCUMENT_BUILDER_FACTORY, type FiscalDocumentBuilderFactory } from '@virteex/domain-fiscal-domain';
 
 @Injectable()
 export class ReconcileBillingUseCase {
@@ -11,17 +10,16 @@ export class ReconcileBillingUseCase {
     @Inject(TENANT_CONFIG_REPOSITORY) private readonly tenantConfigRepository: TenantConfigRepository,
   ) {}
 
-  async execute(tenantId: string, startDate: Date, endDate: Date): Promise<{ matched: number, discrepancies: any[] }> {
+  async execute(tenantId: string, startDate: Date, endDate: Date): Promise<{ matched: number, discrepancies  : any[] }> {
     this.logger.log(`Starting billing reconciliation for tenant ${tenantId} from ${startDate.toISOString()} to ${endDate.toISOString()}`);
 
     const localInvoices = await this.invoiceRepository.findByTenantAndDateRange(tenantId, startDate, endDate);
-    const tenantConfig = await this.tenantConfigRepository.getFiscalConfig(tenantId);
 
     // This is a simplified reconciliation logic.
     // In production, this would call the Fiscal Provider's "fetchRemoteInvoices" method
     // and compare UUIDs, amounts, and statuses.
 
-    const discrepancies: any[] = [];
+    const discrepancies  : any[] = [];
     let matched = 0;
 
     for (const invoice of localInvoices) {

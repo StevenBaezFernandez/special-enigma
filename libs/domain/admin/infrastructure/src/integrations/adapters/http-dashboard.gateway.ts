@@ -41,7 +41,7 @@ export class HttpDashboardGateway implements DashboardGateway {
         churnRate,
         recentActivity: []
       };
-    } catch (error: any) {
+    } catch (error  : any) {
       this.logger.error(`Failed to fetch dashboard metrics: ${error.message}`, error.stack);
       // Fallback or rethrow depending on resilience requirements
       // For now, return zeros to avoid crashing the dashboard entirely

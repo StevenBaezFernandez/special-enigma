@@ -17,7 +17,7 @@ vi.mock('@virteex/shared-util-server-server-config', () => ({
 }));
 
 describe('CRM Sale Transitions', () => {
-  let repository: any;
+  let repository  : any;
 
   beforeEach(() => {
     repository = {

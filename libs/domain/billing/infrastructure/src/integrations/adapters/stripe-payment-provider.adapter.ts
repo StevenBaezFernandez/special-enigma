@@ -39,7 +39,7 @@ export class StripePaymentProvider implements PaymentProvider {
 
       this.logger.log(`Payment successful: ${charge.id}`);
       return { success: true, transactionId: charge.id };
-    } catch (error: any) {
+    } catch (error  : any) {
       this.logger.error('Stripe payment failed', error);
       throw new Error(`Payment failed: ${error.message}`);
     }

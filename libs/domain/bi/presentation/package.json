@@ -9,11 +9,11 @@
     "tslib": "^2.3.0",
     "@nestjs/common": "^11.0.0",
     "@virteex/domain-bi-application": "0.0.1",
-    "@virteex/domain-bi-infrastructure": "0.0.1",
+    "@virteex/domain-bi-contracts": "0.0.1",
     "@nestjs/swagger": "^11.2.6",
     "@virteex/kernel-auth": "0.0.1",
-    "vitest": "^4.0.8",
-    "@nx/vite": "^22.4.1"
+    "vitest": "^4.0.18",
+    "@nx/vite": "22.5.3"
   },
   "exports": {
     ".": {

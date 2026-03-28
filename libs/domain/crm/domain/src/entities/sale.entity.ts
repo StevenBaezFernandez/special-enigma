@@ -16,7 +16,7 @@ export class Sale {
   customerName!: string;
   total!: string;
   status: SaleStatus = SaleStatus.DRAFT;
-  items: any[] = [];
+  items  : any[] = [];
   createdAt: Date = new Date();
 
   constructor(tenantId: string, customerId: string, customerName: string, total: string) {

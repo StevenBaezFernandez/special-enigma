@@ -4,7 +4,7 @@ import { type SalesPort, type TopProductDto } from '@virteex/domain-bi-domain';
 @Injectable()
 export class CrmSalesAdapter implements SalesPort {
   constructor(
-    @Inject('SaleRepository') private readonly saleRepository: any
+    @Inject('SaleRepository') private readonly saleRepository  : any
   ) {}
 
   async getTopProducts(tenantId: string, limit: number): Promise<TopProductDto[]> {

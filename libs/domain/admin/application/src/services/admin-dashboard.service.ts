@@ -26,7 +26,7 @@ export class AdminDashboardService {
     const controlRecords = await this.em.getConnection().execute('SELECT status, count(*) as count FROM tenant_control_records GROUP BY status');
 
     const statusCounts: Record<string, number> = {};
-    controlRecords.forEach((r: any) => {
+    controlRecords.forEach((r  : any) => {
         statusCounts[r.status] = parseInt(r.count);
     });
 
@@ -42,7 +42,7 @@ export class AdminDashboardService {
     };
   }
 
-  private getRecentActivity(): any[] {
+  private getRecentActivity()  : any[] {
     const evidenceDir = path.join(process.cwd(), 'evidence/tenant-lifecycle');
     if (!fs.existsSync(evidenceDir)) return [];
 

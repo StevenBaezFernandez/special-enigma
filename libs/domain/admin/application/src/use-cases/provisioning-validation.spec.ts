@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProvisioningService, ProvisioningStatus } from '../use-cases/provisioning.service';
-import { TenantMode, OperationState, OperationType } from '@virteex/kernel-tenant';
+import { TenantMode, OperationState } from '@virteex/kernel-tenant';
 
 describe('Provisioning Operational Validation', () => {
   let service: ProvisioningService;
-  let mockConfig: any;
-  let mockDbPort: any;
-  let mockTenantService: any;
-  let mockOpService: any;
-  let mockRedis: any;
+  let mockConfig  : any;
+  let mockDbPort  : any;
+  let mockTenantService  : any;
+  let mockOpService  : any;
+  let mockRedis  : any;
 
   beforeEach(() => {
     mockConfig = { get: vi.fn().mockReturnValue('redis://localhost:6379') };

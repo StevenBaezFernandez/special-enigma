@@ -29,7 +29,7 @@ export interface DashboardMetricsDto {
   provisioningTenants: number;
   mrr: number;
   churnRate: number;
-  recentActivity: any[];
+  recentActivity  : any[];
 }
 
 export interface OperationLogDto {
@@ -38,7 +38,7 @@ export interface OperationLogDto {
   type: string;
   state: string;
   createdAt: string;
-  result?: any;
+  result?  : any;
 }
 
 export interface IncidentDto {

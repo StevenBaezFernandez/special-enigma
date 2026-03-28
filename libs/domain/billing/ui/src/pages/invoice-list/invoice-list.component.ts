@@ -53,7 +53,7 @@ import { RouterLink } from '@angular/router';
 })
 export class InvoiceListComponent implements OnInit {
   private http = inject(HttpClient);
-  invoices: any[] = [];
+  invoices  : any[] = [];
   loading = true;
   error = '';
 

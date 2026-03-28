@@ -1,11 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
 import { FiscalStampingService } from './fiscal-stamping.service';
-import { PAC_STRATEGY_FACTORY } from '../../factories/pac-strategy.factory';
-import { TENANT_CONFIG_REPOSITORY } from '../repository-ports/tenant-config.port';
-import { CUSTOMER_REPOSITORY } from '../repository-ports/customer.repository';
-import { FISCAL_DOCUMENT_BUILDER_FACTORY } from '@virteex/domain-fiscal-domain';
-import { Invoice } from '../../entities/invoice.entity';
+import { Invoice } from '../entities/invoice.entity';
 
 describe('FiscalStampingService', () => {
   let service: FiscalStampingService;
@@ -18,17 +13,12 @@ describe('FiscalStampingService', () => {
   const mockProvider = { stamp: vi.fn(), cancel: vi.fn() };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        FiscalStampingService,
-        { provide: PAC_STRATEGY_FACTORY, useValue: mockPacFactory },
-        { provide: TENANT_CONFIG_REPOSITORY, useValue: mockTenantConfigRepo },
-        { provide: CUSTOMER_REPOSITORY, useValue: mockCustomerRepo },
-        { provide: FISCAL_DOCUMENT_BUILDER_FACTORY, useValue: mockBuilderFactory },
-      ],
-    }).compile();
-
-    service = module.get<FiscalStampingService>(FiscalStampingService);
+    service = new FiscalStampingService(
+        mockPacFactory as any,
+        mockTenantConfigRepo as any,
+        mockCustomerRepo as any,
+        mockBuilderFactory as any
+    );
 
     mockPacFactory.getProvider.mockReturnValue(mockProvider);
     mockBuilderFactory.getBuilder.mockReturnValue(mockBuilder);

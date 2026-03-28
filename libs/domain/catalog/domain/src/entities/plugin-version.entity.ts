@@ -6,7 +6,7 @@ export class PluginVersion {
   version!: string;
   code!: string;
   capabilities?: string[];
-  sbom?: any;
+  sbom?  : any;
   signature?: string;
   channel: PluginChannel = PluginChannel.STABLE;
   createdAt = new Date();

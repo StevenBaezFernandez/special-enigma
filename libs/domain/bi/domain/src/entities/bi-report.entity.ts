@@ -16,7 +16,7 @@ export class BiReport {
   readonly type: string;
 
   @Property({ type: 'json' })
-  readonly data: any;
+  readonly data  : any;
 
   @Property()
   readonly createdAt: Date;
@@ -25,7 +25,7 @@ export class BiReport {
     tenantId: string,
     name: string,
     type: string,
-    data: any,
+    data  : any,
     id?: string,
     createdAt?: Date
   ) {

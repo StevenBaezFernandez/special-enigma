@@ -1,4 +1,4 @@
-import { PluginVersion, PluginChannel } from './plugin-version.entity';
+import { PluginVersion } from './plugin-version.entity';
 
 export class Plugin {
   id!: string;

@@ -111,7 +111,7 @@ export class FinkokPacProvider implements PacProvider {
            throw new Error('Unknown response format from Finkok');
         }
 
-      } catch (error: unknown) {
+      } catch (error : any) {
         let errorMessage = 'Unknown error';
         if (axios.isAxiosError(error)) {
             errorMessage = error.message;
@@ -193,7 +193,7 @@ export class FinkokPacProvider implements PacProvider {
             folios = [folios];
         }
 
-        const folio = folios.find((f: any) => f.UUID === uuid);
+        const folio = folios.find((f  : any) => f.UUID === uuid);
         if (!folio) {
             throw new Error(`Cancellation response does not contain UUID ${uuid}`);
         }
@@ -206,7 +206,7 @@ export class FinkokPacProvider implements PacProvider {
 
         throw new Error(`Cancellation failed with status: ${status} - ${folio.EstatusCancelacion || ''}`);
 
-    } catch (error: unknown) {
+    } catch (error : any) {
         if (axios.isAxiosError(error)) {
             throw new Error(`PAC Connection Error during cancel: ${error.message}`);
         }

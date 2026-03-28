@@ -10,7 +10,7 @@
     "@virteex/shared-contracts": "0.0.1",
     "uuid": "^10.0.0",
     "vitest": "^4.0.8",
-    "@nx/vite": "22.4.1"
+    "@nx/vite": "22.5.3"
   },
   "exports": {
     ".": {

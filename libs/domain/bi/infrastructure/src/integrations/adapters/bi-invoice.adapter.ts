@@ -9,7 +9,7 @@ export class BiInvoiceAdapter implements InvoicePort {
   ) {}
 
   async getInvoiceStatusSummary(tenantId: string): Promise<InvoiceStatusSummary[]> {
-    const invoices: any[] = await this.invoiceRepository.findByTenantId(tenantId);
+    const invoices  : any[] = await this.invoiceRepository.findByTenantId(tenantId);
 
     // Simple aggregation for the example
     const summary: Record<string, { count: number; totalAmount: number }> = {};
@@ -30,7 +30,7 @@ export class BiInvoiceAdapter implements InvoicePort {
   }
 
   async getArAging(tenantId: string): Promise<ArAging[]> {
-    const invoices: any[] = await this.invoiceRepository.findByTenantId(tenantId);
+    const invoices  : any[] = await this.invoiceRepository.findByTenantId(tenantId);
     const now = new Date();
 
     const aging: Record<string, number> = {

@@ -13,5 +13,14 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {}
+  "dependencies": {
+    "tslib": "^2.3.0",
+    "@nestjs/common": "^11.0.0",
+    "@virteex/domain-billing-application": "*",
+    "@virteex/domain-subscription-application": "*",
+    "@nestjs/swagger": "^11.2.6",
+    "@virteex/shared-util-server-server-config": "*",
+    "vitest": "^4.0.18",
+    "@nx/vite": "22.5.3"
+  }
 }

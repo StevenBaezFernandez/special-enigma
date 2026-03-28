@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CurrentTenant, DomainException } from '@virteex/shared-util-server-server-config';
 import { StepUp, StepUpGuard } from '@virteex/kernel-auth';

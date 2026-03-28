@@ -1,6 +1,5 @@
 import { CustomerType } from '@virteex/shared-contracts';
 import { v4 as uuidv4 } from 'uuid';
-import type { Opportunity } from './opportunity.entity';
 
 export class Customer {
   id: string = uuidv4();
@@ -19,7 +18,7 @@ export class Customer {
   stateOrProvince?: string;
   postalCode?: string;
   country?: string;
-  opportunities: any[] = [];
+  opportunities  : any[] = [];
   createdAt: Date = new Date();
   updatedAt: Date = new Date();
 

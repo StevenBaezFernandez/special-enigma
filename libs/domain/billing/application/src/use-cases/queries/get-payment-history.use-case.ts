@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { type InvoiceRepository, INVOICE_REPOSITORY, Invoice } from '@virteex/domain-billing-domain';
+import { type InvoiceRepository, INVOICE_REPOSITORY } from '@virteex/domain-billing-domain';
 
 export interface PaymentHistoryItemDto {
   id: string;

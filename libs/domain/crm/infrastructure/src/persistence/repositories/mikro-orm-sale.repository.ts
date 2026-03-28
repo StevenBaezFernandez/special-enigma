@@ -36,7 +36,7 @@ export class MikroOrmSaleRepository implements SaleRepository {
       .limit(limit)
       .execute();
 
-    return result.map((r: any) => ({
+    return result.map((r  : any) => ({
       name: r.name,
       value: Number(r.value),
     }));

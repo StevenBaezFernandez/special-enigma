@@ -7,7 +7,7 @@ export class HandleStripeWebhookUseCase {
 
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
-  async execute(event: any) {
+  async execute(event  : any) {
     this.logger.log(`Processing Stripe Webhook: ${event.type}`);
 
     switch (event.type) {

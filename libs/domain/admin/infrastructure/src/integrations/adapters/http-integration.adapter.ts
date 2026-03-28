@@ -24,7 +24,7 @@ export class HttpIntegrationAdapter implements IntegrationGateway {
     const url = `${this.catalogUrl}/catalog/products`;
     try {
       await firstValueFrom(this.httpService.post(url, dto));
-    } catch (error: any) {
+    } catch (error  : any) {
       this.handleError('Product', error);
     }
   }
@@ -33,7 +33,7 @@ export class HttpIntegrationAdapter implements IntegrationGateway {
     const url = `${this.crmUrl}/crm/customers`;
     try {
       await firstValueFrom(this.httpService.post(url, dto));
-    } catch (error: any) {
+    } catch (error  : any) {
       this.handleError('Customer', error);
     }
   }
@@ -42,12 +42,12 @@ export class HttpIntegrationAdapter implements IntegrationGateway {
     const url = `${this.purchasingUrl}/purchasing/suppliers`;
     try {
       await firstValueFrom(this.httpService.post(url, dto));
-    } catch (error: any) {
+    } catch (error  : any) {
       this.handleError('Supplier', error);
     }
   }
 
-  private handleError(type: string, error: any) {
+  private handleError(type: string, error  : any) {
     this.logger.error(`Failed to create ${type}: ${error.message}`, error.stack);
     throw new Error(`Failed to import ${type}: ${error.response?.data?.message || error.message}`);
   }

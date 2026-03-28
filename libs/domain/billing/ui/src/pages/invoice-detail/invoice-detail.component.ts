@@ -75,7 +75,7 @@ import { catchError, of } from 'rxjs';
 export class InvoiceDetailComponent implements OnInit {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
-  invoice: any = null;
+  invoice  : any = null;
   loading = true;
   error = '';
 

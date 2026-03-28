@@ -35,7 +35,7 @@ export class HttpCustomerRepository implements CustomerRepository {
         address: customer.address,
         country: customer.country || 'MX'
       };
-    } catch (error: any) {
+    } catch (error  : any) {
       if (error.response?.status === 404) return null;
       throw error;
     }

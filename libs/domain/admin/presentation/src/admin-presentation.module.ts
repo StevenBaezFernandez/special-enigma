@@ -7,10 +7,9 @@ import { SecurityController } from './controllers/security.controller';
 import { IncidentsController } from './controllers/incidents.controller';
 import { OperationsController } from './controllers/operations.controller';
 import { AdminApplicationModule } from '@virteex/domain-admin-application';
-import { AdminInfrastructureModule } from '@virteex/domain-admin-infrastructure';
 
 @Module({
-  imports: [AdminApplicationModule, AdminInfrastructureModule],
+  imports: [AdminApplicationModule],
   controllers: [AdminController, AdminDashboardController, TenantsController, MonitoringController, SecurityController, IncidentsController, OperationsController],
   providers: [],
 })

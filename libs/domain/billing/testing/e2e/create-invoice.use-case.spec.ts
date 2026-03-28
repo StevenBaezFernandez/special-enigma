@@ -9,8 +9,8 @@ import { SUBSCRIPTION_REPOSITORY } from '@virteex/domain-subscription-domain';
 
 describe('CreateInvoiceUseCase', () => {
   let useCase: CreateInvoiceUseCase;
-  let invoiceRepository: any;
-  let integrationPublisher: any;
+  let invoiceRepository  : any;
+  let integrationPublisher  : any;
 
   const mockInvoiceRepository = {
     save: vi.fn(),

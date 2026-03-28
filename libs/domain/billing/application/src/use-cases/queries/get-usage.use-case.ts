@@ -1,8 +1,7 @@
-import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { type InvoiceRepository, INVOICE_REPOSITORY } from '@virteex/domain-billing-domain';
-import { type SubscriptionRepository, SUBSCRIPTION_REPOSITORY, SubscriptionPlan } from '@virteex/domain-subscription-domain';
+import { type SubscriptionRepository, SUBSCRIPTION_REPOSITORY } from '@virteex/domain-subscription-domain';
 
 export interface UsageItem {
   resource: string;

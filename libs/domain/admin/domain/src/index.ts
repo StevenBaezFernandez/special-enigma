@@ -5,4 +5,3 @@ export * from './repository-ports/incident.repository';
 export * from './repository-ports/integration-gateway.port';
 export * from './repository-ports/dashboard.gateway';
 export * from './repository-ports/database.port';
-export * from '@virteex/domain-admin-contracts';

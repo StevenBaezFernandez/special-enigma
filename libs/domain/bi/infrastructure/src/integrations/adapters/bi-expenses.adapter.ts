@@ -11,7 +11,7 @@ export class BiExpensesAdapter implements ExpensesPort {
   async getExpensesByCategory(tenantId: string, startDate: Date, endDate: Date): Promise<ExpenseCategory[]> {
     // Correctly using all parameters to follow the "no simplification" rule.
     // In a real scenario, this would filter by date, but here we aggregate based on what the repo provides.
-    const payrolls: any[] = await this.payrollRepo.findAllByTenant(tenantId);
+    const payrolls  : any[] = await this.payrollRepo.findAllByTenant(tenantId);
 
     // Filtering by date if possible (assuming payroll has a date property)
     const filteredPayrolls = payrolls.filter(p => {
