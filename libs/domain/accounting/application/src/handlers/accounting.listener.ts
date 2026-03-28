@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { SetupChartOfAccountsUseCase } from '../use-cases/setup-chart-of-accounts.use-case';
+import { SetupChartOfAccountsUseCase } from '../use-cases/accounts/setup-chart-of-accounts.use-case';
 import { AccountingEventHandlerService } from '../services/accounting-event-handler.service';
 
 @Injectable()

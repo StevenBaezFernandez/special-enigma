@@ -1,5 +1,5 @@
 // app/core/models/account.model.ts
-import { AccountType } from '../enums/account-type.enum';
+import { AccountType } from './enums/account-type.enum';
 
 // --- TIPOS ENUMERADOS (ENUM TYPES) ---
 // Se cambian a 'enum' para que existan en tiempo de ejecución y se puedan iterar.

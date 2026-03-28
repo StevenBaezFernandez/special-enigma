@@ -1,5 +1,5 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { RecordJournalEntryUseCase } from '../use-cases/record-journal-entry.use-case';
+import { RecordJournalEntryUseCase } from '../use-cases/journal-entries/record-journal-entry.use-case';
 import { type AccountRepository, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
 import { type RecordJournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { AccountingPolicyService } from './accounting-policy.service';
