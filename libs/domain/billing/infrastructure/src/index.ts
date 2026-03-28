@@ -1,2 +1,2 @@
-export * from './lib/billing-infrastructure.module';
-export * from './lib/providers/null-pac.provider';
+export * from './integrations/adapters/null-pac.provider';
+export * from './billing-infrastructure.module';
