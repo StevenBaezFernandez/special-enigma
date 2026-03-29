@@ -20,7 +20,7 @@ export class AccountingEventsController {
 
   @EventPattern('billing.invoice.validated')
   async handleInvoiceValidated(@Payload() event: InvoiceValidatedEvent) {
-    const correlationId = `inv-${event.id}-${Date.now()}`;
+    const correlationId = event.id; // Use event ID for idempotency/tracking
     this.logger.log({
       message: `Processing accounting for Invoice ${event.id}`,
       correlationId,

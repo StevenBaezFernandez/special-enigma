@@ -10,8 +10,8 @@ export default defineConfig({
   password: process.env.ACCOUNTING_DB_PASSWORD || 'postgres',
   debug: process.env.NODE_ENV !== 'production',
   migrations: {
-    path: './libs/domain/accounting/infrastructure/src/lib/migrations',
-    pathTs: './libs/domain/accounting/infrastructure/src/lib/migrations',
+    path: './libs/domain/accounting/infrastructure/src/persistence/migrations',
+    pathTs: './libs/domain/accounting/infrastructure/src/persistence/migrations',
     transactional: true,
   },
 });

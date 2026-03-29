@@ -1,4 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtPayload } from 'jsonwebtoken';
 
 export interface UserPayload extends JwtPayload {
@@ -10,14 +11,26 @@ export interface UserPayload extends JwtPayload {
 
 export const CurrentUser = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): UserPayload => {
-    const request = ctx.switchToHttp().getRequest();
+    let request;
+    if (ctx.getType().toString() === 'graphql') {
+      const gqlContext = GqlExecutionContext.create(ctx);
+      request = gqlContext.getContext().req;
+    } else {
+      request = ctx.switchToHttp().getRequest();
+    }
     return request.user;
   },
 );
 
 export const CurrentTenant = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): string => {
-    const request = ctx.switchToHttp().getRequest();
-    return request.tenantContext?.tenantId || request.headers['x-virteex-tenant-id'];
+    let request;
+    if (ctx.getType().toString() === 'graphql') {
+      const gqlContext = GqlExecutionContext.create(ctx);
+      request = gqlContext.getContext().req;
+    } else {
+      request = ctx.switchToHttp().getRequest();
+    }
+    return request.tenantContext?.tenantId || request.headers['x-virteex-tenant-id'] || request.headers['x-tenant-id'];
   },
 );

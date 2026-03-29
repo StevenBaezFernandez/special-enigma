@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { JournalEntry, type JournalEntryRepository, JournalEntryType } from '@virteex/domain-accounting-domain';
-import { IAccountingReportingPort } from '@virteex/domain-accounting-application';
+import { IAccountingReportingPort, IUnitOfWork } from '@virteex/domain-accounting-application';
 
 @Injectable()
-export class MikroOrmJournalEntryRepository implements JournalEntryRepository, IAccountingReportingPort {
+export class MikroOrmJournalEntryRepository implements JournalEntryRepository, IAccountingReportingPort, IUnitOfWork {
   constructor(private readonly em: EntityManager) {}
+
+  async transactional<T>(fn: () => Promise<T>): Promise<T> {
+    return this.em.transactional(fn);
+  }
 
   async create(entry: JournalEntry): Promise<JournalEntry> {
     await this.em.persistAndFlush(entry);
