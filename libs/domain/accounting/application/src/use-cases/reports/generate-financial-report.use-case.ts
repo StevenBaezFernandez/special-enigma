@@ -1,4 +1,4 @@
-import { type JournalEntryRepository, type AccountRepository } from '@virteex/domain-accounting-domain';
+import { type JournalEntryRepository, type AccountRepository, AccountType } from '@virteex/domain-accounting-domain';
 import { Decimal } from 'decimal.js';
 
 export interface FinancialReport {
@@ -37,7 +37,7 @@ export class GenerateFinancialReportUseCase {
         const balance = balances.get(account.id) || { debit: '0', credit: '0' };
         const netBalance = new Decimal(balance.debit).minus(new Decimal(balance.credit));
 
-        const isIncomeOrExpense = account.type === 'REVENUE' || account.type === 'EXPENSE';
+        const isIncomeOrExpense = account.type === AccountType.REVENUE || account.type === AccountType.EXPENSE;
 
         if (type === 'PROFIT_AND_LOSS' && isIncomeOrExpense) {
             reportLines.push({

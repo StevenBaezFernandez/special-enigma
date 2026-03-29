@@ -17,3 +17,4 @@ export * from './shared/enums/journal-entry-status.enum';
 export * from './shared/enums/journal-entry-type.enum';
 export * from './events/v1/account-created.event';
 export * from './compatibility/v1-to-v2.mapper';
+export * from './integration/reporting.port';

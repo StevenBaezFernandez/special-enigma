@@ -5,7 +5,7 @@
 | `/api/auth/*` | `bff-portal` | Authentication & Identity (Shared) | Pending |
 | `/api/users/*` | `bff-portal` | User Management (Shared) | Pending |
 | `/api/inventory/*` | `bff-wms` / `bff-portal` | Inventory Management | Pending |
-| `/api/accounting/*` | `bff-portal` | Financials | Pending |
+| `/api/accounting/*` | `bff-portal` | Financials | Direct (Current) |
 | `/api/billing/*` | `bff-portal` | Invoicing & Billing | Pending |
 | `/api/crm/*` | `bff-portal` | Customer Relationship | Pending |
 | `/api/fiscal/*` | `bff-portal` | Tax & Compliance | Pending |

@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { BiReport, type BiReportRepository, BI_REPORT_REPOSITORY } from '@virteex/domain-bi-domain';
-import { ACCOUNTING_REPORTING_PORT, type IAccountingReportingPort } from '@virteex/domain-accounting-application';
+import { ACCOUNTING_REPORTING_PORT, type IAccountingReportingPort } from '@virteex/domain-accounting-contracts';
 import { GenerateReportCommand } from './generate-report.command';
 
 @Injectable()

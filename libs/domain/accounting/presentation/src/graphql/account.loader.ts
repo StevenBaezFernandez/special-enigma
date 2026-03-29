@@ -10,7 +10,7 @@ export class AccountLoader extends DataLoader<string, Account | null> {
     @Inject(REQUEST) private readonly request: any
   ) {
     super(async (ids: readonly string[]) => {
-      const tenantId = this.request.tenantId || this.request.raw?.tenantId;
+      const tenantId = this.request.tenantContext?.tenantId || this.request.tenantId || this.request.raw?.tenantId;
       if (!tenantId) {
         return ids.map(() => null);
       }

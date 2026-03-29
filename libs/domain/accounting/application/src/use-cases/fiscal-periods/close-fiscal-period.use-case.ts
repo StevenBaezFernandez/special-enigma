@@ -1,4 +1,4 @@
-import { type JournalEntryRepository, type AccountRepository, JournalEntry, JournalEntryLine, JournalEntryType, AccountingDomainError } from '@virteex/domain-accounting-domain';
+import { type JournalEntryRepository, type AccountRepository, JournalEntry, JournalEntryLine, JournalEntryType, AccountingDomainError, AccountType } from '@virteex/domain-accounting-domain';
 import { Decimal } from 'decimal.js';
 import { AccountingPolicyService } from '../../services/accounting-policy.service';
 
@@ -18,7 +18,7 @@ export class CloseFiscalPeriodUseCase {
     const closingEntries: { accountId: string, amount: Decimal }[] = [];
 
     for (const account of accounts) {
-      if (account.type === 'REVENUE' || account.type === 'EXPENSE') {
+      if (account.type === AccountType.REVENUE || account.type === AccountType.EXPENSE) {
         const balance = balances.get(account.id) || { debit: '0', credit: '0' };
         const amount = new Decimal(balance.debit).minus(new Decimal(balance.credit));
         netIncome = netIncome.plus(amount);

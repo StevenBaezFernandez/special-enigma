@@ -16,5 +16,4 @@ export * from './services/accounting-event-handler.service';
 
 // Outbound ports for infrastructure implementation or cross-domain consumption
 export * from './ports/outbound/message-broker.port';
-export * from './ports/outbound/reporting.port';
 export * from './ports/outbound/unit-of-work.port';

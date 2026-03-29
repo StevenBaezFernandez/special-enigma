@@ -1,6 +1,5 @@
 import { EntitySchema } from '@mikro-orm/core';
-import { Account, JournalEntry, JournalEntryLine, FiscalYear, FiscalYearStatus, AccountingPolicy } from '@virteex/domain-accounting-domain';
-import { AccountType, JournalEntryStatus, JournalEntryType } from '@virteex/domain-accounting-contracts';
+import { Account, JournalEntry, JournalEntryLine, FiscalYear, FiscalYearStatus, AccountingPolicy, AccountType, JournalEntryStatus, JournalEntryType } from '@virteex/domain-accounting-domain';
 
 export const AccountSchema = new EntitySchema<Account>({
   class: Account,
