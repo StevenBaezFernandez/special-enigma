@@ -27,20 +27,9 @@
       }
     },
     "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
+      "executor": "nx:run-commands",
       "options": {
-        "buildTarget": "edge-portal-app:build",
-        "inspect": false
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "edge-portal-app:build:development",
-          "inspect": false
-        },
-        "production": {
-          "buildTarget": "edge-portal-app:build:production"
-        }
+        "command": "npx nx build edge-portal-app --configuration=development && node dist/apps/edge/portal/app/main.js"
       }
     },
     "test": {
