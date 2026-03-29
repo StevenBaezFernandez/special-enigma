@@ -1,6 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { OUTBOX_REPOSITORY, type OutboxRepository, TELEMETRY_SERVICE, type ITelemetryService } from '@virteex/domain-accounting-domain';
+import { MESSAGE_BROKER, type IMessageBroker } from '@virteex/domain-accounting-application';
 
 /**
  * Service responsible for relaying domain events from the outbox table to the message broker.
@@ -14,7 +15,9 @@ export class OutboxRelayService {
     @Inject(OUTBOX_REPOSITORY)
     private readonly outboxRepository: OutboxRepository,
     @Inject(TELEMETRY_SERVICE)
-    private readonly telemetryService: ITelemetryService
+    private readonly telemetryService: ITelemetryService,
+    @Inject(MESSAGE_BROKER)
+    private readonly messageBroker: IMessageBroker
   ) {}
 
   @Cron(CronExpression.EVERY_10_SECONDS)
@@ -29,8 +32,7 @@ export class OutboxRelayService {
         try {
           this.logger.log(`Publishing event ${message.eventType} for aggregate ${message.aggregateId}`);
 
-          // In a real implementation, this would call a Message Broker (RabbitMQ, Kafka, etc.)
-          // await this.messageBroker.publish(message.eventType, message.payload);
+          await this.messageBroker.publish(message.eventType, message.payload);
 
           await this.outboxRepository.markAsProcessed(message.id);
           this.telemetryService.recordBusinessMetric('outbox_processed_total', 1, { eventType: message.eventType });

@@ -9,7 +9,7 @@ export default async function() {
 
   try {
     console.log(`Waiting for port ${port} on ${host}...`);
-    await waitForPortOpen(port, { host, timeout: 5000 });
+    await waitForPortOpen(port, { host, retries: 5, retryDelay: 1000 });
   } catch (error) {
     console.warn(`Could not connect to port ${port} on ${host}. This might cause E2E tests to fail if the service is not running independently.`);
   }

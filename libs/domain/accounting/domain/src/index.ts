@@ -1,16 +1,16 @@
-export * from './entities/account.entity';
-export * from './entities/accounting-policy.entity';
-export * from './entities/journal-entry.entity';
-export * from './entities/journal-entry-line.entity';
-export * from './entities/fiscal-year.entity';
+export { Account } from './entities/account.entity';
+export { AccountingPolicy } from './entities/accounting-policy.entity';
+export { JournalEntry } from './entities/journal-entry.entity';
+export { JournalEntryLine } from './entities/journal-entry-line.entity';
+export { FiscalYear } from './entities/fiscal-year.entity';
 
-export * from './events/domain-event.interface';
-export * from './events/account-created.event';
+export { type DomainEvent } from './events/domain-event.interface';
+export { AccountCreated } from './events/account-created.event';
 
-export * from './value-objects/account-type.enum';
-export * from './value-objects/journal-entry-status.enum';
-export * from './value-objects/journal-entry-type.enum';
-export * from './value-objects/money.vo';
+export { AccountType } from './value-objects/account-type.enum';
+export { JournalEntryStatus } from './value-objects/journal-entry-status.enum';
+export { JournalEntryType } from './value-objects/journal-entry-type.enum';
+export { Money } from './value-objects/money.vo';
 
 export * from './errors/accounting.errors';
 

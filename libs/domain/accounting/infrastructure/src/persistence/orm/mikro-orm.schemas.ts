@@ -15,6 +15,7 @@ export const AccountSchema = new EntitySchema<Account>({
     level: { type: 'number' },
     isControl: { type: 'boolean', default: false },
     currency: { type: 'string', nullable: true },
+    domainEvents: { type: 'json', persist: false },
   },
 });
 
@@ -30,6 +31,7 @@ export const JournalEntrySchema = new EntitySchema<JournalEntry>({
     reference: { type: 'string', nullable: true },
     dimensions: { type: 'json', nullable: true },
     lines: { kind: '1:m', entity: () => 'JournalEntryLine', mappedBy: 'journalEntry', orphanRemoval: true },
+    domainEvents: { type: 'json', persist: false },
   },
 });
 
@@ -57,6 +59,7 @@ export const FiscalYearSchema = new EntitySchema<FiscalYear>({
     status: { enum: true, items: () => FiscalYearStatus, default: FiscalYearStatus.OPEN },
     startDate: { type: 'date' },
     endDate: { type: 'date' },
+    domainEvents: { type: 'json', persist: false },
   },
 });
 
@@ -68,5 +71,6 @@ export const AccountingPolicySchema = new EntitySchema<AccountingPolicy>({
     tenantId: { type: 'string', index: true },
     type: { type: 'string' },
     rules: { type: 'json' },
+    domainEvents: { type: 'json', persist: false },
   },
 });

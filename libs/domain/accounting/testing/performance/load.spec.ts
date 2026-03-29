@@ -2,11 +2,12 @@ import { vi, describe, it, expect } from 'vitest';
 import { GenerateFinancialReportUseCase } from '../../application/src/use-cases/reports/generate-financial-report.use-case';
 
 describe('Accounting Domain Performance', () => {
-  it('should meet performance requirements for report generation with many entries (simulated)', async () => {
+  it('should meet performance requirements for report generation with a large dataset', async () => {
+    const totalAccounts = 5000;
     const mockJournalRepo = {
       getBalancesByAccount: vi.fn().mockImplementation(() => {
         const balances = new Map();
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < totalAccounts; i++) {
           balances.set(`acc-${i}`, { debit: '100.00', credit: '50.00' });
         }
         return Promise.resolve(balances);
@@ -16,7 +17,7 @@ describe('Accounting Domain Performance', () => {
     const mockAccountRepo = {
       findAll: vi.fn().mockImplementation(() => {
         const accounts = [];
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < totalAccounts; i++) {
           accounts.push({
             id: `acc-${i}`,
             tenantId: 'tenant-1',
@@ -31,15 +32,18 @@ describe('Accounting Domain Performance', () => {
 
     const useCase = new GenerateFinancialReportUseCase(mockJournalRepo as any, mockAccountRepo as any);
 
+    // Warm up the engine
+    await useCase.execute('tenant-1', 'TRIAL_BALANCE', new Date());
+
     const startTime = performance.now();
     const result = await useCase.execute('tenant-1', 'TRIAL_BALANCE', new Date());
     const endTime = performance.now();
 
     const duration = endTime - startTime;
-    console.log(`[Performance] Trial Balance generation for 1000 accounts took ${duration.toFixed(2)}ms`);
+    console.log(`[Performance] Trial Balance generation for ${totalAccounts} accounts took ${duration.toFixed(2)}ms`);
 
-    expect(result.lines).toHaveLength(1000);
-    // Hardening requirement: Financial report generation for 1000 accounts should be under 500ms
+    expect(result.lines).toHaveLength(totalAccounts);
+    // Hardening requirement: Financial report generation for 5000 accounts should be under 500ms
     expect(duration).toBeLessThan(500);
   });
 });
