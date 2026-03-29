@@ -2,7 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, POLICY_REPOSITORY, OUTBOX_REPOSITORY, TELEMETRY_SERVICE } from '@virteex/domain-accounting-domain';
-import { MESSAGE_BROKER } from '@virteex/domain-accounting-application';
+import { MESSAGE_BROKER, ACCOUNTING_REPORTING_PORT } from '@virteex/domain-accounting-application';
 import { TelemetryService } from '@virteex/kernel-telemetry';
 import { MikroOrmAccountRepository } from './persistence/repositories/mikro-orm-account.repository';
 import { MikroOrmJournalEntryRepository } from './persistence/repositories/mikro-orm-journal-entry.repository';
@@ -29,6 +29,10 @@ import { KafkaMessageBroker } from './messaging/producers/kafka-message-broker';
       useClass: MikroOrmJournalEntryRepository,
     },
     {
+      provide: ACCOUNTING_REPORTING_PORT,
+      useClass: MikroOrmJournalEntryRepository,
+    },
+    {
       provide: POLICY_REPOSITORY,
       useClass: MikroOrmPolicyRepository,
     },
@@ -50,6 +54,9 @@ import { KafkaMessageBroker } from './messaging/producers/kafka-message-broker';
     ACCOUNT_REPOSITORY,
     JOURNAL_ENTRY_REPOSITORY,
     POLICY_REPOSITORY,
+    ACCOUNTING_REPORTING_PORT,
+    MESSAGE_BROKER,
+    TELEMETRY_SERVICE,
     MikroOrmModule
   ],
 })

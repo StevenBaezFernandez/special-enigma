@@ -13,7 +13,7 @@ import { JournalEntryDto } from '@virteex/domain-accounting-contracts';
     <div class="p-6">
       <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold">Journal Entries</h1>
-        <button routerLink="/accounting/journal-entries/new" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button routerLink="./new" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           + New Journal Entry
         </button>
       </div>
