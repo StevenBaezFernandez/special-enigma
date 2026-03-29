@@ -9,3 +9,4 @@ export * from './use-cases/fiscal-periods/close-fiscal-period.use-case';
 export * from './services/accounting-policy.service';
 export * from './services/accounting-event-handler.service';
 export * from './ports/outbound/message-broker.port';
+export * from './ports/outbound/reporting.port';

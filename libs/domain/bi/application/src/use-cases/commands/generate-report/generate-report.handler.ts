@@ -1,19 +1,19 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { BiReport, type BiReportRepository, BI_REPORT_REPOSITORY } from '@virteex/domain-bi-domain';
-import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository } from '@virteex/domain-accounting-domain';
+import { ACCOUNTING_REPORTING_PORT, type IAccountingReportingPort } from '@virteex/domain-accounting-application';
 import { GenerateReportCommand } from './generate-report.command';
 
 @Injectable()
 export class GenerateReportHandler {
   constructor(
     @Inject(BI_REPORT_REPOSITORY) private readonly repository: BiReportRepository,
-    @Inject(JOURNAL_ENTRY_REPOSITORY) private readonly journalEntryRepository: JournalEntryRepository
+    @Inject(ACCOUNTING_REPORTING_PORT) private readonly accountingReporting: IAccountingReportingPort
   ) {}
 
   async handle(command: GenerateReportCommand): Promise<BiReport> {
     const { dto } = command;
     const tenantId = dto.tenantId || dto.parameters?.tenantId || 'default';
-    const totalEntries = await this.journalEntryRepository.count(tenantId);
+    const totalEntries = await this.accountingReporting.countJournalEntries(tenantId);
 
     const realData = {
       summary: `Financial Report: ${dto.name}`,

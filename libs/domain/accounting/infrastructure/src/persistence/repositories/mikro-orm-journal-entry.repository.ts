@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { JournalEntry, type JournalEntryRepository, JournalEntryType } from '@virteex/domain-accounting-domain';
+import { IAccountingReportingPort } from '@virteex/domain-accounting-application';
 
 @Injectable()
-export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
+export class MikroOrmJournalEntryRepository implements JournalEntryRepository, IAccountingReportingPort {
   constructor(private readonly em: EntityManager) {}
 
   async create(entry: JournalEntry): Promise<JournalEntry> {
@@ -21,6 +22,10 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository {
 
   async count(tenantId: string): Promise<number> {
     return this.em.count(JournalEntry, { tenantId } as any);
+  }
+
+  async countJournalEntries(tenantId: string): Promise<number> {
+    return this.count(tenantId);
   }
 
   async getBalancesByAccount(tenantId: string, startDate?: Date, endDate?: Date, dimensions?: Record<string, string>): Promise<Map<string, { debit: string; credit: string }>> {
