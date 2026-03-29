@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AccountingService } from '../../services/accounting.service';
 import { AccountDto } from '@virteex/domain-accounting-contracts';
 import { Decimal } from 'decimal.js';
@@ -13,7 +13,7 @@ import { Decimal } from 'decimal.js';
   template: `
     <div class="p-6">
       <div class="flex items-center mb-6">
-        <a routerLink="/accounting/journal-entries" class="text-blue-600 hover:text-blue-800 mr-4">
+        <a routerLink="../" class="text-blue-600 hover:text-blue-800 mr-4">
           &larr; Back to Journal Entries
         </a>
         <h1 class="text-2xl font-bold">Record New Journal Entry</h1>
@@ -95,7 +95,7 @@ import { Decimal } from 'decimal.js';
           </div>
 
           <div class="flex justify-end mt-6">
-            <button type="button" routerLink="/accounting/journal-entries" class="mr-4 px-4 py-2 border rounded text-gray-700 hover:bg-gray-50">
+            <button type="button" routerLink="../" class="mr-4 px-4 py-2 border rounded text-gray-700 hover:bg-gray-50">
               Cancel
             </button>
             <button type="submit" [disabled]="entryForm.invalid || !isBalanced() || loading" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded disabled:opacity-50">
@@ -115,6 +115,7 @@ export class RecordJournalEntryComponent implements OnInit {
   private fb = inject(FormBuilder);
   private accountingService = inject(AccountingService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   entryForm = this.fb.group({
     date: [new Date().toISOString().split('T')[0], Validators.required],
@@ -193,7 +194,7 @@ export class RecordJournalEntryComponent implements OnInit {
 
     this.accountingService.recordJournalEntry(dto).subscribe({
       next: () => {
-        this.router.navigate(['/accounting/journal-entries']);
+        this.router.navigate(['../'], { relativeTo: this.route });
       },
       error: (err) => {
         this.error = 'Failed to record journal entry. ' + (err.error?.message || '');

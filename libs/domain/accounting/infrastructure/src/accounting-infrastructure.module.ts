@@ -2,6 +2,8 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, POLICY_REPOSITORY, OUTBOX_REPOSITORY, TELEMETRY_SERVICE } from '@virteex/domain-accounting-domain';
+import { MESSAGE_BROKER } from '@virteex/domain-accounting-application';
+import { TelemetryService } from '@virteex/kernel-telemetry';
 import { MikroOrmAccountRepository } from './persistence/repositories/mikro-orm-account.repository';
 import { MikroOrmJournalEntryRepository } from './persistence/repositories/mikro-orm-journal-entry.repository';
 import { MikroOrmPolicyRepository } from './persistence/repositories/mikro-orm-policy.repository';
@@ -9,6 +11,7 @@ import { MikroOrmOutboxRepository } from './persistence/repositories/mikro-orm-o
 import { AccountSchema, JournalEntrySchema, JournalEntryLineSchema, FiscalYearSchema, AccountingPolicySchema } from './persistence/orm/mikro-orm.schemas';
 import { OutboxMessageSchema } from './persistence/orm/outbox.schema';
 import { OutboxRelayService } from './messaging/outbox/outbox-relay.service';
+import { KafkaMessageBroker } from './messaging/producers/kafka-message-broker';
 
 @Global()
 @Module({
@@ -35,11 +38,11 @@ import { OutboxRelayService } from './messaging/outbox/outbox-relay.service';
     },
     {
       provide: TELEMETRY_SERVICE,
-      useValue: {
-        recordSecurityEvent: () => {},
-        recordBusinessMetric: () => {},
-        setTraceAttributes: () => {},
-      },
+      useClass: TelemetryService,
+    },
+    {
+      provide: MESSAGE_BROKER,
+      useClass: KafkaMessageBroker,
     },
     OutboxRelayService,
   ],

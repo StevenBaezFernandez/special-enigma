@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use JournalEntryDto from @virteex/domain-accounting-contracts instead.
+ */
 export interface JournalEntry {
   id: string;
   organizationId: string;

@@ -6,6 +6,9 @@ import { JournalEntry } from '@virteex/domain-accounting-contracts';
 
 type CreateJournalEntryDto = Omit<JournalEntry, 'id' | 'organizationId' | 'createdAt' | 'updatedAt' | 'totalDebit' | 'totalCredit' | 'status'>;
 
+/**
+ * @deprecated Use AccountingService from @virteex/accounting-ui instead.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +16,10 @@ export class JournalEntries {
   private config = inject(APP_CONFIG) as any;
   private http = inject(HttpClient);
   private apiUrl = `${this.config.apiUrl}/journal-entries`;
+
+  constructor() {
+    console.warn('JournalEntries service is deprecated. Use AccountingService from @virteex/accounting-ui instead.');
+  }
 
   getAll(): Observable<JournalEntry[]> {
     return this.http.get<JournalEntry[]>(this.apiUrl);

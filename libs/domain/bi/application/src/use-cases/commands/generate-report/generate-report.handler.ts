@@ -13,7 +13,7 @@ export class GenerateReportHandler {
   async handle(command: GenerateReportCommand): Promise<BiReport> {
     const { dto } = command;
     const tenantId = dto.tenantId || dto.parameters?.tenantId || 'default';
-    const totalEntries = await (this.journalEntryRepository as any).count(tenantId);
+    const totalEntries = await this.journalEntryRepository.count(tenantId);
 
     const realData = {
       summary: `Financial Report: ${dto.name}`,

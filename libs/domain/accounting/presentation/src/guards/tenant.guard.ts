@@ -4,10 +4,10 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@
 export class TenantGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const tenantId = request.headers['x-tenant-id'];
+    const tenantId = request.headers['x-virteex-tenant-id'] || request.headers['x-tenant-id'];
 
     if (!tenantId) {
-      throw new ForbiddenException('Tenant ID is required for this operation.');
+      throw new ForbiddenException('Tenant identification is required for this operation.');
     }
 
     return true;

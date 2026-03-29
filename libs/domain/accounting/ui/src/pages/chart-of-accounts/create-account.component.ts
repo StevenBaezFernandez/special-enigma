@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AccountingService } from '../../services/accounting.service';
 import { AccountType } from '@virteex/domain-accounting-contracts';
 import { AccountDto } from '@virteex/domain-accounting-contracts';
@@ -13,7 +13,7 @@ import { AccountDto } from '@virteex/domain-accounting-contracts';
   template: `
     <div class="p-6">
       <div class="flex items-center mb-6">
-        <a routerLink="/accounting/accounts" class="text-blue-600 hover:text-blue-800 mr-4">
+        <a routerLink="../" class="text-blue-600 hover:text-blue-800 mr-4">
           &larr; Back to Chart of Accounts
         </a>
         <h1 class="text-2xl font-bold">Create New Account</h1>
@@ -57,7 +57,7 @@ import { AccountDto } from '@virteex/domain-accounting-contracts';
             </div>
 
             <div class="flex justify-end mt-4">
-              <button type="button" routerLink="/accounting/accounts" class="mr-4 px-4 py-2 border rounded text-gray-700 hover:bg-gray-50">
+              <button type="button" routerLink="../" class="mr-4 px-4 py-2 border rounded text-gray-700 hover:bg-gray-50">
                 Cancel
               </button>
               <button type="submit" [disabled]="accountForm.invalid || loading" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded disabled:opacity-50">
@@ -78,6 +78,7 @@ export class CreateAccountComponent implements OnInit {
   private fb = inject(FormBuilder);
   private accountingService = inject(AccountingService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   accountForm = this.fb.group({
     code: ['', Validators.required],
@@ -114,7 +115,7 @@ export class CreateAccountComponent implements OnInit {
 
     this.accountingService.createAccount(dto).subscribe({
       next: () => {
-        this.router.navigate(['/accounting/accounts']);
+        this.router.navigate(['../'], { relativeTo: this.route });
       },
       error: (err) => {
         this.error = 'Failed to create account. ' + (err.error?.message || '');
