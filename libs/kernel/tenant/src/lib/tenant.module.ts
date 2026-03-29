@@ -17,10 +17,16 @@ import { ResidencyAuditorController } from './controllers/residency-auditor.cont
 import { TelemetryModule } from '@virteex/kernel-telemetry';
 import { AuthModule } from '@virteex/kernel-auth';
 import { ConfigModule } from '@nestjs/config';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 
 @Global()
 @Module({
-  imports: [ConfigModule, TelemetryModule, AuthModule],
+  imports: [
+    ConfigModule,
+    TelemetryModule,
+    AuthModule,
+    MikroOrmModule.forFeature([]),
+  ],
   controllers: [ResidencyAuditorController],
   providers: [
     TenantService,
