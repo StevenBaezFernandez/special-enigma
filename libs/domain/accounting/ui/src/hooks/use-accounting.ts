@@ -16,7 +16,18 @@ export function useAccounting() {
     }
   }
 
+  async function loadJournalEntries() {
+    accountingState.update(s => ({ ...s, isLoading: true }));
+    try {
+      const entries = await firstValueFrom(service.getJournalEntries());
+      accountingState.update(s => ({ ...s, journalEntries: entries || [], isLoading: false }));
+    } catch (e) {
+      accountingState.update(s => ({ ...s, error: (e as Error).message, isLoading: false }));
+    }
+  }
+
   return {
     loadAccounts,
+    loadJournalEntries,
   };
 }

@@ -10,7 +10,7 @@ export * from './shared/flattened-account.model';
 export * from './shared/general-ledger.model';
 export * from './shared/journal.model';
 export * from './shared/ledger.model';
-export * from './shared/journal-entry.contract';
+export * from './shared/journal-entry.model';
 
 export * from './shared/enums/account-type.enum';
 export * from './shared/enums/journal-entry-status.enum';

@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsDateString, IsOptional, IsObject } from 'class-validator';
+import { FinancialReportType } from './enums/financial-report-type.enum';
 
 export class GenerateFinancialReportDto {
-  @ApiProperty({ enum: ['BALANCE_SHEET', 'PROFIT_AND_LOSS', 'TRIAL_BALANCE'] })
-  @IsEnum(['BALANCE_SHEET', 'PROFIT_AND_LOSS', 'TRIAL_BALANCE'])
-  type!: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS' | 'TRIAL_BALANCE';
+  @ApiProperty({ enum: FinancialReportType })
+  @IsEnum(FinancialReportType)
+  type!: FinancialReportType;
 
   @ApiProperty()
   @IsDateString()

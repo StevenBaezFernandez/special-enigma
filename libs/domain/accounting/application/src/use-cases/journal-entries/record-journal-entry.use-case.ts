@@ -1,12 +1,14 @@
 import { JournalEntry, JournalEntryLine, type JournalEntryRepository, type AccountRepository, AccountNotFoundError, CrossTenantAccessError, PeriodClosedError, type ITelemetryService } from '@virteex/domain-accounting-domain';
 import { type RecordJournalEntryDto, type JournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { JournalEntryMapper } from '../../mappers/journal-entry.mapper';
+import { IUnitOfWork } from '../../ports/outbound/unit-of-work.port';
 
 export class RecordJournalEntryUseCase {
   constructor(
     private journalEntryRepository: JournalEntryRepository,
     private accountRepository: AccountRepository,
-    private telemetryService: ITelemetryService
+    private telemetryService: ITelemetryService,
+    private uow: IUnitOfWork
   ) {}
 
   async execute(dto: RecordJournalEntryDto & { tenantId: string }): Promise<JournalEntryDto> {
@@ -47,8 +49,7 @@ export class RecordJournalEntryUseCase {
         return JournalEntryMapper.toDto(savedEntry);
     };
 
-    const transactionalRepo = this.journalEntryRepository as any;
-    const promise = transactionalRepo.transactional ? transactionalRepo.transactional(handleExecute) : handleExecute();
+    const promise = this.uow.transactional(handleExecute);
 
     return promise.catch(error => {
       const duration = Date.now() - startTime;

@@ -1,0 +1,5 @@
+export enum FinancialReportType {
+  BALANCE_SHEET = 'BALANCE_SHEET',
+  PROFIT_AND_LOSS = 'PROFIT_AND_LOSS',
+  TRIAL_BALANCE = 'TRIAL_BALANCE'
+}

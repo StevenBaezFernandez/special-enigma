@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AccountingService } from '../../services/accounting.service';
 import { AccountType } from '@virteex/domain-accounting-contracts';
 import { AccountDto } from '@virteex/domain-accounting-contracts';
+import { createAccountForm } from '../../forms/account.form';
 
 @Component({
   selector: 'app-create-account',
@@ -75,17 +76,11 @@ import { AccountDto } from '@virteex/domain-accounting-contracts';
   `,
 })
 export class CreateAccountComponent implements OnInit {
-  private fb = inject(FormBuilder);
   private accountingService = inject(AccountingService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  accountForm = this.fb.group({
-    code: ['', Validators.required],
-    name: ['', Validators.required],
-    type: [AccountType.ASSET, Validators.required],
-    parentId: [null as string | null]
-  });
+  accountForm = createAccountForm();
 
   accountTypes = Object.values(AccountType);
   accounts: AccountDto[] = [];
@@ -109,7 +104,7 @@ export class CreateAccountComponent implements OnInit {
     const dto = {
         code: this.accountForm.value.code!,
         name: this.accountForm.value.name!,
-        type: this.accountForm.value.type!,
+        type: this.accountForm.value.type! as any,
         parentId: this.accountForm.value.parentId || undefined
     };
 
