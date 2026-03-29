@@ -1,16 +1,27 @@
-import { type AccountCreatedEventV1 } from '../events/v1/account-created.event';
+import { type AccountDto } from '../api/v1/responses/account.dto';
+import { type AccountDtoV2 } from '../api/v2/responses/account.v2.dto';
 
 /**
  * Mapper for backward compatibility between contract versions.
- * Currently serves as a placeholder for the v1 to v2 migration.
  */
 export class ContractCompatibilityMapper {
-  static mapV1ToV2(event: AccountCreatedEventV1): any {
+  /**
+   * Maps an Account V1 DTO to a V2 DTO.
+   */
+  static mapAccountV1ToV2(v1: AccountDto): AccountDtoV2 {
     return {
-      ...event,
-      version: 'v2',
+      id: v1.id,
+      tenantId: v1.tenantId,
+      code: v1.code,
+      name: v1.name,
+      type: v1.type,
+      parentId: v1.parentId,
+      level: v1.level,
+      isControl: v1.isControl,
+      currency: v1.currency,
       metadata: {
-        mappedAt: new Date().toISOString()
+        version: 'v2',
+        createdAt: new Date().toISOString() // In a real scenario, this would come from the entity
       }
     };
   }

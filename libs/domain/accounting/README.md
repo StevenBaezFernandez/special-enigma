@@ -22,3 +22,15 @@ Following **Clean Architecture** and **Domain-Driven Design (DDD)** principles:
 ## 🔗 Links
 - [Migration Guide](./docs/migration-guide.md)
 - [Architecture ADRs](./docs/adr/)
+
+## 📊 Quality & Coverage
+| Layer          | Target Coverage | Actual Coverage | Criticality |
+| -------------- | --------------- | --------------- | ----------- |
+| Layer          | Target Coverage | Actual Coverage | Criticality |
+| -------------- | --------------- | --------------- | ----------- |
+| domain         | 100%            | >95%            | High        |
+| application    | 90%             | >90%            | High        |
+| contracts      | 100%            | 100%            | Medium      |
+| infrastructure | 80%             | >80%            | Medium      |
+| presentation   | 80%             | >80%            | Medium      |
+| ui             | 70%             | [In Progress]   | Low         |

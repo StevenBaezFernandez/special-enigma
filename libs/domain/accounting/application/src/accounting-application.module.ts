@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, AccountRepository, JournalEntryRepository } from '@virteex/domain-accounting-domain';
+import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, OUTBOX_REPOSITORY, TELEMETRY_SERVICE, AccountRepository, JournalEntryRepository, OutboxRepository, ITelemetryService } from '@virteex/domain-accounting-domain';
 import { AccountingPolicyService } from './services/accounting-policy.service';
 import { AccountingEventHandlerService } from './services/accounting-event-handler.service';
 import { AccountingListener } from './handlers/accounting.listener';
@@ -18,13 +18,13 @@ import { CloseFiscalPeriodUseCase } from './use-cases/fiscal-periods/close-fisca
     AccountingListener,
     {
       provide: CreateAccountUseCase,
-      useFactory: (repo: AccountRepository) => new CreateAccountUseCase(repo),
-      inject: [ACCOUNT_REPOSITORY],
+      useFactory: (repo: AccountRepository, outbox: OutboxRepository, telemetry: ITelemetryService) => new CreateAccountUseCase(repo, outbox, telemetry),
+      inject: [ACCOUNT_REPOSITORY, OUTBOX_REPOSITORY, TELEMETRY_SERVICE],
     },
     {
       provide: RecordJournalEntryUseCase,
-      useFactory: (jeRepo: JournalEntryRepository, accRepo: AccountRepository) => new RecordJournalEntryUseCase(jeRepo, accRepo),
-      inject: [JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY],
+      useFactory: (jeRepo: JournalEntryRepository, accRepo: AccountRepository, telemetry: ITelemetryService) => new RecordJournalEntryUseCase(jeRepo, accRepo, telemetry),
+      inject: [JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY, TELEMETRY_SERVICE],
     },
     {
       provide: GetAccountsUseCase,

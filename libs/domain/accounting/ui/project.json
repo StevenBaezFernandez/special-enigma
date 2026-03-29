@@ -9,7 +9,9 @@
     "type:ui",
     "platform:agnostic",
     "criticality:medium",
-    "compliance:fiscal"
+    "compliance:fiscal",
+    "tenant-mode:schema",
+    "region:global"
   ],
   "targets": {
     "test": {

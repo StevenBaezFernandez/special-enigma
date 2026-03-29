@@ -1,7 +1,45 @@
+import { vi, describe, it, expect } from 'vitest';
+import { GenerateFinancialReportUseCase } from '../../application/src/use-cases/reports/generate-financial-report.use-case';
+
 describe('Accounting Domain Performance', () => {
-  it('should meet minimal latency requirements for critical paths (placeholder)', () => {
-    const startTime = Date.now();
-    const endTime = Date.now();
-    expect(endTime - startTime).toBeLessThan(1000);
+  it('should meet performance requirements for report generation with many entries (simulated)', async () => {
+    const mockJournalRepo = {
+      getBalancesByAccount: vi.fn().mockImplementation(() => {
+        const balances = new Map();
+        for (let i = 0; i < 1000; i++) {
+          balances.set(`acc-${i}`, { debit: '100.00', credit: '50.00' });
+        }
+        return Promise.resolve(balances);
+      }),
+    };
+
+    const mockAccountRepo = {
+      findAll: vi.fn().mockImplementation(() => {
+        const accounts = [];
+        for (let i = 0; i < 1000; i++) {
+          accounts.push({
+            id: `acc-${i}`,
+            tenantId: 'tenant-1',
+            code: `code-${i}`,
+            name: `Account ${i}`,
+            type: 'ASSET'
+          });
+        }
+        return Promise.resolve(accounts);
+      }),
+    };
+
+    const useCase = new GenerateFinancialReportUseCase(mockJournalRepo as any, mockAccountRepo as any);
+
+    const startTime = performance.now();
+    const result = await useCase.execute('tenant-1', 'TRIAL_BALANCE', new Date());
+    const endTime = performance.now();
+
+    const duration = endTime - startTime;
+    console.log(`[Performance] Trial Balance generation for 1000 accounts took ${duration.toFixed(2)}ms`);
+
+    expect(result.lines).toHaveLength(1000);
+    // Hardening requirement: Financial report generation for 1000 accounts should be under 500ms
+    expect(duration).toBeLessThan(500);
   });
 });

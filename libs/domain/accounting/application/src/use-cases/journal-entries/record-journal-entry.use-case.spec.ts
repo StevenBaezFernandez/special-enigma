@@ -1,12 +1,13 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { RecordJournalEntryUseCase } from './record-journal-entry.use-case';
-import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository, ACCOUNT_REPOSITORY, type AccountRepository, Account } from '@virteex/domain-accounting-domain';
+import { JOURNAL_ENTRY_REPOSITORY, type JournalEntryRepository, ACCOUNT_REPOSITORY, type AccountRepository, Account, type ITelemetryService } from '@virteex/domain-accounting-domain';
 import { AccountType } from '@virteex/domain-accounting-contracts';
 
 describe('RecordJournalEntryUseCase', () => {
   let service: RecordJournalEntryUseCase;
   let journalRepo: JournalEntryRepository;
   let accountRepo: AccountRepository;
+  let telemetry: ITelemetryService;
 
   beforeEach(() => {
     journalRepo = {
@@ -20,7 +21,11 @@ describe('RecordJournalEntryUseCase', () => {
       findByCode: vi.fn(),
       findAll: vi.fn(),
     } as unknown as AccountRepository;
-    service = new RecordJournalEntryUseCase(journalRepo, accountRepo);
+    telemetry = {
+      recordBusinessMetric: vi.fn(),
+      setTraceAttributes: vi.fn(),
+    } as unknown as ITelemetryService;
+    service = new RecordJournalEntryUseCase(journalRepo, accountRepo, telemetry);
   });
 
   it('should create a balanced journal entry', async () => {

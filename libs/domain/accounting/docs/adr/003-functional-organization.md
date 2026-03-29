@@ -1,7 +1,7 @@
 # ADR 003: Functional Organization of Use Cases in Accounting Domain
 
 ## Status
-Proposed
+Accepted
 
 ## Context
 The standard migration guide (`GUIA_MIGRACION_DOMINIOS_V2.md`) suggests organizing use cases under `application/use-cases/commands|queries|workflows`. However, the `accounting` domain currently organizes them by functional subdomain (e.g., `accounts`, `journal-entries`, `reports`, `fiscal-periods`).

@@ -1,11 +1,14 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { CreateAccountUseCase } from './create-account.use-case';
-import { ACCOUNT_REPOSITORY, type AccountRepository, Account } from '@virteex/domain-accounting-domain';
+import { ACCOUNT_REPOSITORY, type AccountRepository, Account, type OutboxRepository, type ITelemetryService } from '@virteex/domain-accounting-domain';
 import { AccountType } from '@virteex/domain-accounting-contracts';
 
 describe('CreateAccountUseCase', () => {
   let service: CreateAccountUseCase;
   let repo: AccountRepository;
+  let outbox: OutboxRepository;
+
+  let telemetry: ITelemetryService;
 
   beforeEach(() => {
     repo = {
@@ -13,8 +16,16 @@ describe('CreateAccountUseCase', () => {
       create: vi.fn(),
       findById: vi.fn(),
       findAll: vi.fn(),
+      transactional: vi.fn().mockImplementation((cb) => cb()),
     } as unknown as AccountRepository;
-    service = new CreateAccountUseCase(repo);
+    outbox = {
+      save: vi.fn(),
+    } as unknown as OutboxRepository;
+    telemetry = {
+      recordBusinessMetric: vi.fn(),
+      setTraceAttributes: vi.fn(),
+    } as unknown as ITelemetryService;
+    service = new CreateAccountUseCase(repo, outbox, telemetry);
   });
 
   it('should be defined', () => {
@@ -30,7 +41,11 @@ describe('CreateAccountUseCase', () => {
     };
 
     (repo.findByCode as any).mockResolvedValue(null);
-    (repo.create as any).mockImplementation((account: any) => Promise.resolve({ ...account, id: '1' }));
+    (repo.create as any).mockImplementation((account: any) => {
+        const saved = Object.assign(Object.create(Object.getPrototypeOf(account)), account);
+        saved.id = '1';
+        return Promise.resolve(saved);
+    });
 
     const result = await service.execute(dto);
 
@@ -55,7 +70,11 @@ describe('CreateAccountUseCase', () => {
 
       (repo.findByCode as any).mockResolvedValue(null);
       (repo.findById as any).mockResolvedValue(parent);
-      (repo.create as any).mockImplementation((account: any) => Promise.resolve({ ...account, id: '2' }));
+      (repo.create as any).mockImplementation((account: any) => {
+          const saved = Object.assign(Object.create(Object.getPrototypeOf(account)), account);
+          saved.id = '2';
+          return Promise.resolve(saved);
+      });
 
       const result = await service.execute(dto);
 

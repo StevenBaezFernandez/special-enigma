@@ -1,6 +1,7 @@
 export * from './api/v1/requests/create-account.dto';
 export * from './api/v1/requests/record-journal-entry.dto';
 export * from './api/v1/responses/account.dto';
+export * from './api/v2/responses/account.v2.dto';
 export * from './api/v1/responses/journal-entry.dto';
 
 export * from './shared/accounting-ops.dto';
