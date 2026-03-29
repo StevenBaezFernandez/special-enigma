@@ -71,5 +71,6 @@ export function setupGlobalConfig(app: INestApplication, serviceName?: string) {
   app.useGlobalFilters(new GlobalExceptionFilter());
 
   // Prefix
-  app.setGlobalPrefix('api');
+  const globalPrefix = serviceName ? `api/${serviceName}` : 'api';
+  app.setGlobalPrefix(globalPrefix);
 }

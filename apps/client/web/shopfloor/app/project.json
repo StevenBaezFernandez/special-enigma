@@ -32,6 +32,7 @@
         ]
       },
       "configurations": {
+        "production": { "fileReplacements": [ { "replace": "apps/client/web/shopfloor/app/src/environments/environment.ts", "with": "apps/client/web/shopfloor/app/src/environments/environment.prod.ts" } ] },
         "production": {
           "budgets": [
             {
@@ -58,7 +59,9 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": { "proxyConfig": "apps/client/web/shopfloor/app/proxy.conf.json" },
       "configurations": {
+        "production": { "fileReplacements": [ { "replace": "apps/client/web/shopfloor/app/src/environments/environment.ts", "with": "apps/client/web/shopfloor/app/src/environments/environment.prod.ts" } ] },
         "production": {
           "buildTarget": "web-shopfloor-app:build:production"
         },

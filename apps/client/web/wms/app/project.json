@@ -32,6 +32,7 @@
         ]
       },
       "configurations": {
+        "production": { "fileReplacements": [ { "replace": "apps/client/web/wms/app/src/environments/environment.ts", "with": "apps/client/web/wms/app/src/environments/environment.prod.ts" } ] },
         "production": {
           "budgets": [
             {
@@ -59,7 +60,9 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": { "proxyConfig": "apps/client/web/wms/app/proxy.conf.json" },
       "configurations": {
+        "production": { "fileReplacements": [ { "replace": "apps/client/web/wms/app/src/environments/environment.ts", "with": "apps/client/web/wms/app/src/environments/environment.prod.ts" } ] },
         "production": {
           "buildTarget": "web-wms-app:build:production"
         },

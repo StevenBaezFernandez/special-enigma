@@ -36,6 +36,7 @@
         ]
       },
       "configurations": {
+        "production": { "fileReplacements": [ { "replace": "apps/client/web/ops/app/src/environments/environment.ts", "with": "apps/client/web/ops/app/src/environments/environment.prod.ts" } ] },
         "production": {
           "budgets": [
             {
@@ -62,7 +63,9 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": { "proxyConfig": "apps/client/web/ops/app/proxy.conf.json" },
       "configurations": {
+        "production": { "fileReplacements": [ { "replace": "apps/client/web/ops/app/src/environments/environment.ts", "with": "apps/client/web/ops/app/src/environments/environment.prod.ts" } ] },
         "production": {
           "buildTarget": "web-ops-app:build:production"
         },

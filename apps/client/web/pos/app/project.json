@@ -41,6 +41,12 @@
       },
       "configurations": {
         "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/client/web/pos/app/src/environments/environment.ts",
+              "with": "apps/client/web/pos/app/src/environments/environment.prod.ts"
+            }
+          ],
           "budgets": [
             {
               "type": "initial",
@@ -76,7 +82,8 @@
       },
       "defaultConfiguration": "development",
       "options": {
-        "port": 4204
+        "port": 4204,
+        "proxyConfig": "apps/client/web/pos/app/proxy.conf.json"
       }
     },
     "lint": {

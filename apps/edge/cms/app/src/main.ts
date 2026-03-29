@@ -5,9 +5,9 @@ import { setupGlobalConfig } from '@virteex/shared-util-server-server-config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  setupGlobalConfig(app);
+  setupGlobalConfig(app, 'cms');
   const port = process.env.PORT || 3105;
   await app.listen(port);
-  Logger.log(`🚀 BFF is running on: http://localhost:${port}/api`);
+  Logger.log(`🚀 BFF is running on: http://localhost:${port}/api/cms`);
 }
 bootstrap();

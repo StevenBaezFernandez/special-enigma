@@ -1,18 +1,20 @@
-import {
-  ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-} from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { appRoutes } from './app.routes';
-import {
-  provideClientHydration,
-  withEventReplay,
-} from '@angular/platform-browser';
+import { APP_CONFIG, AppConfig, getBffUrl, API_URL } from '@virteex/shared-config';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes),
+    provideHttpClient(),
+    { provide: APP_CONFIG, useValue: environment },
+    {
+      provide: API_URL,
+      useFactory: (config: AppConfig) => getBffUrl('site', config.apiUrl),
+      deps: [APP_CONFIG]
+    }
   ],
 };
