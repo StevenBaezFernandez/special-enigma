@@ -7,15 +7,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Apply Global Configuration (Security, Pipes, Filters, Throttling)
-  setupGlobalConfig(app);
+  setupGlobalConfig(app, 'pos');
 
   const port = process.env.PORT || 3101;
-  const globalPrefix = 'api';
 
   await app.listen(port);
-  Logger.log(
-    `🚀 BFF is running on: http://localhost:${port}/${globalPrefix}`
-  );
+  Logger.log(`🚀 BFF is running on: http://localhost:${port}/api/pos`);
 }
 
 bootstrap();

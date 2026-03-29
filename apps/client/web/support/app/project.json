@@ -28,6 +28,7 @@
         "styles": ["apps/client/web/support/app/src/styles.scss"]
       },
       "configurations": {
+        "production": { "fileReplacements": [ { "replace": "apps/client/web/support/app/src/environments/environment.ts", "with": "apps/client/web/support/app/src/environments/environment.prod.ts" } ] },
         "production": {
           "budgets": [
             {
@@ -54,7 +55,9 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": { "proxyConfig": "apps/client/web/support/app/proxy.conf.json" },
       "configurations": {
+        "production": { "fileReplacements": [ { "replace": "apps/client/web/support/app/src/environments/environment.ts", "with": "apps/client/web/support/app/src/environments/environment.prod.ts" } ] },
         "production": {
           "buildTarget": "web-support-app:build:production"
         },
