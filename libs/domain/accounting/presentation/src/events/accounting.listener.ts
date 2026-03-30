@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SetupChartOfAccountsUseCase, AccountingEventHandlerService } from '@virteex/domain-accounting-application';
+import { InvoiceStampedEventDto, PayrollStampedEventDto, ACCOUNTING_EVENTS } from '@virteex/domain-accounting-contracts';
 
 @Injectable()
 export class AccountingListener {
@@ -23,8 +24,8 @@ export class AccountingListener {
     }
   }
 
-  @OnEvent('invoice.stamped')
-  async handleInvoiceStamped(event: { invoiceId: string; tenantId: string; total: number; taxes: number; date: Date }) {
+  @OnEvent(ACCOUNTING_EVENTS.INVOICE_STAMPED)
+  async handleInvoiceStamped(event: InvoiceStampedEventDto) {
     try {
         await this.eventHandlerService.handleInvoiceStamped(event);
         this.logger.log(`Journal Entry created for Invoice ${event.invoiceId}`);
@@ -34,8 +35,8 @@ export class AccountingListener {
     }
   }
 
-  @OnEvent('payroll.stamped')
-  async handlePayrollStamped(event: { payrollId: string; tenantId: string; netPay: number; taxes: number; date: Date }) {
+  @OnEvent(ACCOUNTING_EVENTS.PAYROLL_STAMPED)
+  async handlePayrollStamped(event: PayrollStampedEventDto) {
     try {
         await this.eventHandlerService.handlePayrollStamped(event);
         this.logger.log(`Journal Entry created for Payroll ${event.payrollId}`);

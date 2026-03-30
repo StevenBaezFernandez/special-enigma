@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, UseInterceptors } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiHeader } from '@nestjs/swagger';
-import { CreateAccountDto, RecordJournalEntryDto, GenerateFinancialReportDto, CloseFiscalPeriodDto } from '@virteex/domain-accounting-contracts';
+import { CreateAccountDto, RecordJournalEntryDto, GenerateFinancialReportDto, CloseFiscalPeriodDto, FinancialReportDto } from '@virteex/domain-accounting-contracts';
 import {
   CreateAccountUseCase,
   RecordJournalEntryUseCase,
@@ -78,8 +78,12 @@ export class AccountingController {
   async generateFinancialReport(
     @CurrentTenant() tenantId: string,
     @Query() dto: GenerateFinancialReportDto
-  ) {
-    return this.generateFinancialReportUseCase.execute(tenantId, dto.type, new Date(dto.endDate), dto.dimensions);
+  ): Promise<FinancialReportDto> {
+    const report = await this.generateFinancialReportUseCase.execute(tenantId, dto.type, new Date(dto.endDate), dto.dimensions);
+    return {
+        ...report,
+        generatedAt: report.generatedAt.toISOString()
+    };
   }
 
   @Post('closing')

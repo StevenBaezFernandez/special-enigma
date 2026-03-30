@@ -28,6 +28,23 @@ export class Account {
     this.level = 1;
   }
 
+  setParent(parent: Account): void {
+    if (parent.tenantId !== this.tenantId) {
+      throw new CrossTenantAccessError();
+    }
+    if (!parent.isControl) {
+      throw new AccountingDomainError('Parent account must be a control account');
+    }
+    if (parent.type !== this.type) {
+      // In some accounting systems, children can have different types, but usually they match.
+      // For now, let's enforce type consistency if it's a best practice in this system.
+      // If the audit says to be more robust, we can add this or keep it flexible.
+      // The audit mentions "ensuring a parent account is a control account".
+    }
+    this.parent = parent;
+    this.level = parent.level + 1;
+  }
+
   get domainEvents(): DomainEvent[] {
     return this._domainEvents;
   }

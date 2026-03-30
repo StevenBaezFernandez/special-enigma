@@ -18,7 +18,7 @@ import {
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { AccountingInfrastructureModule, AccountingApplicationWiringModule } from '@virteex/domain-accounting-infrastructure';
+import { AccountingApplicationWiringModule } from '@virteex/domain-accounting-infrastructure';
 import { AccountingPresentationModule } from '@virteex/domain-accounting-presentation';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { AuthModule, CanonicalTenantMiddleware } from '@virteex/kernel-auth';
@@ -84,7 +84,6 @@ function shouldConnectDatabase(): boolean {
       autoLoadEntities: true,
     }),
     EventEmitterModule.forRoot(),
-    AccountingInfrastructureModule,
     AccountingApplicationWiringModule,
     AccountingPresentationModule,
   ],

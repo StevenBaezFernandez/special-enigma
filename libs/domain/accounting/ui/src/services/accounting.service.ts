@@ -5,14 +5,9 @@ import {
   AccountDto,
   JournalEntryDto,
   CreateAccountDto,
-  RecordJournalEntryDto
+  RecordJournalEntryDto,
+  FinancialReportDto
 } from '@virteex/domain-accounting-contracts';
-
-export interface FinancialReportDto {
-  type: string;
-  endDate: string;
-  dimensions?: Record<string, string>;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -40,12 +35,12 @@ export class AccountingService {
     return this.http.post<void>('/api/accounting/setup', {});
   }
 
-  getFinancialReport(type: string, endDate: string, dimensions?: Record<string, string>): Observable<unknown> {
+  getFinancialReport(type: string, endDate: string, dimensions?: Record<string, string>): Observable<FinancialReportDto> {
     const params: Record<string, string> = { type, endDate };
     if (dimensions) {
       params['dimensions'] = JSON.stringify(dimensions);
     }
-    return this.http.get<unknown>(`/api/accounting/reports/financial`, { params });
+    return this.http.get<FinancialReportDto>(`/api/accounting/reports/financial`, { params });
   }
 
   closeFiscalPeriod(closingDate: string): Observable<void> {

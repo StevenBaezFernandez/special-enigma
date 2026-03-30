@@ -16,7 +16,9 @@ import {
 import { ACCOUNTING_REPORTING_PORT } from '@virteex/domain-accounting-contracts';
 import { TelemetryService } from '@virteex/kernel-telemetry';
 import { MikroOrmAccountRepository } from './persistence/repositories/mikro-orm-account.repository';
-import { MikroOrmJournalEntryRepository } from './persistence/repositories/mikro-orm-journal-entry.repository';
+import { JournalEntryRepositoryAdapter } from './persistence/repositories/journal-entry-repository-adapter';
+import { MikroOrmReportingAdapter } from './persistence/repositories/mikro-orm-reporting-adapter';
+import { MikroOrmUnitOfWorkAdapter } from './persistence/repositories/mikro-orm-unit-of-work-adapter';
 import { MikroOrmPolicyRepository } from './persistence/repositories/mikro-orm-policy.repository';
 import { MikroOrmOutboxRepository } from './persistence/repositories/mikro-orm-outbox.repository';
 import {
@@ -32,7 +34,6 @@ import { KafkaMessageBroker } from './messaging/producers/kafka-message-broker';
 import { AccountingEventConsumerService } from './messaging/consumers/accounting-event-consumer.service';
 import { AccountingApplicationWiringModule } from './accounting-application-wiring.module';
 
-@Global()
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -52,15 +53,15 @@ import { AccountingApplicationWiringModule } from './accounting-application-wiri
     },
     {
       provide: JOURNAL_ENTRY_REPOSITORY,
-      useClass: MikroOrmJournalEntryRepository,
+      useClass: JournalEntryRepositoryAdapter,
     },
     {
       provide: ACCOUNTING_REPORTING_PORT,
-      useClass: MikroOrmJournalEntryRepository,
+      useClass: MikroOrmReportingAdapter,
     },
     {
       provide: I_UNIT_OF_WORK,
-      useClass: MikroOrmJournalEntryRepository,
+      useClass: MikroOrmUnitOfWorkAdapter,
     },
     {
       provide: POLICY_REPOSITORY,

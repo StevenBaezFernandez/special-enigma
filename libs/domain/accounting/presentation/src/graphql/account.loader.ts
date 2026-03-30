@@ -1,12 +1,13 @@
 import { Injectable, Scope, Inject } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import DataLoader from 'dataloader';
-import { ACCOUNT_REPOSITORY, type AccountRepository, Account } from '@virteex/domain-accounting-domain';
+import { GetAccountsByIdsUseCase } from '@virteex/domain-accounting-application';
+import { type AccountDto } from '@virteex/domain-accounting-contracts';
 
 @Injectable({ scope: Scope.REQUEST })
-export class AccountLoader extends DataLoader<string, Account | null> {
+export class AccountLoader extends DataLoader<string, AccountDto | null> {
   constructor(
-    @Inject(ACCOUNT_REPOSITORY) private readonly accountRepository: AccountRepository,
+    private readonly getAccountsByIdsUseCase: GetAccountsByIdsUseCase,
     @Inject(REQUEST) private readonly request: any
   ) {
     super(async (ids: readonly string[]) => {
@@ -14,9 +15,7 @@ export class AccountLoader extends DataLoader<string, Account | null> {
       if (!tenantId) {
         return ids.map(() => null);
       }
-      const accounts = await this.accountRepository.findByIds(tenantId, [...ids]);
-      const accountMap = new Map(accounts.map((a) => [a.id, a]));
-      return ids.map((id) => accountMap.get(id) || null);
+      return this.getAccountsByIdsUseCase.execute(tenantId, [...ids]);
     });
   }
 }

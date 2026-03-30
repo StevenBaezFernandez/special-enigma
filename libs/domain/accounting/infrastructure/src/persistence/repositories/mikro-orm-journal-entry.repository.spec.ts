@@ -1,11 +1,11 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { MikroOrmJournalEntryRepository } from './mikro-orm-journal-entry.repository';
+import { JournalEntryRepositoryAdapter } from './journal-entry-repository-adapter';
 import { JournalEntry, JournalEntryType, JournalEntryLine } from '@virteex/domain-accounting-domain';
 import { EntityManager } from '@mikro-orm/knex';
 import { DimensionValidator } from '@virteex/domain-accounting-application';
 
-describe('MikroOrmJournalEntryRepository', () => {
-  let repository: MikroOrmJournalEntryRepository;
+describe('JournalEntryRepositoryAdapter', () => {
+  let repository: JournalEntryRepositoryAdapter;
   let em: EntityManager;
   let dimensionValidator: DimensionValidator;
 
@@ -32,7 +32,7 @@ describe('MikroOrmJournalEntryRepository', () => {
     vi.clearAllMocks();
     em = mockEm as unknown as EntityManager;
     dimensionValidator = mockDimensionValidator as unknown as DimensionValidator;
-    repository = new MikroOrmJournalEntryRepository(em, dimensionValidator);
+    repository = new JournalEntryRepositoryAdapter(em, dimensionValidator);
   });
 
   it('should create a journal entry', async () => {
@@ -49,7 +49,7 @@ describe('MikroOrmJournalEntryRepository', () => {
     const tenantId = 'tenant-1';
     mockEm.count.mockResolvedValue(5);
 
-    const result = await repository.countJournalEntries(tenantId);
+    const result = await repository.count(tenantId);
 
     expect(mockEm.count).toHaveBeenCalledWith(JournalEntry, { tenantId });
     expect(result).toBe(5);

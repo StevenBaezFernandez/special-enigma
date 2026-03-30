@@ -22,13 +22,13 @@ import {
   RecordJournalEntryUseCase,
   GetAccountsUseCase,
   GetJournalEntriesUseCase,
+  GetAccountsByIdsUseCase,
   CountJournalEntriesUseCase,
   SetupChartOfAccountsUseCase,
   GenerateFinancialReportUseCase,
   CloseFiscalPeriodUseCase,
 } from '@virteex/domain-accounting-application';
 
-@Global()
 @Module({
   imports: [AccountingInfrastructureModule],
   providers: [
@@ -97,6 +97,12 @@ import {
       inject: [JOURNAL_ENTRY_REPOSITORY],
     },
     {
+      provide: GetAccountsByIdsUseCase,
+      useFactory: (accRepo: AccountRepository, jeRepo: JournalEntryRepository) =>
+        new GetAccountsByIdsUseCase(accRepo, jeRepo),
+      inject: [ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY],
+    },
+    {
       provide: CountJournalEntriesUseCase,
       useFactory: (repo: JournalEntryRepository) =>
         new CountJournalEntriesUseCase(repo),
@@ -134,6 +140,7 @@ import {
     CreateAccountUseCase,
     RecordJournalEntryUseCase,
     GetAccountsUseCase,
+    GetAccountsByIdsUseCase,
     GetJournalEntriesUseCase,
     CountJournalEntriesUseCase,
     SetupChartOfAccountsUseCase,

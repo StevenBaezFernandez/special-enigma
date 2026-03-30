@@ -26,11 +26,7 @@ export class CreateAccountUseCase {
             if (!parent) {
                 throw new ParentAccountNotFoundError(dto.parentId);
             }
-            if (parent.tenantId !== dto.tenantId) {
-                throw new CrossTenantAccessError();
-            }
-            account.parent = parent;
-            account.level = parent.level + 1;
+            account.setParent(parent);
         }
 
         const savedAccount = await this.accountRepository.create(account);

@@ -2,19 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { QueryOrder } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/knex';
 import { JournalEntry, type JournalEntryRepository, JournalEntryType, JournalEntryLine } from '@virteex/domain-accounting-domain';
-import { IUnitOfWork, DimensionValidator } from '@virteex/domain-accounting-application';
-import { IAccountingReportingPort } from '@virteex/domain-accounting-contracts';
+import { DimensionValidator } from '@virteex/domain-accounting-application';
 
 @Injectable()
-export class MikroOrmJournalEntryRepository implements JournalEntryRepository, IAccountingReportingPort, IUnitOfWork {
+export class JournalEntryRepositoryAdapter implements JournalEntryRepository {
   constructor(
     private readonly em: EntityManager,
     private readonly dimensionValidator: DimensionValidator
   ) {}
-
-  async transactional<T>(fn: () => Promise<T>): Promise<T> {
-    return this.em.transactional(fn);
-  }
 
   async create(entry: JournalEntry): Promise<JournalEntry> {
     await this.em.persistAndFlush(entry);
@@ -33,11 +28,7 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository, I
     return this.em.count(JournalEntry, { tenantId });
   }
 
-  async countJournalEntries(tenantId: string): Promise<number> {
-    return this.count(tenantId);
-  }
-
-  async getBalancesByAccount(tenantId: string, startDate?: Date, endDate?: Date, dimensions?: Record<string, string>): Promise<Map<string, { debit: string; credit: string }>> {
+  async getBalancesByAccount(tenantId: string, startDate?: Date, endDate?: Date, dimensions?: Record<string, string>, accountIds?: string[]): Promise<Map<string, { debit: string; credit: string }>> {
     const qb = this.em.createQueryBuilder(JournalEntryLine, 'l');
     qb.select(['l.account_id', 'SUM(l.debit) as total_debit', 'SUM(l.credit) as total_credit'])
       .join('l.journalEntry', 'e')
@@ -45,6 +36,7 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository, I
 
     if (startDate) qb.andWhere('e.date >= ?', [startDate]);
     if (endDate) qb.andWhere('e.date <= ?', [endDate]);
+    if (accountIds && accountIds.length > 0) qb.andWhere({ 'l.account_id': { $in: accountIds } });
 
     if (dimensions) {
         Object.entries(dimensions).forEach(([key, value]) => {

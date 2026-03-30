@@ -1,10 +1,11 @@
-export * from './accounting-application.module';
+export * from './application.public-api';
 
 // Use cases: needed by presentation layer for DI.
 // These should generally be accessed via Controllers or Resolvers.
 export * from './use-cases/accounts/create-account.use-case';
 export * from './use-cases/journal-entries/record-journal-entry.use-case';
 export * from './use-cases/accounts/get-accounts.use-case';
+export * from './use-cases/accounts/get-accounts-by-ids.use-case';
 export * from './use-cases/journal-entries/get-journal-entries.use-case';
 export * from './use-cases/journal-entries/count-journal-entries.use-case';
 export * from './use-cases/accounts/setup-chart-of-accounts.use-case';

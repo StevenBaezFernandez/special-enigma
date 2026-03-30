@@ -59,6 +59,7 @@ describe('CreateAccountUseCase', () => {
       const parent = new Account('tenant1', '100', 'Assets', AccountType.ASSET as any);
       parent.id = '1';
       parent.level = 1;
+      parent.isControl = true;
 
       const dto = {
         tenantId: 'tenant1',

@@ -5,6 +5,7 @@ export class AccountingDomainError extends Error {
   }
 }
 
+
 export class AccountAlreadyExistsError extends AccountingDomainError {
   constructor(code: string) {
     super(`Account with code ${code} already exists`);

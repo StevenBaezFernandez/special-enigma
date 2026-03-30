@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { AccountingEventConsumerService, InvoiceValidatedEvent } from '@virteex/domain-accounting-infrastructure';
+import { AccountingEventConsumerService } from '@virteex/domain-accounting-infrastructure';
+import { InvoiceValidatedEventDto, ACCOUNTING_EVENTS } from '@virteex/domain-accounting-contracts';
 
 @Controller()
 export class AccountingEventsController {
@@ -8,8 +9,8 @@ export class AccountingEventsController {
     private readonly consumerService: AccountingEventConsumerService
   ) {}
 
-  @EventPattern('billing.invoice.validated')
-  async handleInvoiceValidated(@Payload() event: InvoiceValidatedEvent) {
+  @EventPattern(ACCOUNTING_EVENTS.BILLING_INVOICE_VALIDATED)
+  async handleInvoiceValidated(@Payload() event: InvoiceValidatedEventDto) {
     return this.consumerService.consumeInvoiceValidated(event);
   }
 }
