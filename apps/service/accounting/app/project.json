@@ -71,18 +71,21 @@
       "executor": "nx:noop"
     },
     "serve": {
-      "executor": "@nx/js:node",
+      "continuous": true,
+      "executor": "nx:run-commands",
       "defaultConfiguration": "development",
+      "dependsOn": [
+        "build"
+      ],
       "options": {
-        "buildTarget": "service-accounting-app:build",
-        "inspect": false
+        "command": "node dist/apps/service-accounting-app/main.js"
       },
       "configurations": {
         "development": {
-          "buildTarget": "service-accounting-app:build:development"
+          "command": "node dist/apps/service-accounting-app/main.js"
         },
         "production": {
-          "buildTarget": "service-accounting-app:build:production"
+          "command": "NODE_ENV=production ACCOUNTING_DB_CONNECT=true ACCOUNTING_KAFKA_ENABLED=true node dist/apps/service-accounting-app/main.js"
         }
       }
     },
@@ -92,7 +95,8 @@
         "{options.reportsDirectory}"
       ],
       "options": {
-        "jestConfig": "apps/service/accounting/app/jest.config.cts", "passWithNoTests": true
+        "jestConfig": "apps/service/accounting/app/jest.config.cts",
+        "passWithNoTests": true
       }
     }
   }
