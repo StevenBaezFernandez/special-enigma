@@ -1,5 +1,6 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { RiskEngineService, GeoIpPort, GEO_IP_PORT } from '@virteex/domain-identity-domain';
+import { GEO_IP_PORT } from '@virteex/domain-identity-domain';
+import type { RiskEngineService, GeoIpPort } from '@virteex/domain-identity-domain';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

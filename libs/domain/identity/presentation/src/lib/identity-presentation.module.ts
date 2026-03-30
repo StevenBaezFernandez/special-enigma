@@ -7,11 +7,13 @@ import { SubscriptionController } from './controllers/subscription.controller';
 import { IdentityInfrastructureModule } from '@virteex/domain-identity-infrastructure';
 import { AuthModule } from '@virteex/kernel-auth';
 import { IdentityResolver } from './graphql/identity.resolver';
+import { RequestContextService } from './services/request-context.service';
+import { CookiePolicyService } from './services/cookie-policy.service';
 
 @Module({
   imports: [IdentityInfrastructureModule, AuthModule],
   controllers: [AuthController, UsersController, LocalizationController, TenantController, SubscriptionController],
-  providers: [IdentityResolver],
+  providers: [IdentityResolver, RequestContextService, CookiePolicyService],
   exports: [],
 })
 export class IdentityPresentationModule {}

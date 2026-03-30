@@ -1,7 +1,8 @@
 import { DomainException } from '@virteex/shared-util-server-server-config';
 import { Injectable, Inject } from '@nestjs/common';
 import { Tenant } from '@virteex/kernel-tenant';
-import { TenantRepository, TENANT_REPOSITORY } from '@virteex/domain-identity-domain';
+import { TENANT_REPOSITORY } from '@virteex/domain-identity-domain';
+import type { TenantRepository } from '@virteex/domain-identity-domain';
 
 @Injectable()
 export class GetSubscriptionStatusUseCase {

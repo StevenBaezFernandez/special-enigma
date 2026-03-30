@@ -1,6 +1,7 @@
-import { User, UserAuthenticator } from '@virteex/domain-identity-domain';
+import { User, UserAuthenticator, Company } from '@virteex/domain-identity-domain';
 import { UserOrmEntity } from '../persistence/entities/user.orm-entity';
 import { UserAuthenticatorOrmEntity } from '../persistence/entities/user-authenticator.orm-entity';
+import { CompanyOrmEntity } from '../persistence/entities/company.orm-entity';
 
 export class UserMapper {
   static toDomain(entity: UserOrmEntity): User {
@@ -10,7 +11,7 @@ export class UserMapper {
       entity.firstName,
       entity.lastName,
       entity.country,
-      entity.company
+      this.toDomainCompany(entity.company)
     );
     user.id = entity.id;
     user.timezone = entity.timezone;
@@ -60,7 +61,7 @@ export class UserMapper {
       domain.firstName,
       domain.lastName,
       domain.country,
-      domain.company
+      this.toPersistenceCompany(domain.company)
     );
     entity.id = domain.id;
     entity.timezone = domain.timezone;
@@ -107,6 +108,35 @@ export class UserMapper {
       });
     }
 
+    entity.createdAt = domain.createdAt;
+    entity.updatedAt = domain.updatedAt;
+    return entity;
+  }
+
+  private static toDomainCompany(entity: CompanyOrmEntity): Company {
+    const company = new Company(entity.name, entity.taxId, entity.country);
+    company.id = entity.id;
+    company.regime = entity.regime;
+    company.postalCode = entity.postalCode;
+    company.currency = entity.currency;
+    company.settings = entity.settings;
+    company.metadata = entity.metadata;
+    company.createdAt = entity.createdAt;
+    company.updatedAt = entity.updatedAt;
+    return company;
+  }
+
+  private static toPersistenceCompany(domain: Company): CompanyOrmEntity {
+    const entity = new CompanyOrmEntity();
+    entity.id = domain.id;
+    entity.name = domain.name;
+    entity.taxId = domain.taxId;
+    entity.country = domain.country;
+    entity.regime = domain.regime;
+    entity.postalCode = domain.postalCode;
+    entity.currency = domain.currency;
+    entity.settings = domain.settings;
+    entity.metadata = domain.metadata;
     entity.createdAt = domain.createdAt;
     entity.updatedAt = domain.updatedAt;
     return entity;

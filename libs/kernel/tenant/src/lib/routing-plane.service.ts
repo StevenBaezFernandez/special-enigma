@@ -7,7 +7,7 @@ import {
 import { EntityManager } from '@mikro-orm/core';
 import { TenantRoutingSnapshot } from './entities/tenant-routing-snapshot.entity';
 import { TenantService } from './tenant.service';
-import { createHmac, randomBytes, timingSafeEqual } from 'crypto';
+import { createHmac, timingSafeEqual, randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { TenantControlRecord } from './entities/tenant-control-record.entity';
 import { TenantMode } from './interfaces/tenant-config.interface';
@@ -30,30 +30,23 @@ export class RoutingPlaneService {
     private readonly tenantService: TenantService,
     private readonly configService: ConfigService,
   ) {
-    const secret = this.configService.get<string>('ROUTING_SNAPSHOT_SECRET');
-    const isProduction =
-      this.configService.get<string>('NODE_ENV') === 'production';
+    const configuredSecret = this.configService.get<string>('ROUTING_SNAPSHOT_SECRET');
+    const isProduction = this.configService.get<string>('NODE_ENV') === 'production';
 
-    if (!secret || secret === 'dev-secret-change-in-prod') {
+    if (!configuredSecret || configuredSecret === 'dev-secret-change-in-prod') {
       if (isProduction) {
-        this.logger.error(
-          '[SECURITY CRITICAL] Insecure or missing ROUTING_SNAPSHOT_SECRET',
-        );
-        throw new Error(
-          'Insecure routing configuration: ROUTING_SNAPSHOT_SECRET must be set and secure',
-        );
+        this.logger.error('[SECURITY CRITICAL] Insecure or missing ROUTING_SNAPSHOT_SECRET');
+        throw new Error('Insecure routing configuration: ROUTING_SNAPSHOT_SECRET must be set and secure');
       }
 
       this.hmacSecret = randomBytes(32).toString('hex');
       this.logger.warn(
-        '[SECURITY] ROUTING_SNAPSHOT_SECRET not provided. Generated ephemeral secret for non-production runtime.',
+        '[SECURITY] ROUTING_SNAPSHOT_SECRET is not configured; using an ephemeral in-memory secret for non-production mode.'
       );
     } else {
-      this.hmacSecret = secret;
+      this.hmacSecret = configuredSecret;
     }
-    this.maxHealthStalenessMs = Number(
-      this.configService.get('ROUTING_HEALTH_MAX_STALENESS_MS') ?? 120000,
-    );
+    this.maxHealthStalenessMs = Number(this.configService.get('ROUTING_HEALTH_MAX_STALENESS_MS') ?? 120000);
   }
 
   async resolveRoute(tenantId: string): Promise<any> {

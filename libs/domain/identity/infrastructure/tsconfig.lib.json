@@ -9,7 +9,7 @@
     ],
     "moduleResolution": "bundler", "module": "esnext"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "files": [],
   "exclude": [
     "src/**/*.spec.ts",

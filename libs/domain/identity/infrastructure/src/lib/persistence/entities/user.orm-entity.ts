@@ -1,5 +1,5 @@
-import { Entity, PrimaryKey, Property, ManyToOne, Unique, OneToMany, Collection } from '@mikro-orm/core';
-import { Company } from '@virteex/domain-identity-domain';
+import { Entity, PrimaryKey, Property, ManyToOne, Unique, OneToMany, Collection, Rel } from '@mikro-orm/core';
+import { CompanyOrmEntity } from './company.orm-entity';
 import { UserAuthenticatorOrmEntity } from './user-authenticator.orm-entity';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -39,8 +39,8 @@ export class UserOrmEntity {
   @Property()
   role = 'user'; // 'admin', 'user', etc.
 
-  @ManyToOne('Company')
-  company!: Company;
+  @ManyToOne(() => CompanyOrmEntity)
+  company!: Rel<CompanyOrmEntity>;
 
   @Property()
   isActive = true;
@@ -95,7 +95,7 @@ export class UserOrmEntity {
 
   // Passkey Authenticators
   @OneToMany(() => UserAuthenticatorOrmEntity, (a) => a.user, { orphanRemoval: true })
-  authenticators = new Collection<UserAuthenticatorOrmEntity>(this);
+  authenticators = new Collection<Rel<UserAuthenticatorOrmEntity>>(this);
 
   @Property()
   createdAt: Date = new Date();
@@ -103,7 +103,14 @@ export class UserOrmEntity {
   @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  constructor(email: string, passwordHash: string, firstName: string, lastName: string, country: string, company: Company) {
+  constructor(
+    email: string,
+    passwordHash: string,
+    firstName: string,
+    lastName: string,
+    country: string,
+    company: CompanyOrmEntity
+  ) {
     this.email = email;
     this.passwordHash = passwordHash;
     this.firstName = firstName;
