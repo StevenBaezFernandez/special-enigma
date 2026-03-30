@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Module, Global, forwardRef } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ScheduleModule } from '@nestjs/schedule';
 import {
@@ -29,6 +29,8 @@ import {
 import { OutboxMessageSchema } from './persistence/orm/outbox.schema';
 import { OutboxRelayService } from './messaging/outbox/outbox-relay.service';
 import { KafkaMessageBroker } from './messaging/producers/kafka-message-broker';
+import { AccountingEventConsumerService } from './messaging/consumers/accounting-event-consumer.service';
+import { AccountingApplicationWiringModule } from './accounting-application-wiring.module';
 
 @Global()
 @Module({
@@ -78,8 +80,10 @@ import { KafkaMessageBroker } from './messaging/producers/kafka-message-broker';
     },
     DimensionValidator,
     OutboxRelayService,
+    AccountingEventConsumerService,
   ],
   exports: [
+    AccountingEventConsumerService,
     ACCOUNT_REPOSITORY,
     JOURNAL_ENTRY_REPOSITORY,
     POLICY_REPOSITORY,
@@ -89,6 +93,7 @@ import { KafkaMessageBroker } from './messaging/producers/kafka-message-broker';
     MESSAGE_BROKER,
     TELEMETRY_SERVICE,
     MikroOrmModule,
+    DimensionValidator,
   ],
 })
 export class AccountingInfrastructureModule {}

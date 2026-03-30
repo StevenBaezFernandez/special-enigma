@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AccountingService } from '../../services/accounting.service';
+import { useAccounting } from '../../hooks/use-accounting';
+import { selectIsReportsLoading, selectReportsError, reportsState } from '../../state/accounting.state';
 
 @Component({
   selector: 'app-financial-reports',
@@ -33,38 +34,26 @@ import { AccountingService } from '../../services/accounting.service';
         </div>
       </div>
 
-      <div *ngIf="loading" class="text-blue-500">Generating report...</div>
-      <div *ngIf="error" class="text-red-500">{{ error }}</div>
+      <div *ngIf="loading()" class="text-blue-500">Generating report...</div>
+      <div *ngIf="error()" class="text-red-500">{{ error() }}</div>
 
-      <div *ngIf="reportData" class="bg-white p-6 rounded shadow">
+      <div *ngIf="reportData()" class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-semibold mb-4">{{ reportType }} as of {{ endDate }}</h2>
-        <pre class="bg-gray-100 p-4 rounded">{{ reportData | json }}</pre>
+        <pre class="bg-gray-100 p-4 rounded">{{ reportData() | json }}</pre>
       </div>
     </div>
   `,
 })
 export class FinancialReportsComponent {
-  private accountingService = inject(AccountingService);
+  private accounting = useAccounting();
   reportType = 'BALANCE_SHEET';
   endDate = new Date().toISOString().split('T')[0];
-  loading = false;
-  error = '';
-  reportData: unknown = null;
+
+  loading = selectIsReportsLoading;
+  error = selectReportsError;
+  reportData = () => reportsState().data;
 
   generateReport() {
-    this.loading = true;
-    this.error = '';
-    this.reportData = null;
-
-    this.accountingService.getFinancialReport(this.reportType, this.endDate).subscribe({
-      next: (data) => {
-        this.reportData = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Failed to generate financial report. ' + (err.error?.message || '');
-        this.loading = false;
-      }
-    });
+    this.accounting.generateReport(this.reportType, this.endDate);
   }
 }

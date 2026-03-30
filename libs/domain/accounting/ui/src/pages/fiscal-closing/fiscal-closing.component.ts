@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AccountingService } from '../../services/accounting.service';
+import { useAccounting } from '../../hooks/use-accounting';
 
 @Component({
   selector: 'app-fiscal-closing',
@@ -33,13 +33,13 @@ import { AccountingService } from '../../services/accounting.service';
   `,
 })
 export class FiscalClosingComponent {
-  private accountingService = inject(AccountingService);
+  private accounting = useAccounting();
   closingDate = new Date().toISOString().split('T')[0];
   loading = false;
   error = '';
   success = false;
 
-  closePeriod() {
+  async closePeriod() {
     if (!confirm('Are you sure you want to close this fiscal period? This action cannot be undone.')) {
         return;
     }
@@ -48,15 +48,13 @@ export class FiscalClosingComponent {
     this.error = '';
     this.success = false;
 
-    this.accountingService.closeFiscalPeriod(this.closingDate).subscribe({
-      next: () => {
-        this.success = true;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Failed to close fiscal period. ' + (err.error?.message || '');
-        this.loading = false;
-      }
-    });
+    try {
+      await this.accounting.closeFiscalPeriod(this.closingDate);
+      this.success = true;
+      this.loading = false;
+    } catch (err: any) {
+      this.error = 'Failed to close fiscal period. ' + (err.error?.message || err.message || '');
+      this.loading = false;
+    }
   }
 }

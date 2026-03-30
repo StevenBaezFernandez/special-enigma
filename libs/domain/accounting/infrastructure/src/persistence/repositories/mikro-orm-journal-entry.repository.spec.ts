@@ -64,4 +64,21 @@ describe('MikroOrmJournalEntryRepository', () => {
     expect(mockDimensionValidator.ensureValidKey).toHaveBeenCalledWith('project');
     expect(mockEm.createQueryBuilder).toHaveBeenCalledWith(JournalEntryLine, 'l');
   });
+
+  it('should find journal entry by id and tenantId', async () => {
+    const tenantId = 'tenant-1';
+    const entryId = 'entry-1';
+    const mockEntry = { id: entryId, tenantId };
+
+    mockEm.findOne.mockResolvedValue(mockEntry);
+
+    const result = await repository.findById(tenantId, entryId);
+
+    expect(mockEm.findOne).toHaveBeenCalledWith(
+      JournalEntry,
+      { id: entryId, tenantId },
+      { populate: ['lines'] }
+    );
+    expect(result).toBe(mockEntry);
+  });
 });

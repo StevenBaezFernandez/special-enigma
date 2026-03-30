@@ -2,10 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
-import { AccountingService } from '../../services/accounting.service';
 import { AccountType } from '@virteex/domain-accounting-contracts';
-import { AccountDto } from '@virteex/domain-accounting-contracts';
 import { createAccountForm } from '../../forms/account.form';
+import { useAccounting } from '../../hooks/use-accounting';
+import { selectAccounts } from '../../state/accounting.state';
 
 @Component({
   selector: 'app-create-account',
@@ -53,7 +53,7 @@ import { createAccountForm } from '../../forms/account.form';
               <label class="block text-sm font-medium text-gray-700">Parent Account (Optional)</label>
               <select formControlName="parentId" class="mt-1 block w-full border rounded p-2">
                 <option [value]="null">None</option>
-                <option *ngFor="let acc of accounts" [value]="acc.id">{{ acc.code }} - {{ acc.name }}</option>
+                <option *ngFor="let acc of accounts()" [value]="acc.id">{{ acc.code }} - {{ acc.name }}</option>
               </select>
             </div>
 
@@ -76,26 +76,24 @@ import { createAccountForm } from '../../forms/account.form';
   `,
 })
 export class CreateAccountComponent implements OnInit {
-  private accountingService = inject(AccountingService);
+  private accounting = useAccounting();
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   accountForm = createAccountForm();
 
   accountTypes = Object.values(AccountType);
-  accounts: AccountDto[] = [];
+  accounts = selectAccounts;
   loading = false;
   error = '';
 
   get f() { return this.accountForm.controls; }
 
   ngOnInit() {
-    this.accountingService.getAccounts().subscribe(data => {
-      this.accounts = data;
-    });
+    this.accounting.loadAccounts();
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.accountForm.invalid) return;
 
     this.loading = true;
@@ -108,14 +106,12 @@ export class CreateAccountComponent implements OnInit {
         parentId: this.accountForm.value.parentId || undefined
     };
 
-    this.accountingService.createAccount(dto).subscribe({
-      next: () => {
-        this.router.navigate(['../'], { relativeTo: this.route });
-      },
-      error: (err) => {
-        this.error = 'Failed to create account. ' + (err.error?.message || '');
-        this.loading = false;
-      }
-    });
+    try {
+      await this.accounting.createAccount(dto);
+      this.router.navigate(['../'], { relativeTo: this.route });
+    } catch (err: any) {
+      this.error = 'Failed to create account. ' + (err.error?.message || err.message || '');
+      this.loading = false;
+    }
   }
 }

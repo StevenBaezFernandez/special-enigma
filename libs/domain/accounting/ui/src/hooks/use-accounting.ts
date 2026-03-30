@@ -36,9 +36,30 @@ export function useAccounting() {
     }
   }
 
+  async function closeFiscalPeriod(closingDate: string) {
+    try {
+      await firstValueFrom(service.closeFiscalPeriod(closingDate));
+      return true;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async function createAccount(dto: any) {
+    try {
+      const account = await firstValueFrom(service.createAccount(dto));
+      accountsState.update(s => ({ ...s, items: [...s.items, account] }));
+      return account;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   return {
     loadAccounts,
     loadJournalEntries,
     generateReport,
+    closeFiscalPeriod,
+    createAccount,
   };
 }
