@@ -13,6 +13,7 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/ap
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
+import { AuthModule } from '@virteex/kernel-auth';
 import { IdentityPresentationModule } from '@virteex/domain-identity-presentation';
 import { IdentityInfrastructureModule } from '@virteex/domain-identity-infrastructure';
 
@@ -22,6 +23,7 @@ import { AppService } from './app.service';
 @Module({
   imports: [
     TenantModule,
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -62,10 +64,15 @@ import { AppService } from './app.service';
           password: isPostgres ? (configService.get<string>('IDENTITY_DB_PASSWORD') || configService.get<string>('DB_PASSWORD')) : undefined,
           dbName: (() => {
             const dbName = configService.get<string>('IDENTITY_DB_NAME');
-            if (!dbName) {
-              throw new Error('IDENTITY_DB_NAME environment variable is required.');
+            if (dbName) {
+              return dbName;
             }
-            return dbName;
+
+            if (isPostgres) {
+              throw new Error('IDENTITY_DB_NAME environment variable is required when DB_DRIVER=postgres.');
+            }
+
+            return 'identity.sqlite3';
           })(),
           autoLoadEntities: true,
           driverOptions: (isPostgres && configService.get<boolean>('DB_SSL_ENABLED'))

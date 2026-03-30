@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, ManyToOne, Rel } from '@mikro-orm/core';
 import { UserOrmEntity } from './user.orm-entity';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -8,7 +8,7 @@ export class SessionOrmEntity {
   id: string = uuidv4();
 
   @ManyToOne(() => UserOrmEntity)
-  user!: UserOrmEntity;
+  user!: Rel<UserOrmEntity>;
 
   @Property()
   ipAddress!: string;

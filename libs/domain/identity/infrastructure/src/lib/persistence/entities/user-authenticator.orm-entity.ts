@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, ManyToOne, Rel } from '@mikro-orm/core';
 import { UserOrmEntity } from './user.orm-entity';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -26,7 +26,7 @@ export class UserAuthenticatorOrmEntity {
   transports?: string[];
 
   @ManyToOne(() => UserOrmEntity)
-  user!: UserOrmEntity;
+  user!: Rel<UserOrmEntity>;
 
   constructor(
     credentialID: Uint8Array,
@@ -34,7 +34,7 @@ export class UserAuthenticatorOrmEntity {
     counter: number,
     credentialDeviceType: string,
     credentialBackedUp: boolean,
-    user: UserOrmEntity,
+    user: Rel<UserOrmEntity>,
     transports?: string[]
   ) {
     this.credentialID = credentialID;

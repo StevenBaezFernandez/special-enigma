@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property, OneToMany, Collection } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, OneToMany, Collection, Rel } from '@mikro-orm/core';
 import { UserOrmEntity } from './user.orm-entity';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -32,7 +32,7 @@ export class CompanyOrmEntity {
   metadata?: Record<string, any>;
 
   @OneToMany(() => UserOrmEntity, user => user.company)
-  users = new Collection<UserOrmEntity>(this);
+  users = new Collection<Rel<UserOrmEntity>>(this);
 
   @Property()
   createdAt: Date = new Date();

@@ -2,7 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, RecaptchaPort, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService, WebAuthnService, LocalizationPort } from '@virteex/domain-identity-domain';
+import { UserRepository, CompanyRepository, AuditLogRepository, SessionRepository, JobTitleRepository, AuthService, RecaptchaPort, NotificationService, RiskEngineService, CachePort, RiskEvaluatorService, WebAuthnService, LocalizationPort, UNIT_OF_WORK_PORT, TENANT_REPOSITORY } from '@virteex/domain-identity-domain';
 
 import { MikroOrmUserRepository } from './persistence/mikro-orm-user.repository';
 import { UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema, UserAuthenticatorSchema } from './persistence/identity.schemas';
@@ -52,6 +52,7 @@ import {
   TokenGenerationService,
   LocalizationService,
   GetJobTitlesUseCase,
+  GetAuditLogsUseCase,
   CheckSecurityContextUseCase,
   LogoutUserUseCase,
   HandleSocialLoginUseCase,
@@ -78,7 +79,10 @@ import { SharedInfrastructureStorageModule } from '@virteex/platform-storage';
 import { StorageAdapter } from './adapters/storage.adapter';
 import { RedisCacheModule } from '@virteex/platform-cache';
 import { RedisCacheAdapter } from './adapters/redis-cache.adapter';
+import { MikroOrmUnitOfWorkAdapter } from './adapters/mikro-orm-unit-of-work.adapter';
+import { MikroOrmTenantRepository } from './adapters/mikro-orm-tenant.repository';
 import { AuthModule } from '@virteex/kernel-auth';
+import { TenantModule } from '@virteex/kernel-tenant';
 import { HttpModule } from '@nestjs/axios';
 
 @Global()
@@ -87,6 +91,7 @@ import { HttpModule } from '@nestjs/axios';
     ConfigModule,
     EventEmitterModule,
     AuthModule,
+    TenantModule,
     HttpModule,
     MikroOrmModule.forFeature([UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema, UserAuthenticatorSchema]),
     SharedInfrastructureStorageModule,
@@ -137,6 +142,8 @@ import { HttpModule } from '@nestjs/axios';
     { provide: StoragePort, useClass: StorageAdapter },
     { provide: GEO_IP_PORT, useClass: GeoIpLiteAdapter },
     { provide: CachePort, useClass: RedisCacheAdapter },
+    { provide: UNIT_OF_WORK_PORT, useClass: MikroOrmUnitOfWorkAdapter },
+    { provide: TENANT_REPOSITORY, useClass: MikroOrmTenantRepository },
     { provide: LocalizationPort, useClass: LocalizationService },
     InitiateSignupUseCase,
     VerifySignupUseCase,
@@ -159,6 +166,7 @@ import { HttpModule } from '@nestjs/axios';
     GetOnboardingStatusUseCase,
       TokenGenerationService,
     GetJobTitlesUseCase,
+    GetAuditLogsUseCase,
     CheckSecurityContextUseCase,
     LogoutUserUseCase,
     HandleSocialLoginUseCase,
@@ -200,9 +208,11 @@ import { HttpModule } from '@nestjs/axios';
     RefreshTokenUseCase,
     UpdateSubscriptionUseCase,
     GetSubscriptionStatusUseCase,
+    GetOnboardingStatusUseCase,
       TokenGenerationService,
     LocalizationPort,
     GetJobTitlesUseCase,
+    GetAuditLogsUseCase,
     CheckSecurityContextUseCase,
     LogoutUserUseCase,
     HandleSocialLoginUseCase,
@@ -236,6 +246,8 @@ import { HttpModule } from '@nestjs/axios';
     RiskEngineService,
     RiskEvaluatorService,
     CachePort,
+    UNIT_OF_WORK_PORT,
+    TENANT_REPOSITORY,
     GEO_IP_PORT
   ]
 })

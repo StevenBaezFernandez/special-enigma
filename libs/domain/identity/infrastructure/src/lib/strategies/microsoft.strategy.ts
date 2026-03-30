@@ -1,25 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-microsoft';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MicrosoftStrategy extends PassportStrategy(Strategy, 'microsoft') {
+  private readonly logger = new Logger(MicrosoftStrategy.name);
+
   constructor(configService: ConfigService) {
     const clientID = configService.get<string>('MICROSOFT_CLIENT_ID');
     const clientSecret = configService.get<string>('MICROSOFT_CLIENT_SECRET');
-
-    if (!clientID || !clientSecret) {
-      throw new Error('Microsoft OAuth credentials are not fully configured');
-    }
+    const isConfigured = Boolean(clientID && clientSecret);
 
     super({
-      clientID,
-      clientSecret,
+      clientID: clientID ?? 'disabled-microsoft-client-id',
+      clientSecret: clientSecret ?? 'disabled-microsoft-client-secret',
       callbackURL: configService.get<string>('MICROSOFT_CALLBACK_URL') || 'http://localhost:3000/api/auth/microsoft/callback',
       scope: ['user.read'],
       tenant: configService.get<string>('MICROSOFT_TENANT', 'common'),
     });
+
+    if (!isConfigured) {
+      this.logger.warn('Microsoft OAuth credentials are not fully configured. Microsoft auth strategy is disabled.');
+    }
   }
 
   async validate(accessToken: string, refreshToken: string, profile: any, done: (err: any, user: any) => void): Promise<any> {

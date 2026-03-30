@@ -13,9 +13,9 @@ import {
     Company,
     SessionRepository,
     CachePort,
-    UNIT_OF_WORK_PORT,
-    UnitOfWorkPort
+    UNIT_OF_WORK_PORT
 } from '@virteex/domain-identity-domain';
+import type { UnitOfWorkPort } from '@virteex/domain-identity-domain';
 import { Tenant, TenantMode } from '@virteex/kernel-tenant';
 import { TokenGenerationService } from '../services/token-generation.service';
 import { CompleteOnboardingDto } from '@virteex/domain-identity-contracts';

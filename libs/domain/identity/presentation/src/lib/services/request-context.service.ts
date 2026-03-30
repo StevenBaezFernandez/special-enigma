@@ -1,6 +1,7 @@
 import { Injectable, Inject, Optional } from '@nestjs/common';
 import { Request } from 'express';
-import { GeoIpPort, GEO_IP_PORT } from '@virteex/domain-identity-domain';
+import { GEO_IP_PORT } from '@virteex/domain-identity-domain';
+import type { GeoIpPort } from '@virteex/domain-identity-domain';
 import { SecretManagerService } from '@virteex/kernel-auth';
 
 @Injectable()
