@@ -21,8 +21,8 @@ export class MikroOrmJournalEntryRepository implements JournalEntryRepository, I
     return entry;
   }
 
-  async findById(id: string): Promise<JournalEntry | null> {
-    return this.em.findOne(JournalEntry, { id }, { populate: ['lines'] });
+  async findById(tenantId: string, id: string): Promise<JournalEntry | null> {
+    return this.em.findOne(JournalEntry, { id, tenantId }, { populate: ['lines'] });
   }
 
   async findAll(tenantId: string): Promise<JournalEntry[]> {

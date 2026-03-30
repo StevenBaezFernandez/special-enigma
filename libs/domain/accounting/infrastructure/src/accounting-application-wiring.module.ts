@@ -1,0 +1,144 @@
+import { Module, Logger, Global, forwardRef } from '@nestjs/common';
+import { AccountingInfrastructureModule } from './accounting-infrastructure.module';
+import {
+  ACCOUNT_REPOSITORY,
+  JOURNAL_ENTRY_REPOSITORY,
+  OUTBOX_REPOSITORY,
+  TELEMETRY_SERVICE,
+  POLICY_REPOSITORY,
+  AccountRepository,
+  JournalEntryRepository,
+  OutboxRepository,
+  ITelemetryService,
+  PolicyRepository,
+} from '@virteex/domain-accounting-domain';
+import {
+  I_UNIT_OF_WORK,
+  IUnitOfWork,
+  DimensionValidator,
+  AccountingPolicyService,
+  AccountingEventHandlerService,
+  CreateAccountUseCase,
+  RecordJournalEntryUseCase,
+  GetAccountsUseCase,
+  GetJournalEntriesUseCase,
+  CountJournalEntriesUseCase,
+  SetupChartOfAccountsUseCase,
+  GenerateFinancialReportUseCase,
+  CloseFiscalPeriodUseCase,
+} from '@virteex/domain-accounting-application';
+
+@Global()
+@Module({
+  imports: [AccountingInfrastructureModule],
+  providers: [
+    {
+      provide: DimensionValidator,
+      useValue: new DimensionValidator(),
+    },
+    {
+      provide: AccountingPolicyService,
+      useFactory: (repo?: PolicyRepository) => new AccountingPolicyService(repo),
+      inject: [{ token: POLICY_REPOSITORY, optional: true }],
+    },
+    {
+      provide: AccountingEventHandlerService,
+      useFactory: (
+        recordJE: RecordJournalEntryUseCase,
+        policy: AccountingPolicyService,
+        accRepo: AccountRepository
+      ) =>
+        new AccountingEventHandlerService(
+          recordJE,
+          policy,
+          accRepo,
+          new Logger(AccountingEventHandlerService.name)
+        ),
+      inject: [
+        RecordJournalEntryUseCase,
+        AccountingPolicyService,
+        ACCOUNT_REPOSITORY,
+      ],
+    },
+    {
+      provide: CreateAccountUseCase,
+      useFactory: (
+        repo: AccountRepository,
+        outbox: OutboxRepository,
+        telemetry: ITelemetryService
+      ) => new CreateAccountUseCase(repo, outbox, telemetry),
+      inject: [ACCOUNT_REPOSITORY, OUTBOX_REPOSITORY, TELEMETRY_SERVICE],
+    },
+    {
+      provide: RecordJournalEntryUseCase,
+      useFactory: (
+        jeRepo: JournalEntryRepository,
+        accRepo: AccountRepository,
+        telemetry: ITelemetryService,
+        uow: IUnitOfWork
+      ) => new RecordJournalEntryUseCase(jeRepo, accRepo, telemetry, uow),
+      inject: [
+        JOURNAL_ENTRY_REPOSITORY,
+        ACCOUNT_REPOSITORY,
+        TELEMETRY_SERVICE,
+        I_UNIT_OF_WORK,
+      ],
+    },
+    {
+      provide: GetAccountsUseCase,
+      useFactory: (accRepo: AccountRepository, jeRepo: JournalEntryRepository) =>
+        new GetAccountsUseCase(accRepo, jeRepo),
+      inject: [ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY],
+    },
+    {
+      provide: GetJournalEntriesUseCase,
+      useFactory: (repo: JournalEntryRepository) =>
+        new GetJournalEntriesUseCase(repo),
+      inject: [JOURNAL_ENTRY_REPOSITORY],
+    },
+    {
+      provide: CountJournalEntriesUseCase,
+      useFactory: (repo: JournalEntryRepository) =>
+        new CountJournalEntriesUseCase(repo),
+      inject: [JOURNAL_ENTRY_REPOSITORY],
+    },
+    {
+      provide: SetupChartOfAccountsUseCase,
+      useFactory: (repo: AccountRepository) => new SetupChartOfAccountsUseCase(repo),
+      inject: [ACCOUNT_REPOSITORY],
+    },
+    {
+      provide: GenerateFinancialReportUseCase,
+      useFactory: (jeRepo: JournalEntryRepository, accRepo: AccountRepository) =>
+        new GenerateFinancialReportUseCase(jeRepo, accRepo),
+      inject: [JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY],
+    },
+    {
+      provide: CloseFiscalPeriodUseCase,
+      useFactory: (
+        jeRepo: JournalEntryRepository,
+        accRepo: AccountRepository,
+        policySvc: AccountingPolicyService
+      ) => new CloseFiscalPeriodUseCase(jeRepo, accRepo, policySvc),
+      inject: [
+        JOURNAL_ENTRY_REPOSITORY,
+        ACCOUNT_REPOSITORY,
+        AccountingPolicyService,
+      ],
+    },
+  ],
+  exports: [
+    AccountingPolicyService,
+    AccountingEventHandlerService,
+    DimensionValidator,
+    CreateAccountUseCase,
+    RecordJournalEntryUseCase,
+    GetAccountsUseCase,
+    GetJournalEntriesUseCase,
+    CountJournalEntriesUseCase,
+    SetupChartOfAccountsUseCase,
+    GenerateFinancialReportUseCase,
+    CloseFiscalPeriodUseCase,
+  ],
+})
+export class AccountingApplicationWiringModule {}

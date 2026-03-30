@@ -38,3 +38,6 @@ export const selectAccountsError = computed(() => accountsState().error);
 export const selectJournalEntries = computed(() => entriesState().items);
 export const selectIsEntriesLoading = computed(() => entriesState().isLoading);
 export const selectEntriesError = computed(() => entriesState().error);
+
+export const selectIsReportsLoading = computed(() => reportsState().isLoading);
+export const selectReportsError = computed(() => reportsState().error);

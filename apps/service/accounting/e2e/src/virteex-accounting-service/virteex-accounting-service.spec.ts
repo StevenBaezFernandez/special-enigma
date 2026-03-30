@@ -17,7 +17,7 @@ describe('Accounting Service E2E', () => {
     complianceProfile: 'default',
     requestId: 'e2e-test-request',
     provenance: 'e2e-test',
-    contextVersion: '1.0',
+    contextVersion: 'v1',
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 3600,
   };
@@ -26,6 +26,7 @@ describe('Accounting Service E2E', () => {
   const signature = createHmac('sha256', hmacSecret).update(encodedContext).digest('hex');
 
   const axiosConfig = {
+    baseURL: 'http://localhost:3000',
     headers: {
       'x-virteex-tenant-id': tenantId,
       'x-virteex-context': encodedContext,
@@ -105,8 +106,9 @@ describe('Accounting Service E2E', () => {
 
         try {
             await axios.post('/api/accounting/journal-entries', recordEntryDto, axiosConfig);
-            expect.fail('Should have thrown an error');
+            throw new Error('Should have thrown an error');
         } catch (error: any) {
+            if (error.message === 'Should have thrown an error') throw error;
             expect(error.response.status).toBe(400);
         }
       });

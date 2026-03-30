@@ -1,3 +1,6 @@
+export * from './core/create-account.interface';
+export * from './core/accounting-ops.interface';
+
 export * from './api/v1/requests/create-account.dto';
 export * from './api/v1/requests/record-journal-entry.dto';
 export * from './api/v1/responses/account.dto';
