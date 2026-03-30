@@ -16,6 +16,24 @@ FORBIDDEN_PATTERNS=(
     "exit 0"
 )
 
+# 1b. LEVEL 5 TEST MOCK CHECK (Ensure critical tests don't over-mock)
+LEVEL5_TEST_FILES=$(find libs/kernel/tenant/src/lib/tests -name "*.spec.ts" | grep -v "adversarial-isolation-hardened.spec.ts")
+CRITICAL_MOCKS=(
+    "EntityManager"
+    "Connection"
+    "axios"
+)
+
+echo "Checking for excessive mocking in Level 5 validation tests..."
+for MOCK in "${CRITICAL_MOCKS[@]}"; do
+    MOCK_MATCHES=$(grep -iE "vi\.mock.*$MOCK|vi\.spyOn.*$MOCK" $LEVEL5_TEST_FILES || true)
+    if [ ! -z "$MOCK_MATCHES" ]; then
+        echo "CRITICAL: Excessive mocking of '$MOCK' found in Level 5 test suite:"
+        echo "$MOCK_MATCHES"
+        FOUND=1
+    fi
+done
+
 # Productive files are mainly .ts files in apps/ and libs/, excluding tests and mock directories
 PRODUCTIVE_TS_FILES=$(find apps libs -type f -name "*.ts" ! -name "*.spec.ts" ! -name "*.test.ts" ! -name "*.hardening.spec.ts" ! -path "*/test/*" ! -path "*/testing/*" ! -path "*/__mocks__/*" ! -path "*/mock/*")
 

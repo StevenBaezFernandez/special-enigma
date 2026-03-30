@@ -71,6 +71,8 @@ export class JobProcessorService implements OnModuleInit, OnModuleDestroy {
         region: (job.payload?.['region'] as string) || process.env['AWS_REGION'] || 'us-east-1',
         currency: (job.payload?.['currency'] as string) || 'USD',
         language: (job.payload?.['language'] as string) || 'en',
+        contextVersion: 'v1',
+        exp: Math.floor(Date.now() / 1000) + 3600, // Valid for 1 hour
       }, async () => this.routeJobExecution(job));
 
       JobStateMachine.transition(job, JobStatus.SUCCEEDED);

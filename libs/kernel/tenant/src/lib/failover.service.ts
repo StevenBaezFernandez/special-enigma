@@ -131,8 +131,8 @@ export class FailoverService {
         timeline.push({ step: 'VALIDATING', at: new Date().toISOString(), status: 'completed' });
 
         // 2. Data Plane Consistency Check (Lag Check)
-        await this.checkDataConsistency(tenantId, control.primaryRegion, control.secondaryRegion);
-        timeline.push({ step: 'RPO_VALIDATION', at: new Date().toISOString(), status: 'completed' });
+        const { rpoMs } = await this.checkDataConsistency(tenantId, control.primaryRegion, control.secondaryRegion);
+        timeline.push({ step: 'RPO_VALIDATION', at: new Date().toISOString(), status: 'completed', details: { rpoMs } });
 
         const backlogBefore = await this.captureEventBacklog(tenantId);
 
@@ -200,7 +200,7 @@ export class FailoverService {
           },
           telemetry: {
             rtoMs: duration,
-            rpoMs: 0,
+            rpoMs,
             backlogBefore,
             backlogAfter,
           },
@@ -286,7 +286,7 @@ export class FailoverService {
       }
   }
 
-  private async checkDataConsistency(tenantId: string, from: string, to: string): Promise<void> {
+  private async checkDataConsistency(tenantId: string, from: string, to: string): Promise<{ rpoMs: number }> {
       this.logger.log(`Verifying RPO compliance between ${from} and ${to}`);
 
       const lagResult = await this.em.getConnection().execute(`
@@ -297,6 +297,7 @@ export class FailoverService {
       if (lag > 2000) { // 2s RPO limit for enterprise GA
           throw new Error(`Replication lag too high (${lag}ms). Failover would violate RPO policy.`);
       }
+      return { rpoMs: lag };
   }
 
   private async recoverEventPlane(tenantId: string, region: string): Promise<void> {

@@ -59,14 +59,21 @@ export class FinOpsService {
       try {
           // Level 5: Real Cloud Pricing ingestion from managed pricing table
           const result = await this.em.getConnection().execute(`
-              SELECT rate_usd
+              SELECT rate_usd, updated_at
               FROM cloud_pricing_catalog
               WHERE region = ? AND resource_type = ?
               AND effective_to IS NULL
+              ORDER BY updated_at DESC
               LIMIT 1
           `, [region, resource]);
 
           if (result && result.length > 0) {
+              const updatedAt = new Date(result[0].updated_at || result[0].UPDATED_AT);
+              const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+              if (updatedAt < oneDayAgo) {
+                  this.logger.warn(`[FINOPS STALENESS] Pricing data for ${resource} in ${region} is older than 24h. Last updated: ${updatedAt.toISOString()}`);
+              }
               return parseFloat(result[0].rate_usd);
           }
       } catch (err) {

@@ -61,13 +61,22 @@ export class TenantRlsInterceptor implements NestInterceptor {
     this.requestCounter.add(1, { tenantId });
 
     const config = await this.tenantService.getTenantConfig(tenantId);
+    if (!config) {
+        this.logger.error(`[SECURITY] Configuration missing for tenant ${tenantId}`);
+        throw new ForbiddenException('Tenant is currently unavailable');
+    }
 
     // Centralized Data Sovereignty & Regional Residency Enforcement
     await this.enforceRegionalResidency(tenantId, config);
 
     // Tenant Status Enforcement
     const control = await this.em.findOne(TenantControlRecord, { tenantId });
-    if (control && control.status !== TenantStatus.ACTIVE && control.status !== TenantStatus.DEGRADED) {
+    if (!control) {
+        this.logger.error(`[SECURITY] Control record missing for tenant ${tenantId}`);
+        throw new ForbiddenException('Tenant is currently unavailable');
+    }
+
+    if (control.status !== TenantStatus.ACTIVE && control.status !== TenantStatus.DEGRADED) {
         this.logger.warn(`Access attempt for tenant ${tenantId} in non-active state: ${control.status}`);
         throw new ForbiddenException(`Tenant is ${control.status.toLowerCase()}. Access denied.`);
     }

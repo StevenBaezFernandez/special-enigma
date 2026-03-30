@@ -57,6 +57,18 @@ export class CanonicalTenantMiddleware implements NestMiddleware, OnModuleInit {
       throw new UnauthorizedException('Tenant context is required for all enterprise operations.');
     }
 
+    // Level 5: Fail-closed contract checks for mandatory claims (version/exp)
+    if (!context.contextVersion || !context.exp) {
+        this.auditViolation(req, 'invalid_claims', 'Tenant context integrity cannot be verified (missing Level 5 claims)');
+        throw new UnauthorizedException('Tenant context integrity cannot be verified');
+    }
+
+    const nowEpochSeconds = Math.floor(Date.now() / 1000);
+    if (context.exp <= nowEpochSeconds) {
+        this.auditViolation(req, 'expired_context', 'Tenant context expired');
+        throw new UnauthorizedException('Tenant context expired');
+    }
+
     const tenantIdHeader = this.getHeader(req, 'x-virteex-tenant-id');
     if (tenantIdHeader && tenantIdHeader !== context.tenantId) {
       this.auditViolation(req, 'invalid_claims', 'Tenant context integrity violation');

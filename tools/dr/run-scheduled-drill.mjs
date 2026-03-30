@@ -54,10 +54,20 @@ for (const drill of schedule.drills) {
   }
 
   const result = await res.json();
+
+  // Level 5: High-precision RTO/RPO calculation validation
+  if (result.telemetry.rtoMs > body.expectedRtoMs) {
+      console.warn(`⚠️  DRILL RTO EXCEEDED: Observed ${result.telemetry.rtoMs}ms > Expected ${body.expectedRtoMs}ms`);
+  }
+
   const evidence = {
     ...result,
     scheduleId: schedule.scheduleId,
-    executedAt: new Date().toISOString()
+    executedAt: new Date().toISOString(),
+    postmortem: result.postmortem || {
+        summary: result.status === 'SUCCESS' ? 'Drill completed successfully.' : 'Drill failed.',
+        actionItems: result.telemetry.backlogAfter > 0 ? ['Optimize outbox drain rate'] : []
+    }
   };
 
   const signature = createHmac('sha256', signingSecret)
