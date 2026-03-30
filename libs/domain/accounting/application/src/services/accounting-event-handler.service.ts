@@ -2,12 +2,7 @@ import { RecordJournalEntryUseCase } from '../use-cases/journal-entries/record-j
 import { type AccountRepository } from '@virteex/domain-accounting-domain';
 import { type RecordJournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { AccountingPolicyService } from './accounting-policy.service';
-
-interface ILogger {
-  log(message: string): void;
-  warn(message: string): void;
-  error(message: string, trace?: string): void;
-}
+import { LoggerPort } from '../ports/logger.port';
 
 interface InvoiceStampedEvent {
     invoiceId: string;
@@ -30,11 +25,11 @@ export class AccountingEventHandlerService {
     private readonly recordJournalEntryUseCase: RecordJournalEntryUseCase,
     private readonly policyService: AccountingPolicyService,
     private readonly accountRepo: AccountRepository,
-    private readonly logger: ILogger = console
+    private readonly logger: LoggerPort
   ) {}
 
   async handleInvoiceStamped(event: InvoiceStampedEvent) {
-    this.logger.log(`Processing accounting for Invoice ${event.invoiceId}`);
+    this.logger.info(`Processing accounting for Invoice ${event.invoiceId}`);
 
     const policy = await this.policyService.resolveAccountsForInvoice(event.tenantId);
 
@@ -62,7 +57,7 @@ export class AccountingEventHandlerService {
   }
 
   async handlePayrollStamped(event: PayrollStampedEvent) {
-    this.logger.log(`Processing accounting for Payroll ${event.payrollId}`);
+    this.logger.info(`Processing accounting for Payroll ${event.payrollId}`);
 
     const policy = await this.policyService.resolveAccountsForPayroll(event.tenantId);
 

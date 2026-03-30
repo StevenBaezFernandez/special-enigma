@@ -18,7 +18,6 @@ import {
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { AccountingApplicationWiringModule } from '@virteex/domain-accounting-infrastructure';
 import { AccountingPresentationModule } from '@virteex/domain-accounting-presentation';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { AuthModule, CanonicalTenantMiddleware } from '@virteex/kernel-auth';
@@ -32,11 +31,42 @@ const DEFAULT_ACCOUNTING_DB_CONFIG = {
   dbName: 'virteex_accounting',
 } as const;
 
-function getDatabasePort(): number {
+function getDatabaseConfig() {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  if (isProd) {
+    const missing = [];
+    if (!process.env.ACCOUNTING_DB_HOST) missing.push('ACCOUNTING_DB_HOST');
+    if (!process.env.ACCOUNTING_DB_USER) missing.push('ACCOUNTING_DB_USER');
+    if (!process.env.ACCOUNTING_DB_PASSWORD)
+      missing.push('ACCOUNTING_DB_PASSWORD');
+    if (!process.env.ACCOUNTING_DB_NAME) missing.push('ACCOUNTING_DB_NAME');
+
+    if (missing.length > 0) {
+      throw new Error(
+        `Missing required database configuration for production: ${missing.join(
+          ', ',
+        )}`,
+      );
+    }
+  }
+
   const configuredPort = Number(process.env.ACCOUNTING_DB_PORT);
-  return Number.isFinite(configuredPort) && configuredPort > 0
-    ? configuredPort
-    : DEFAULT_ACCOUNTING_DB_CONFIG.port;
+  const port =
+    Number.isFinite(configuredPort) && configuredPort > 0
+      ? configuredPort
+      : DEFAULT_ACCOUNTING_DB_CONFIG.port;
+
+  return {
+    host: process.env.ACCOUNTING_DB_HOST || DEFAULT_ACCOUNTING_DB_CONFIG.host,
+    port,
+    user: process.env.ACCOUNTING_DB_USER || DEFAULT_ACCOUNTING_DB_CONFIG.user,
+    password:
+      process.env.ACCOUNTING_DB_PASSWORD ||
+      DEFAULT_ACCOUNTING_DB_CONFIG.password,
+    dbName:
+      process.env.ACCOUNTING_DB_NAME || DEFAULT_ACCOUNTING_DB_CONFIG.dbName,
+  };
 }
 
 function shouldConnectDatabase(): boolean {
@@ -72,19 +102,11 @@ function shouldConnectDatabase(): boolean {
     }),
     MikroOrmModule.forRoot({
       driver: PostgreSqlDriver,
-      host: process.env.ACCOUNTING_DB_HOST || DEFAULT_ACCOUNTING_DB_CONFIG.host,
-      port: getDatabasePort(),
-      user: process.env.ACCOUNTING_DB_USER || DEFAULT_ACCOUNTING_DB_CONFIG.user,
-      password:
-        process.env.ACCOUNTING_DB_PASSWORD ||
-        DEFAULT_ACCOUNTING_DB_CONFIG.password,
-      dbName:
-        process.env.ACCOUNTING_DB_NAME || DEFAULT_ACCOUNTING_DB_CONFIG.dbName,
+      ...getDatabaseConfig(),
       connect: shouldConnectDatabase(),
       autoLoadEntities: true,
     }),
     EventEmitterModule.forRoot(),
-    AccountingApplicationWiringModule,
     AccountingPresentationModule,
   ],
   controllers: [],

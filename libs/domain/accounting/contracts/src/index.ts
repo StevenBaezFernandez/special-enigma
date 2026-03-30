@@ -3,14 +3,15 @@ export * from './core/accounting-ops.interface';
 
 export * from './api/v1/requests/create-account.dto';
 export * from './api/v1/requests/record-journal-entry.dto';
+export * from './api/v1/requests/accounting-ops.dto';
 export * from './api/v1/responses/account.dto';
 export * from './api/v2/responses/account.v2.dto';
 export * from './api/v1/responses/journal-entry.dto';
+export * from './api/v2/responses/journal-entry.v2.dto';
 export * from './api/v1/responses/financial-report.dto';
 export * from './errors/integration.error';
 export * from './events/accounting-integration.events';
 
-export * from './shared/accounting-ops.dto';
 export * from './shared/account.model';
 export * from './shared/flattened-account.model';
 export * from './shared/general-ledger.model';

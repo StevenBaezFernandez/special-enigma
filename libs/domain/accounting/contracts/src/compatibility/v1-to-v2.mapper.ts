@@ -1,5 +1,7 @@
 import { type AccountDto } from '../api/v1/responses/account.dto';
 import { type AccountDtoV2 } from '../api/v2/responses/account.v2.dto';
+import { type JournalEntryDto } from '../api/v1/responses/journal-entry.dto';
+import { type JournalEntryDtoV2 } from '../api/v2/responses/journal-entry.v2.dto';
 
 /**
  * Mapper for backward compatibility between contract versions.
@@ -21,8 +23,19 @@ export class ContractCompatibilityMapper {
       currency: v1.currency,
       metadata: {
         version: 'v2',
-        createdAt: new Date().toISOString() // In a real scenario, this would come from the entity
+        createdAt: new Date().toISOString()
       }
+    };
+  }
+
+  /**
+   * Maps a JournalEntry V1 DTO to a V2 DTO.
+   */
+  static mapJournalEntryV1ToV2(v1: JournalEntryDto): JournalEntryDtoV2 {
+    return {
+      ...v1,
+      totalDebit: v1.amount,
+      totalCredit: v1.amount
     };
   }
 }

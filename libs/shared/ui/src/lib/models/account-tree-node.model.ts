@@ -6,11 +6,11 @@ export enum HierarchyType {
   EXPENSE = 'EXPENSE'
 }
 
-export interface Account {
+export interface AccountTreeNode {
   id: string;
   name: string;
   code: string;
   parentId?: string;
-  children?: Account[];
+  children?: AccountTreeNode[];
   type: HierarchyType;
 }

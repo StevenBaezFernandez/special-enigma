@@ -14,7 +14,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Account } from '../../models/account.model';
+import { AccountTreeNode } from '../../models/account-tree-node.model';
 import { FlattenedAccount } from '../../models/flattened-account.model';
 
 @Injectable({
@@ -31,20 +31,20 @@ export class TreeService {
    * @param accounts El array plano de cuentas obtenido de la API. Cada cuenta debe tener 'id' y 'parentId'.
    * @returns Un array de cuentas de nivel raíz (aquellas sin padre), con sus respectivos hijos anidados.
    */
-  public buildTree(accounts: Account[], sort: { field: keyof FlattenedAccount; direction: 'asc' | 'desc' }): Account[] {
+  public buildTree(accounts: AccountTreeNode[], sort: { field: keyof FlattenedAccount; direction: 'asc' | 'desc' }): AccountTreeNode[] {
     if (!Array.isArray(accounts) || accounts.length === 0) {
       return [];
     }
 
     // Crear un mapa para acceso rápido
-    const accountMap = new Map<string, Account>();
+    const accountMap = new Map<string, AccountTreeNode>();
     accounts.forEach(account => {
       account.children = [];
       accountMap.set(account.id, account);
     });
 
     // Asignar hijos a padres
-    const rootAccounts: Account[] = [];
+    const rootAccounts: AccountTreeNode[] = [];
     accounts.forEach(account => {
       if (account.parentId && accountMap.has(account.parentId)) {
         accountMap.get(account.parentId)!.children!.push(account);
@@ -54,7 +54,7 @@ export class TreeService {
     });
 
     // Función de ordenación recursiva
-    const sortTree = (nodeList: Account[]): void => {
+    const sortTree = (nodeList: AccountTreeNode[]): void => {
       nodeList.sort((a, b) => this.compareAccounts(a, b, sort));
       nodeList.forEach(node => {
         if (node.children && node.children.length > 0) {
@@ -68,8 +68,8 @@ export class TreeService {
     return rootAccounts;
   }
 
-  private compareAccounts(a: Account, b: Account, sort: { field: keyof FlattenedAccount; direction: 'asc' | 'desc' }): number {
-    const field = sort.field as keyof Account;
+  private compareAccounts(a: AccountTreeNode, b: AccountTreeNode, sort: { field: keyof FlattenedAccount; direction: 'asc' | 'desc' }): number {
+    const field = sort.field as keyof AccountTreeNode;
     const valA = a[field];
     const valB = b[field];
 
@@ -96,11 +96,11 @@ export class TreeService {
    * @param tree El array de cuentas de nivel raíz (el resultado de buildTree).
    * @returns Un array de `FlattenedAccount` listo para ser renderizado en una vista de tabla/lista.
    */
-  public flattenTree(tree: Account[]): FlattenedAccount[] {
+  public flattenTree(tree: AccountTreeNode[]): FlattenedAccount[] {
     const flattened: FlattenedAccount[] = [];
 
     // Función recursiva interna para procesar cada nivel del árbol.
-    const flatten = (nodes: Account[], level: number) => {
+    const flatten = (nodes: AccountTreeNode[], level: number) => {
       for (const node of nodes) {
         // 1. Añadir el nodo actual a la lista plana, extendiéndolo con las propiedades de UI.
         flattened.push({

@@ -55,6 +55,21 @@ describe('JournalEntryRepositoryAdapter', () => {
     expect(result).toBe(5);
   });
 
+  it('should find all journal entries for a tenant', async () => {
+    const tenantId = 'tenant-1';
+    const mockEntries = [{ id: '1', tenantId }, { id: '2', tenantId }];
+    mockEm.find.mockResolvedValue(mockEntries);
+
+    const result = await repository.findAll(tenantId);
+
+    expect(mockEm.find).toHaveBeenCalledWith(
+      JournalEntry,
+      { tenantId },
+      { populate: ['lines', 'lines.account'] as any }
+    );
+    expect(result).toBe(mockEntries);
+  });
+
   it('should get balances by account', async () => {
     const tenantId = 'tenant-1';
     const dimensions = { project: 'P1' };
@@ -77,7 +92,7 @@ describe('JournalEntryRepositoryAdapter', () => {
     expect(mockEm.findOne).toHaveBeenCalledWith(
       JournalEntry,
       { id: entryId, tenantId },
-      { populate: ['lines'] }
+      { populate: ['lines', 'lines.account'] as any }
     );
     expect(result).toBe(mockEntry);
   });

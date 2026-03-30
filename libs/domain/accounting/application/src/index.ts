@@ -20,3 +20,4 @@ export * from './services/dimension-validator.service';
 // Outbound ports for infrastructure implementation or cross-domain consumption
 export * from './ports/outbound/message-broker.port';
 export * from './ports/outbound/unit-of-work.port';
+export * from './ports/logger.port';

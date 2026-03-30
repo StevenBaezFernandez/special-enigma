@@ -96,10 +96,6 @@ export class OutboxRelayService implements OnModuleInit {
           );
         }
       }
-
-      // Check for pending count if repository supports it, otherwise simulated or skip
-      // const pendingCount = await (this.outboxRepository as any).countUnprocessed?.() || 0;
-      // this.telemetryService.recordBusinessMetric('outbox_pending_count', pendingCount);
     } catch (error) {
       this.logger.error(
         `Error fetching unprocessed outbox messages: ${(error as Error).message}`,
