@@ -1,11 +1,24 @@
-import { Injectable, UnauthorizedException, Logger, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  Logger,
+  Inject,
+} from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { SecretManagerService } from './secret-manager.service';
-import { TelemetryService, TELEMETRY_SERVICE } from '@virteex/kernel-telemetry-interfaces';
+import {
+  TelemetryService,
+  TELEMETRY_SERVICE,
+} from '@virteex/kernel-telemetry-interfaces';
 import Redis from 'ioredis';
 
-export type SupportedTokenType = 'access' | 'refresh' | 'service' | 'plugin' | 'stepup';
+export type SupportedTokenType =
+  | 'access'
+  | 'refresh'
+  | 'service'
+  | 'plugin'
+  | 'stepup';
 
 export interface TokenIssueOptions {
   tokenType: SupportedTokenType;
@@ -40,7 +53,7 @@ export class JwtTokenService {
 
   constructor(
     private readonly secretManager: SecretManagerService,
-    @Inject(TELEMETRY_SERVICE) private readonly telemetry: TelemetryService
+    @Inject(TELEMETRY_SERVICE) private readonly telemetry: TelemetryService,
   ) {
     this.isProduction = process.env['NODE_ENV'] === 'production';
 
@@ -53,36 +66,80 @@ export class JwtTokenService {
     this.allowedAlgorithms = algs.length ? algs : ['HS256'];
     this.enforceProductionAlgorithmPolicy();
 
-    this.defaultClockSkewSeconds = Number(this.secretManager.getSecret('JWT_CLOCK_SKEW_SECONDS', '30'));
+    this.defaultClockSkewSeconds = Number(
+      this.secretManager.getSecret('JWT_CLOCK_SKEW_SECONDS', '30'),
+    );
 
     this.issuerByType = {
-      access: this.secretManager.getSecret('JWT_ISSUER_ACCESS', this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer')),
-      refresh: this.secretManager.getSecret('JWT_ISSUER_REFRESH', this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer')),
-      service: this.secretManager.getSecret('JWT_ISSUER_SERVICE', this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer')),
-      plugin: this.secretManager.getSecret('JWT_ISSUER_PLUGIN', this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer')),
-      stepup: this.secretManager.getSecret('JWT_ISSUER_STEPUP', this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer')),
+      access: this.secretManager.getSecret(
+        'JWT_ISSUER_ACCESS',
+        this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer'),
+      ),
+      refresh: this.secretManager.getSecret(
+        'JWT_ISSUER_REFRESH',
+        this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer'),
+      ),
+      service: this.secretManager.getSecret(
+        'JWT_ISSUER_SERVICE',
+        this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer'),
+      ),
+      plugin: this.secretManager.getSecret(
+        'JWT_ISSUER_PLUGIN',
+        this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer'),
+      ),
+      stepup: this.secretManager.getSecret(
+        'JWT_ISSUER_STEPUP',
+        this.secretManager.getSecret('JWT_ISSUER', 'virteex-issuer'),
+      ),
     };
 
     this.audienceByType = {
-      access: this.secretManager.getSecret('JWT_AUDIENCE_ACCESS', this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-api')),
-      refresh: this.secretManager.getSecret('JWT_AUDIENCE_REFRESH', this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-api')),
-      service: this.secretManager.getSecret('JWT_AUDIENCE_SERVICE', this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-internal')),
-      plugin: this.secretManager.getSecret('JWT_AUDIENCE_PLUGIN', this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-plugin-host')),
-      stepup: this.secretManager.getSecret('JWT_AUDIENCE_STEPUP', this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-api')),
+      access: this.secretManager.getSecret(
+        'JWT_AUDIENCE_ACCESS',
+        this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-api'),
+      ),
+      refresh: this.secretManager.getSecret(
+        'JWT_AUDIENCE_REFRESH',
+        this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-api'),
+      ),
+      service: this.secretManager.getSecret(
+        'JWT_AUDIENCE_SERVICE',
+        this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-internal'),
+      ),
+      plugin: this.secretManager.getSecret(
+        'JWT_AUDIENCE_PLUGIN',
+        this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-plugin-host'),
+      ),
+      stepup: this.secretManager.getSecret(
+        'JWT_AUDIENCE_STEPUP',
+        this.secretManager.getSecret('JWT_AUDIENCE', 'virteex-api'),
+      ),
     };
 
     const redisUrl = process.env['REDIS_URL'];
     if (redisUrl) {
       this.redis = new Redis(redisUrl, {
+        lazyConnect: true,
+        enableOfflineQueue: false,
         maxRetriesPerRequest: 1,
+        retryStrategy: (times) =>
+          times > 3 ? null : Math.min(times * 200, 1000),
         connectTimeout: 2000,
+      });
+      this.redis.on('error', (err) => {
+        this.logger.warn(
+          `JWT Redis backend unavailable: ${(err as Error).message}`,
+        );
       });
     }
 
     this.readJwks();
   }
 
-  issueToken(payload: Record<string, unknown>, options: TokenIssueOptions): string {
+  issueToken(
+    payload: Record<string, unknown>,
+    options: TokenIssueOptions,
+  ): string {
     const key = this.resolveSigningKey();
 
     const tokenType = options.tokenType;
@@ -130,7 +187,11 @@ export class JwtTokenService {
     return this.resolveVerificationKey(header.kid).secret;
   }
 
-  async verifyToken(token: string, tokenType: SupportedTokenType, enforceOneTime = false): Promise<jwt.JwtPayload> {
+  async verifyToken(
+    token: string,
+    tokenType: SupportedTokenType,
+    enforceOneTime = false,
+  ): Promise<jwt.JwtPayload> {
     const decoded = jwt.decode(token, { complete: true });
     if (!decoded || typeof decoded === 'string') {
       throw new UnauthorizedException('Malformed JWT');
@@ -163,7 +224,10 @@ export class JwtTokenService {
     if (!verified.iat || !verified.nbf) {
       throw new UnauthorizedException('JWT missing iat/nbf');
     }
-    if (verified['typ'] !== `virteex+${tokenType}` || verified['token_use'] !== tokenType) {
+    if (
+      verified['typ'] !== `virteex+${tokenType}` ||
+      verified['token_use'] !== tokenType
+    ) {
       throw new UnauthorizedException('JWT token type mismatch');
     }
 
@@ -217,7 +281,10 @@ export class JwtTokenService {
 
   private resolveSigningKey() {
     const jwks = this.readJwks();
-    const preferredKid = this.secretManager.getSecret('JWT_CURRENT_KID', jwks[0]?.kid ?? 'default');
+    const preferredKid = this.secretManager.getSecret(
+      'JWT_CURRENT_KID',
+      jwks[0]?.kid ?? 'default',
+    );
     const key = jwks.find((item) => item.kid === preferredKid) ?? jwks[0];
     if (!key) {
       throw new Error('No JWT signing key available');
@@ -225,7 +292,9 @@ export class JwtTokenService {
     return {
       kid: key.kid,
       alg: key.alg,
-      secret: key.k ? Buffer.from(key.k, 'base64url').toString('utf8') : this.secretManager.getJwtSecret(),
+      secret: key.k
+        ? Buffer.from(key.k, 'base64url').toString('utf8')
+        : this.secretManager.getJwtSecret(),
     };
   }
 
@@ -239,7 +308,9 @@ export class JwtTokenService {
     return {
       kid: key.kid,
       alg: key.alg,
-      secret: key.k ? Buffer.from(key.k, 'base64url').toString('utf8') : this.secretManager.getJwtSecret(),
+      secret: key.k
+        ? Buffer.from(key.k, 'base64url').toString('utf8')
+        : this.secretManager.getJwtSecret(),
     };
   }
 
@@ -254,7 +325,9 @@ export class JwtTokenService {
     }
 
     if (this.isProduction) {
-      throw new Error('JWT_JWKS is mandatory in production. Symmetric secret fallback is disabled.');
+      throw new Error(
+        'JWT_JWKS is mandatory in production. Symmetric secret fallback is disabled.',
+      );
     }
 
     const secret = this.secretManager.getJwtSecret();
@@ -272,7 +345,9 @@ export class JwtTokenService {
     if (!jti) return false;
     if (!this.redis) {
       if (this.isProduction) {
-        this.logger.error('FAIL-CLOSED: Redis not configured for revocation check.');
+        this.logger.error(
+          'FAIL-CLOSED: Redis not configured for revocation check.',
+        );
         return true;
       }
       return false;
@@ -291,7 +366,9 @@ export class JwtTokenService {
   private async isUsed(jti: string): Promise<boolean> {
     if (!this.redis) {
       if (this.isProduction) {
-        this.logger.error('FAIL-CLOSED: Redis not configured for replay check.');
+        this.logger.error(
+          'FAIL-CLOSED: Redis not configured for replay check.',
+        );
         return true;
       }
       return false;
@@ -311,10 +388,12 @@ export class JwtTokenService {
     if (!this.redis) return;
     const ttlSeconds = exp - Math.floor(Date.now() / 1000);
     if (ttlSeconds > 0) {
-      await this.redis.set(`used:${jti}`, '1', 'EX', ttlSeconds).catch((e: unknown) => {
-        const message = e instanceof Error ? e.message : String(e);
-        this.logger.error(`Failed to mark jti as used in Redis: ${message}`);
-      });
+      await this.redis
+        .set(`used:${jti}`, '1', 'EX', ttlSeconds)
+        .catch((e: unknown) => {
+          const message = e instanceof Error ? e.message : String(e);
+          this.logger.error(`Failed to mark jti as used in Redis: ${message}`);
+        });
     }
   }
 
@@ -323,13 +402,19 @@ export class JwtTokenService {
       return;
     }
 
-    const insecureAlgs = this.allowedAlgorithms.filter((algorithm) => algorithm.startsWith('HS'));
+    const insecureAlgs = this.allowedAlgorithms.filter((algorithm) =>
+      algorithm.startsWith('HS'),
+    );
     if (insecureAlgs.length === 0) {
       return;
     }
 
-    const allowOverride = this.secretManager.getSecret('JWT_ALLOW_HS_IN_PRODUCTION', 'false') === 'true';
-    const overrideAuditRef = this.secretManager.getSecret('JWT_HS_OVERRIDE_AUDIT_REF', '').trim();
+    const allowOverride =
+      this.secretManager.getSecret('JWT_ALLOW_HS_IN_PRODUCTION', 'false') ===
+      'true';
+    const overrideAuditRef = this.secretManager
+      .getSecret('JWT_HS_OVERRIDE_AUDIT_REF', '')
+      .trim();
 
     if (!allowOverride || !overrideAuditRef) {
       throw new Error(

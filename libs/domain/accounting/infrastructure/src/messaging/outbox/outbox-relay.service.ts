@@ -1,7 +1,15 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { OUTBOX_REPOSITORY, type OutboxRepository, TELEMETRY_SERVICE, type ITelemetryService } from '@virteex/domain-accounting-domain';
-import { MESSAGE_BROKER, type IMessageBroker } from '@virteex/domain-accounting-application';
+import {
+  OUTBOX_REPOSITORY,
+  type OutboxRepository,
+  TELEMETRY_SERVICE,
+  type ITelemetryService,
+} from '@virteex/domain-accounting-domain';
+import {
+  MESSAGE_BROKER,
+  type IMessageBroker,
+} from '@virteex/domain-accounting-application';
 
 /**
  * Service responsible for relaying domain events from the outbox table to the message broker.
@@ -10,6 +18,10 @@ import { MESSAGE_BROKER, type IMessageBroker } from '@virteex/domain-accounting-
 export class OutboxRelayService {
   private readonly logger = new Logger(OutboxRelayService.name);
   private isProcessing = false;
+  private readonly shouldProcessOutbox =
+    process.env['ACCOUNTING_DB_CONNECT'] === 'true' ||
+    process.env['NODE_ENV'] === 'production';
+  private hasLoggedOutboxSkip = false;
 
   constructor(
     @Inject(OUTBOX_REPOSITORY)
@@ -17,11 +29,21 @@ export class OutboxRelayService {
     @Inject(TELEMETRY_SERVICE)
     private readonly telemetryService: ITelemetryService,
     @Inject(MESSAGE_BROKER)
-    private readonly messageBroker: IMessageBroker
+    private readonly messageBroker: IMessageBroker,
   ) {}
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   async processOutbox() {
+    if (!this.shouldProcessOutbox) {
+      if (!this.hasLoggedOutboxSkip) {
+        this.logger.warn(
+          'Outbox relay skipped because ACCOUNTING_DB_CONNECT is disabled in this environment.',
+        );
+        this.hasLoggedOutboxSkip = true;
+      }
+      return;
+    }
+
     if (this.isProcessing) return;
     this.isProcessing = true;
 
@@ -30,25 +52,38 @@ export class OutboxRelayService {
 
       for (const message of messages) {
         try {
-          this.logger.log(`Publishing event ${message.eventType} for aggregate ${message.aggregateId}`);
+          this.logger.log(
+            `Publishing event ${message.eventType} for aggregate ${message.aggregateId}`,
+          );
 
           await this.messageBroker.publish(message.eventType, message.payload);
 
           await this.outboxRepository.markAsProcessed(message.id);
-          this.telemetryService.recordBusinessMetric('outbox_processed_total', 1, { eventType: message.eventType });
+          this.telemetryService.recordBusinessMetric(
+            'outbox_processed_total',
+            1,
+            { eventType: message.eventType },
+          );
           this.logger.log(`Marked event ${message.id} as processed`);
         } catch (error) {
-          this.telemetryService.recordBusinessMetric('outbox_publish_failures_total', 1, { eventType: message.eventType });
-          this.logger.error(`Failed to process outbox message ${message.id}: ${(error as Error).message}`);
+          this.telemetryService.recordBusinessMetric(
+            'outbox_publish_failures_total',
+            1,
+            { eventType: message.eventType },
+          );
+          this.logger.error(
+            `Failed to process outbox message ${message.id}: ${(error as Error).message}`,
+          );
         }
       }
 
       // Check for pending count if repository supports it, otherwise simulated or skip
       // const pendingCount = await (this.outboxRepository as any).countUnprocessed?.() || 0;
       // this.telemetryService.recordBusinessMetric('outbox_pending_count', pendingCount);
-
     } catch (error) {
-      this.logger.error(`Error fetching unprocessed outbox messages: ${(error as Error).message}`);
+      this.logger.error(
+        `Error fetching unprocessed outbox messages: ${(error as Error).message}`,
+      );
     } finally {
       this.isProcessing = false;
     }
