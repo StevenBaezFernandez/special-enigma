@@ -1,24 +1,17 @@
+import {
+  InvoiceStampedV1EventDto as SharedInvoiceStampedV1EventDto,
+  PayrollStampedV1EventDto as SharedPayrollStampedV1EventDto,
+  ACCOUNTING_INTEGRATION_EVENTS as SharedACCOUNTING_INTEGRATION_EVENTS
+} from '@virteex/shared-contracts';
+
 /**
  * Integration Events for Accounting Module (V1)
  * These are the canonical contracts for external domains (Billing, Payroll)
  * to integrate with Accounting.
  */
 
-export interface InvoiceStampedV1EventDto {
-  invoiceId: string;
-  tenantId: string;
-  totalAmount: number;
-  taxAmount: number;
-  stampedAt: string; // ISO Date
-}
-
-export interface PayrollStampedV1EventDto {
-  payrollId: string;
-  tenantId: string;
-  netAmount: number;
-  taxAmount: number;
-  stampedAt: string; // ISO Date
-}
+export type InvoiceStampedV1EventDto = SharedInvoiceStampedV1EventDto;
+export type PayrollStampedV1EventDto = SharedPayrollStampedV1EventDto;
 
 /**
  * @deprecated Use InvoiceStampedV1EventDto
@@ -58,17 +51,7 @@ export interface PayrollStampedEventDto {
   date: string;
 }
 
-export const ACCOUNTING_INTEGRATION_EVENTS = {
-  INVOICE_STAMPED_V1: 'integration.v1.billing.invoice.stamped',
-  PAYROLL_STAMPED_V1: 'integration.v1.payroll.payroll.stamped',
-
-  // Legacy events for backward compatibility during transition
-  LEGACY: {
-    BILLING_INVOICE_VALIDATED: 'billing.invoice.validated',
-    INVOICE_STAMPED: 'invoice.stamped',
-    PAYROLL_STAMPED: 'payroll.stamped',
-  }
-} as const;
+export const ACCOUNTING_INTEGRATION_EVENTS = SharedACCOUNTING_INTEGRATION_EVENTS;
 
 /**
  * @deprecated Use ACCOUNTING_INTEGRATION_EVENTS

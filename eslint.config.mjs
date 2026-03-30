@@ -44,6 +44,7 @@ export default [
                 'type:application',
                 'type:contracts',
                 'type:util',
+                'type:infrastructure',
               ],
             },
 
@@ -94,7 +95,7 @@ export default [
             },
             {
               sourceTag: 'scope:billing',
-              onlyDependOnLibsWithTags: ['scope:billing', 'scope:shared', 'scope:kernel', 'scope:subscription', 'scope:fiscal']
+              onlyDependOnLibsWithTags: ['scope:billing', 'scope:shared', 'scope:kernel', 'scope:subscription', 'scope:fiscal', 'scope:identity', 'scope:catalog', 'scope:platform']
             },
             {
               sourceTag: 'scope:purchasing',
@@ -110,7 +111,7 @@ export default [
             },
             {
               sourceTag: 'scope:payroll',
-              onlyDependOnLibsWithTags: ['scope:payroll', 'scope:shared', 'scope:kernel']
+              onlyDependOnLibsWithTags: ['scope:payroll', 'scope:shared', 'scope:kernel', 'scope:identity', 'scope:platform']
             },
             {
               sourceTag: 'scope:manufacturing',

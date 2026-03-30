@@ -1,9 +1,8 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { JournalEntryStatus, JournalEntryType } from '@virteex/domain-accounting-contracts';
 import { useAccounting } from '../../hooks/use-accounting';
 import { selectAccounts, selectJournalEntries, selectIsAccountsLoading, selectIsEntriesLoading, selectAccountsError, selectEntriesError } from '../../state/accounting.state';
-import { AccountingService } from '../../services/accounting.service';
 
 @Component({
   selector: 'app-accounting-dashboard',
@@ -44,7 +43,6 @@ import { AccountingService } from '../../services/accounting.service';
 })
 export class DashboardComponent implements OnInit {
   private accounting = useAccounting();
-  private accountingService = inject(AccountingService);
 
   accounts = selectAccounts;
   entries = selectJournalEntries;
@@ -80,9 +78,6 @@ export class DashboardComponent implements OnInit {
   }
 
   setupChart() {
-    this.accountingService.setupChartOfAccounts().subscribe(() => {
-      this.accounting.loadAccounts();
-      this.accounting.loadJournalEntries();
-    });
+    this.accounting.setupChartOfAccounts();
   }
 }

@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TerminusModule } from '@nestjs/terminus';
 import { ConfigModule } from '@nestjs/config';
-import { AccountingApplicationWiringModule } from '@virteex/domain-accounting-infrastructure';
 import { AccountingRestModule } from './modules/accounting-rest.module';
 import { AccountingGraphqlModule } from './modules/accounting-graphql.module';
 import { AccountingEventsModule } from './modules/accounting-events.module';
@@ -16,7 +15,6 @@ import { PresentationLoggingInterceptor } from './interceptors/presentation-logg
  */
 @Module({
   imports: [
-    AccountingApplicationWiringModule,
     TerminusModule,
     ConfigModule,
     AccountingRestModule,

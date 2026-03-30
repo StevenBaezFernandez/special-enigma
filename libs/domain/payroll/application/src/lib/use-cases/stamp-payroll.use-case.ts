@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { type PayrollRepository, PAYROLL_REPOSITORY, PacProvider, PAC_PROVIDER, type TenantConfigRepository, TENANT_CONFIG_REPOSITORY, PayrollStampedEvent, type Payroll, PayrollStatus, PayrollDetailType } from '@virteex/domain-payroll-domain';
-import { ACCOUNTING_INTEGRATION_EVENTS, PayrollStampedV1EventDto } from '@virteex/domain-accounting-contracts';
+import { ACCOUNTING_INTEGRATION_EVENTS, PayrollStampedV1EventDto } from '@virteex/shared-contracts';
 import { XMLBuilder } from 'fast-xml-parser';
 import { XsltService } from '@virteex/platform-xslt';
 import * as crypto from 'crypto';
