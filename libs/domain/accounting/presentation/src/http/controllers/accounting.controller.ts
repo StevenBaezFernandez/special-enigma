@@ -58,6 +58,13 @@ export class AccountingController {
     return this.getJournalEntriesUseCase.execute(tenantId);
   }
 
+  @Get('journal-entries/count')
+  @ApiOperation({ summary: 'Count journal entries (internal)' })
+  async countJournalEntries(@CurrentTenant() tenantId: string) {
+    const entries = await this.getJournalEntriesUseCase.execute(tenantId);
+    return { count: entries.length };
+  }
+
   @Post('setup')
   @ApiOperation({ summary: 'Setup initial chart of accounts' })
   async setupChartOfAccounts(@CurrentTenant() tenantId: string) {

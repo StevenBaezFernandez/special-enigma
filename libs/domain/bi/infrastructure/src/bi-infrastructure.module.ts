@@ -6,6 +6,8 @@ import { BiExpensesAdapter } from './integrations/adapters/bi-expenses.adapter';
 import { BiInvoiceAdapter } from './integrations/adapters/bi-invoice.adapter';
 import { CrmSalesAdapter } from './integrations/adapters/crm-sales.adapter';
 import { SqlDashboardGateway } from './integrations/adapters/sql-dashboard-gateway.adapter';
+import { AccountingReportingAdapter } from './integrations/adapters/accounting-reporting.adapter';
+import { ACCOUNTING_REPORTING_PORT } from '@virteex/domain-accounting-contracts';
 
 @Module({
   imports: [
@@ -32,6 +34,10 @@ import { SqlDashboardGateway } from './integrations/adapters/sql-dashboard-gatew
       provide: DashboardGateway,
       useClass: SqlDashboardGateway,
     },
+    {
+      provide: ACCOUNTING_REPORTING_PORT,
+      useClass: AccountingReportingAdapter,
+    },
   ],
   exports: [
     BI_REPORT_REPOSITORY,
@@ -39,6 +45,7 @@ import { SqlDashboardGateway } from './integrations/adapters/sql-dashboard-gatew
     INVOICE_PORT,
     EXPENSES_PORT,
     DashboardGateway,
+    ACCOUNTING_REPORTING_PORT,
   ],
 })
 export class BiInfrastructureModule {}

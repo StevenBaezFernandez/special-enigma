@@ -34,8 +34,9 @@ export class KafkaMessageBroker implements IMessageBroker, OnModuleInit, OnModul
 
   async publish(topic: string, payload: unknown): Promise<void> {
     if (!this.kafkaProducer) {
-      this.logger.warn(`Kafka producer not available. Dropping message for topic: ${topic}`);
-      return;
+      const errorMsg = `Kafka producer not available. Cannot publish message to topic: ${topic}`;
+      this.logger.error(errorMsg);
+      throw new Error(errorMsg);
     }
 
     try {

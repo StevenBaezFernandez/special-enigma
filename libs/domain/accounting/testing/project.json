@@ -1,0 +1,22 @@
+{
+  "name": "domain-accounting-testing",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/accounting/testing/src",
+  "projectType": "library",
+  "prefix": "virteex",
+  "tags": [
+    "scope:accounting",
+    "type:testing"
+  ],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../../../coverage/libs/domain/accounting/testing"
+      }
+    }
+  }
+}

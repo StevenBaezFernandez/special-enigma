@@ -1,4 +1,4 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import {
   OUTBOX_REPOSITORY,
@@ -15,12 +15,13 @@ import {
  * Service responsible for relaying domain events from the outbox table to the message broker.
  */
 @Injectable()
-export class OutboxRelayService {
+export class OutboxRelayService implements OnModuleInit {
   private readonly logger = new Logger(OutboxRelayService.name);
   private isProcessing = false;
-  private readonly shouldProcessOutbox =
-    process.env['ACCOUNTING_DB_CONNECT'] === 'true' ||
+  private readonly isOutboxRequired =
+    process.env['ACCOUNTING_OUTBOX_REQUIRED'] === 'true' ||
     process.env['NODE_ENV'] === 'production';
+  private readonly isDbConnected = process.env['ACCOUNTING_DB_CONNECT'] === 'true';
   private hasLoggedOutboxSkip = false;
 
   constructor(
@@ -32,12 +33,29 @@ export class OutboxRelayService {
     private readonly messageBroker: IMessageBroker,
   ) {}
 
+  async onModuleInit() {
+    if (this.isOutboxRequired) {
+      if (!this.isDbConnected) {
+        const errorMsg = 'Outbox relay is required but ACCOUNTING_DB_CONNECT is not enabled.';
+        this.logger.error(errorMsg);
+        throw new Error(errorMsg);
+      }
+
+      const brokers = process.env['KAFKA_BROKERS'] ? process.env['KAFKA_BROKERS'].split(',') : [];
+      if (brokers.length === 0) {
+        const errorMsg = 'Outbox relay is required but KAFKA_BROKERS are not configured.';
+        this.logger.error(errorMsg);
+        throw new Error(errorMsg);
+      }
+    }
+  }
+
   @Cron(CronExpression.EVERY_10_SECONDS)
   async processOutbox() {
-    if (!this.shouldProcessOutbox) {
+    if (!this.isDbConnected && !this.isOutboxRequired) {
       if (!this.hasLoggedOutboxSkip) {
         this.logger.warn(
-          'Outbox relay skipped because ACCOUNTING_DB_CONNECT is disabled in this environment.',
+          'Outbox relay skipped because ACCOUNTING_DB_CONNECT is disabled and outbox is not strictly required in this environment.',
         );
         this.hasLoggedOutboxSkip = true;
       }

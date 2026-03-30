@@ -1,5 +1,6 @@
 import { AccountType } from '../value-objects/account-type.enum';
 import { DomainEvent } from '../events/domain-event.interface';
+import { AccountingDomainError } from '../errors/accounting.errors';
 
 export class Account {
   id!: string;
@@ -15,10 +16,10 @@ export class Account {
   private _domainEvents: DomainEvent[] = [];
 
   constructor(tenantId: string, code: string, name: string, type: AccountType) {
-    if (!tenantId) throw new Error('TenantId is required');
-    if (!code) throw new Error('Account code is required');
-    if (!name) throw new Error('Account name is required');
-    if (!type) throw new Error('Account type is required');
+    if (!tenantId) throw new AccountingDomainError('TenantId is required');
+    if (!code) throw new AccountingDomainError('Account code is required');
+    if (!name) throw new AccountingDomainError('Account name is required');
+    if (!type) throw new AccountingDomainError('Account type is required');
 
     this.tenantId = tenantId;
     this.code = code;

@@ -1,6 +1,7 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { GqlArgumentsHost } from '@nestjs/graphql';
 import { Response, Request } from 'express';
+import { AccountingDomainError } from '@virteex/domain-accounting-domain';
 
 @Catch()
 export class AccountingExceptionFilter implements ExceptionFilter {
@@ -9,22 +10,28 @@ export class AccountingExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const isGql = host.getType().toString() === 'graphql';
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message = (exception as any)?.message || 'Internal Server Error';
+    let message = 'Internal Server Error';
+    let errorCode = 'INTERNAL_SERVER_ERROR';
     let path = 'UNKNOWN';
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const response = exception.getResponse();
-      message = typeof response === 'object' ? (response as any).message || message : response;
+      message = typeof response === 'object' && response !== null && 'message' in response ? (response as any).message : exception.message;
+      errorCode = 'HTTP_EXCEPTION';
+    } else if (exception instanceof AccountingDomainError) {
+      status = HttpStatus.BAD_REQUEST;
+      message = exception.message;
+      errorCode = exception.constructor.name;
     }
+
+    const stack = exception instanceof Error ? exception.stack : undefined;
 
     if (isGql) {
       const gqlHost = GqlArgumentsHost.create(host);
       const info = gqlHost.getInfo();
       path = info?.fieldName || 'GraphQL Query';
-      this.logger.error(`[GraphQL] Exception on ${path}: ${message}`, (exception as any)?.stack);
-      // NestJS handles GraphQL errors by returning them in the response.
-      // Throwing it back for the GraphQL engine to handle is correct.
+      this.logger.error(`[GraphQL] Exception on ${path}: ${message}`, stack);
       return exception;
     } else {
       const ctx = host.switchToHttp();
@@ -34,12 +41,13 @@ export class AccountingExceptionFilter implements ExceptionFilter {
 
       const errorResponse = {
         statusCode: status,
+        errorCode,
         timestamp: new Date().toISOString(),
         path,
-        message,
+        message: status === HttpStatus.INTERNAL_SERVER_ERROR ? 'An unexpected error occurred' : message,
       };
 
-      this.logger.error(`[HTTP] Exception on ${path}: ${message}`, (exception as any)?.stack);
+      this.logger.error(`[HTTP] Exception on ${path}: ${message}`, stack);
       response.status(status).json(errorResponse);
     }
   }
