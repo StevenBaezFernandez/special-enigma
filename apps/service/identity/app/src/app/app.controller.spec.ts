@@ -1,4 +1,3 @@
-import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,7 +12,7 @@ describe('AppController', () => {
         {
           provide: AppService,
           useValue: {
-            getData: vi.fn().mockReturnValue({ status: 'ok' }),
+            getData: jest.fn().mockReturnValue({ status: 'ok' }),
           },
         },
       ],

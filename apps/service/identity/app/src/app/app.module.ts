@@ -11,8 +11,8 @@ import depthLimit from 'graphql-depth-limit';
 import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
+import { FederationSupportModule } from '@virteex/shared-util-server-server-config';
 import { TenantModule } from '@virteex/kernel-tenant';
-import { CanonicalTenantMiddleware } from '@virteex/kernel-auth';
 import { AuthModule } from '@virteex/kernel-auth';
 import { IdentityPresentationModule } from '@virteex/domain-identity-presentation';
 import { IdentityInfrastructureModule } from '@virteex/domain-identity-infrastructure';
@@ -32,8 +32,10 @@ import { AppService } from './app.service';
       limit: 10,
     }]),
     EventEmitterModule.forRoot(),
+    FederationSupportModule,
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
+      playground: false,
       plugins: [
         process.env.NODE_ENV === 'production'
           ? ApolloServerPluginLandingPageProductionDefault({
@@ -83,7 +85,6 @@ import { AppService } from './app.service';
         };
       },
     }),
-    TenantModule,
     IdentityInfrastructureModule,
     IdentityPresentationModule,
   ],
@@ -96,10 +97,4 @@ import { AppService } from './app.service';
     },
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(CanonicalTenantMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
-  }
-}
+export class AppModule {}
