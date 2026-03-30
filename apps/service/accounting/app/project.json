@@ -75,7 +75,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "service-accounting-app:build",
-        "port": 9239
+        "inspect": false
       },
       "configurations": {
         "development": {
