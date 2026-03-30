@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { InvalidDimensionKeyError } from '@virteex/domain-accounting-domain';
 
-@Injectable()
 export class DimensionValidator {
   private readonly keyRegex = /^[a-zA-Z0-9_]+$/;
 
@@ -10,7 +9,7 @@ export class DimensionValidator {
 
   ensureValidKey(key: string): void {
     if (!this.validateKey(key)) {
-      throw new Error(`Invalid dimension key: ${key}`);
+      throw new InvalidDimensionKeyError(key);
     }
   }
 }

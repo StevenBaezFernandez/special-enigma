@@ -21,7 +21,7 @@ export class JournalEntryLineInputDto {
 
 export class RecordJournalEntryDto {
   @IsDateString()
-  date!: Date;
+  date!: string;
 
   @IsString()
   @IsNotEmpty()

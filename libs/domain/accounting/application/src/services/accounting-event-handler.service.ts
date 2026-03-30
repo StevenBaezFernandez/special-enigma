@@ -1,8 +1,13 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
 import { RecordJournalEntryUseCase } from '../use-cases/journal-entries/record-journal-entry.use-case';
-import { type AccountRepository, ACCOUNT_REPOSITORY } from '@virteex/domain-accounting-domain';
+import { type AccountRepository } from '@virteex/domain-accounting-domain';
 import { type RecordJournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { AccountingPolicyService } from './accounting-policy.service';
+
+interface ILogger {
+  log(message: string): void;
+  warn(message: string): void;
+  error(message: string, trace?: string): void;
+}
 
 interface InvoiceStampedEvent {
     invoiceId: string;
@@ -20,14 +25,12 @@ interface PayrollStampedEvent {
     date: Date;
 }
 
-@Injectable()
 export class AccountingEventHandlerService {
-  private readonly logger = new Logger(AccountingEventHandlerService.name);
-
   constructor(
     private readonly recordJournalEntryUseCase: RecordJournalEntryUseCase,
     private readonly policyService: AccountingPolicyService,
-    @Inject(ACCOUNT_REPOSITORY) private readonly accountRepo: AccountRepository
+    private readonly accountRepo: AccountRepository,
+    private readonly logger: ILogger = console
   ) {}
 
   async handleInvoiceStamped(event: InvoiceStampedEvent) {
@@ -46,7 +49,7 @@ export class AccountingEventHandlerService {
 
     const dto: RecordJournalEntryDto & { tenantId: string } = {
         tenantId: event.tenantId,
-        date: event.date,
+        date: event.date.toISOString(),
         description: `Venta Factura ${event.invoiceId}`,
         lines: [
             { accountId: clientAccount.id, debit: Number(event.total).toFixed(2), credit: '0.00', description: 'Cargo a Clientes' },
@@ -76,7 +79,7 @@ export class AccountingEventHandlerService {
 
     const dto: RecordJournalEntryDto & { tenantId: string } = {
         tenantId: event.tenantId,
-        date: event.date,
+        date: event.date.toISOString(),
         description: `Nómina ${event.payrollId}`,
         lines: [
             { accountId: salaryExpenseAccount.id, debit: totalEarnings.toFixed(2), credit: '0.00', description: 'Gasto por Sueldos' },

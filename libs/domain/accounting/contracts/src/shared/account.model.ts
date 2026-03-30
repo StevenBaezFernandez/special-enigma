@@ -50,14 +50,9 @@ export interface Account {
   isPostable: boolean;
   createdAt: Date;
   updatedAt: Date;
-  organizationId: string;
+  tenantId: string;
   parentId: string | null;
   children?: Account[];
-
-  // Propiedades de UI que se añaden en el frontend
-  level?: number;
-  isExpanded?: boolean;
-  hasChildren?: boolean;
 
   // Campos adicionales para el formulario
   statementMapping?: {

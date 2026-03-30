@@ -46,3 +46,9 @@ export class PeriodClosedError extends AccountingDomainError {
     super(`The period for date ${date.toISOString()} is already closed`);
   }
 }
+
+export class InvalidDimensionKeyError extends AccountingDomainError {
+  constructor(key: string) {
+    super(`Invalid dimension key: ${key}`);
+  }
+}

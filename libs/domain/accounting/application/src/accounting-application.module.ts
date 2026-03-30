@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, OUTBOX_REPOSITORY, TELEMETRY_SERVICE, AccountRepository, JournalEntryRepository, OutboxRepository, ITelemetryService } from '@virteex/domain-accounting-domain';
+import { Module, Logger } from '@nestjs/common';
+import { ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY, OUTBOX_REPOSITORY, TELEMETRY_SERVICE, POLICY_REPOSITORY, AccountRepository, JournalEntryRepository, OutboxRepository, ITelemetryService, PolicyRepository } from '@virteex/domain-accounting-domain';
 import { I_UNIT_OF_WORK, IUnitOfWork } from './ports/outbound/unit-of-work.port';
 import { AccountingPolicyService } from './services/accounting-policy.service';
 import { AccountingEventHandlerService } from './services/accounting-event-handler.service';
@@ -8,15 +8,28 @@ import { CreateAccountUseCase } from './use-cases/accounts/create-account.use-ca
 import { RecordJournalEntryUseCase } from './use-cases/journal-entries/record-journal-entry.use-case';
 import { GetAccountsUseCase } from './use-cases/accounts/get-accounts.use-case';
 import { GetJournalEntriesUseCase } from './use-cases/journal-entries/get-journal-entries.use-case';
+import { CountJournalEntriesUseCase } from './use-cases/journal-entries/count-journal-entries.use-case';
 import { SetupChartOfAccountsUseCase } from './use-cases/accounts/setup-chart-of-accounts.use-case';
 import { GenerateFinancialReportUseCase } from './use-cases/reports/generate-financial-report.use-case';
 import { CloseFiscalPeriodUseCase } from './use-cases/fiscal-periods/close-fiscal-period.use-case';
 
 @Module({
   providers: [
-    AccountingPolicyService,
-    AccountingEventHandlerService,
-    DimensionValidator,
+    {
+      provide: DimensionValidator,
+      useValue: new DimensionValidator(),
+    },
+    {
+      provide: AccountingPolicyService,
+      useFactory: (repo?: PolicyRepository) => new AccountingPolicyService(repo),
+      inject: [{ token: POLICY_REPOSITORY, optional: true }],
+    },
+    {
+      provide: AccountingEventHandlerService,
+      useFactory: (recordJE: RecordJournalEntryUseCase, policy: AccountingPolicyService, accRepo: AccountRepository) =>
+        new AccountingEventHandlerService(recordJE, policy, accRepo, new Logger(AccountingEventHandlerService.name)),
+      inject: [RecordJournalEntryUseCase, AccountingPolicyService, ACCOUNT_REPOSITORY],
+    },
     {
       provide: CreateAccountUseCase,
       useFactory: (repo: AccountRepository, outbox: OutboxRepository, telemetry: ITelemetryService) => new CreateAccountUseCase(repo, outbox, telemetry),
@@ -35,6 +48,11 @@ import { CloseFiscalPeriodUseCase } from './use-cases/fiscal-periods/close-fisca
     {
       provide: GetJournalEntriesUseCase,
       useFactory: (repo: JournalEntryRepository) => new GetJournalEntriesUseCase(repo),
+      inject: [JOURNAL_ENTRY_REPOSITORY],
+    },
+    {
+      provide: CountJournalEntriesUseCase,
+      useFactory: (repo: JournalEntryRepository) => new CountJournalEntriesUseCase(repo),
       inject: [JOURNAL_ENTRY_REPOSITORY],
     },
     {
@@ -61,6 +79,7 @@ import { CloseFiscalPeriodUseCase } from './use-cases/fiscal-periods/close-fisca
     RecordJournalEntryUseCase,
     GetAccountsUseCase,
     GetJournalEntriesUseCase,
+    CountJournalEntriesUseCase,
     SetupChartOfAccountsUseCase,
     GenerateFinancialReportUseCase,
     CloseFiscalPeriodUseCase,
