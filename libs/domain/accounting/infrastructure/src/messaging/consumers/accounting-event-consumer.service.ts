@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AccountingEventHandlerService } from '@virteex/domain-accounting-application';
-import { InvoiceStampedV1EventDto, InvoiceValidatedEventDto } from '@virteex/domain-accounting-contracts';
+import { AccountingEventHandlerService, AccountingEventConsumerPort } from '@virteex/domain-accounting-application';
+import { InvoiceStampedV1EventDto, InvoiceValidatedEventDto, PayrollStampedV1EventDto } from '@virteex/domain-accounting-contracts';
 
 @Injectable()
-export class AccountingEventConsumerService {
+export class AccountingEventConsumerService implements AccountingEventConsumerPort {
   private readonly logger = new Logger(AccountingEventConsumerService.name);
 
   constructor(
@@ -20,6 +20,18 @@ export class AccountingEventConsumerService {
       invoiceId: event.invoiceId,
       tenantId: event.tenantId,
       total: event.totalAmount,
+      taxes: event.taxAmount,
+      date: new Date(event.stampedAt)
+    });
+  }
+
+  async consumePayrollStampedV1(event: PayrollStampedV1EventDto) {
+    this.logger.log(`Processing V1 Payroll Stamped integration event: ${event.payrollId}`);
+
+    await this.eventHandlerService.handlePayrollStamped({
+      payrollId: event.payrollId,
+      tenantId: event.tenantId,
+      netPay: event.netAmount,
       taxes: event.taxAmount,
       date: new Date(event.stampedAt)
     });

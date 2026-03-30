@@ -14,6 +14,7 @@ import {
   MESSAGE_BROKER,
   I_UNIT_OF_WORK,
   DimensionValidator,
+  AccountingEventConsumerPort,
 } from '@virteex/domain-accounting-application';
 import { ACCOUNTING_REPORTING_PORT } from '@virteex/domain-accounting-contracts';
 import { TelemetryService } from '@virteex/kernel-telemetry';
@@ -81,12 +82,15 @@ import { AccountingApplicationWiringModule } from './accounting-application-wiri
       provide: MESSAGE_BROKER,
       useClass: KafkaMessageBroker,
     },
+    {
+      provide: AccountingEventConsumerPort,
+      useClass: AccountingEventConsumerService,
+    },
     DimensionValidator,
     OutboxRelayService,
-    AccountingEventConsumerService,
   ],
   exports: [
-    AccountingEventConsumerService,
+    AccountingEventConsumerPort,
     ACCOUNT_REPOSITORY,
     JOURNAL_ENTRY_REPOSITORY,
     POLICY_REPOSITORY,
