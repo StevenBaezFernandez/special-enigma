@@ -3,9 +3,11 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import {
   OUTBOX_REPOSITORY,
   type OutboxRepository,
+} from '@virteex/domain-accounting-domain';
+import {
   TELEMETRY_SERVICE,
   type ITelemetryService,
-} from '@virteex/domain-accounting-domain';
+} from '@virteex/kernel-telemetry';
 import {
   MESSAGE_BROKER,
   type IMessageBroker,

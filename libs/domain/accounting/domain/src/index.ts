@@ -36,12 +36,5 @@ export interface OutboxRepository {
 }
 
 export const OUTBOX_REPOSITORY = 'OUTBOX_REPOSITORY';
-export const TELEMETRY_SERVICE = 'TELEMETRY_SERVICE';
-
-export interface ITelemetryService {
-  recordSecurityEvent(eventName: string, details: Record<string, unknown>): void;
-  recordBusinessMetric(name: string, value: number, attributes?: Record<string, string | number | boolean>): void;
-  setTraceAttributes(attributes: Record<string, string | number | boolean>): void;
-}
 
 export type { CurrencyRevaluationService } from './domain-services/currency-revaluation.service';

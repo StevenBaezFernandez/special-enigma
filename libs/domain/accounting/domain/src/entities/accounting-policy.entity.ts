@@ -1,4 +1,5 @@
 import { DomainEvent } from '../events/domain-event.interface';
+import { AccountingDomainError } from '../errors/accounting.errors';
 
 export class AccountingPolicy {
   id!: string;
@@ -21,17 +22,17 @@ export class AccountingPolicy {
   }
 
   private validate(): void {
-    if (!this.tenantId) throw new Error('Tenant ID is required for policy');
+    if (!this.tenantId) throw new AccountingDomainError('Tenant ID is required for policy');
     if (!['invoice', 'payroll', 'closing'].includes(this.type)) {
-      throw new Error(`Invalid policy type: ${this.type}`);
+      throw new AccountingDomainError(`Invalid policy type: ${this.type}`);
     }
     if (!this.rules || typeof this.rules !== 'object') {
-      throw new Error('Rules must be a valid object');
+      throw new AccountingDomainError('Rules must be a valid object');
     }
 
     // Specific validations based on type
     if (this.type === 'invoice') {
-       if (!this.rules['salesAccountCode']) throw new Error('Invoice policy requires salesAccountCode');
+       if (!this.rules['salesAccountCode']) throw new AccountingDomainError('Invoice policy requires salesAccountCode');
     }
   }
 

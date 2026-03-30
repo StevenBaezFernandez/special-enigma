@@ -41,14 +41,14 @@ export class CloseFiscalPeriodUseCase {
     }
 
     const policy = await this.policyService.resolveAccountsForClosing(tenantId);
-    const retainedEarningsAccount = await this.accountRepository.findByCode(tenantId, policy.retainedEarningsAccountCode);
+    const retainedEarningsAccount = await this.accountRepository.findByCode(tenantId, policy['retainedEarningsAccountCode']);
 
     if (retainedEarningsAccount) {
         const debit = netIncome.isPositive() ? netIncome.abs().toFixed(2) : '0.00';
         const credit = netIncome.isPositive() ? '0.00' : netIncome.abs().toFixed(2);
         entry.addLine(new JournalEntryLine(retainedEarningsAccount, debit, credit));
     } else if (!netIncome.isZero()) {
-        throw new AccountingDomainError(`Retained earnings account with code ${policy.retainedEarningsAccountCode} not found for fiscal closing.`);
+        throw new AccountingDomainError(`Retained earnings account with code ${policy['retainedEarningsAccountCode']} not found for fiscal closing.`);
     }
 
     entry.type = JournalEntryType.CLOSING;

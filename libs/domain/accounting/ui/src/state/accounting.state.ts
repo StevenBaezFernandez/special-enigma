@@ -1,5 +1,5 @@
 import { signal, computed } from '@angular/core';
-import { AccountDto, JournalEntryDto } from '@virteex/domain-accounting-contracts';
+import { AccountDto, JournalEntryDto, FinancialReportDto } from '@virteex/domain-accounting-contracts';
 
 export const accountsState = signal<{
   items: AccountDto[];
@@ -22,7 +22,7 @@ export const entriesState = signal<{
 });
 
 export const reportsState = signal<{
-  data: unknown;
+  data: FinancialReportDto | null;
   isLoading: boolean;
   error: string | null;
 }>({

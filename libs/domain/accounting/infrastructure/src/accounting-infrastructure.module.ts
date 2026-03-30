@@ -6,8 +6,10 @@ import {
   JOURNAL_ENTRY_REPOSITORY,
   POLICY_REPOSITORY,
   OUTBOX_REPOSITORY,
-  TELEMETRY_SERVICE,
 } from '@virteex/domain-accounting-domain';
+import {
+  TELEMETRY_SERVICE,
+} from '@virteex/kernel-telemetry';
 import {
   MESSAGE_BROKER,
   I_UNIT_OF_WORK,

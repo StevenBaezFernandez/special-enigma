@@ -12,8 +12,3 @@ export interface FinancialReportDto {
   dimensions?: Record<string, string>;
 }
 
-export class GenerateFinancialReportDto {
-  type!: 'BALANCE_SHEET' | 'PROFIT_AND_LOSS' | 'TRIAL_BALANCE';
-  endDate!: string;
-  dimensions?: Record<string, string>;
-}

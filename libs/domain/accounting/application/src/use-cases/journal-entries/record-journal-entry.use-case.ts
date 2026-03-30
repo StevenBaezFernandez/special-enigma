@@ -1,4 +1,5 @@
-import { JournalEntry, JournalEntryLine, type JournalEntryRepository, type AccountRepository, AccountNotFoundError, CrossTenantAccessError, PeriodClosedError, type ITelemetryService } from '@virteex/domain-accounting-domain';
+import { JournalEntry, JournalEntryLine, type JournalEntryRepository, type AccountRepository, AccountNotFoundError, CrossTenantAccessError, PeriodClosedError } from '@virteex/domain-accounting-domain';
+import { type ITelemetryService } from '@virteex/kernel-telemetry';
 import { type RecordJournalEntryDto, type JournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { JournalEntryMapper } from '../../mappers/journal-entry.mapper';
 import { IUnitOfWork } from '../../ports/outbound/unit-of-work.port';

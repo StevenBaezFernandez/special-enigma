@@ -1,8 +1,8 @@
-import { Component, OnInit, inject, computed, effect } from '@angular/core';
+import { Component, OnInit, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { JournalEntryStatus, JournalEntryType } from '@virteex/domain-accounting-contracts';
 import { useAccounting } from '../../hooks/use-accounting';
-import { selectAccounts, selectJournalEntries, selectIsAccountsLoading, selectIsEntriesLoading } from '../../state/accounting.state';
+import { selectAccounts, selectJournalEntries, selectIsAccountsLoading, selectIsEntriesLoading, selectAccountsError, selectEntriesError } from '../../state/accounting.state';
 import { AccountingService } from '../../services/accounting.service';
 
 @Component({
@@ -38,7 +38,7 @@ import { AccountingService } from '../../services/accounting.service';
         </div>
       </div>
 
-      <div *ngIf="error" class="mt-4 text-red-500 text-sm">{{ error }}</div>
+      <div *ngIf="error()" class="mt-4 text-red-500 text-sm">{{ error() }}</div>
     </div>
   `,
 })
@@ -52,6 +52,7 @@ export class DashboardComponent implements OnInit {
   isEntriesLoading = selectIsEntriesLoading;
 
   loading = computed(() => this.isAccountsLoading() || this.isEntriesLoading());
+  error = computed(() => selectAccountsError() || selectEntriesError());
 
   stats = computed(() => {
     const accounts = this.accounts();

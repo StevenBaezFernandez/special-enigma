@@ -1,7 +1,6 @@
 export * from './accounting-infrastructure.module';
 export * from './accounting-application-wiring.module';
 export * from './messaging/consumers/accounting-event-consumer.service';
-export { InvoiceValidatedEvent } from './messaging/consumers/accounting-event-consumer.service';
 export * from './persistence/repositories/mikro-orm-account.repository';
 export * from './persistence/repositories/journal-entry-repository-adapter';
 export * from './persistence/repositories/mikro-orm-reporting-adapter';

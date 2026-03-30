@@ -1,6 +1,6 @@
 import { AccountType } from '../value-objects/account-type.enum';
 import { DomainEvent } from '../events/domain-event.interface';
-import { AccountingDomainError } from '../errors/accounting.errors';
+import { AccountingDomainError, CrossTenantAccessError } from '../errors/accounting.errors';
 
 export class Account {
   id!: string;

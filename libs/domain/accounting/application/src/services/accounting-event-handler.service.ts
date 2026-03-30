@@ -38,9 +38,9 @@ export class AccountingEventHandlerService {
 
     const policy = await this.policyService.resolveAccountsForInvoice(event.tenantId);
 
-    const salesAccount = await this.accountRepo.findByCode(event.tenantId, policy.salesAccountCode);
-    const vatAccount = await this.accountRepo.findByCode(event.tenantId, policy.vatAccountCode);
-    const clientAccount = await this.accountRepo.findByCode(event.tenantId, policy.clientAccountCode);
+    const salesAccount = await this.accountRepo.findByCode(event.tenantId, policy['salesAccountCode']);
+    const vatAccount = await this.accountRepo.findByCode(event.tenantId, policy['vatAccountCode']);
+    const clientAccount = await this.accountRepo.findByCode(event.tenantId, policy['clientAccountCode']);
 
     if (!salesAccount || !vatAccount || !clientAccount) {
         this.logger.warn(`Missing accounting codes for tenant ${event.tenantId}. Skipping journal entry.`);
@@ -66,9 +66,9 @@ export class AccountingEventHandlerService {
 
     const policy = await this.policyService.resolveAccountsForPayroll(event.tenantId);
 
-    const salaryExpenseAccount = await this.accountRepo.findByCode(event.tenantId, policy.salaryExpenseAccountCode);
-    const taxPayableAccount = await this.accountRepo.findByCode(event.tenantId, policy.taxPayableAccountCode);
-    const bankAccount = await this.accountRepo.findByCode(event.tenantId, policy.bankAccountCode);
+    const salaryExpenseAccount = await this.accountRepo.findByCode(event.tenantId, policy['salaryExpenseAccountCode']);
+    const taxPayableAccount = await this.accountRepo.findByCode(event.tenantId, policy['taxPayableAccountCode']);
+    const bankAccount = await this.accountRepo.findByCode(event.tenantId, policy['bankAccountCode']);
 
     if (!salaryExpenseAccount || !taxPayableAccount || !bankAccount) {
         this.logger.warn(`Missing accounting codes for tenant ${event.tenantId}. Skipping payroll entry.`);

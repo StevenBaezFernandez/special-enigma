@@ -4,14 +4,16 @@ import {
   ACCOUNT_REPOSITORY,
   JOURNAL_ENTRY_REPOSITORY,
   OUTBOX_REPOSITORY,
-  TELEMETRY_SERVICE,
   POLICY_REPOSITORY,
   AccountRepository,
   JournalEntryRepository,
   OutboxRepository,
-  ITelemetryService,
   PolicyRepository,
 } from '@virteex/domain-accounting-domain';
+import {
+  TELEMETRY_SERVICE,
+  type ITelemetryService,
+} from '@virteex/kernel-telemetry';
 import {
   I_UNIT_OF_WORK,
   IUnitOfWork,

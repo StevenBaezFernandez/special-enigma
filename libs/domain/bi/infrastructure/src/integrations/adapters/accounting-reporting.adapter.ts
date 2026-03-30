@@ -2,7 +2,7 @@ import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { IAccountingReportingPort } from '@virteex/domain-accounting-contracts';
 import { SecretManagerService } from '@virteex/kernel-auth';
 import { buildSignedContextClaims, encodeContextClaims, signEncodedContext } from '@virteex/kernel-auth';
-import { TELEMETRY_SERVICE, ITelemetryService } from '@virteex/domain-accounting-domain';
+import { TELEMETRY_SERVICE, ITelemetryService } from '@virteex/kernel-telemetry';
 import { IntegrationError } from '@virteex/domain-accounting-contracts';
 
 @Injectable()
