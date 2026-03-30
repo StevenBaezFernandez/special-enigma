@@ -88,6 +88,7 @@
         "{options.reportsDirectory}"
       ],
       "options": {
+        "jestConfig": "apps/service/identity/app/jest.config.cts",
         "reportsDirectory": "../../coverage/apps/service-identity-app"
       }
     }
