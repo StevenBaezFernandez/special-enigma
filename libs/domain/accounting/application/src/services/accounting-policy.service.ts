@@ -1,10 +1,8 @@
-import { Injectable, Inject, Optional } from '@nestjs/common';
-import { POLICY_REPOSITORY, type PolicyRepository } from '@virteex/domain-accounting-domain';
+import { type PolicyRepository } from '@virteex/domain-accounting-domain';
 
-@Injectable()
 export class AccountingPolicyService {
   constructor(
-    @Optional() @Inject(POLICY_REPOSITORY) private readonly policyRepository?: PolicyRepository
+    private readonly policyRepository?: PolicyRepository
   ) {}
 
   private readonly defaultPolicies: Record<string, Record<string, string>> = {

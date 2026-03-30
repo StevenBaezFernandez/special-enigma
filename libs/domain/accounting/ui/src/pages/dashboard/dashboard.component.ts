@@ -68,10 +68,12 @@ export class DashboardComponent implements OnInit {
         ).length;
 
         // Robust logic for last closing
-        const closingEntry = data.entries.find(e =>
-          e.type === JournalEntryType.CLOSING
-        );
-        this.stats.lastClosing = closingEntry ? closingEntry.date.toString() : 'No closing found';
+        const closingEntries = data.entries
+          .filter(e => e.type === JournalEntryType.CLOSING)
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+        const latestClosing = closingEntries.length > 0 ? closingEntries[0] : null;
+        this.stats.lastClosing = latestClosing ? new Date(latestClosing.date).toLocaleDateString() : 'No closing found';
 
         this.loading = false;
       },

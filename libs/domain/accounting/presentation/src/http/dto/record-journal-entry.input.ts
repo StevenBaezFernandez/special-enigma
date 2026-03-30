@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsNotEmpty, IsDate, IsArray, ValidateNested, IsOptional, IsUUID } from 'class-validator';
+import { IsString, IsNotEmpty, IsDateString, IsArray, ValidateNested, IsOptional, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
 
 @InputType()
@@ -28,9 +28,9 @@ export class JournalEntryLineInput {
 @InputType()
 export class RecordJournalEntryInput {
   @Field()
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
-  date!: Date;
+  date!: string;
 
   @Field()
   @IsString()

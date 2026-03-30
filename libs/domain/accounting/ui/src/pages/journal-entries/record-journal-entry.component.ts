@@ -190,7 +190,7 @@ export class RecordJournalEntryComponent implements OnInit {
     const formValue = this.entryForm.getRawValue();
 
     const dto: RecordJournalEntryDto = {
-        date: new Date(formValue.date),
+        date: formValue.date,
         description: formValue.description,
         lines: formValue.lines.map((l) => ({
             accountId: l.accountId,

@@ -6,6 +6,7 @@ export * from './use-cases/accounts/create-account.use-case';
 export * from './use-cases/journal-entries/record-journal-entry.use-case';
 export * from './use-cases/accounts/get-accounts.use-case';
 export * from './use-cases/journal-entries/get-journal-entries.use-case';
+export * from './use-cases/journal-entries/count-journal-entries.use-case';
 export * from './use-cases/accounts/setup-chart-of-accounts.use-case';
 export * from './use-cases/reports/generate-financial-report.use-case';
 export * from './use-cases/fiscal-periods/close-fiscal-period.use-case';

@@ -11,7 +11,7 @@ export class RecordJournalEntryUseCase {
     private uow: IUnitOfWork
   ) {}
 
-  async execute(dto: RecordJournalEntryDto & { tenantId: string }): Promise<JournalEntryDto> {
+  async execute(dto: Omit<RecordJournalEntryDto, 'date'> & { date: string | Date; tenantId: string }): Promise<JournalEntryDto> {
     const startTime = Date.now();
     this.telemetryService.setTraceAttributes({ tenantId: dto.tenantId, useCase: 'RecordJournalEntry' });
 
@@ -21,7 +21,7 @@ export class RecordJournalEntryUseCase {
             throw new PeriodClosedError(new Date(dto.date));
         }
 
-        const entry = new JournalEntry(dto.tenantId, dto.description, dto.date);
+        const entry = new JournalEntry(dto.tenantId, dto.description, new Date(dto.date));
 
         for (const lineDto of dto.lines) {
             const account = await this.accountRepository.findById(dto.tenantId, lineDto.accountId);

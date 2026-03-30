@@ -6,6 +6,7 @@ import {
   RecordJournalEntryUseCase,
   GetAccountsUseCase,
   GetJournalEntriesUseCase,
+  CountJournalEntriesUseCase,
   SetupChartOfAccountsUseCase,
   GenerateFinancialReportUseCase,
   CloseFiscalPeriodUseCase
@@ -22,6 +23,7 @@ export class AccountingController {
     private readonly recordJournalEntryUseCase: RecordJournalEntryUseCase,
     private readonly getAccountsUseCase: GetAccountsUseCase,
     private readonly getJournalEntriesUseCase: GetJournalEntriesUseCase,
+    private readonly countJournalEntriesUseCase: CountJournalEntriesUseCase,
     private readonly setupChartOfAccountsUseCase: SetupChartOfAccountsUseCase,
     private readonly generateFinancialReportUseCase: GenerateFinancialReportUseCase,
     private readonly closeFiscalPeriodUseCase: CloseFiscalPeriodUseCase,
@@ -61,8 +63,8 @@ export class AccountingController {
   @Get('journal-entries/count')
   @ApiOperation({ summary: 'Count journal entries (internal)' })
   async countJournalEntries(@CurrentTenant() tenantId: string) {
-    const entries = await this.getJournalEntriesUseCase.execute(tenantId);
-    return { count: entries.length };
+    const count = await this.countJournalEntriesUseCase.execute(tenantId);
+    return { count };
   }
 
   @Post('setup')

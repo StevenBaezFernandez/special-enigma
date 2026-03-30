@@ -1,8 +1,8 @@
 import { vi, describe, it, expect } from 'vitest';
 import { GenerateFinancialReportUseCase } from '../../application/src/use-cases/reports/generate-financial-report.use-case';
 
-describe('Accounting Domain Performance', () => {
-  it('should meet performance requirements for report generation with a large dataset', async () => {
+describe('Accounting Domain Performance (Mock-based/Simulated)', () => {
+  it('should meet performance requirements for report generation with a large simulated dataset', async () => {
     const totalAccounts = 5000;
     const mockJournalRepo = {
       getBalancesByAccount: vi.fn().mockImplementation(() => {
