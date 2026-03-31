@@ -28,6 +28,7 @@ import {
   CountJournalEntriesUseCase,
   SetupChartOfAccountsUseCase,
   GenerateFinancialReportUseCase,
+  GetMonthlyOpexUseCase,
   CloseFiscalPeriodUseCase,
   AccountingCommandFacade,
   AccountingQueryFacade,
@@ -45,14 +46,21 @@ import {
         getJE: GetJournalEntriesUseCase,
         countJE: CountJournalEntriesUseCase,
         genReport: GenerateFinancialReportUseCase,
-        jeRepo: JournalEntryRepository,
-      ) => new AccountingQueryFacade(getAcc, getJE, countJE, genReport, jeRepo),
+        getOpex: GetMonthlyOpexUseCase,
+      ) =>
+        new AccountingQueryFacade(
+          getAcc,
+          getJE,
+          countJE,
+          genReport,
+          getOpex,
+        ),
       inject: [
         GetAccountsUseCase,
         GetJournalEntriesUseCase,
         CountJournalEntriesUseCase,
         GenerateFinancialReportUseCase,
-        JOURNAL_ENTRY_REPOSITORY,
+        GetMonthlyOpexUseCase,
       ],
     },
     {
@@ -137,6 +145,12 @@ import {
       useFactory: (repo: JournalEntryRepository) =>
         new CountJournalEntriesUseCase(repo),
       inject: [JOURNAL_ENTRY_REPOSITORY],
+    },
+    {
+      provide: GetMonthlyOpexUseCase,
+      useFactory: (jeRepo: JournalEntryRepository, accRepo: AccountRepository) =>
+        new GetMonthlyOpexUseCase(jeRepo, accRepo),
+      inject: [JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY],
     },
     {
       provide: SetupChartOfAccountsUseCase,

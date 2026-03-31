@@ -49,4 +49,72 @@ describe('AccountingController', () => {
       expect(mockQueryFacade.getAccounts).toHaveBeenCalledWith(tenantId);
     });
   });
+
+  describe('recordJournalEntry', () => {
+    it('should call commandFacade.recordJournalEntry', async () => {
+      const dto = {
+        date: new Date().toISOString(),
+        description: 'Test',
+        lines: [],
+      };
+      const tenantId = 'tenant-1';
+      await controller.recordJournalEntry(tenantId, dto as any);
+      expect(mockCommandFacade.recordJournalEntry).toHaveBeenCalledWith({
+        ...dto,
+        tenantId,
+      });
+    });
+  });
+
+  describe('getJournalEntries', () => {
+    it('should call queryFacade.getJournalEntries', async () => {
+      const tenantId = 'tenant-1';
+      await controller.getJournalEntries(tenantId);
+      expect(mockQueryFacade.getJournalEntries).toHaveBeenCalledWith(tenantId);
+    });
+  });
+
+  describe('setupChartOfAccounts', () => {
+    it('should call commandFacade.setupChartOfAccounts', async () => {
+      const tenantId = 'tenant-1';
+      await controller.setupChartOfAccounts(tenantId);
+      expect(mockCommandFacade.setupChartOfAccounts).toHaveBeenCalledWith(
+        tenantId
+      );
+    });
+  });
+
+  describe('generateFinancialReport', () => {
+    it('should call queryFacade.generateFinancialReport', async () => {
+      const tenantId = 'tenant-1';
+      const dto = { type: 'BALANCE_SHEET', endDate: '2023-12-31' };
+      const mockReport = {
+        type: 'BALANCE_SHEET',
+        endDate: new Date('2023-12-31'),
+        generatedAt: new Date(),
+        sections: [],
+      };
+      mockQueryFacade.generateFinancialReport.mockResolvedValue(mockReport);
+
+      await controller.generateFinancialReport(tenantId, dto as any);
+      expect(mockQueryFacade.generateFinancialReport).toHaveBeenCalledWith(
+        tenantId,
+        dto.type,
+        expect.any(Date),
+        undefined
+      );
+    });
+  });
+
+  describe('closeFiscalPeriod', () => {
+    it('should call commandFacade.closeFiscalPeriod', async () => {
+      const tenantId = 'tenant-1';
+      const dto = { closingDate: '2023-12-31' };
+      await controller.closeFiscalPeriod(tenantId, dto as any);
+      expect(mockCommandFacade.closeFiscalPeriod).toHaveBeenCalledWith(
+        tenantId,
+        expect.any(Date)
+      );
+    });
+  });
 });

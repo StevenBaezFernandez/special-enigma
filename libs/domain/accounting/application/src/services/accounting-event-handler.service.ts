@@ -38,8 +38,19 @@ export class AccountingEventHandlerService {
     const clientAccount = await this.accountRepo.findByCode(event.tenantId, policy['clientAccountCode']);
 
     if (!salesAccount || !vatAccount || !clientAccount) {
-        this.logger.warn(`Missing accounting codes for tenant ${event.tenantId}. Skipping journal entry.`);
-        return;
+      const missing = [];
+      if (!salesAccount) missing.push('salesAccount');
+      if (!vatAccount) missing.push('vatAccount');
+      if (!clientAccount) missing.push('clientAccount');
+
+      this.logger.error(
+        `Critical: Missing accounting codes [${missing.join(
+          ', '
+        )}] for tenant ${event.tenantId}. Cannot process invoice ${
+          event.invoiceId
+        }`
+      );
+      throw new Error(`Accounting configuration missing for tenant ${event.tenantId}`);
     }
 
     const dto: RecordJournalEntryDto & { tenantId: string } = {
@@ -66,8 +77,19 @@ export class AccountingEventHandlerService {
     const bankAccount = await this.accountRepo.findByCode(event.tenantId, policy['bankAccountCode']);
 
     if (!salaryExpenseAccount || !taxPayableAccount || !bankAccount) {
-        this.logger.warn(`Missing accounting codes for tenant ${event.tenantId}. Skipping payroll entry.`);
-        return;
+      const missing = [];
+      if (!salaryExpenseAccount) missing.push('salaryExpenseAccount');
+      if (!taxPayableAccount) missing.push('taxPayableAccount');
+      if (!bankAccount) missing.push('bankAccount');
+
+      this.logger.error(
+        `Critical: Missing accounting codes [${missing.join(
+          ', '
+        )}] for tenant ${event.tenantId}. Cannot process payroll ${
+          event.payrollId
+        }`
+      );
+      throw new Error(`Accounting configuration missing for tenant ${event.tenantId}`);
     }
 
     const totalEarnings = Number(event.netPay) + Number(event.taxes);

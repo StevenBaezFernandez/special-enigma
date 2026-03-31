@@ -48,20 +48,6 @@ export class AccountingController {
     return this.queryFacade.getJournalEntries(tenantId);
   }
 
-  @Get('journal-entries/count')
-  @ApiOperation({ summary: 'Count journal entries (internal)' })
-  async countJournalEntries(@CurrentTenant() tenantId: string) {
-    const count = await this.queryFacade.countJournalEntries(tenantId);
-    return { count };
-  }
-
-  @Get('metrics/monthly-opex')
-  @ApiOperation({ summary: 'Get monthly OPEX (internal)' })
-  async getMonthlyOpex(@CurrentTenant() tenantId: string) {
-    const amount = await this.queryFacade.getMonthlyOpex(tenantId);
-    return { amount };
-  }
-
   @Post('setup')
   @ApiOperation({ summary: 'Setup initial chart of accounts' })
   async setupChartOfAccounts(@CurrentTenant() tenantId: string) {

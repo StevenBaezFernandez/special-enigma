@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CreateAccountDto, RecordJournalEntryDto } from '@virteex/domain-accounting-contracts';
 import { AccountingService } from '../services/accounting.service';
+import { mapAccountingError } from '../utils/error-mapper';
 import {
   accountsState,
   entriesState,
@@ -25,7 +26,7 @@ export function accountingFacade() {
       const accounts = await firstValueFrom(service.getAccounts());
       accountsState.update(s => ({ ...s, items: accounts || [], isLoading: false }));
     } catch (e) {
-      accountsState.update(s => ({ ...s, error: (e as Error).message, isLoading: false }));
+      accountsState.update(s => ({ ...s, error: mapAccountingError(e), isLoading: false }));
     }
   }
 
@@ -35,7 +36,7 @@ export function accountingFacade() {
       const entries = await firstValueFrom(service.getJournalEntries());
       entriesState.update(s => ({ ...s, items: entries || [], isLoading: false }));
     } catch (e) {
-      entriesState.update(s => ({ ...s, error: (e as Error).message, isLoading: false }));
+      entriesState.update(s => ({ ...s, error: mapAccountingError(e), isLoading: false }));
     }
   }
 
@@ -45,7 +46,7 @@ export function accountingFacade() {
       const report = await firstValueFrom(service.getFinancialReport(type, endDate, dimensions));
       reportsState.update(s => ({ ...s, data: report, isLoading: false }));
     } catch (e) {
-      reportsState.update(s => ({ ...s, error: (e as Error).message, isLoading: false }));
+      reportsState.update(s => ({ ...s, error: mapAccountingError(e), isLoading: false }));
     }
   }
 
@@ -65,7 +66,7 @@ export function accountingFacade() {
       await firstValueFrom(service.setupChartOfAccounts());
       await loadAccounts();
     } catch (e) {
-        accountsState.update(s => ({ ...s, error: (e as Error).message }));
+        accountsState.update(s => ({ ...s, error: mapAccountingError(e) }));
     }
   }
 
