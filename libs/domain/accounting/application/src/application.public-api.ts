@@ -11,3 +11,4 @@ export * from './use-cases/reports/generate-financial-report.use-case';
 export * from './use-cases/fiscal-periods/close-fiscal-period.use-case';
 export * from './ports/outbound/unit-of-work.port';
 export * from './ports/inbound/accounting-event-consumer.port';
+export * from './mappers/journal-entry.mapper';

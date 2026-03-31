@@ -1,8 +1,6 @@
 import { vi, describe, it, expect } from 'vitest';
-import { CreateAccountUseCase } from '../../application/src/use-cases/accounts/create-account.use-case';
-import { Account } from '../../domain/src/entities/account.entity';
-import { AccountType } from '../../domain/src/value-objects/account-type.enum';
-import { CrossTenantAccessError } from '../../domain/src/errors/accounting.errors';
+import { CreateAccountUseCase } from '@virteex/domain-accounting-application';
+import { Account, AccountType } from '@virteex/domain-accounting-domain';
 
 describe('Accounting Domain Security', () => {
   const mockTelemetry = {

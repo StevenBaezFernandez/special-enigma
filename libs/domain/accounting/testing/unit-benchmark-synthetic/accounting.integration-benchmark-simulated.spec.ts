@@ -49,12 +49,7 @@ describe('Accounting Domain Integration (Gating)', () => {
           return Promise.resolve(saved);
       }),
       transactional: vi.fn().mockImplementation(async (cb) => {
-          try {
-              return await cb();
-          } catch (e) {
-              // Simulating rollback
-              throw e;
-          }
+          return await cb();
       }),
     };
     const mockOutbox = {

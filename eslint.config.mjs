@@ -79,6 +79,17 @@ export default [
               sourceTag: 'type:contracts',
               onlyDependOnLibsWithTags: ['type:util', 'type:contracts'],
             },
+            {
+              sourceTag: 'type:testing',
+              onlyDependOnLibsWithTags: [
+                'type:domain',
+                'type:application',
+                'type:infrastructure',
+                'type:presentation',
+                'type:contracts',
+                'type:util',
+              ],
+            },
 
             // Domain Scopes (Strict Boundaries)
             {

@@ -6,3 +6,4 @@ export * from './persistence/repositories/journal-entry-repository-adapter';
 export * from './persistence/repositories/mikro-orm-reporting-adapter';
 export * from './persistence/repositories/mikro-orm-unit-of-work-adapter';
 export * from './persistence/orm/mikro-orm.config';
+export * from './messaging/producers/kafka-message-broker';

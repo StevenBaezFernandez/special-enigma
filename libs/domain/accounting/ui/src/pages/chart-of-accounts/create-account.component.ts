@@ -52,7 +52,7 @@ import { useAccounting } from '../../hooks/use-accounting';
               <label class="block text-sm font-medium text-gray-700">Parent Account (Optional)</label>
               <select formControlName="parentId" class="mt-1 block w-full border rounded p-2">
                 <option [value]="null">None</option>
-                <option *ngFor="let acc of accounts()" [value]="acc.id">{{ acc.code }} - {{ acc.name }}</option>
+                <option *ngFor="let acc of accounting.accounts()" [value]="acc.id">{{ acc.code }} - {{ acc.name }}</option>
               </select>
             </div>
 

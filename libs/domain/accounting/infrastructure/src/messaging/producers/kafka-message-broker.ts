@@ -41,7 +41,7 @@ export class KafkaMessageBroker implements IMessageBroker, OnModuleInit, OnModul
 
     try {
       await this.kafkaProducer.send({
-        topic: topic.replace(/\./g, '-'),
+        topic: topic,
         messages: [{ value: JSON.stringify(payload) }],
       });
     } catch (err) {

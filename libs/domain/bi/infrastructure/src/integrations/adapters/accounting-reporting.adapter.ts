@@ -34,13 +34,19 @@ export class AccountingReportingAdapter implements IAccountingReportingPort, OnM
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
         const response = await fetch(`${baseUrl}/api/accounting/journal-entries/count`, {
             headers: {
               'x-virteex-tenant-id': tenantId,
               'x-virteex-context': encodedContext,
               'x-virteex-signature': signature
-            }
+            },
+            signal: controller.signal
         });
+        clearTimeout(timeoutId);
+
         if (response.ok) {
           const data = await response.json();
           return data.count;
@@ -58,9 +64,12 @@ export class AccountingReportingAdapter implements IAccountingReportingPort, OnM
 
     this.telemetry.recordBusinessMetric('accounting_reporting_integration_failure', 1, {
       tenantId,
-      error: lastError?.message
+      error: lastError?.message,
+      errorType: lastError?.name === 'AbortError' ? 'timeout' : 'network_or_api'
     });
 
-    throw new IntegrationError('Accounting', `Failed to count journal entries after ${maxRetries} attempts: ${lastError?.message}`);
+    // Fallback strategy: return 0 if BI cannot reach accounting, assuming no data yet or degradation
+    this.telemetry.recordBusinessMetric('accounting_reporting_fallback_applied', 1, { tenantId });
+    return 0;
   }
 }

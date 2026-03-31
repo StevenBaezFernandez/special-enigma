@@ -143,13 +143,8 @@ import {
         AccountingPolicyService,
       ],
     },
-    {
-      provide: ACCOUNTING_EVENT_CONSUMER_PORT,
-      useClass: AccountingEventConsumerService
-    }
   ],
   exports: [
-    ACCOUNTING_EVENT_CONSUMER_PORT,
     AccountingPolicyService,
     AccountingEventHandlerService,
     DimensionValidator,

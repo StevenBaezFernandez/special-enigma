@@ -34,7 +34,7 @@ import { useAccounting } from '../../hooks/use-accounting';
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ entry.date | date }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ entry.reference }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ entry.description }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ entry.amount | currency }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ (entry.amount ?? calculateFallbackAmount(entry)) | currency }}</td>
             </tr>
             <tr *ngIf="accounting.entries().length === 0">
               <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">No journal entries found.</td>
@@ -50,5 +50,13 @@ export class JournalEntriesComponent implements OnInit {
 
   ngOnInit() {
     this.accounting.loadJournalEntries();
+  }
+
+  calculateFallbackAmount(entry: any): number {
+    if (!entry.lines || !Array.isArray(entry.lines)) return 0;
+    return entry.lines.reduce((sum: number, line: any) => {
+      const debit = parseFloat(line.debit) || 0;
+      return sum + debit;
+    }, 0);
   }
 }
