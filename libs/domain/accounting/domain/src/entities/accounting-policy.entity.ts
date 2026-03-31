@@ -4,7 +4,7 @@ import { AccountingDomainError } from '../errors/accounting.errors';
 export class AccountingPolicy {
   id!: string;
   tenantId!: string;
-  type!: string; // 'invoice', 'payroll', 'closing'
+  type!: string; // 'invoice', 'payroll', 'closing', 'consolidation'
   rules!: Record<string, unknown>;
 
   private _domainEvents: DomainEvent[] = [];
@@ -23,7 +23,7 @@ export class AccountingPolicy {
 
   private validate(): void {
     if (!this.tenantId) throw new AccountingDomainError('Tenant ID is required for policy');
-    if (!['invoice', 'payroll', 'closing'].includes(this.type)) {
+    if (!['invoice', 'payroll', 'closing', 'consolidation'].includes(this.type)) {
       throw new AccountingDomainError(`Invalid policy type: ${this.type}`);
     }
     if (!this.rules || typeof this.rules !== 'object') {

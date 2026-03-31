@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseInterceptors, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiHeader } from '@nestjs/swagger';
 import { CreateAccountDto, RecordJournalEntryDto, GenerateFinancialReportDto, CloseFiscalPeriodDto, FinancialReportDto } from '@virteex/domain-accounting-contracts';
 import {
@@ -7,10 +7,13 @@ import {
 } from '@virteex/domain-accounting-application';
 import { CurrentTenant } from '@virteex/kernel-auth';
 import { IdempotencyInterceptor } from '@virteex/shared-util-server-server-config';
+import { CapabilityGuard } from '../../guards/capability.guard';
+import { RequiresCapability } from '../../guards/requires-capability.decorator';
 
 @ApiTags('Accounting')
 @Controller('accounting')
 @UseInterceptors(IdempotencyInterceptor)
+@UseGuards(CapabilityGuard)
 export class AccountingController {
   constructor(
     private readonly commandFacade: AccountingCommandFacade,
@@ -27,6 +30,7 @@ export class AccountingController {
   }
 
   @Post('journal-entries')
+  @RequiresCapability('accounting:journal-entry:create')
   @ApiOperation({ summary: 'Record a new journal entry' })
   @ApiHeader({ name: 'x-idempotency-key', required: false, description: 'Optional idempotency key' })
   async recordJournalEntry(
@@ -63,11 +67,14 @@ export class AccountingController {
     const report = await this.queryFacade.generateFinancialReport(tenantId, dto.type, new Date(dto.endDate), dto.dimensions);
     return {
         ...report,
-        generatedAt: report.generatedAt.toISOString()
+        generatedAt: report.generatedAt.toISOString(),
+        endDate: report.endDate.toISOString(),
+        previousEndDate: report.previousEndDate?.toISOString()
     };
   }
 
   @Post('closing')
+  @RequiresCapability('accounting:period:close')
   @ApiOperation({ summary: 'Close fiscal period (Fiscal Closing)' })
   @ApiHeader({ name: 'x-idempotency-key', required: false, description: 'Optional idempotency key' })
   async closeFiscalPeriod(
@@ -78,6 +85,7 @@ export class AccountingController {
   }
 
   @Post('closing/reopen')
+  @RequiresCapability('accounting:period:reopen')
   @ApiOperation({ summary: 'Reopen a closed fiscal period' })
   async reopenFiscalPeriod(
     @CurrentTenant() tenantId: string,
@@ -87,6 +95,7 @@ export class AccountingController {
   }
 
   @Post('consolidation')
+  @RequiresCapability('accounting:consolidation:run')
   @ApiOperation({ summary: 'Perform multi-entity consolidation' })
   @ApiHeader({ name: 'x-idempotency-key', required: false, description: 'Optional idempotency key' })
   async consolidate(

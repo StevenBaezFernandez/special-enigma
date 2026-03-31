@@ -5,10 +5,14 @@ import {
   JOURNAL_ENTRY_REPOSITORY,
   OUTBOX_REPOSITORY,
   POLICY_REPOSITORY,
+  FISCAL_PERIOD_REPOSITORY,
+  CLOSING_TASK_REPOSITORY,
   AccountRepository,
   JournalEntryRepository,
   OutboxRepository,
   PolicyRepository,
+  FiscalPeriodRepository,
+  ClosingTaskRepository,
 } from '@virteex/domain-accounting-domain';
 import {
   TELEMETRY_SERVICE,
@@ -172,11 +176,15 @@ import {
       useFactory: (
         jeRepo: JournalEntryRepository,
         accRepo: AccountRepository,
+        fpRepo: FiscalPeriodRepository,
+        ctRepo: ClosingTaskRepository,
         policySvc: AccountingPolicyService,
-      ) => new CloseFiscalPeriodUseCase(jeRepo, accRepo, policySvc),
+      ) => new CloseFiscalPeriodUseCase(jeRepo, accRepo, fpRepo, ctRepo, policySvc),
       inject: [
         JOURNAL_ENTRY_REPOSITORY,
         ACCOUNT_REPOSITORY,
+        { token: FISCAL_PERIOD_REPOSITORY, optional: true },
+        { token: CLOSING_TASK_REPOSITORY, optional: true },
         AccountingPolicyService,
       ],
     },
@@ -185,8 +193,13 @@ import {
       useFactory: (
         jeRepo: JournalEntryRepository,
         accRepo: AccountRepository,
-      ) => new ConsolidateAccountsUseCase(jeRepo, accRepo),
-      inject: [JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY],
+        policyRepo: PolicyRepository,
+      ) => new ConsolidateAccountsUseCase(jeRepo, accRepo, policyRepo),
+      inject: [
+        JOURNAL_ENTRY_REPOSITORY,
+        ACCOUNT_REPOSITORY,
+        POLICY_REPOSITORY,
+      ],
     },
   ],
   exports: [

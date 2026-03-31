@@ -11,6 +11,10 @@ export class MikroOrmPolicyRepository implements PolicyRepository {
     return policy?.rules || null;
   }
 
+  async findByTenantAndType(tenantId: string, type: string): Promise<AccountingPolicy | null> {
+    return this.em.findOne(AccountingPolicy, { tenantId, type });
+  }
+
   async savePolicy(tenantId: string, type: string, rules: any): Promise<void> {
     const existing = await this.em.findOne(AccountingPolicy, { tenantId, type });
     if (existing) {
