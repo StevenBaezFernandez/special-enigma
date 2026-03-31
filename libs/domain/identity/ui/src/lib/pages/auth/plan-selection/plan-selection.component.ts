@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthLayoutComponent } from '../components/auth-layout/auth-layout.component';
-import { AuthService, LanguageService, CountryService } from '@virteex/shared-ui';
+import { AuthService, LanguageService, CountryService, BillingService } from '@virteex/shared-ui';
 
 @Component({
   selector: 'virteex-plan-selection',
@@ -14,11 +14,13 @@ import { AuthService, LanguageService, CountryService } from '@virteex/shared-ui
 })
 export class PlanSelectionComponent implements OnInit {
   private authService = inject(AuthService);
+  private billingService = inject(BillingService);
   private router = inject(Router);
   private languageService = inject(LanguageService);
   private countryService = inject(CountryService);
 
   isLoading = signal(true);
+  plans = this.billingService.plans;
 
   ngOnInit() {
     this.authService.getOnboardingStatus().subscribe({
@@ -41,5 +43,13 @@ export class PlanSelectionComponent implements OnInit {
     const lang = this.languageService.currentLang();
     const country = this.countryService.currentCountryCode();
     this.router.navigate(['/', lang, country, 'accounting']);
+  }
+
+  selectPlan(planId: string) {
+    this.billingService.changePlan(planId).subscribe(success => {
+      if (success) {
+        // Redirection happens in service
+      }
+    });
   }
 }

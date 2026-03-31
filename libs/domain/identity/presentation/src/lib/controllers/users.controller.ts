@@ -16,13 +16,13 @@ import {
 } from '@virteex/domain-identity-application';
 import { UserRepository } from '@virteex/domain-identity-domain';
 import { UpdateUserDto, InviteUserDto, PaginatedUsersResponse } from '@virteex/domain-identity-contracts';
-import { JwtAuthGuard, CurrentUser, StepUp, StepUpGuard } from '@virteex/kernel-auth';
+import { JwtAuthGuard, CurrentUser, StepUp, StepUpGuard, TenantGuard } from '@virteex/kernel-auth';
 import { UserMapper } from '../mappers/user.mapper';
 import { AuditLogMapper } from '../mappers/audit-log.mapper';
 import { UserResponseDto, AuditLogDto } from '@virteex/domain-identity-contracts';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard, StepUpGuard)
+@UseGuards(JwtAuthGuard, TenantGuard, StepUpGuard)
 export class UsersController {
   constructor(
     private readonly getProfile: GetUserProfileUseCase,
@@ -97,15 +97,15 @@ export class UsersController {
 
   @Patch(':id')
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
-  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<UserResponseDto> {
-    const userEntity = await this.updateUserUseCase.execute(id, dto);
+  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto, @CurrentUser() user: any): Promise<UserResponseDto> {
+    const userEntity = await this.updateUserUseCase.execute(id, dto, user.tenantId);
     return UserMapper.toDto(userEntity);
   }
 
   @Delete(':id')
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
-  async delete(@Param('id') id: string): Promise<void> {
-    await this.deleteUserUseCase.execute(id);
+  async delete(@Param('id') id: string, @CurrentUser() user: any): Promise<void> {
+    await this.deleteUserUseCase.execute(id, user.tenantId);
   }
 
   @Post('invite')
@@ -118,22 +118,25 @@ export class UsersController {
 
   @Post(':id/force-logout')
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
-  async forceLogout(@Param('id') id: string): Promise<void> {
+  async forceLogout(@Param('id') id: string, @CurrentUser() user: any): Promise<void> {
+    // We should ideally verify if the target user belongs to the same tenant here or in the use case
+    const targetUser = await this.userRepository.findById(id, user.tenantId);
+    if (!targetUser) throw new Error('User not found in tenant context');
     await this.forceLogoutUseCase.execute(id);
   }
 
   @Post(':id/block-and-logout')
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
-  async blockAndLogout(@Param('id') id: string): Promise<void> {
+  async blockAndLogout(@Param('id') id: string, @CurrentUser() user: any): Promise<void> {
+    const targetUser = await this.userRepository.findById(id, user.tenantId);
+    if (!targetUser) throw new Error('User not found in tenant context');
     await this.blockUserUseCase.execute(id);
   }
 
   @Put(':id/status')
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
-  async setUserStatus(@Param('id') id: string, @Body() body: { isOnline: boolean }): Promise<UserResponseDto> {
-    // Mapping isOnline to a status string for simplicity, or we could add isOnline to the entity.
-    // Given the FE sends isOnline, we'll use that to update the user.
-    const userEntity = await this.updateUserUseCase.execute(id, { status: body.isOnline ? 'ONLINE' : 'OFFLINE' } as any);
+  async setUserStatus(@Param('id') id: string, @Body() body: { isOnline: boolean }, @CurrentUser() user: any): Promise<UserResponseDto> {
+    const userEntity = await this.updateUserUseCase.execute(id, { status: body.isOnline ? 'ONLINE' : 'OFFLINE' } as any, user.tenantId);
     return UserMapper.toDto(userEntity);
   }
 

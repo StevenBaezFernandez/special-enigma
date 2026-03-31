@@ -34,7 +34,10 @@ import { MfaHelperService } from './services/mfa-helper.service';
   providers: [
     CanonicalTenantMiddleware,
     TenantGuard,
-    SecretManagerService,
+    {
+      provide: SecretManagerService,
+      useClass: SecretManagerService,
+    },
     JwtStrategy,
     DefaultSecretProvider,
     VaultSecretProvider,

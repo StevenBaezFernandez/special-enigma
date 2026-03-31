@@ -84,6 +84,7 @@ import { MikroOrmTenantRepository } from './adapters/mikro-orm-tenant.repository
 import { AuthModule } from '@virteex/kernel-auth';
 import { TenantModule } from '@virteex/kernel-tenant';
 import { HttpModule } from '@nestjs/axios';
+import { EntitlementsModule } from '@virteex/kernel-entitlements';
 
 @Global()
 @Module({
@@ -92,6 +93,7 @@ import { HttpModule } from '@nestjs/axios';
     EventEmitterModule,
     AuthModule,
     TenantModule,
+    EntitlementsModule,
     HttpModule,
     MikroOrmModule.forFeature([UserSchema, CompanySchema, AuditLogSchema, SessionSchema, JobTitleSchema, UserAuthenticatorSchema]),
     SharedInfrastructureStorageModule,

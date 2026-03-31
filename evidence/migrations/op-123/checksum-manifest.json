@@ -5,10 +5,10 @@
   "operationRefs": {
     "tenantId": "t-lag",
     "operationId": "op-123",
-    "requestedAt": "2026-03-22T04:40:34.043Z",
+    "requestedAt": "2026-03-31T20:27:44.123Z",
     "idempotencyKey": "key-lag"
   },
-  "generatedAt": "2026-03-22T04:40:34.043Z",
+  "generatedAt": "2026-03-31T20:27:44.124Z",
   "checksums": {
     "pre": {
       "users": {
@@ -26,6 +26,6 @@
     }
   },
   "integrityDigest": "564613ae6c121c417f95a083a49c4dfe34b67ec9c9f5063836aac3914d86c7bd",
-  "signature": "598881027bb7133d53f4da86f67af70e73d18232d50a83e4404d3c4b4f49ae15",
+  "signature": "ebdb0f972ec62210371cdcaec6de969536206ab4c3683b212514f269cf94eb65",
   "signatureAlgorithm": "HMAC-SHA256"
 }

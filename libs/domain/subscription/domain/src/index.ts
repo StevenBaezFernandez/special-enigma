@@ -8,3 +8,4 @@ export { type PaymentSessionProvider, PAYMENT_SESSION_PROVIDER } from './lib/por
 export * from './lib/services/customer-identity.service';
 
 export * from './lib/services/stripe-runtime-config.service';
+export * from './lib/subscription-domain.module';

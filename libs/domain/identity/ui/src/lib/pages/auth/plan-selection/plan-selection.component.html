@@ -3,12 +3,20 @@
     <h1 class="text-3xl font-bold text-text-primary mb-4">{{ 'PLAN_SELECTION.TITLE' | translate }}</h1>
     <p class="text-text-secondary mb-12">{{ 'PLAN_SELECTION.SUBTITLE' | translate }}</p>
 
-    <!-- Placeholder for plan cards -->
+    <!-- Real plan cards from API -->
     <div class="grid md:grid-cols-3 gap-8">
-      <div class="bg-card p-8 rounded-2xl border border-border-color">
-        <h2 class="text-xl font-bold mb-4">{{ 'PLAN_SELECTION.BASIC.TITLE' | translate }}</h2>
-        <p class="text-3xl font-bold mb-6">$0<span class="text-sm font-normal text-text-secondary">/{{ 'PLAN_SELECTION.MONTH' | translate }}</span></p>
-        <button class="w-full py-3 px-6 rounded-lg bg-primary text-white font-semibold">{{ 'PLAN_SELECTION.SELECT' | translate }}</button>
+      <div *ngFor="let plan of plans()" class="bg-card p-8 rounded-2xl border border-border-color shadow-sm hover:shadow-md transition-shadow">
+        <h2 class="text-xl font-bold mb-4">{{ plan.name }}</h2>
+        <p class="text-gray-600 mb-6 min-h-[3rem]">{{ plan.description }}</p>
+        <p class="text-3xl font-bold mb-6">${{ plan.price }}<span class="text-sm font-normal text-text-secondary">/{{ 'PLAN_SELECTION.MONTH' | translate }}</span></p>
+
+        <ul class="text-left mb-8 space-y-2">
+          <li *ngFor="let feature of plan.features" class="flex items-center text-sm">
+             <span class="text-green-500 mr-2">✓</span> {{ feature }}
+          </li>
+        </ul>
+
+        <button (click)="selectPlan(plan.id)" class="w-full py-3 px-6 rounded-lg bg-primary text-white font-semibold hover:bg-primary-dark transition-colors">{{ 'PLAN_SELECTION.SELECT' | translate }}</button>
       </div>
     </div>
   </div>

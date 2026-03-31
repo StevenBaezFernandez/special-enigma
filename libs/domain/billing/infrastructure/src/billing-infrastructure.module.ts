@@ -33,11 +33,13 @@ import { ProductEventsController } from './messaging/consumers/product-events.co
 import { XsltService } from '@virteex/platform-xslt';
 import { INVOICE_INTEGRATION_PUBLISHER } from '@virteex/domain-billing-application';
 import { PaymentMethodSchema, TaxLineSchema, TaxRuleSchema } from './persistence/orm/mikro-orm.schemas';
+import { EntitlementsModule } from '@virteex/kernel-entitlements';
 
 @Global()
 @Module({
   imports: [
     AuthModule,
+    EntitlementsModule,
     FiscalInfrastructureModule,
     BillingDomainModule,
     MikroOrmModule.forFeature([

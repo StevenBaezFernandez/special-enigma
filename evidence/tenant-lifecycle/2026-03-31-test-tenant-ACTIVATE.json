@@ -2,10 +2,10 @@
   "tenantId": "test-tenant",
   "action": "ACTIVATE",
   "status": "ACTIVE",
-  "timestamp": "2026-03-22T04:42:21.146Z",
+  "timestamp": "2026-03-31T20:27:49.145Z",
   "environment": "development",
   "region": "us-east-1",
   "version": 1,
-  "signature": "3cac9d7c0bf9dda3fdfeb3e67fc28d2319be27ab9e1a8315063ecbbfa60cda31",
+  "signature": "12f1a7924f01c2c7466176d61f26e74c4cba2f081cc45b5bf9e3cac647a752c0",
   "signatureAlgorithm": "HMAC-SHA256"
 }

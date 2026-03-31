@@ -9,8 +9,8 @@ export class UpdateUserUseCase {
     @Inject(UserRepository) private readonly userRepository: UserRepository
   ) {}
 
-  async execute(userId: string, dto: UpdateUserDto): Promise<User> {
-    const user = await this.userRepository.findById(userId);
+  async execute(userId: string, dto: UpdateUserDto, tenantId?: string): Promise<User> {
+    const user = await this.userRepository.findById(userId, tenantId);
     if (!user) {
       throw new DomainException('User not found', 'ENTITY_NOT_FOUND');
     }

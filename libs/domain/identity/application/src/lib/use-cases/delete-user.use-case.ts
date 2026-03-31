@@ -8,11 +8,11 @@ export class DeleteUserUseCase {
     @Inject(UserRepository) private readonly userRepository: UserRepository
   ) {}
 
-  async execute(userId: string): Promise<void> {
-    const user = await this.userRepository.findById(userId);
+  async execute(userId: string, tenantId?: string): Promise<void> {
+    const user = await this.userRepository.findById(userId, tenantId);
     if (!user) {
       throw new DomainException('User not found', 'ENTITY_NOT_FOUND');
     }
-    await this.userRepository.delete(userId);
+    await this.userRepository.delete(userId, tenantId);
   }
 }

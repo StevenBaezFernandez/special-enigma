@@ -12,20 +12,23 @@ export interface UsageItem {
   isEnabled: boolean;
 }
 
+import { UserRepository } from '@virteex/domain-identity-domain';
+
 @Injectable()
 export class GetUsageUseCase {
   constructor(
     @Inject(INVOICE_REPOSITORY) private readonly invoiceRepository: InvoiceRepository,
     @Inject(SUBSCRIPTION_REPOSITORY) private readonly subscriptionRepository: SubscriptionRepository,
+    @Inject(UserRepository) private readonly userRepository: UserRepository,
     private readonly configService: ConfigService
   ) {}
 
   async execute(tenantId: string): Promise<UsageItem[]> {
     const invoiceCount = await this.invoiceRepository.countByTenantId(tenantId);
     const subscription = await this.subscriptionRepository.findByTenantId(tenantId);
+    const { total: userCount } = await this.userRepository.findAll({ page: 1, pageSize: 1, tenantId });
 
     // Default Limits if no subscription (e.g., Free Tier or Trial fallback)
-    // Configuration allows changing these without recompilation
     let limits = {
       invoices: this.configService.get<number>('DEFAULT_INVOICE_LIMIT', 10),
       users: this.configService.get<number>('DEFAULT_USER_LIMIT', 1),
@@ -36,15 +39,31 @@ export class GetUsageUseCase {
        limits = subscription.getPlan().limits;
     }
 
-    const isUnlimited = limits.invoices === -1;
-
-    return [{
-      resource: 'Invoices',
-      used: invoiceCount,
-      limit: isUnlimited ? Infinity : limits.invoices,
-      type: 'numeric',
-      isUnlimited: isUnlimited,
-      isEnabled: true
-    }];
+    return [
+      {
+        resource: 'Invoices',
+        used: invoiceCount,
+        limit: limits.invoices === -1 ? Infinity : limits.invoices,
+        type: 'numeric',
+        isUnlimited: limits.invoices === -1,
+        isEnabled: true
+      },
+      {
+        resource: 'Users',
+        used: userCount,
+        limit: limits.users === -1 ? Infinity : limits.users,
+        type: 'numeric',
+        isUnlimited: limits.users === -1,
+        isEnabled: true
+      },
+      {
+        resource: 'Storage',
+        used: 0, // Placeholder for actual storage tracking
+        limit: limits.storage === -1 ? Infinity : limits.storage,
+        type: 'numeric',
+        isUnlimited: limits.storage === -1,
+        isEnabled: true
+      }
+    ];
   }
 }

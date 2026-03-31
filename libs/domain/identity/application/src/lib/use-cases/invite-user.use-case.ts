@@ -3,6 +3,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { User, UserRepository, AuthService, UserInvitedEvent } from '@virteex/domain-identity-domain';
 import { InviteUserDto } from '@virteex/domain-identity-contracts';
+import { EntitlementService } from '@virteex/kernel-entitlements';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -10,17 +11,23 @@ export class InviteUserUseCase {
   constructor(
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     @Inject(AuthService) private readonly authService: AuthService,
-    @Inject(EventEmitter2) private readonly eventEmitter: EventEmitter2
+    @Inject(EventEmitter2) private readonly eventEmitter: EventEmitter2,
+    private readonly entitlementService: EntitlementService
   ) {}
 
   async execute(dto: InviteUserDto, currentUserId: string): Promise<User> {
+    const currentUser = await this.userRepository.findById(currentUserId);
+    if (!currentUser) throw new Error('Inviter not found');
+    const tenantId = currentUser.company.id;
+
+    // Quota check for users
+    const { total: currentCount } = await this.userRepository.findAll({ page: 1, pageSize: 1, tenantId });
+    await this.entitlementService.checkQuota('users', currentCount);
+
     const existing = await this.userRepository.findByEmail(dto.email);
     if (existing) {
       throw new DomainException('User already exists', 'CONFLICT');
     }
-
-    const currentUser = await this.userRepository.findById(currentUserId);
-    if (!currentUser) throw new Error('Inviter not found');
 
     const token = randomUUID();
     const tokenHash = this.authService.hashToken(token);

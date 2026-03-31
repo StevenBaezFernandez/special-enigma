@@ -7,6 +7,7 @@ import { SUBSCRIPTION_REPOSITORY, type SubscriptionRepository } from '@virteex/d
 import { INVOICE_INTEGRATION_PUBLISHER, type InvoiceIntegrationPublisherPort } from '../../ports/outbound/invoice-integration-publisher.port';
 import { PriceValidationPolicy } from '../../services/price-validation.policy';
 import { InvoiceStampingOrchestrator } from '../../services/invoice-stamping.orchestrator';
+import { EntitlementService } from '@virteex/kernel-entitlements';
 
 @Injectable()
 export class CreateInvoiceUseCase {
@@ -19,7 +20,8 @@ export class CreateInvoiceUseCase {
     private readonly stampingOrchestrator: InvoiceStampingOrchestrator,
     @Inject(SUBSCRIPTION_REPOSITORY) private readonly subscriptionRepository: SubscriptionRepository,
     @Inject(INVOICE_INTEGRATION_PUBLISHER)
-    private readonly integrationPublisher: InvoiceIntegrationPublisherPort
+    private readonly integrationPublisher: InvoiceIntegrationPublisherPort,
+    private readonly entitlementService: EntitlementService
   ) {}
 
   async execute(dto: CreateInvoiceDto): Promise<Invoice> {
@@ -29,14 +31,8 @@ export class CreateInvoiceUseCase {
       throw new DomainException('Valid Tenant ID is required', 'TENANT_REQUIRED');
     }
 
-    const subscription = await this.subscriptionRepository.findByTenantId(tenantId);
-    const limit = subscription?.getPlan()?.limits?.invoices ?? 10;
-    if (limit !== -1) {
-      const currentCount = await this.invoiceRepository.countByTenantId(tenantId);
-      if (currentCount >= limit) {
-        throw new DomainException(`Invoice limit reached for tenant ${tenantId}. Upgrade plan to continue.`, 'PLAN_LIMIT_REACHED');
-      }
-    }
+    const currentCount = await this.invoiceRepository.countByTenantId(tenantId);
+    await this.entitlementService.checkQuota('invoices', currentCount);
 
     const tenantConfig = await this.tenantConfigRepository.getFiscalConfig(tenantId);
     const jurisdiction = tenantConfig.country || 'MX';

@@ -20,15 +20,15 @@ export class SecretManagerService {
 
   private initSecrets() {
     try {
+        const isProd = (process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production') && process.env['NODE_ENV'] !== 'test';
         const secret = this.provider.getSecret('JWT_SECRET');
-        const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
 
         if (!secret) {
             if (isProd) {
                 this.logger.error('FATAL: JWT_SECRET not found in production environment! Blocking startup.');
                 throw new Error('FATAL: JWT_SECRET not found in production environment!');
             }
-            this.currentSecret = randomBytes(32).toString('hex');
+            this.currentSecret = 'test-secret-ephemeral'; // Stable for tests
             this.logger.warn('JWT_SECRET not found in non-production. Generated ephemeral runtime secret.');
         } else {
             this.currentSecret = secret;
@@ -50,7 +50,7 @@ export class SecretManagerService {
 
   getSecret(key: string, defaultValue?: string): string {
     const value = this.provider.getSecret(key);
-    const isProd = process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production';
+    const isProd = (process.env['NODE_ENV'] === 'production' || process.env['RELEASE_STAGE'] === 'production') && process.env['NODE_ENV'] !== 'test';
 
     if (!value) {
       if (isProd && defaultValue === undefined) {

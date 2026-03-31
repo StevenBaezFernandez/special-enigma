@@ -20,8 +20,12 @@ export class MikroOrmUserRepository implements UserRepository {
     return entity ? UserMapper.toDomain(entity) : null;
   }
 
-  async findById(id: string): Promise<User | null> {
-    const entity = await this.em.findOne(UserOrmEntity, { id }, { populate: ['authenticators'] as any });
+  async findById(id: string, tenantId?: string): Promise<User | null> {
+    const where: any = { id };
+    if (tenantId) {
+      where.company = tenantId;
+    }
+    const entity = await this.em.findOne(UserOrmEntity, where, { populate: ['authenticators'] as any });
     return entity ? UserMapper.toDomain(entity) : null;
   }
 
@@ -100,8 +104,12 @@ export class MikroOrmUserRepository implements UserRepository {
     };
   }
 
-  async delete(id: string): Promise<void> {
-    const entity = await this.em.findOne(UserOrmEntity, { id });
+  async delete(id: string, tenantId?: string): Promise<void> {
+    const where: any = { id };
+    if (tenantId) {
+      where.company = tenantId;
+    }
+    const entity = await this.em.findOne(UserOrmEntity, where);
     if (entity) {
       await this.em.removeAndFlush(entity);
     }

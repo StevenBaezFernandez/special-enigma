@@ -297,6 +297,9 @@
       "@virteex/exceptions": [
         "libs/kernel/exceptions/src/index.ts"
       ],
+      "@virteex/kernel-entitlements": [
+        "libs/kernel/entitlements/src/index.ts"
+      ],
       "@virteex/kernel-audit": [
         "libs/kernel/audit/src/index.ts"
       ],
