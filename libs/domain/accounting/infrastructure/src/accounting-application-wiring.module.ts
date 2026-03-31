@@ -1,4 +1,4 @@
-import { Module, Logger } from '@nestjs/common';
+import { Global, Module, Logger } from '@nestjs/common';
 import { AccountingInfrastructureModule } from './accounting-infrastructure.module';
 import {
   ACCOUNT_REPOSITORY,
@@ -33,6 +33,7 @@ import {
   AccountingQueryFacade,
 } from '@virteex/domain-accounting-application';
 
+@Global()
 @Module({
   imports: [AccountingInfrastructureModule],
   providers: [
@@ -44,7 +45,7 @@ import {
         getJE: GetJournalEntriesUseCase,
         countJE: CountJournalEntriesUseCase,
         genReport: GenerateFinancialReportUseCase,
-        jeRepo: JournalEntryRepository
+        jeRepo: JournalEntryRepository,
       ) => new AccountingQueryFacade(getAcc, getJE, countJE, genReport, jeRepo),
       inject: [
         GetAccountsUseCase,
@@ -60,7 +61,8 @@ import {
     },
     {
       provide: AccountingPolicyService,
-      useFactory: (repo?: PolicyRepository) => new AccountingPolicyService(repo),
+      useFactory: (repo?: PolicyRepository) =>
+        new AccountingPolicyService(repo),
       inject: [{ token: POLICY_REPOSITORY, optional: true }],
     },
     {
@@ -68,20 +70,15 @@ import {
       useFactory: (
         recordJE: RecordJournalEntryUseCase,
         policy: AccountingPolicyService,
-        accRepo: AccountRepository
+        accRepo: AccountRepository,
       ) => {
         const nestLogger = new Logger(AccountingEventHandlerService.name);
-        return new AccountingEventHandlerService(
-          recordJE,
-          policy,
-          accRepo,
-          {
-            debug: (msg, ...args) => nestLogger.debug(msg, ...args),
-            info: (msg, ...args) => nestLogger.log(msg, ...args),
-            warn: (msg, ...args) => nestLogger.warn(msg, ...args),
-            error: (msg, ...args) => nestLogger.error(msg, ...args),
-          }
-        );
+        return new AccountingEventHandlerService(recordJE, policy, accRepo, {
+          debug: (msg, ...args) => nestLogger.debug(msg, ...args),
+          info: (msg, ...args) => nestLogger.log(msg, ...args),
+          warn: (msg, ...args) => nestLogger.warn(msg, ...args),
+          error: (msg, ...args) => nestLogger.error(msg, ...args),
+        });
       },
       inject: [
         RecordJournalEntryUseCase,
@@ -94,7 +91,7 @@ import {
       useFactory: (
         repo: AccountRepository,
         outbox: OutboxRepository,
-        telemetry: ITelemetryService
+        telemetry: ITelemetryService,
       ) => new CreateAccountUseCase(repo, outbox, telemetry),
       inject: [ACCOUNT_REPOSITORY, OUTBOX_REPOSITORY, TELEMETRY_SERVICE],
     },
@@ -104,7 +101,7 @@ import {
         jeRepo: JournalEntryRepository,
         accRepo: AccountRepository,
         telemetry: ITelemetryService,
-        uow: IUnitOfWork
+        uow: IUnitOfWork,
       ) => new RecordJournalEntryUseCase(jeRepo, accRepo, telemetry, uow),
       inject: [
         JOURNAL_ENTRY_REPOSITORY,
@@ -115,8 +112,10 @@ import {
     },
     {
       provide: GetAccountsUseCase,
-      useFactory: (accRepo: AccountRepository, jeRepo: JournalEntryRepository) =>
-        new GetAccountsUseCase(accRepo, jeRepo),
+      useFactory: (
+        accRepo: AccountRepository,
+        jeRepo: JournalEntryRepository,
+      ) => new GetAccountsUseCase(accRepo, jeRepo),
       inject: [ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY],
     },
     {
@@ -127,8 +126,10 @@ import {
     },
     {
       provide: GetAccountsByIdsUseCase,
-      useFactory: (accRepo: AccountRepository, jeRepo: JournalEntryRepository) =>
-        new GetAccountsByIdsUseCase(accRepo, jeRepo),
+      useFactory: (
+        accRepo: AccountRepository,
+        jeRepo: JournalEntryRepository,
+      ) => new GetAccountsByIdsUseCase(accRepo, jeRepo),
       inject: [ACCOUNT_REPOSITORY, JOURNAL_ENTRY_REPOSITORY],
     },
     {
@@ -139,13 +140,16 @@ import {
     },
     {
       provide: SetupChartOfAccountsUseCase,
-      useFactory: (repo: AccountRepository) => new SetupChartOfAccountsUseCase(repo),
+      useFactory: (repo: AccountRepository) =>
+        new SetupChartOfAccountsUseCase(repo),
       inject: [ACCOUNT_REPOSITORY],
     },
     {
       provide: GenerateFinancialReportUseCase,
-      useFactory: (jeRepo: JournalEntryRepository, accRepo: AccountRepository) =>
-        new GenerateFinancialReportUseCase(jeRepo, accRepo),
+      useFactory: (
+        jeRepo: JournalEntryRepository,
+        accRepo: AccountRepository,
+      ) => new GenerateFinancialReportUseCase(jeRepo, accRepo),
       inject: [JOURNAL_ENTRY_REPOSITORY, ACCOUNT_REPOSITORY],
     },
     {
@@ -153,7 +157,7 @@ import {
       useFactory: (
         jeRepo: JournalEntryRepository,
         accRepo: AccountRepository,
-        policySvc: AccountingPolicyService
+        policySvc: AccountingPolicyService,
       ) => new CloseFiscalPeriodUseCase(jeRepo, accRepo, policySvc),
       inject: [
         JOURNAL_ENTRY_REPOSITORY,

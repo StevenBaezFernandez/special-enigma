@@ -4,11 +4,8 @@ import { AccountingEventsController } from '../http/controllers/accounting-event
 import { AccountingListener } from '../events/accounting.listener';
 
 @Module({
-  imports: [
-    ConfigModule,
-  ],
+  imports: [ConfigModule],
   controllers: [AccountingEventsController],
   providers: [AccountingListener],
-  exports: [AccountingEventsController]
 })
 export class AccountingEventsModule {}

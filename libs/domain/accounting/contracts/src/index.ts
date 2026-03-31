@@ -35,6 +35,7 @@ export * from './shared/journal-entry.model';
 export * from './shared/enums/account-type.enum';
 export * from './shared/enums/journal-entry-status.enum';
 export * from './shared/enums/journal-entry-type.enum';
+export * from './shared/enums/financial-report-type.enum';
 
 // Compatibility & Integration
 export * from './compatibility/v1-to-v2.mapper';

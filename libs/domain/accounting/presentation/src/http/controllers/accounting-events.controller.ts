@@ -1,22 +1,22 @@
 import { Controller, Inject } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
+import { ACCOUNTING_EVENT_CONSUMER_PORT } from '@virteex/domain-accounting-application';
+import type { AccountingEventConsumerPort } from '@virteex/domain-accounting-application';
 import {
-  AccountingEventConsumerPort,
-  ACCOUNTING_EVENT_CONSUMER_PORT,
-} from '@virteex/domain-accounting-application';
-import {
-  InvoiceValidatedEventDto,
   ACCOUNTING_EVENTS,
   ACCOUNTING_INTEGRATION_EVENTS,
+} from '@virteex/domain-accounting-contracts';
+import type {
+  InvoiceValidatedEventDto,
   InvoiceStampedV1EventDto,
-  PayrollStampedV1EventDto
+  PayrollStampedV1EventDto,
 } from '@virteex/domain-accounting-contracts';
 
 @Controller()
 export class AccountingEventsController {
   constructor(
     @Inject(ACCOUNTING_EVENT_CONSUMER_PORT)
-    private readonly consumerService: AccountingEventConsumerPort
+    private readonly consumerService: AccountingEventConsumerPort,
   ) {}
 
   @EventPattern(ACCOUNTING_INTEGRATION_EVENTS.INVOICE_STAMPED_V1)

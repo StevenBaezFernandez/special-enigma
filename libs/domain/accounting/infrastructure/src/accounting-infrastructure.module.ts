@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MikroOrmModule as NestMikroOrmModule } from '@mikro-orm/nestjs';
 import {
@@ -7,9 +7,7 @@ import {
   POLICY_REPOSITORY,
   OUTBOX_REPOSITORY,
 } from '@virteex/domain-accounting-domain';
-import {
-  TELEMETRY_SERVICE,
-} from '@virteex/kernel-telemetry';
+import { TELEMETRY_SERVICE } from '@virteex/kernel-telemetry';
 import {
   MESSAGE_BROKER,
   I_UNIT_OF_WORK,
@@ -36,6 +34,7 @@ import { OutboxRelayService } from './messaging/outbox/outbox-relay.service';
 import { KafkaMessageBroker } from './messaging/producers/kafka-message-broker';
 import { AccountingEventConsumerService } from './messaging/consumers/accounting-event-consumer.service';
 
+@Global()
 @Module({
   imports: [
     ScheduleModule.forRoot(),
