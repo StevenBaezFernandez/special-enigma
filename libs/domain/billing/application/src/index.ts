@@ -5,6 +5,7 @@ export * from './use-cases/queries/get-usage.use-case';
 export { AddPaymentMethodUseCase, type AddPaymentMethodDto } from './use-cases/commands/add-payment-method.use-case';
 export * from './use-cases/queries/get-payment-method.use-case';
 export * from './use-cases/commands/process-payment.use-case';
+export * from './use-cases/commands/create-checkout-session.use-case';
 export * from './dto/create-invoice.dto';
 export * from './ports/outbound/invoice-integration-publisher.port';
 export * from './mappers/create-invoice-input.mapper';

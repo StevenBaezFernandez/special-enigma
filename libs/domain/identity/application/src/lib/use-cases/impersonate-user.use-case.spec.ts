@@ -3,7 +3,7 @@ import { EntityNotFoundException } from "@virteex/exceptions";
 import { ImpersonateUserUseCase } from './impersonate-user.use-case';
 import { UserRepository, AuditLogRepository } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
-import { UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@virteex/kernel-exceptions';
 import { vi } from 'vitest';
 
 describe('ImpersonateUserUseCase', () => {

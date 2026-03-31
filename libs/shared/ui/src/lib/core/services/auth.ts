@@ -154,11 +154,18 @@ export class AuthService {
     const user = this._currentUser();
     if (!user) return false;
 
-    // Entitlements from backend claims take precedence
+    // Entitlements from backend claims take precedence for commercial features
     const entitlements = user.entitlements || [];
     if (entitlements.includes(permission)) return true;
 
-    // Fallback to pre-existing permissions or role-based logic
+    // For specific commercial entitlements, we do NOT want to fall back to roles if they are not enabled by the plan.
+    // List of commercial entitlements that should be strictly governed by the plan:
+    const commercialEntitlements = ['invoices', 'users', 'storage', 'branches', 'advanced-reports'];
+    if (commercialEntitlements.includes(permission)) {
+        return false;
+    }
+
+    // Fallback to pre-existing permissions or role-based logic for organizational access
     if (user.role === 'ADMIN' || user.role === 'SUPERUSER') return true;
 
     const rolePermissions: Record<string, string[]> = {

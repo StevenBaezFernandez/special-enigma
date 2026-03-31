@@ -27,6 +27,12 @@ export class BillingController {
     return await this.createInvoiceUseCase.execute(dto);
   }
 
+  @Get('invoices')
+  @RequireEntitlement('invoices')
+  async findAll(@CurrentTenant() tenantId: string) {
+    return await this.getInvoicesUseCase.execute(tenantId);
+  }
+
   @Get('subscription')
   async getSubscription(@CurrentTenant() tenantId: string) {
     const subscription = await this.getSubscriptionUseCase.execute(tenantId);
@@ -51,22 +57,19 @@ export class BillingController {
     };
   }
 
-  @Get('invoices')
-  async findAll(@CurrentTenant() tenantId: string) {
-    return await this.getInvoicesUseCase.execute(tenantId);
-  }
-
   @Get('plans')
   async getPlans() {
     return await this.getSubscriptionPlansUseCase.execute();
   }
 
   @Get('history')
+  @RequireEntitlement('invoices')
   async getHistory(@CurrentTenant() tenantId: string) {
     return await this.getPaymentHistoryUseCase.execute(tenantId);
   }
 
   @Get('usage')
+  @RequireEntitlement('invoices')
   async getUsage(@CurrentTenant() tenantId: string) {
     return await this.getUsageUseCase.execute(tenantId);
   }

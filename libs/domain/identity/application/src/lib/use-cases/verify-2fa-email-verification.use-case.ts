@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { UserRepository, CachePort } from '@virteex/domain-identity-domain';
-import { UnauthorizedException } from "@virteex/exceptions";
+import { UnauthorizedException } from '@virteex/kernel-exceptions';
 
 @Injectable()
 export class Verify2faEmailVerificationUseCase {
