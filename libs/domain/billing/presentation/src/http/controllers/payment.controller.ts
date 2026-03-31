@@ -1,7 +1,8 @@
 import { Controller, Post, Body, Logger, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { ProcessPaymentUseCase } from '@virteex/domain-billing-application';
+import { ProcessPaymentUseCase, CreateCheckoutSessionUseCase } from '@virteex/domain-billing-application';
 import { JwtAuthGuard, TenantGuard } from '@virteex/kernel-auth';
+import { CurrentTenant } from '@virteex/shared-util-server-server-config';
 
 @ApiTags('Payment')
 @ApiBearerAuth()
@@ -10,12 +11,15 @@ import { JwtAuthGuard, TenantGuard } from '@virteex/kernel-auth';
 export class PaymentController {
   private readonly logger = new Logger(PaymentController.name);
 
-  constructor(private readonly processPaymentUseCase: ProcessPaymentUseCase) {}
+  constructor(
+    private readonly processPaymentUseCase: ProcessPaymentUseCase,
+    private readonly createCheckoutSessionUseCase: CreateCheckoutSessionUseCase
+  ) {}
 
   @Post('checkout-session')
-  async createCheckoutSession(@Body() body: any) {
-    // Alignment with /payment/checkout-session
-    return { url: 'https://checkout.stripe.com/...' };
+  async createCheckoutSession(@Body() body: { planId: string }, @CurrentTenant() tenantId: string) {
+    this.logger.log(`Received checkout session request for plan ${body.planId} and tenant ${tenantId}`);
+    return await this.createCheckoutSessionUseCase.execute(body.planId, tenantId);
   }
 
   @Post()

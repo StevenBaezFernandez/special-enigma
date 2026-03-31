@@ -3,7 +3,7 @@ import { EntityNotFoundException } from "@virteex/exceptions";
 import { LoginUserDto, LoginResponseDto } from '@virteex/domain-identity-contracts';
 import { UserRepository, AuditLogRepository, AuditLog, RiskEngineService, AuthService } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
-import { ForbiddenException } from '@virteex/kernel-exceptions';
+import { ForbiddenException, UnauthorizedException, BadRequestException } from '@virteex/kernel-exceptions';
 import { RecaptchaPort } from '@virteex/domain-identity-domain';
 
 export interface LoginContext {

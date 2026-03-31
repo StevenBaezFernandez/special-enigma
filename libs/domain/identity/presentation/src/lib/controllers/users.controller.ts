@@ -42,6 +42,7 @@ export class UsersController {
   ) {}
 
   @Get()
+  @RequireEntitlement('users')
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
   async listUsers(
     @CurrentUser() user: any,
@@ -104,6 +105,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @RequireEntitlement('users')
   @StepUp({ action: 'tenant-admin', maxAgeSeconds: 300 })
   async delete(@Param('id') id: string, @CurrentUser() user: any): Promise<void> {
     await this.deleteUserUseCase.execute(id, user.tenantId);

@@ -32,7 +32,8 @@ export class EntitlementService {
     }
 
     const plan = subscription.getPlan();
-    const limit = plan?.limits?.[resource] ?? 0;
+    const limitObj = plan?.limits?.find(l => l.resource === resource);
+    const limit = limitObj ? limitObj.limit : 0;
 
     if (limit !== -1 && currentCount >= limit) {
       throw new ForbiddenException(`Quota exceeded for ${resource}. Limit: ${limit}, Current: ${currentCount}`);

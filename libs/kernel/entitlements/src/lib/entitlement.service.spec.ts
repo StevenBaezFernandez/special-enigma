@@ -37,7 +37,7 @@ describe('EntitlementService', () => {
     (getTenantContext as any).mockReturnValue({ tenantId: 't1' });
     subscriptionRepository.findByTenantId.mockResolvedValue({
       isValid: () => true,
-      getPlan: () => ({ limits: { users: 5 } }),
+      getPlan: () => ({ limits: [{ resource: 'users', limit: 5 }] }),
     });
     await expect(service.checkQuota('users', 5)).rejects.toThrow('Quota exceeded');
   });

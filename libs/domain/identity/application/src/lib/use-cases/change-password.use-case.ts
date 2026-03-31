@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { EntityNotFoundException } from "@virteex/exceptions";
+import { UnauthorizedException } from '@virteex/kernel-exceptions';
 import { UserRepository, AuthService, AuditLogRepository, AuditLog, SessionRepository } from '@virteex/domain-identity-domain';
 
 @Injectable()

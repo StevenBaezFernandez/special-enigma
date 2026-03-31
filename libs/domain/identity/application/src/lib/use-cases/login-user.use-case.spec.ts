@@ -3,7 +3,7 @@ import { EntityNotFoundException } from "@virteex/exceptions";
 import { LoginUserUseCase } from './login-user.use-case';
 import { UserRepository, AuditLogRepository, AuthService, RiskEngineService, RecaptchaPort } from '@virteex/domain-identity-domain';
 import { TokenGenerationService } from '../services/token-generation.service';
-import { ForbiddenException } from '@virteex/kernel-exceptions';
+import { ForbiddenException, UnauthorizedException } from '@virteex/kernel-exceptions';
 import { vi, Mock } from 'vitest';
 
 describe('LoginUserUseCase', () => {

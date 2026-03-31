@@ -44,4 +44,36 @@ export class StripePaymentProvider implements PaymentProvider {
       throw new Error(`Payment failed: ${error.message}`);
     }
   }
+
+  async createCheckoutSession(planId: string, tenantId: string): Promise<{ url: string }> {
+    this.logger.log(`Creating Stripe checkout session for plan ${planId} and tenant ${tenantId}`);
+
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: planId, // In real scenario, planId might be the Stripe Price ID
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: `${this.configService.get('APP_URL')}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${this.configService.get('APP_URL')}/billing/cancel`,
+        metadata: {
+            tenantId,
+            planId
+        }
+      });
+
+      if (!session.url) {
+        throw new Error('Stripe failed to generate a checkout URL');
+      }
+
+      return { url: session.url };
+    } catch (error: any) {
+      this.logger.error('Failed to create Stripe checkout session', error);
+      throw new Error(`Checkout session creation failed: ${error.message}`);
+    }
+  }
 }
