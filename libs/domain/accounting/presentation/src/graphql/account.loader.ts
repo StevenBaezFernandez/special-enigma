@@ -8,7 +8,11 @@ import { type AccountDto } from '@virteex/domain-accounting-contracts';
 export class AccountLoader extends DataLoader<string, AccountDto | null> {
   constructor(
     private readonly getAccountsByIdsUseCase: GetAccountsByIdsUseCase,
-    @Inject(REQUEST) private readonly request: any
+    @Inject(REQUEST) private readonly request: {
+      tenantContext?: { tenantId: string };
+      tenantId?: string;
+      raw?: { tenantId: string };
+    }
   ) {
     super(async (ids: readonly string[]) => {
       const tenantId = this.request.tenantContext?.tenantId || this.request.tenantId || this.request.raw?.tenantId;

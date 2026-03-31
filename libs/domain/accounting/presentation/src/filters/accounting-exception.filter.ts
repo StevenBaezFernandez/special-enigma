@@ -17,7 +17,7 @@ export class AccountingExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const response = exception.getResponse();
-      message = typeof response === 'object' && response !== null && 'message' in response ? (response as any).message : exception.message;
+      message = typeof response === 'object' && response !== null && 'message' in response ? (response as { message?: string }).message || exception.message : exception.message;
       errorCode = 'HTTP_EXCEPTION';
     } else if (exception instanceof AccountingDomainError) {
       status = HttpStatus.BAD_REQUEST;

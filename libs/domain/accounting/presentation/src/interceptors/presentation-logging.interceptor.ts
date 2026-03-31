@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 export class PresentationLoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger(PresentationLoggingInterceptor.name);
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const now = Date.now();
     let method = 'UNKNOWN';
     let url = 'UNKNOWN';

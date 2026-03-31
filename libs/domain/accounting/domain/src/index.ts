@@ -37,4 +37,4 @@ export interface OutboxRepository {
 
 export const OUTBOX_REPOSITORY = 'OUTBOX_REPOSITORY';
 
-export type { CurrencyRevaluationService } from './domain-services/currency-revaluation.service';
+export { CurrencyRevaluationService } from './domain-services/currency-revaluation.service';

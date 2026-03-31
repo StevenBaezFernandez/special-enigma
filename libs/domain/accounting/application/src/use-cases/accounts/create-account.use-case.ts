@@ -1,4 +1,4 @@
-import { Account, AccountType, AccountAlreadyExistsError, ParentAccountNotFoundError, CrossTenantAccessError, type AccountRepository, type OutboxRepository, AccountCreated } from '@virteex/domain-accounting-domain';
+import { Account, AccountType, AccountAlreadyExistsError, ParentAccountNotFoundError, type AccountRepository, type OutboxRepository, AccountCreated } from '@virteex/domain-accounting-domain';
 import { type ITelemetryService } from '@virteex/kernel-telemetry';
 import { type CreateAccountDto, type AccountDto } from '@virteex/domain-accounting-contracts';
 import { AccountMapper } from '../../mappers/account.mapper';

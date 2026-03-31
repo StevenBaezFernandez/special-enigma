@@ -17,11 +17,11 @@ export class JournalEntryRepositoryAdapter implements JournalEntryRepository {
   }
 
   async findById(tenantId: string, id: string): Promise<JournalEntry | null> {
-    return this.em.findOne(JournalEntry, { id, tenantId }, { populate: ['lines', 'lines.account'] as any });
+    return this.em.findOne(JournalEntry, { id, tenantId }, { populate: ['lines', 'lines.account'] as never });
   }
 
   async findAll(tenantId: string): Promise<JournalEntry[]> {
-    return this.em.find(JournalEntry, { tenantId }, { populate: ['lines', 'lines.account'] as any });
+    return this.em.find(JournalEntry, { tenantId }, { populate: ['lines', 'lines.account'] as never });
   }
 
   async count(tenantId: string): Promise<number> {

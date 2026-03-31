@@ -1,14 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SetupChartOfAccountsUseCase, AccountingEventHandlerService } from '@virteex/domain-accounting-application';
-import {
-    InvoiceStampedEventDto,
-    PayrollStampedEventDto,
-    ACCOUNTING_EVENTS,
-    ACCOUNTING_INTEGRATION_EVENTS,
-    InvoiceStampedV1EventDto,
-    PayrollStampedV1EventDto
-} from '@virteex/domain-accounting-contracts';
 
 @Injectable()
 export class AccountingListener {

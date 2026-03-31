@@ -97,18 +97,27 @@ export class CreateAccountComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
+    const { code, name, type, parentId } = this.accountForm.getRawValue();
+
+    if (!code || !name || !type) {
+      this.error = 'Missing required fields';
+      this.loading = false;
+      return;
+    }
+
     const dto = {
-        code: this.accountForm.value.code!,
-        name: this.accountForm.value.name!,
-        type: this.accountForm.value.type! as any,
-        parentId: this.accountForm.value.parentId || undefined
+        code,
+        name,
+        type: type as AccountType,
+        parentId: parentId || undefined
     };
 
     try {
       await this.accounting.createAccount(dto);
       this.router.navigate(['../'], { relativeTo: this.route });
-    } catch (err: any) {
-      this.error = 'Failed to create account. ' + (err.error?.message || err.message || '');
+    } catch (err: unknown) {
+      const errorResponse = err as { error?: { message?: string }; message?: string };
+      this.error = 'Failed to create account. ' + (errorResponse.error?.message || errorResponse.message || '');
       this.loading = false;
     }
   }

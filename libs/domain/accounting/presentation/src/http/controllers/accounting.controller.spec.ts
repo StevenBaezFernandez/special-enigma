@@ -1,13 +1,13 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { AccountingController } from './accounting.controller';
 import {
-  CreateAccountUseCase,
-  RecordJournalEntryUseCase,
-  GetAccountsUseCase,
-  GetJournalEntriesUseCase,
-  SetupChartOfAccountsUseCase,
-  GenerateFinancialReportUseCase,
-  CloseFiscalPeriodUseCase,
+  type CreateAccountUseCase,
+  type RecordJournalEntryUseCase,
+  type GetAccountsUseCase,
+  type GetJournalEntriesUseCase,
+  type SetupChartOfAccountsUseCase,
+  type GenerateFinancialReportUseCase,
+  type CloseFiscalPeriodUseCase,
 } from '@virteex/domain-accounting-application';
 import { AccountType } from '@virteex/domain-accounting-contracts';
 
@@ -38,13 +38,13 @@ describe('AccountingController', () => {
 
   beforeEach(async () => {
     controller = new AccountingController(
-      mockCreateAccountUseCase as any,
-      mockRecordJournalEntryUseCase as any,
-      mockGetAccountsUseCase as any,
-      mockGetJournalEntriesUseCase as any,
-      mockSetupChartOfAccountsUseCase as any,
-      mockGenerateFinancialReportUseCase as any,
-      mockCloseFiscalPeriodUseCase as any
+      mockCreateAccountUseCase as unknown as CreateAccountUseCase,
+      mockRecordJournalEntryUseCase as unknown as RecordJournalEntryUseCase,
+      mockGetAccountsUseCase as unknown as GetAccountsUseCase,
+      mockGetJournalEntriesUseCase as unknown as GetJournalEntriesUseCase,
+      mockSetupChartOfAccountsUseCase as unknown as SetupChartOfAccountsUseCase,
+      mockGenerateFinancialReportUseCase as unknown as GenerateFinancialReportUseCase,
+      mockCloseFiscalPeriodUseCase as unknown as CloseFiscalPeriodUseCase
     );
   });
 

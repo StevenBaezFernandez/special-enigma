@@ -1,6 +1,6 @@
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
 import { CreateAccountUseCase } from './create-account.use-case';
-import { ACCOUNT_REPOSITORY, type AccountRepository, Account, type OutboxRepository, type ITelemetryService } from '@virteex/domain-accounting-domain';
+import { type AccountRepository, Account, type OutboxRepository, type ITelemetryService } from '@virteex/domain-accounting-domain';
 import { AccountType } from '@virteex/domain-accounting-contracts';
 
 describe('CreateAccountUseCase', () => {
@@ -40,8 +40,8 @@ describe('CreateAccountUseCase', () => {
       type: AccountType.ASSET,
     };
 
-    (repo.findByCode as any).mockResolvedValue(null);
-    (repo.create as any).mockImplementation((account: any) => {
+    (repo.findByCode as Mock).mockResolvedValue(null);
+    (repo.create as Mock).mockImplementation((account: Account) => {
         const saved = Object.assign(Object.create(Object.getPrototypeOf(account)), account);
         saved.id = '1';
         return Promise.resolve(saved);
@@ -69,9 +69,9 @@ describe('CreateAccountUseCase', () => {
         parentId: '1'
       };
 
-      (repo.findByCode as any).mockResolvedValue(null);
-      (repo.findById as any).mockResolvedValue(parent);
-      (repo.create as any).mockImplementation((account: any) => {
+      (repo.findByCode as Mock).mockResolvedValue(null);
+      (repo.findById as Mock).mockResolvedValue(parent);
+      (repo.create as Mock).mockImplementation((account: Account) => {
           const saved = Object.assign(Object.create(Object.getPrototypeOf(account)), account);
           saved.id = '2';
           return Promise.resolve(saved);
@@ -92,7 +92,7 @@ describe('CreateAccountUseCase', () => {
       type: AccountType.ASSET,
     };
 
-    (repo.findByCode as any).mockResolvedValue(new Account('tenant1', '100', 'Assets', AccountType.ASSET as any));
+    (repo.findByCode as Mock).mockResolvedValue(new Account('tenant1', '100', 'Assets', AccountType.ASSET as unknown as any));
 
     await expect(service.execute(dto)).rejects.toThrow('Account with code 100 already exists');
   });
@@ -109,8 +109,8 @@ describe('CreateAccountUseCase', () => {
         parentId: '1'
       };
 
-      (repo.findByCode as any).mockResolvedValue(null);
-      (repo.findById as any).mockResolvedValue(parent);
+      (repo.findByCode as Mock).mockResolvedValue(null);
+      (repo.findById as Mock).mockResolvedValue(parent);
 
       await expect(service.execute(dto)).rejects.toThrow();
   });

@@ -1,6 +1,5 @@
 import { Module, Logger } from '@nestjs/common';
 import { AccountingInfrastructureModule } from './accounting-infrastructure.module';
-import { AccountingEventConsumerService } from './messaging/consumers/accounting-event-consumer.service';
 import {
   ACCOUNT_REPOSITORY,
   JOURNAL_ENTRY_REPOSITORY,
@@ -18,7 +17,6 @@ import {
 import {
   I_UNIT_OF_WORK,
   IUnitOfWork,
-  ACCOUNTING_EVENT_CONSUMER_PORT,
   DimensionValidator,
   AccountingPolicyService,
   AccountingEventHandlerService,

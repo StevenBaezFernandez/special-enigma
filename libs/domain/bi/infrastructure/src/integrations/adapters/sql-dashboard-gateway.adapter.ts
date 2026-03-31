@@ -1,74 +1,52 @@
-import { Injectable } from '@nestjs/common';
-import { DashboardGateway, type DashboardStats } from '@virteex/domain-bi-domain';
-import { EntityManager } from '@mikro-orm/core';
+import { Injectable, Inject } from '@nestjs/common';
+import {
+  DashboardGateway,
+  type DashboardStats,
+  PURCHASING_PORT,
+  PurchasingPort,
+  CRM_PORT,
+  CrmPort,
+  CATALOG_PORT,
+  CatalogPort,
+  TREASURY_PORT,
+  TreasuryPort,
+  BI_ACCOUNTING_PORT,
+  BiAccountingPort,
+} from '@virteex/domain-bi-domain';
 
 @Injectable()
 export class SqlDashboardGateway extends DashboardGateway {
-  constructor(private readonly em: EntityManager) {
+  constructor(
+    @Inject(PURCHASING_PORT) private readonly purchasingPort: PurchasingPort,
+    @Inject(CRM_PORT) private readonly crmPort: CrmPort,
+    @Inject(CATALOG_PORT) private readonly catalogPort: CatalogPort,
+    @Inject(TREASURY_PORT) private readonly treasuryPort: TreasuryPort,
+    @Inject(BI_ACCOUNTING_PORT) private readonly accountingPort: BiAccountingPort
+  ) {
     super();
   }
 
   async getStats(tenantId: string): Promise<DashboardStats> {
-    const qb = this.em.getConnection();
+    const [
+      pendingApprovals,
+      openDeals,
+      inventoryAlerts,
+      salesToday,
+      monthlyOpex,
+      monthlySales,
+      cashFlow,
+    ] = await Promise.all([
+      this.purchasingPort.getPendingApprovalsCount(tenantId),
+      this.crmPort.getOpenDealsCount(tenantId),
+      this.catalogPort.getInventoryAlertsCount(tenantId),
+      this.crmPort.getSalesToday(tenantId),
+      this.accountingPort.getMonthlyOpex(tenantId),
+      this.crmPort.getMonthlySales(tenantId),
+      this.treasuryPort.getCashFlow(tenantId),
+    ]);
 
-    // 1. Pending Approvals (Purchasing Requisitions)
-    const pendingApprovalsRes = await qb.execute(`
-      SELECT count(*) as count
-      FROM purchasing.requisition
-      WHERE tenant_id = ? AND status = 'PENDING'
-    `, [tenantId]);
-    const pendingApprovals = Number(pendingApprovalsRes[0]?.count || 0);
-
-    // 2. Open Deals (CRM Sales)
-    const openDealsRes = await qb.execute(`
-      SELECT count(*) as count
-      FROM crm.sale
-      WHERE tenant_id = ? AND status IN ('NEGOTIATION', 'QUALIFIED')
-    `, [tenantId]);
-    const openDeals = Number(openDealsRes[0]?.count || 0);
-
-    // 3. Inventory Alerts (Products below min stock)
-    const inventoryAlertsRes = await qb.execute(`
-      SELECT count(*) as count
-      FROM catalog.product
-      WHERE tenant_id = ? AND stock <= min_stock_level
-    `, [tenantId]);
-    const inventoryAlerts = Number(inventoryAlertsRes[0]?.count || 0);
-
-    // 4. Sales Today
-    const salesTodayRes = await qb.execute(`
-      SELECT sum(total) as total
-      FROM crm.sale
-      WHERE tenant_id = ? AND status = 'COMPLETED' AND date(created_at) = CURRENT_DATE
-    `, [tenantId]);
-    const salesToday = Number(salesTodayRes[0]?.total || 0);
-
-    // 5. EBITDA (Simple approximation: Gross Sales - OpEx recorded)
-    const opexRes = await qb.execute(`
-      SELECT sum(amount) as amount
-      FROM accounting.transaction
-      WHERE tenant_id = ? AND account_type = 'EXPENSE' AND date(created_at) >= date_trunc('month', CURRENT_DATE)
-    `, [tenantId]);
-    const monthlyOpex = Number(opexRes[0]?.amount || 0);
-
-    const monthlySalesRes = await qb.execute(`
-      SELECT sum(total) as total
-      FROM crm.sale
-      WHERE tenant_id = ? AND status = 'COMPLETED' AND date(created_at) >= date_trunc('month', CURRENT_DATE)
-    `, [tenantId]);
-    const monthlySales = Number(monthlySalesRes[0]?.total || 0);
     const ebitda = monthlySales - monthlyOpex;
-
-    // 6. Net Margin
     const netMargin = monthlySales > 0 ? (ebitda / monthlySales) * 100 : 0;
-
-    // 7. Cash Flow (Current balance across all accounts)
-    const cashFlowRes = await qb.execute(`
-      SELECT sum(balance) as balance
-      FROM treasury.bank_account
-      WHERE tenant_id = ?
-    `, [tenantId]);
-    const cashFlow = Number(cashFlowRes[0]?.balance || 0);
 
     return {
       pendingApprovals,

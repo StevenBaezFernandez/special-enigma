@@ -9,3 +9,14 @@ export type { ExpensesPort, ExpenseCategory } from './repository-ports/expenses.
 export { EXPENSES_PORT } from './repository-ports/expenses.port';
 export { DashboardGateway } from './repository-ports/dashboard-gateway.port';
 export type { DashboardStats } from './repository-ports/dashboard-gateway.port';
+
+export type { PurchasingPort } from './repository-ports/purchasing.port';
+export { PURCHASING_PORT } from './repository-ports/purchasing.port';
+export type { CrmPort } from './repository-ports/crm.port';
+export { CRM_PORT } from './repository-ports/crm.port';
+export type { CatalogPort } from './repository-ports/catalog.port';
+export { CATALOG_PORT } from './repository-ports/catalog.port';
+export type { TreasuryPort } from './repository-ports/treasury.port';
+export { TREASURY_PORT } from './repository-ports/treasury.port';
+export type { BiAccountingPort } from './repository-ports/bi-accounting.port';
+export { BI_ACCOUNTING_PORT } from './repository-ports/bi-accounting.port';

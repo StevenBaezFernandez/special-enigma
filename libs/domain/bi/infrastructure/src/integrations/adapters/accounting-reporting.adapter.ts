@@ -70,6 +70,6 @@ export class AccountingReportingAdapter implements IAccountingReportingPort, OnM
 
     // Fallback strategy: return 0 if BI cannot reach accounting, assuming no data yet or degradation
     this.telemetry.recordBusinessMetric('accounting_reporting_fallback_applied', 1, { tenantId });
-    return 0;
+    throw new IntegrationError(`Failed to count journal entries for tenant ${tenantId} after ${maxRetries} attempts. Last error: ${lastError?.message}`);
   }
 }

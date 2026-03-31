@@ -43,8 +43,7 @@ export class RecordJournalEntryUseCase {
 
         const savedEntry = await this.journalEntryRepository.create(entry);
 
-        const duration = Date.now() - startTime;
-        this.telemetryService.recordBusinessMetric('accounting_record_journal_entry_latency_ms', duration, { tenantId: dto.tenantId });
+        this.telemetryService.recordBusinessMetric('accounting_record_journal_entry_latency_ms', Date.now() - startTime, { tenantId: dto.tenantId });
         this.telemetryService.recordBusinessMetric('accounting_record_journal_entry_success_total', 1, { tenantId: dto.tenantId });
 
         return JournalEntryMapper.toDto(savedEntry);
@@ -53,7 +52,6 @@ export class RecordJournalEntryUseCase {
     const promise = this.uow.transactional(handleExecute);
 
     return promise.catch(error => {
-      const duration = Date.now() - startTime;
       this.telemetryService.recordBusinessMetric('accounting_record_journal_entry_error_total', 1, {
         tenantId: dto.tenantId,
         error: (error as Error).message
