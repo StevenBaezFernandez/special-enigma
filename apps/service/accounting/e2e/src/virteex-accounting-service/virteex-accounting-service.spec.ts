@@ -28,7 +28,7 @@ describe('Accounting Service E2E', () => {
   const axiosConfig = {
     baseURL: 'http://localhost:3000',
     headers: {
-      'x-virteex-tenant-id': tenantId,
+      'x-tenant-id': tenantId,
       'x-virteex-context': encodedContext,
       'x-virteex-signature': signature,
     },

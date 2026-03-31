@@ -18,6 +18,10 @@ import { TelemetryModule } from '@virteex/kernel-telemetry';
 import { AuthModule } from '@virteex/kernel-auth';
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { Tenant } from './entities/tenant.entity';
+import { TenantControlRecord } from './entities/tenant-control-record.entity';
+import { TenantOperation } from './entities/tenant-operation.entity';
+import { TenantRoutingSnapshot } from './entities/tenant-routing-snapshot.entity';
 
 @Global()
 @Module({
@@ -25,7 +29,12 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
     ConfigModule,
     TelemetryModule,
     AuthModule,
-    MikroOrmModule.forFeature([]),
+    MikroOrmModule.forFeature([
+      Tenant,
+      TenantControlRecord,
+      TenantOperation,
+      TenantRoutingSnapshot,
+    ]),
   ],
   controllers: [ResidencyAuditorController],
   providers: [

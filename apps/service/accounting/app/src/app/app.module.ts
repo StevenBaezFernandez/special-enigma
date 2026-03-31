@@ -7,6 +7,7 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { SqliteDriver } from '@mikro-orm/sqlite';
 import { GraphQLModule } from '@nestjs/graphql';
 import depthLimit from 'graphql-depth-limit';
 import {
@@ -102,7 +103,7 @@ function shouldConnectDatabase(): boolean {
       ],
     }),
     MikroOrmModule.forRoot({
-      driver: PostgreSqlDriver,
+      driver: process.env.ACCOUNTING_DB_DRIVER === 'sqlite' ? SqliteDriver : PostgreSqlDriver,
       ...getDatabaseConfig(),
       connect: shouldConnectDatabase(),
       autoLoadEntities: true,

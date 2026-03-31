@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app/app.module';
 import { setupGlobalConfig } from '@virteex/shared-util-server-server-config';
@@ -20,6 +21,7 @@ function shouldStartKafkaMicroservice(): boolean {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   setupGlobalConfig(app);
+  app.use(cookieParser());
 
   if (shouldStartKafkaMicroservice()) {
     app.connectMicroservice<MicroserviceOptions>({
