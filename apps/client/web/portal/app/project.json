@@ -42,10 +42,7 @@
           "includePaths": [
             "libs/shared/ui/src/lib/styles"
           ]
-        },
-        "externalDependencies": [
-          "class-transformer/storage"
-        ]
+        }
       },
       "configurations": {
         "production": {
