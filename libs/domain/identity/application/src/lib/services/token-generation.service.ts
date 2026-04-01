@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Optional } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { SessionRepository, AuthService, CachePort, User, Session } from '@virteex/domain-identity-domain';
 import { SUBSCRIPTION_REPOSITORY, type SubscriptionRepository } from '@virteex/domain-subscription-domain';
@@ -16,7 +16,7 @@ export class TokenGenerationService {
     @Inject(SessionRepository) private readonly sessionRepository: SessionRepository,
     @Inject(AuthService) private readonly authService: AuthService,
     @Inject(CachePort) private readonly cachePort: CachePort,
-    @Inject(SUBSCRIPTION_REPOSITORY) private readonly subscriptionRepository: SubscriptionRepository
+    @Optional() @Inject(SUBSCRIPTION_REPOSITORY) private readonly subscriptionRepository?: SubscriptionRepository
   ) {}
 
   async createSessionAndTokens(
@@ -37,7 +37,9 @@ export class TokenGenerationService {
 
     await this.cachePort.set(`session:${session.id}`, 'valid', SESSION_TTL);
 
-    const subscription = await this.subscriptionRepository.findByTenantId(user.company.id);
+    const subscription = this.subscriptionRepository
+      ? await this.subscriptionRepository.findByTenantId(user.company.id)
+      : undefined;
     const entitlements = subscription?.getPlan()?.features || [];
 
     const accessToken = await this.authService.generateToken({
@@ -74,7 +76,9 @@ export class TokenGenerationService {
     await this.sessionRepository.save(session);
     await this.cachePort.set(`session:${session.id}`, 'valid', SESSION_TTL);
 
-    const subscription = await this.subscriptionRepository.findByTenantId(user.company.id);
+    const subscription = this.subscriptionRepository
+      ? await this.subscriptionRepository.findByTenantId(user.company.id)
+      : undefined;
     const entitlements = subscription?.getPlan()?.features || [];
 
     const accessToken = await this.authService.generateToken({

@@ -1,5 +1,5 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { EntityNotFoundException } from "@virteex/exceptions";
+import { EntityNotFoundException } from "@virteex/kernel-exceptions";
 import { UserRepository, NotificationService, AuditLogRepository, AuditLog, AuthService } from '@virteex/domain-identity-domain';
 import { ForgotPasswordDto } from '@virteex/domain-identity-contracts';
 import { randomBytes } from 'crypto';

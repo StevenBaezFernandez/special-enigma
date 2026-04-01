@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntityNotFoundException } from "@virteex/exceptions";
+import { EntityNotFoundException } from "@virteex/kernel-exceptions";
 import { ChangePasswordUseCase } from './change-password.use-case';
 import { UserRepository, AuthService, AuditLogRepository, SessionRepository } from '@virteex/domain-identity-domain';
 import { UnauthorizedException } from '@virteex/kernel-exceptions';
