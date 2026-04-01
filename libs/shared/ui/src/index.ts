@@ -12,6 +12,7 @@ export * from './lib/core/services/auth';
 export * from './lib/core/services/country.service';
 export * from './lib/core/services/language';
 export * from './lib/core/services/geo-location.service';
+export * from './lib/core/services/billing';
 export * from './lib/components/geo-mismatch-modal/geo-mismatch-modal.component';
 export * from './lib/utils/file.util';
 export * from './lib/interfaces/register-payload.interface';
