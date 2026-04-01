@@ -13,6 +13,7 @@ export interface UsageItem {
 }
 
 import { USER_READ_PORT, type UserReadPort } from '../../ports/user-read.port';
+import { PlanLimitMapper } from '@virteex/domain-subscription-domain';
 
 @Injectable()
 export class GetUsageUseCase {
@@ -36,7 +37,13 @@ export class GetUsageUseCase {
     };
 
     if (subscription && subscription.isValid() && subscription.getPlan()) {
-       limits = subscription.getPlan().limits;
+       const planLimits = subscription.getPlan().limits;
+       const structured = PlanLimitMapper.toStructuredLimits(planLimits);
+       limits = {
+           invoices: structured.invoices ?? limits.invoices,
+           users: structured.users ?? limits.users,
+           storage: structured.storage ?? limits.storage
+       };
     }
 
     return [

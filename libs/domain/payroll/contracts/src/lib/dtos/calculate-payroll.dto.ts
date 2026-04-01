@@ -1,9 +1,9 @@
-import { IsDateString, IsString, IsNotEmpty } from 'class-validator';
+import { IsDateString, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CalculatePayrollDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  tenantId!: string;
+  tenantId?: string;
 
   @IsNotEmpty()
   @IsString()

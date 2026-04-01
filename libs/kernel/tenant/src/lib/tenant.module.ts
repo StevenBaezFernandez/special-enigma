@@ -14,8 +14,10 @@ import { DualWriteManager } from './dual-write-manager';
 import { TenantCriticalConfigService } from './tenant-critical-config.service';
 import { ResidencyComplianceService } from './residency-compliance.service';
 import { ResidencyAuditorController } from './controllers/residency-auditor.controller';
+import { FeatureFlagsController } from './controllers/feature-flags.controller';
 import { TelemetryModule } from '@virteex/kernel-telemetry';
 import { AuthModule } from '@virteex/kernel-auth';
+import { EntitlementsModule } from '@virteex/kernel-entitlements';
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Tenant } from './entities/tenant.entity';
@@ -29,6 +31,7 @@ import { TenantRoutingSnapshot } from './entities/tenant-routing-snapshot.entity
     ConfigModule,
     TelemetryModule,
     AuthModule,
+    EntitlementsModule,
     MikroOrmModule.forFeature([
       Tenant,
       TenantControlRecord,
@@ -36,7 +39,7 @@ import { TenantRoutingSnapshot } from './entities/tenant-routing-snapshot.entity
       TenantRoutingSnapshot,
     ]),
   ],
-  controllers: [ResidencyAuditorController],
+  controllers: [ResidencyAuditorController, FeatureFlagsController],
   providers: [
     TenantService,
     TenantOperationService,
